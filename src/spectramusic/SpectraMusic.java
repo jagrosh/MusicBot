@@ -1,0 +1,81 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package spectramusic;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import javax.security.auth.login.LoginException;
+import net.dv8tion.jda.JDA;
+import net.dv8tion.jda.JDABuilder;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/**
+ *
+ * @author John Grosh (jagrosh)
+ */
+public class SpectraMusic {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        
+        try{
+            JSONObject config = new JSONObject(new String(Files.readAllBytes(Paths.get("config.json"))));
+            JSONArray array = config.getJSONArray("prefixes");
+            String[] prefixes = new String[array.length()];
+            for(int i=0; i<prefixes.length; i++)
+                prefixes[i] = array.getString(i);
+            String token = config.getString("bot_token");
+            String ownerId = config.getString("owner_id");
+            
+            if(token==null || token.equals("INSERT_TOKEN_HERE"))
+            {
+                System.out.println("Looks like you didn't set a token...");
+            }
+            else if(ownerId==null || !ownerId.matches("\\d{10,}"))
+            {
+                System.out.println("That owner ID doesn't look right...");
+            }
+            else if(prefixes.length==0)
+            {
+                System.out.println("Please specify at least 1 prefix");
+            }
+            else 
+            {
+                JDA jda = new JDABuilder().setBotToken(token).addListener(new Bot(ownerId, prefixes)).buildAsync();
+            }
+        }
+        catch(IOException e)
+        {
+            JSONObject newconfig = new JSONObject();
+            newconfig.put("bot_token", "INSERT_TOKEN_HERE");
+            newconfig.put("owner_id", "INSERT_OWNER'S_DISCORD_ID_HERE");
+            newconfig.put("prefixes", new JSONArray().put("%").put("/"));
+            try
+            {
+                Files.write(Paths.get("config.json"), newconfig.toString(4).getBytes());
+                System.out.println("No config file was found. Config.json has been generated, please populate it!");
+            }
+            catch (IOException e1)
+            {
+                System.out.println("No config file was found and we failed to generate one.");
+            }
+        }
+        catch(JSONException e)
+        {
+            System.out.println("There was an error reading the config file. Please fix this or delete it so a new one can be created.");
+        }
+        catch(LoginException e)
+        {
+            System.out.println("Cannot log in with given token.");
+        }
+    }
+    
+}
