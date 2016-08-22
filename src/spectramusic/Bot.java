@@ -111,31 +111,7 @@ public class Bot extends ListenerAdapter {
         AudioSource searchresult = pullSearch(event);
         if(searchresult!=null)
         {
-            AudioInfo info = searchresult.getInfo();
-            if (info.getError() == null)
-            {
-                if(!event.getGuild().getVoiceStatusOfUser(event.getJDA().getSelfInfo()).inVoiceChannel())
-                {
-                    VoiceChannel target = event.getGuild().getVoiceStatusOfUser(event.getAuthor()).getChannel();
-                    if(!target.checkPermission(event.getJDA().getSelfInfo(), Permission.VOICE_CONNECT) || !target.checkPermission(event.getJDA().getSelfInfo(), Permission.VOICE_SPEAK))
-                    {
-                        Sender.sendReply(SpConst.ERROR+"I must be able to connect and speak in **"+target.getName()+"** to join!", event);
-                        return;
-                    }
-                    event.getGuild().getAudioManager().openAudioConnection(target);
-                }
-                ClumpedMusicPlayer player = (ClumpedMusicPlayer)event.getGuild().getAudioManager().getSendingHandler();
-                int position = player.getAudioQueue().add(event.getAuthor().getId(),searchresult);
-                if(player.isStopped())
-                    player.play();
-                Sender.sendReply(SpConst.SUCCESS+"Added **"+info.getTitle()
-                        +"** (`"+(info.isLive() ? "LIVE" : info.getDuration().getTimestamp())+"`) to the queue "
-                        +(position==0 ? "and will begin playing" :"at position "+(position+1)), event);
-            }
-            else
-            {
-                Sender.sendReply(SpConst.ERROR+"There was a problem with the provided source:\n"+info.getError(), event);
-            }
+            addToQueue(event,searchresult);
             return;
         }
         
@@ -233,6 +209,40 @@ public class Bot extends ListenerAdapter {
     public void onShutdown(ShutdownEvent event) {
         listeners.stream().forEach(e -> e.shutdown());
         Sender.shutdown();
+    }
+    
+    public void addToQueue(GuildMessageReceivedEvent event, AudioSource audiosource)
+    {
+        AudioInfo info = audiosource.getInfo();
+        if (info.getError() == null)
+        {
+            if(!event.getGuild().getVoiceStatusOfUser(event.getJDA().getSelfInfo()).inVoiceChannel())
+            {
+                VoiceChannel target = event.getGuild().getVoiceStatusOfUser(event.getAuthor()).getChannel();
+                if(!target.checkPermission(event.getJDA().getSelfInfo(), Permission.VOICE_CONNECT) || !target.checkPermission(event.getJDA().getSelfInfo(), Permission.VOICE_SPEAK))
+                {
+                    Sender.sendReply(SpConst.ERROR+"I must be able to connect and speak in **"+target.getName()+"** to join!", event);
+                    return;
+                }
+                event.getGuild().getAudioManager().openAudioConnection(target);
+            }
+            ClumpedMusicPlayer player = (ClumpedMusicPlayer)event.getGuild().getAudioManager().getSendingHandler();
+            int position = player.getAudioQueue().add(event.getAuthor().getId(),audiosource);
+            if(player.isStopped())
+                player.play();
+            Sender.sendReply(SpConst.SUCCESS+"Added **"+info.getTitle()
+                    +"** (`"+(info.isLive() ? "LIVE" : info.getDuration().getTimestamp())+"`) to the queue "
+                    +(position==0 ? "and will begin playing" :"at position "+(position+1)), event);
+        }
+        else
+        {
+            Sender.sendReply(SpConst.ERROR+"There was a problem with the provided source:\n"+info.getError(), event);
+        }
+    }
+    
+    public void addToQueue(GuildMessageReceivedEvent event, String url)
+    {
+        
     }
     
     public void addSearch(GuildMessageReceivedEvent event, List<AudioSource> list, Message botMessage)

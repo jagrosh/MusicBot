@@ -42,7 +42,7 @@ public class SpectraMusic {
             JSONArray array = config.getJSONArray("prefixes");
             String[] prefixes = new String[array.length()];
             for(int i=0; i<prefixes.length; i++)
-                prefixes[i] = array.getString(i);
+                prefixes[i] = array.getString(i).toLowerCase();
             String token = config.getString("bot_token");
             String ownerId = config.getString("owner_id");
             
