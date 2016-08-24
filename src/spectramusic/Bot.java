@@ -22,9 +22,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javafx.util.Pair;
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
@@ -37,6 +39,7 @@ import net.dv8tion.jda.events.ShutdownEvent;
 import net.dv8tion.jda.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 import net.dv8tion.jda.managers.AudioManager;
+import net.dv8tion.jda.player.Playlist;
 import net.dv8tion.jda.player.hooks.PlayerListenerAdapter;
 import net.dv8tion.jda.player.hooks.events.FinishEvent;
 import net.dv8tion.jda.player.source.AudioInfo;
@@ -53,11 +56,15 @@ import spectramusic.commands.SetTCCmd;
 import spectramusic.commands.SetVCCmd;
 import spectramusic.commands.ShutdownCmd;
 import spectramusic.commands.SkipCmd;
+import spectramusic.commands.StatusCmd;
 import spectramusic.commands.StopCmd;
 import spectramusic.commands.VolumeCmd;
 import spectramusic.commands.VoteskipCmd;
 import spectramusic.entities.ClumpedMusicPlayer;
+import spectramusic.entities.ClumpedQueue;
 import spectramusic.util.FormatUtil;
+import spectramusic.web.YoutubeSearcher;
+import spectramusic.web.YoutubeSearcher.YoutubeInfo;
 
 /**
  *
@@ -71,8 +78,10 @@ public class Bot extends ListenerAdapter {
     private final JSONObject serverSettings;
     private final ArrayList<PlayerEvents> listeners = new ArrayList<>();
     private final HashMap<String,WaitingSearch> searches = new HashMap<>();
+    private final ExecutorService addSongs = Executors.newFixedThreadPool(20);
+    private final YoutubeSearcher youtubeSearcher;
     
-    public Bot(String ownerId, String[] prefixes){
+    public Bot(String ownerId, String[] prefixes, String youtubeApiKey){
         this.prefixes = prefixes;
         this.ownerId = ownerId;
         JSONObject loadedSettings = new JSONObject();
@@ -82,11 +91,16 @@ public class Bot extends ListenerAdapter {
             System.out.println("No server settings found; using new settings for all servers.");
         }
         serverSettings = loadedSettings;
+        if(youtubeApiKey==null || youtubeApiKey.equals(""))
+            youtubeSearcher = null;
+        else
+            youtubeSearcher = new YoutubeSearcher(youtubeApiKey);
         commands = new Command[]{
             new NowplayingCmd(),
-            new PlayCmd(),
+            new PlayCmd(this),
             new QueueCmd(),
-            new SearchCmd(this),
+            new SearchCmd(this,youtubeSearcher),
+            new StatusCmd(serverSettings,ownerId),
             new VoteskipCmd(),
             
             new SkipCmd(),
@@ -108,13 +122,15 @@ public class Bot extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        AudioSource searchresult = pullSearch(event);
+        Object searchresult = pullSearch(event);
         if(searchresult!=null)
         {
-            addToQueue(event,searchresult);
+            if(searchresult instanceof AudioSource)
+                addToQueue(event, (AudioSource)searchresult);
+            else
+                addToQueue(event, ((YoutubeInfo)searchresult).url);
             return;
         }
-        
         String content = null;
         for(String prefix : prefixes)
             if(event.getMessage().getRawContent().toLowerCase().startsWith(prefix))
@@ -127,11 +143,11 @@ public class Bot extends ListenerAdapter {
         
         //get levels for users
         JSONObject settings = serverSettings.has(event.getGuild().getId()) ? serverSettings.getJSONObject(event.getGuild().getId()) : null;
-        Role djRole = settings==null ? null : event.getGuild().getRoleById(settings.getString("dj_role_id"));
+        Role djRole = settings==null ? null : event.getGuild().getRoleById(settings.getString(SpConst.DJ_JSON));
         PermLevel userLevel = PermLevel.EVERYONE;
         if(event.getAuthor().getId().equals(ownerId))
             userLevel = PermLevel.OWNER;
-        else if (PermissionUtil.checkPermission(event.getAuthor(), Permission.MANAGE_SERVER, event.getGuild()))
+        else if (PermissionUtil.checkPermission(event.getGuild(), event.getAuthor(), Permission.MANAGE_SERVER))
             userLevel = PermLevel.ADMIN;
         else if (djRole!=null && event.getGuild().getRolesForUser(event.getAuthor()).contains(djRole))
             userLevel = PermLevel.DJ;
@@ -165,12 +181,13 @@ public class Bot extends ListenerAdapter {
         if(command==null)
             return;
         
-        boolean isValidChannel = userLevel.isAtLeast(PermLevel.DJ) || settings==null || settings.getString("text_channel_id").equals("") || settings.getString("text_channel_id").equals(event.getChannel().getId());
+        boolean isValidChannel = userLevel.isAtLeast(PermLevel.DJ) || settings==null || settings.getString(SpConst.TC_JSON).equals("") || settings.getString(SpConst.TC_JSON).equals(event.getChannel().getId());
         
         boolean listeningInVc;
         VoiceStatus botstatus = event.getGuild().getVoiceStatusOfUser(event.getJDA().getSelfInfo());
         VoiceStatus userstatus = event.getGuild().getVoiceStatusOfUser(event.getAuthor());
-        VoiceChannel vc = settings==null ? null : event.getJDA().getVoiceChannelById(settings.getString("voice_channel_id"));
+        VoiceChannel vc = settings==null ? null : event.getJDA().getVoiceChannelById(settings.getString(SpConst.VC_JSON));
+        String vcName = vc==null ? "a voice channel" : "**"+vc.getName()+"**";
         if(userstatus==null || !userstatus.inVoiceChannel() || userstatus.isDeaf())
         {
             listeningInVc = false;
@@ -201,7 +218,7 @@ public class Bot extends ListenerAdapter {
             {
                 player = (ClumpedMusicPlayer) manager.getSendingHandler();
             }
-            command.run(parts.length<2||parts[1]==null ? "" : parts[1], event, userLevel, player, listeningInVc);
+            command.run(parts.length<2||parts[1]==null ? "" : parts[1], event, userLevel, player, new Pair<>(listeningInVc,vcName));
         }
     }
 
@@ -213,44 +230,115 @@ public class Bot extends ListenerAdapter {
     
     public void addToQueue(GuildMessageReceivedEvent event, AudioSource audiosource)
     {
-        AudioInfo info = audiosource.getInfo();
-        if (info.getError() == null)
-        {
-            if(!event.getGuild().getVoiceStatusOfUser(event.getJDA().getSelfInfo()).inVoiceChannel())
+        addSongs.submit(() -> {
+            AudioInfo info = audiosource.getInfo();
+            if (info.getError() == null)
             {
-                VoiceChannel target = event.getGuild().getVoiceStatusOfUser(event.getAuthor()).getChannel();
-                if(!target.checkPermission(event.getJDA().getSelfInfo(), Permission.VOICE_CONNECT) || !target.checkPermission(event.getJDA().getSelfInfo(), Permission.VOICE_SPEAK))
-                {
-                    Sender.sendReply(SpConst.ERROR+"I must be able to connect and speak in **"+target.getName()+"** to join!", event);
+                if(!joinVoiceChannel(event))
                     return;
-                }
-                event.getGuild().getAudioManager().openAudioConnection(target);
+                ClumpedMusicPlayer player = (ClumpedMusicPlayer)event.getGuild().getAudioManager().getSendingHandler();
+                int position = player.getAudioQueue().add(event.getAuthor().getId(),audiosource);
+                if(player.isStopped())
+                    player.play();
+                Sender.sendReply(SpConst.SUCCESS+"Added **"+info.getTitle()
+                        +"** (`"+(info.isLive() ? "LIVE" : info.getDuration().getTimestamp())+"`) to the queue "
+                        +(position==0 ? "and will begin playing" :"at position "+(position+1)), event);
             }
-            ClumpedMusicPlayer player = (ClumpedMusicPlayer)event.getGuild().getAudioManager().getSendingHandler();
-            int position = player.getAudioQueue().add(event.getAuthor().getId(),audiosource);
-            if(player.isStopped())
-                player.play();
-            Sender.sendReply(SpConst.SUCCESS+"Added **"+info.getTitle()
-                    +"** (`"+(info.isLive() ? "LIVE" : info.getDuration().getTimestamp())+"`) to the queue "
-                    +(position==0 ? "and will begin playing" :"at position "+(position+1)), event);
-        }
-        else
-        {
-            Sender.sendReply(SpConst.ERROR+"There was a problem with the provided source:\n"+info.getError(), event);
-        }
+            else
+            {
+                Sender.sendReply(SpConst.ERROR+"There was a problem with the provided source:\n"+info.getError(), event);
+            }
+        });
     }
     
     public void addToQueue(GuildMessageReceivedEvent event, String url)
     {
-        
+        if(!joinVoiceChannel(event))
+            return;
+        addSongs.submit(() -> {
+                Sender.sendReply("\u231A Loading... `["+url+"]`", event, () -> {
+                    Playlist playlist;
+                    try {
+                        playlist = Playlist.getPlaylist(url);
+                    } catch(NullPointerException e)
+                    {
+                        return SpConst.ERROR+"The given link or playlist was invalid";
+                    }
+                    
+                    List<AudioSource> sources = new ArrayList<>(playlist.getSources());
+                    String id = event.getAuthor().getId();
+                    final ClumpedMusicPlayer player = (ClumpedMusicPlayer)event.getGuild().getAudioManager().getSendingHandler();
+                    if (sources.size() > 1)
+                    {
+                        ClumpedQueue<String,AudioSource> queue = player.getAudioQueue();
+                        addSongs.submit(() -> {
+                                int count = 0;
+                                for(AudioSource it : sources)
+                                {
+                                    AudioSource source = it;
+                                    AudioInfo info = source.getInfo();
+                                    if (info.getError() == null)
+                                    {
+                                        try 
+                                        {
+                                            queue.add(id,source);
+                                        } catch(UnsupportedOperationException e)
+                                        {
+                                            return;
+                                        }
+                                        count++;
+                                        if (player.isStopped())
+                                            player.play();
+                                    }
+                                }
+                                Sender.sendAlert(SpConst.SUCCESS+"Successfully queued "+count+" (out of "+sources.size()+") sources [<@"+id+">]", event);
+                            });
+                        return SpConst.SUCCESS+"Found a playlist with `"
+                                +sources.size()+"` entries.\n\u231A Queueing sources... (this may take some time)";
+                    }
+                    else
+                    {
+                        AudioSource source = sources.get(0);
+                        AudioInfo info = source.getInfo();
+                        if (info.getError() == null)
+                        {
+                            int position = player.getAudioQueue().add(id,source);
+                            if(player.isStopped())
+                                player.play();
+                            return SpConst.SUCCESS+"Added **"+info.getTitle()
+                                    +"** (`"+(info.isLive() ? "LIVE" : info.getDuration().getTimestamp())+"`) to the queue "+(position==0 ? "and will begin playing" :"at position "+(position+1));
+
+                        }
+                        else
+                        {
+                            return SpConst.ERROR+"There was a problem with the provided source:\n"+info.getError();
+                        }
+                    }
+                });});
     }
     
-    public void addSearch(GuildMessageReceivedEvent event, List<AudioSource> list, Message botMessage)
+    public boolean joinVoiceChannel(GuildMessageReceivedEvent event)
     {
-        searches.put(event.getAuthor().getId()+"|"+event.getChannel().getId(), new WaitingSearch(list,event.getMessage(),botMessage));
+        if(!event.getGuild().getVoiceStatusOfUser(event.getJDA().getSelfInfo()).inVoiceChannel())
+        {
+            VoiceChannel target = event.getGuild().getVoiceStatusOfUser(event.getAuthor()).getChannel();
+            if(!target.checkPermission(event.getJDA().getSelfInfo(), Permission.VOICE_CONNECT) || !target.checkPermission(event.getJDA().getSelfInfo(), Permission.VOICE_SPEAK))
+            {
+                Sender.sendReply(SpConst.ERROR+"I must be able to connect and speak in **"+target.getName()+"** to join!", event);
+                return false;
+            }
+            event.getGuild().getAudioManager().openAudioConnection(target);
+        }
+        return true;
     }
     
-    public AudioSource pullSearch(GuildMessageReceivedEvent event)
+    public void addSearch(GuildMessageReceivedEvent event, List<AudioSource> list, List<YoutubeInfo> list2, Message botMessage)
+    {
+        searches.put(event.getAuthor().getId()+"|"+event.getChannel().getId(), new WaitingSearch(list, list2, event.getMessage(), botMessage));
+    }
+    
+    //returns an AudioSource or a String (url)
+    public Object pullSearch(GuildMessageReceivedEvent event)
     {
         WaitingSearch search = searches.remove(event.getAuthor().getId()+"|"+event.getChannel().getId());
         if(search==null)
@@ -260,7 +348,7 @@ public class Bot extends ListenerAdapter {
             search.userMessage.deleteMessage();
         try
         {
-            return search.list.get(Integer.parseInt(event.getMessage().getRawContent())-1);
+            return (search.list==null ? search.list2 : search.list).get(Integer.parseInt(event.getMessage().getRawContent())-1);
         }
         catch(Exception e)
         {
@@ -270,11 +358,13 @@ public class Bot extends ListenerAdapter {
     
     private class WaitingSearch {
         private final List<AudioSource> list;
+        private final List<YoutubeInfo> list2;
         private final Message userMessage;
         private final Message botMessage;
-        public WaitingSearch(List<AudioSource> list, Message userMessage, Message botMessage)
+        public WaitingSearch(List<AudioSource> list, List<YoutubeInfo> list2, Message userMessage, Message botMessage)
         {
             this.list = list;
+            this.list2 = list2;
             this.userMessage = userMessage;
             this.botMessage = botMessage;
         }

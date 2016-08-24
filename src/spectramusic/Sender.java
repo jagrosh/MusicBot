@@ -49,7 +49,7 @@ public class Sender {
                     }, m.getRawContent().split("\n").length*10+5, TimeUnit.SECONDS) 
                 : null;
         if(edit==null)
-            event.getChannel().sendMessageAsync(message, cleanup);
+            event.getChannel().sendMessageAsync(cleanMessage(message), cleanup);
         else
             event.getChannel().sendMessageAsync(cleanMessage(message), m -> {
                 String newmessage = cleanMessage(edit.get());

@@ -16,6 +16,7 @@
  */
 package spectramusic;
 
+import javafx.util.Pair;
 import net.dv8tion.jda.events.message.guild.GuildMessageReceivedEvent;
 import spectramusic.entities.ClumpedMusicPlayer;
 
@@ -34,7 +35,7 @@ public abstract class Command {
     
     protected abstract void execute(String args, GuildMessageReceivedEvent event, PermLevel caller, ClumpedMusicPlayer player);
     
-    public void run(String args, GuildMessageReceivedEvent event, PermLevel caller, ClumpedMusicPlayer player, boolean isInVC)
+    public void run(String args, GuildMessageReceivedEvent event, PermLevel caller, ClumpedMusicPlayer player, Pair<Boolean,String> voiceState)
     {
         if(!caller.isAtLeast(level))
             return;
@@ -43,9 +44,9 @@ public abstract class Command {
             Sender.sendReply(SpConst.MUST_BE_PLAYING, event);
             return;
         }
-        if(userMustBeInVC && !isInVC)
+        if(userMustBeInVC && !voiceState.getKey())
         {
-            Sender.sendReply(SpConst.MUST_BE_IN_VC, event);
+            Sender.sendReply(String.format(SpConst.MUST_BE_IN_VC,voiceState.getValue()), event);
             return;
         }
         execute(args,event,caller,player);

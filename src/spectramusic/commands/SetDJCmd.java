@@ -53,7 +53,7 @@ public class SetDJCmd extends Command {
         {
             if(settings!=null)
             {
-                settings.put("dj_role_id", "");
+                settings.put(SpConst.DJ_JSON, "");
             }
             Sender.sendReply(SpConst.SUCCESS+"Only Admins (users with Manage Server permission) can now use DJ-level commands", event);
         }
@@ -73,13 +73,13 @@ public class SetDJCmd extends Command {
                 if(settings==null)
                 {
                     settings = new JSONObject()
-                            .put("voice_channel_id", "")
-                            .put("text_channel_id", "")
-                            .put("dj_role_id",found.get(0).getId());
+                            .put(SpConst.VC_JSON, "")
+                            .put(SpConst.TC_JSON, "")
+                            .put(SpConst.DJ_JSON,found.get(0).getId());
                 }
                 else
                 {
-                    settings = settings.put("dj_role_id",found.get(0).getId());
+                    settings = settings.put(SpConst.DJ_JSON,found.get(0).getId());
                 }
                 serverSettings.put(event.getGuild().getId(), settings);
                 String msg = SpConst.SUCCESS+"DJ commands can now be used by users with the role **"+found.get(0).getName()+"**";

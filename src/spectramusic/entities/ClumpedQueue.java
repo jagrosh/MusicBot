@@ -30,10 +30,13 @@ import javafx.util.Pair;
  * also on the associated "ID" item. Each clump can only contain a predefined
  * number of objects from a certain ID. When this threshold is reached, all
  * items from that ID are placed in the next clump.
+ * @param <X> the item used for clump max
+ * @param <Y> the items in the list
  */
 public class ClumpedQueue<X,Y> extends LinkedList {
     private final int clumpSize;
     private final ArrayList<Clump> clumps;
+    private boolean alive = true;
     
     public ClumpedQueue(int clumpSize)
     {
@@ -47,8 +50,10 @@ public class ClumpedQueue<X,Y> extends LinkedList {
     
         @returns the index of the new addition
     */
-    public int add(X key, Y value)
+    public synchronized int add(X key, Y value)
     {
+        if(!alive)
+            throw new UnsupportedOperationException("The current queue is dead.");
         int size = 0;
         for(Clump clump : clumps)
         {
@@ -68,7 +73,7 @@ public class ClumpedQueue<X,Y> extends LinkedList {
     }
 
     @Override
-    public Pair<X,Y> removeFirst()
+    public synchronized Pair<X,Y> removeFirst()
     {
         if(clumps.isEmpty())
             return null;
@@ -79,7 +84,7 @@ public class ClumpedQueue<X,Y> extends LinkedList {
     }
 
     @Override
-    public Pair<X,Y> remove(int index)
+    public synchronized Pair<X,Y> remove(int index)
     {
         if(clumps.isEmpty() || index>=size())
             return null;
@@ -99,20 +104,20 @@ public class ClumpedQueue<X,Y> extends LinkedList {
     }
 
     @Override
-    public int size()
+    public synchronized int size()
     {
         int sum = 0;
         return clumps.stream().map((clump) -> clump.size()).reduce(sum, Integer::sum);
     }
 
     @Override
-    public boolean isEmpty()
+    public synchronized boolean isEmpty()
     {
         return clumps.isEmpty();
     }
 
     @Override
-    public Pair<X,Y> get(int index)
+    public synchronized Pair<X,Y> get(int index)
     {
         if(index<0 || index>=size())
             return null;
@@ -125,9 +130,14 @@ public class ClumpedQueue<X,Y> extends LinkedList {
     }
     
     @Override
-    public void clear()
+    public synchronized void clear()
     {
         clumps.clear();
+    }
+    
+    public synchronized void kill()
+    {
+        alive = false;
     }
     
     private class Clump {

@@ -21,14 +21,21 @@ package spectramusic;
  * @author John Grosh (jagrosh)
  */
 public class SpConst {
+    final public static String VERSION = "0.1";
     
     //command responses
     final public static String SUCCESS = (char)9989+" ";
     final public static String WARNING = (char)9888+" ";
     final public static String ERROR   = (char)9940+" ";
     
+    final public static String LINESTART = "  ➣  ";
+    
+    final public static String TC_JSON = "text_channel_id";
+    final public static String VC_JSON = "voice_channel_id";
+    final public static String DJ_JSON = "dj_role_id";
+    
     final public static String MUST_BE_PLAYING = ERROR+"There must be a song playing to use that!";
-    final public static String MUST_BE_IN_VC = ERROR+"You must be listening in a valid voice channel to use that!";
+    final public static String MUST_BE_IN_VC = ERROR+"You must be listening in %s to use that!";
     
     
     final public static String MULTIPLE_FOUND = WARNING + "**Multiple %s found matching \"%s\":**";

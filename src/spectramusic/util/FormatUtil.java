@@ -45,8 +45,8 @@ public class FormatUtil {
             AudioTimestamp currentTime = player.getCurrentTimestamp();
             User user = jda.getUserById(player.getCurrentRequestor());
             String title = info.getError()==null ? info.getTitle() : "Error! Source: "+player.getCurrentAudioSource().getSource();
-            if(inTopic && title.length()>50)
-                title = title.substring(0,47)+"...";
+            if(inTopic && title.length()>40)
+                title = title.substring(0,37)+"...";
             double progress = info.getError()==null && !info.isLive() ? (double)currentTime.getTotalSeconds() / info.getDuration().getTotalSeconds() : 0;
             String str = "**"+title+"** ~ "+(user==null ? "???" : user.getUsername())+"\n\u25B6 "+progressBar(progress)
                     +" "+(inTopic ? "" : "`")+"["+currentTime.getTimestamp() + "/" 

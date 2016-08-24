@@ -40,6 +40,12 @@ public abstract class ClumpedAbstractMusicPlayer extends AbstractMusicPlayer
         return audioQueue;
     }
     
+    public void newQueue()
+    {
+        audioQueue.kill();
+        audioQueue = new ClumpedQueue<>(2);
+    }
+    
     public String getCurrentRequestor()
     {
         return currentRequestor;

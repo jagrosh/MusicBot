@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
+import net.dv8tion.jda.utils.SimpleLog;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +46,7 @@ public class SpectraMusic {
                 prefixes[i] = array.getString(i).toLowerCase();
             String token = config.getString("bot_token");
             String ownerId = config.getString("owner_id");
+            String youtubeApiKey = config.has("youtube_api_key") ? config.getString("youtube_api_key") : null;
             
             if(token==null || token.equals("INSERT_TOKEN_HERE"))
             {
@@ -60,7 +62,12 @@ public class SpectraMusic {
             }
             else 
             {
-                JDA jda = new JDABuilder().setBotToken(token).addListener(new Bot(ownerId, prefixes)).buildAsync();
+                if(youtubeApiKey==null || youtubeApiKey.equals("INSERT_YOUTUBE_API_KEY_HERE_FOR_FASTER_SEARCHES"))
+                {
+                    SimpleLog.getLog("Youtube").warn("No Youtube API key found; The search command could be faster if one was provided.");
+                    youtubeApiKey = null;
+                }
+                JDA jda = new JDABuilder().setBotToken(token).addListener(new Bot(ownerId, prefixes, youtubeApiKey)).buildAsync();
             }
         }
         catch(IOException e)
@@ -69,6 +76,7 @@ public class SpectraMusic {
             newconfig.put("bot_token", "INSERT_TOKEN_HERE");
             newconfig.put("owner_id", "INSERT_OWNER'S_DISCORD_ID_HERE");
             newconfig.put("prefixes", new JSONArray().put("%").put("/"));
+            newconfig.put("youtube_api_key","INSERT_YOUTUBE_API_KEY_HERE_FOR_FASTER_SEARCHES");
             try
             {
                 Files.write(Paths.get("config.json"), newconfig.toString(4).getBytes());

@@ -53,7 +53,7 @@ public class SetVCCmd extends Command {
         {
             if(settings!=null)
             {
-                settings.put("voice_channel_id", "");
+                settings.put(SpConst.VC_JSON, "");
             }
             Sender.sendReply(SpConst.SUCCESS+event.getJDA().getSelfInfo().getUsername()+" can now use any Voice Channel for music", event);
         }
@@ -73,13 +73,13 @@ public class SetVCCmd extends Command {
                 if(settings==null)
                 {
                     settings = new JSONObject()
-                            .put("voice_channel_id", found.get(0).getId())
-                            .put("text_channel_id", "")
-                            .put("dj_role_id","");
+                            .put(SpConst.VC_JSON, found.get(0).getId())
+                            .put(SpConst.TC_JSON, "")
+                            .put(SpConst.DJ_JSON,"");
                 }
                 else
                 {
-                    settings = settings.put("voice_channel_id", found.get(0).getId());
+                    settings = settings.put(SpConst.VC_JSON, found.get(0).getId());
                 }
                 serverSettings.put(event.getGuild().getId(), settings);
                 String msg = SpConst.SUCCESS+event.getJDA().getSelfInfo().getUsername()+" can now only play music in **"+found.get(0).getName()+"**";

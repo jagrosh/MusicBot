@@ -53,7 +53,7 @@ public class SetTCCmd extends Command {
         {
             if(settings!=null)
             {
-                settings.put("text_channel_id", "");
+                settings.put(SpConst.TC_JSON, "");
             }
             Sender.sendReply(SpConst.SUCCESS+event.getJDA().getSelfInfo().getUsername()+" can now use any Text Channel to receive commands", event);
         }
@@ -73,13 +73,13 @@ public class SetTCCmd extends Command {
                 if(settings==null)
                 {
                     settings = new JSONObject()
-                            .put("voice_channel_id", "")
-                            .put("text_channel_id", found.get(0).getId())
-                            .put("dj_role_id","");
+                            .put(SpConst.VC_JSON, "")
+                            .put(SpConst.TC_JSON, found.get(0).getId())
+                            .put(SpConst.DJ_JSON,"");
                 }
                 else
                 {
-                    settings = settings.put("text_channel_id", found.get(0).getId());
+                    settings = settings.put(SpConst.TC_JSON, found.get(0).getId());
                 }
                 serverSettings.put(event.getGuild().getId(), settings);
                 String msg = SpConst.SUCCESS+event.getJDA().getSelfInfo().getUsername()+" will now only receive commands in **"+found.get(0).getName()+"**";
