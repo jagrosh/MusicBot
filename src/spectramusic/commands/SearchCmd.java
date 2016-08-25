@@ -40,6 +40,11 @@ public class SearchCmd extends Command {
     
     @Override
     protected void execute(String args, GuildMessageReceivedEvent event, PermLevel caller, ClumpedMusicPlayer player) {
+        if(args==null || args.equals(""))
+        {
+            Sender.sendReply(SpConst.ERROR+"Please include search terms!", event);
+            return;
+        }
         StringBuilder builder = new StringBuilder(SpConst.SUCCESS+"<@"+event.getAuthor().getId()+"> Results for `"+args+"`:");
         if(searcher==null)
         {
@@ -76,6 +81,7 @@ public class SearchCmd extends Command {
         }
         else
         {
+            event.getChannel().sendTyping();
             List<YoutubeInfo> list = searcher.getResults(args, 3);
             if(list==null)
             {

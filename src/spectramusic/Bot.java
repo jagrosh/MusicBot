@@ -122,6 +122,8 @@ public class Bot extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+        if(event.getAuthor().isBot())
+            return;
         Object searchresult = pullSearch(event);
         if(searchresult!=null)
         {

@@ -37,7 +37,7 @@ public class VoteskipCmd extends Command {
         {
             if(checked.contains(user.getId()) || user.isBot())
                 continue;
-            if(!event.getGuild().getVoiceStatusOfUser(user).isDeaf())
+            if(event.getGuild().getVoiceStatusOfUser(user).inVoiceChannel() && !event.getGuild().getVoiceStatusOfUser(user).isDeaf())
                 listeners++;
             if(player.getCurrentSkips().contains(user.getId()))
                 skippers++;
