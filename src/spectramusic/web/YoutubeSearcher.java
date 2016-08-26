@@ -73,6 +73,8 @@ public class YoutubeSearcher {
         try {
             searchResponse = search.execute();
             List<SearchResult> searchResultList = searchResponse.getItems();
+            if(searchResultList.isEmpty())
+                return infos;
             StringBuilder builder = new StringBuilder();
             searchResultList.stream().forEach(sr -> builder.append(", ").append(sr.getId().getVideoId()));
             List<Video> videos = videoInfo.setId(builder.toString().substring(2)).execute().getItems();

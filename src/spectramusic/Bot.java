@@ -45,6 +45,7 @@ import net.dv8tion.jda.player.hooks.events.FinishEvent;
 import net.dv8tion.jda.player.source.AudioInfo;
 import net.dv8tion.jda.player.source.AudioSource;
 import net.dv8tion.jda.utils.PermissionUtil;
+import net.dv8tion.jda.utils.SimpleLog;
 import org.json.JSONObject;
 import spectramusic.Command.PermLevel;
 import spectramusic.commands.NowplayingCmd;
@@ -264,6 +265,7 @@ public class Bot extends ListenerAdapter {
                         playlist = Playlist.getPlaylist(url);
                     } catch(NullPointerException e)
                     {
+                        SimpleLog.getLog("Queue").warn("Invalid url ["+url+"]: "+e);
                         return SpConst.ERROR+"The given link or playlist was invalid";
                     }
                     
@@ -350,7 +352,10 @@ public class Bot extends ListenerAdapter {
             search.userMessage.deleteMessage();
         try
         {
-            return (search.list==null ? search.list2 : search.list).get(Integer.parseInt(event.getMessage().getRawContent())-1);
+            String input = event.getMessage().getRawContent();
+            if(input.endsWith("."))
+                input = input.substring(0,input.length()-1);
+            return (search.list==null ? search.list2 : search.list).get(Integer.parseInt(input)-1);
         }
         catch(Exception e)
         {

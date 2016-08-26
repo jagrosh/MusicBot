@@ -71,7 +71,7 @@ public class SearchCmd extends Command {
                             .append("]` **").append(info.getTitle()).append("**");
                     }
                 }
-                builder.append("\nType the number of your choice to play, or any invalid choice to cancel");
+                builder.append("\nType the number of your choice to play (ex: `2`), or any invalid choice to cancel");
                 Sender.sendReplyNoDelete(builder.toString(), event, m -> bot.addSearch(event, list, null, m) );
             } 
             catch(NullPointerException | UnsupportedEncodingException e)
@@ -99,7 +99,7 @@ public class SearchCmd extends Command {
                         .append(list.get(i).duration)
                         .append("]` **").append(list.get(i).title).append("**");
             }
-            builder.append("\nType the number of your choice to play, or any invalid choice to cancel");
+            builder.append("\nType the number of your choice to play (ex: `2`), or any invalid choice to cancel");
             Sender.sendReplyNoDelete(builder.toString(), event, m -> bot.addSearch(event, null, list, m) );
         }
     }
