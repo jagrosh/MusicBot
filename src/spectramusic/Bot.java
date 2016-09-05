@@ -28,8 +28,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.util.Pair;
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Guild;
@@ -166,7 +164,7 @@ public class Bot extends ListenerAdapter {
         
         if(content.equalsIgnoreCase("musichelp") || content.equalsIgnoreCase("music help"))
         {
-            StringBuilder builder = new StringBuilder("**Spectra Music** commands:");
+            StringBuilder builder = new StringBuilder("**"+event.getJDA().getSelfInfo().getUsername()+"** commands:");
             PermLevel current = PermLevel.EVERYONE;
             for(Command cmd: commands)
             {
