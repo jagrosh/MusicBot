@@ -48,7 +48,7 @@ public class FormatUtil {
             if(inTopic && title.length()>40)
                 title = title.substring(0,37)+"...";
             double progress = info.getError()==null && !info.isLive() ? (double)currentTime.getTotalSeconds() / info.getDuration().getTotalSeconds() : 0;
-            String str = "**"+title+"** ~ "+(user==null ? "???" : user.getUsername())+"\n\u25B6 "+progressBar(progress)
+            String str = "**"+title+"** {"+(user==null ? "???" : user.getUsername())+"}\n\u25B6 "+progressBar(progress)
                     +" "+(inTopic ? "" : "`")+"["+currentTime.getTimestamp() + "/" 
                     + (info.getError()==null ? info.getDuration().getTimestamp() : "???")+"]"+(inTopic ? "" : "`")+" "
                     +volumeIcon(player.getVolume());

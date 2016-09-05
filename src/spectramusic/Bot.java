@@ -17,6 +17,8 @@
 package spectramusic;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.util.Pair;
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Guild;
@@ -118,7 +122,12 @@ public class Bot extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
-        event.getJDA().getAccountManager().setGame("Type %musichelp");
+        event.getJDA().getAccountManager().setGame("Type "+prefixes[0]+"musichelp");
+        if(event.getJDA().getGuilds().isEmpty())
+            System.out.println("Warning: This bot is not connected to any servers. Please use the following link to connect it to your servers:\n"
+                    +event.getJDA().getSelfInfo().getAuthUrl(Permission.VOICE_CONNECT,Permission.VOICE_SPEAK,
+                            Permission.MANAGE_CHANNEL,Permission.MESSAGE_MANAGE,Permission.MESSAGE_READ,Permission.MESSAGE_WRITE));
+        SimpleLog.getLog("Music").info(event.getJDA().getSelfInfo().getUsername()+" is online and ready to play music!");
     }
 
     @Override
@@ -229,6 +238,7 @@ public class Bot extends ListenerAdapter {
     public void onShutdown(ShutdownEvent event) {
         listeners.stream().forEach(e -> e.shutdown());
         Sender.shutdown();
+        System.exit(0);
     }
     
     public void addToQueue(GuildMessageReceivedEvent event, AudioSource audiosource)
@@ -265,8 +275,13 @@ public class Bot extends ListenerAdapter {
                         playlist = Playlist.getPlaylist(url);
                     } catch(NullPointerException e)
                     {
-                        SimpleLog.getLog("Queue").warn("Invalid url ["+url+"]: "+e);
-                        return SpConst.ERROR+"The given link or playlist was invalid";
+                        try{
+                            playlist = Playlist.getPlaylist("ytsearch:"+URLEncoder.encode(url, "UTF-8"));
+                        } catch(NullPointerException | UnsupportedEncodingException ex)
+                        {
+                            SimpleLog.getLog("Queue").warn("Invalid url ["+url+"]: "+ex);
+                            return SpConst.ERROR+"The given link or playlist was invalid";
+                        }
                     }
                     
                     List<AudioSource> sources = new ArrayList<>(playlist.getSources());

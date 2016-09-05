@@ -5,20 +5,12 @@
  */
 package spectramusic.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-import net.dv8tion.jda.Permission;
-import net.dv8tion.jda.entities.VoiceChannel;
 import net.dv8tion.jda.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.player.Playlist;
-import net.dv8tion.jda.player.source.AudioInfo;
-import net.dv8tion.jda.player.source.AudioSource;
 import spectramusic.Bot;
 import spectramusic.Command;
 import spectramusic.Sender;
 import spectramusic.SpConst;
 import spectramusic.entities.ClumpedMusicPlayer;
-import spectramusic.entities.ClumpedQueue;
 
 /**
  *
@@ -26,7 +18,7 @@ import spectramusic.entities.ClumpedQueue;
  */
 public class PlayCmd extends Command {
 
-    public static final String YT_ID = "[a-zA-Z0-9\\-_]+";
+    //public static final String YT_ID = "[a-zA-Z0-9\\-_]+";
     private final Bot bot;
     public PlayCmd(Bot bot)
     {
