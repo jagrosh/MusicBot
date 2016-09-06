@@ -33,7 +33,7 @@ public class PlayCmd extends Command {
     protected void execute(String args, GuildMessageReceivedEvent event, PermLevel caller, ClumpedMusicPlayer player) {
         if(args.startsWith("<") && args.endsWith(">"))
             args = args.substring(1,args.length()-1);
-        args = args.split("\\s+")[0];
+        //args = args.split("\\s+")[0];
         if(args.contains("&list="))
             args = args.split("&list=")[0];
         if(args.equals(""))
