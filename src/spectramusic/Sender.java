@@ -88,6 +88,14 @@ public class Sender {
         }
     }
     
+    public static void sendPrivate(String message, PrivateChannel pchan)
+    {
+        ArrayList<String> bits = splitMessage(message);
+        bits.stream().forEach((bit) -> {
+            pchan.sendMessageAsync(bit, null);
+        });
+    }
+    
     private static String cleanMessage(String message)
     {
         message = message.replace("@everyone", "@\u200Beveryone").replace("@here", "@\u200Bhere").trim();

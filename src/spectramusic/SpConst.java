@@ -21,7 +21,7 @@ package spectramusic;
  * @author John Grosh (jagrosh)
  */
 public class SpConst {
-    final public static String VERSION = "0.2";
+    final public static String VERSION = "0.3";
     
     //command responses
     final public static String SUCCESS = (char)9989+" ";

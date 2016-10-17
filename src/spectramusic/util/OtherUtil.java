@@ -16,10 +16,14 @@
  */
 package spectramusic.util;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -40,5 +44,21 @@ public class OtherUtil {
                 writer.flush();
         }catch(IOException e){System.err.println("ERROR saving file: "+e);}
         return f;
+    }
+    
+    public static BufferedImage imageFromUrl(String url)
+    {
+        if(url==null)
+            return null;
+        try {
+            URL u = new URL(url);
+            URLConnection urlConnection = u.openConnection();
+            urlConnection.setRequestProperty("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36");
+            //urlConnection.setRequestProperty("authorization", jda.getAuthToken());
+            
+            return ImageIO.read(urlConnection.getInputStream());
+        } catch(IOException|IllegalArgumentException e) {
+        }
+        return null;
     }
 }

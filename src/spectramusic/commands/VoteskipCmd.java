@@ -21,7 +21,8 @@ public class VoteskipCmd extends Command {
 
     public VoteskipCmd()
     {
-        this.command = "voteskip";
+        this.command = "skip";
+        this.aliases = new String[]{"voteskip"};
         this.help = "votes to skip the current song (needs majority vote of listeners)";
         this.mustBePlaying = true;
         this.userMustBeInVC = true;
@@ -29,6 +30,20 @@ public class VoteskipCmd extends Command {
     
     @Override
     protected void execute(String args, GuildMessageReceivedEvent event, PermLevel caller, ClumpedMusicPlayer player) {
+        if(event.getAuthor().getId().equals(player.getCurrentRequestor()))
+        {
+            if(player.getCurrentTimestamp().getTotalSeconds()<1)
+            {
+                Sender.sendReply(SpConst.WARNING+"Please wait for the song to start before skipping.", event);
+                return;
+            }
+            else
+            {
+                Sender.sendReply(SpConst.SUCCESS+"Skipped **"+player.getCurrentAudioSource().getInfo().getTitle()+"** (requested by **"+event.getAuthor().getUsername()+"**)", event);
+                player.skipToNext();
+                return;
+            }
+        }
         int listeners = 0;
         int skippers = 0;
         ArrayList<String> checked = new ArrayList<>();

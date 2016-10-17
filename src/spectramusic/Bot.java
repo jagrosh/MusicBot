@@ -50,19 +50,7 @@ import net.dv8tion.jda.utils.PermissionUtil;
 import net.dv8tion.jda.utils.SimpleLog;
 import org.json.JSONObject;
 import spectramusic.Command.PermLevel;
-import spectramusic.commands.NowplayingCmd;
-import spectramusic.commands.PlayCmd;
-import spectramusic.commands.QueueCmd;
-import spectramusic.commands.SearchCmd;
-import spectramusic.commands.SetDJCmd;
-import spectramusic.commands.SetTCCmd;
-import spectramusic.commands.SetVCCmd;
-import spectramusic.commands.ShutdownCmd;
-import spectramusic.commands.SkipCmd;
-import spectramusic.commands.StatusCmd;
-import spectramusic.commands.StopCmd;
-import spectramusic.commands.VolumeCmd;
-import spectramusic.commands.VoteskipCmd;
+import spectramusic.commands.*;
 import spectramusic.entities.ClumpedMusicPlayer;
 import spectramusic.entities.ClumpedQueue;
 import spectramusic.util.FormatUtil;
@@ -99,14 +87,15 @@ public class Bot extends ListenerAdapter {
         else
             youtubeSearcher = new YoutubeSearcher(youtubeApiKey);
         commands = new Command[]{
+            new MusicinfoCmd(ownerId),
             new NowplayingCmd(),
             new PlayCmd(this),
             new QueueCmd(),
             new SearchCmd(this,youtubeSearcher),
-            new StatusCmd(serverSettings,ownerId),
+            new StatusCmd(serverSettings),
             new VoteskipCmd(),
             
-            new SkipCmd(),
+            new ForceSkipCmd(),
             new StopCmd(),
             new VolumeCmd(),
             
@@ -114,6 +103,8 @@ public class Bot extends ListenerAdapter {
             new SetTCCmd(serverSettings),
             new SetVCCmd(serverSettings),
             
+            new SetavatarCmd(),
+            new SetnameCmd(),
             new ShutdownCmd(),
         };
     }
@@ -162,7 +153,7 @@ public class Bot extends ListenerAdapter {
         else if (djRole!=null && event.getGuild().getRolesForUser(event.getAuthor()).contains(djRole))
             userLevel = PermLevel.DJ;
         
-        if(content.equalsIgnoreCase("musichelp") || content.equalsIgnoreCase("music help"))
+        if(content.equalsIgnoreCase("musichelp") || content.equalsIgnoreCase("music help") || content.equalsIgnoreCase("help music"))
         {
             StringBuilder builder = new StringBuilder("**"+event.getJDA().getSelfInfo().getUsername()+"** commands:");
             PermLevel current = PermLevel.EVERYONE;
@@ -180,7 +171,7 @@ public class Bot extends ListenerAdapter {
                 builder.append("\n`").append(prefixes[0]).append(cmd.command)
                         .append(cmd.arguments==null ? "" : " "+cmd.arguments).append("` - ").append(cmd.getHelp());
             }
-            Sender.sendReply(builder.toString(), event);
+            Sender.sendHelp(builder.toString(), event.getAuthor().getPrivateChannel(), event);
             return;
         }
         String[] parts = content.split("\\s+",2);
@@ -191,13 +182,12 @@ public class Bot extends ListenerAdapter {
         if(command==null)
             return;
         
-        boolean isValidChannel = userLevel.isAtLeast(PermLevel.DJ) || settings==null || settings.getString(SpConst.TC_JSON).equals("") || settings.getString(SpConst.TC_JSON).equals(event.getChannel().getId());
-        
+        TextChannel commandchannel = settings==null ? null : event.getJDA().getTextChannelById(settings.getString(SpConst.TC_JSON));
         boolean listeningInVc;
         VoiceStatus botstatus = event.getGuild().getVoiceStatusOfUser(event.getJDA().getSelfInfo());
         VoiceStatus userstatus = event.getGuild().getVoiceStatusOfUser(event.getAuthor());
         VoiceChannel vc = settings==null ? null : event.getJDA().getVoiceChannelById(settings.getString(SpConst.VC_JSON));
-        String vcName = vc==null ? "a voice channel" : "**"+vc.getName()+"**";
+        String vcName = vc==null ? (botstatus.inVoiceChannel() ? "**"+botstatus.getChannel().getName()+"**" : "a voice channel") : "**"+vc.getName()+"**";
         if(userstatus==null || !userstatus.inVoiceChannel() || userstatus.isDeaf())
         {
             listeningInVc = false;
@@ -211,7 +201,7 @@ public class Bot extends ListenerAdapter {
             listeningInVc = botstatus.getChannel().equals(userstatus.getChannel());
         }
         
-        if(isValidChannel)
+        if(userLevel.isAtLeast(PermLevel.DJ) || commandchannel==null ||  commandchannel.equals(event.getChannel()))
         {
             AudioManager manager = event.getGuild().getAudioManager();
             ClumpedMusicPlayer player;
@@ -229,6 +219,10 @@ public class Bot extends ListenerAdapter {
                 player = (ClumpedMusicPlayer) manager.getSendingHandler();
             }
             command.run(parts.length<2||parts[1]==null ? "" : parts[1], event, userLevel, player, new Pair<>(listeningInVc,vcName));
+        }
+        else
+        {
+            Sender.sendPrivate(SpConst.WARNING+"You can only use music commands in <#"+commandchannel.getId()+">!", event.getAuthor().getPrivateChannel());
         }
     }
 
