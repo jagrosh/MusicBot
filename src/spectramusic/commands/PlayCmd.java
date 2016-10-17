@@ -24,8 +24,8 @@ public class PlayCmd extends Command {
     {
         this.bot = bot;
         this.command = "play";
-        this.arguments = "<URL>";
-        this.help = "plays the song at the specified URL (or youtube video ID)";
+        this.arguments = "<URL or song title>";
+        this.help = "plays the song at the specified URL (or youtube video ID/search)";
         this.userMustBeInVC = true;
     }
     

@@ -46,7 +46,7 @@ public class Sender {
                 ? m -> executor.schedule(() -> {
                         event.getMessage().deleteMessage();
                         m.deleteMessage();
-                    }, m.getRawContent().split("\n").length*10+5, TimeUnit.SECONDS) 
+                    }, m.getRawContent().split("\n").length*15+10, TimeUnit.SECONDS)
                 : null;
         if(edit==null)
             event.getChannel().sendMessageAsync(cleanMessage(message), cleanup);
@@ -67,7 +67,7 @@ public class Sender {
     {
         message = cleanMessage(message);
         event.getChannel().sendMessageAsync(message, m -> {
-            executor.schedule(()-> m.deleteMessage(), m.getRawContent().split("\n").length*30, TimeUnit.SECONDS);
+            executor.schedule(()-> m.deleteMessage(), m.getRawContent().split("\n").length*90, TimeUnit.SECONDS);
         });
     }
     

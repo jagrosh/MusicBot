@@ -247,7 +247,7 @@ public class Bot extends ListenerAdapter {
                     player.play();
                 Sender.sendReply(SpConst.SUCCESS+"Added **"+info.getTitle()
                         +"** (`"+(info.isLive() ? "LIVE" : info.getDuration().getTimestamp())+"`) to the queue "
-                        +(position==0 ? "and will begin playing" :"at position "+(position+1)), event);
+                        +(position==0 ? "and will play next!" :"at position "+(position+1)), event);
             }
             else
             {

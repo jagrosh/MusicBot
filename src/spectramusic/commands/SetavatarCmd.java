@@ -24,7 +24,7 @@ public class SetavatarCmd extends Command {
     {
         this.command = "setavatar";
         this.help = "sets the bot's avatar";
-        this.arguments = "<url or NONE>";
+        this.arguments = "<url>";
         this.level = PermLevel.OWNER;
     }
     
