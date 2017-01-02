@@ -25,6 +25,7 @@ import me.jagrosh.jdautilities.commandclient.CommandEvent;
 import me.jagrosh.jdautilities.menu.orderedmenu.OrderedMenuBuilder;
 import me.jagrosh.jmusicbot.Bot;
 import me.jagrosh.jmusicbot.utils.FormatUtil;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 
 /**
@@ -42,6 +43,7 @@ public class SearchCmd extends MusicCommand {
         this.help = "searches Youtube for a provided query";
         this.beListening = true;
         this.bePlaying = false;
+        this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
         builder = new OrderedMenuBuilder()
                 .allowTextInput(true)
                 .useNumbers()

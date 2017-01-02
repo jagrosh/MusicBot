@@ -57,7 +57,7 @@ public class FormatUtil {
             double progress = (double)track.getPosition()/track.getDuration();
             String str = "**"+title+"** ["+(user==null||inTopic ? "<@"+userid+">" : user.getName())+"]\n\u25B6 "+progressBar(progress)
                     +" "+(inTopic ? "" : "`")+"["+formatTime(track.getPosition()) + "/" + formatTime(track.getDuration())
-                    +"]` " +volumeIcon(handler.getPlayer().getVolume());
+                    +"]"+(inTopic ? "" : "`")+" " +volumeIcon(handler.getPlayer().getVolume());
             return str;
         }
     }

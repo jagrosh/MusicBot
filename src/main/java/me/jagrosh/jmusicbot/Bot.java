@@ -31,12 +31,15 @@ import me.jagrosh.jdautilities.commandclient.Command.Category;
 import me.jagrosh.jdautilities.commandclient.CommandEvent;
 import me.jagrosh.jdautilities.waiter.EventWaiter;
 import me.jagrosh.jmusicbot.audio.AudioHandler;
+import me.jagrosh.jmusicbot.gui.GUI;
 import me.jagrosh.jmusicbot.utils.FormatUtil;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
+import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.ShutdownEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.dv8tion.jda.core.utils.PermissionUtil;
@@ -54,6 +57,9 @@ public class Bot extends ListenerAdapter {
     private final AudioPlayerManager manager;
     private final EventWaiter waiter;
     private final ScheduledExecutorService threadpool;
+    private JDA jda;
+    private GUI gui;
+    //private GuildsPanel panel;
     public final Category MUSIC = new Category("Music");
     public final Category DJ = new Category("DJ", event -> 
     {
@@ -117,7 +123,7 @@ public class Bot extends ListenerAdapter {
             handler = new AudioHandler(player, event.getGuild());
             player.addListener(handler);
             event.getGuild().getAudioManager().setSendingHandler(handler);
-            startTopicUpdater(event.getGuild(), handler);
+            threadpool.scheduleWithFixedDelay(() -> updateTopic(event.getGuild(),handler), 0, 5, TimeUnit.SECONDS);
         }
         else
         {
@@ -126,31 +132,58 @@ public class Bot extends ListenerAdapter {
         return handler;
     }
     
-    private void startTopicUpdater(Guild guild, AudioHandler handler)
+    private void updateTopic(Guild guild, AudioHandler handler)
     {
-        threadpool.scheduleWithFixedDelay(() -> {
-            TextChannel tchan = guild.getTextChannelById(getSettings(guild).getTextId());
-            if(tchan!=null && PermissionUtil.checkPermission(tchan, guild.getSelfMember(), Permission.MANAGE_CHANNEL))
+        TextChannel tchan = guild.getTextChannelById(getSettings(guild).getTextId());
+        if(tchan!=null && PermissionUtil.checkPermission(tchan, guild.getSelfMember(), Permission.MANAGE_CHANNEL))
+        {
+            String otherText;
+            if(tchan.getTopic()==null || tchan.getTopic().isEmpty())
+                otherText = "";
+            else if(tchan.getTopic().contains("\u200B"))
+                otherText = tchan.getTopic().substring(tchan.getTopic().indexOf("\u200B")).trim();
+            else
+                otherText = "\n\u200B "+tchan.getTopic();
+            String text = FormatUtil.formattedAudio(handler, guild.getJDA(), true)+otherText;
+            if(!text.equals(tchan.getTopic()))
+                tchan.getManager().setTopic(text).queue();
+        }
+    }
+
+    public void shutdown(){
+        manager.shutdown();
+        threadpool.shutdownNow();
+        jda.getGuilds().stream().forEach(g -> {
+            g.getAudioManager().closeAudioConnection();
+            AudioHandler ah = (AudioHandler)g.getAudioManager().getSendingHandler();
+            if(ah!=null)
             {
-                String otherText;
-                if(tchan.getTopic()==null || tchan.getTopic().isEmpty())
-                    otherText = "";
-                else if(tchan.getTopic().contains("\u200B"))
-                    otherText = tchan.getTopic().substring(tchan.getTopic().indexOf("\u200B")).trim();
-                else
-                    otherText = "\n\u200B"+tchan.getTopic();
-                String text = FormatUtil.formattedAudio(handler, guild.getJDA(), true)+otherText;
-                if(!text.equals(tchan.getTopic()))
-                    tchan.getManager().setTopic(text).queue();
+                ah.getQueue().clear();
+                ah.getPlayer().destroy();
+                updateTopic(g, ah);
             }
-        }, 0, 5, TimeUnit.SECONDS);
+        });
+        jda.shutdown();
+    }
+
+    public void setGUI(GUI gui)
+    {
+        this.gui = gui;
+    }
+    
+    @Override
+    public void onShutdown(ShutdownEvent event) {
+        if(gui!=null)
+            gui.dispose();
     }
 
     @Override
-    public void onShutdown(ShutdownEvent event) {
-        manager.shutdown();
-        threadpool.shutdown();
+    public void onReady(ReadyEvent event) {
+        this.jda = event.getJDA();
+        //if(panel!=null)
+        //    panel.updateList(event.getJDA().getGuilds());
     }
+    
     
     // settings
     
@@ -260,4 +293,36 @@ public class Bot extends ListenerAdapter {
             SimpleLog.getLog("Settings").warn("Failed to write to file: "+ex);
         }
     }
+    
+    //gui stuff
+    /*public void registerPanel(GuildsPanel panel)
+    {
+        this.panel = panel;
+        threadpool.scheduleWithFixedDelay(() -> updatePanel(), 0, 5, TimeUnit.SECONDS);
+    }
+    
+    public void updatePanel()
+    {
+        System.out.println("updating...");
+        Guild guild = jda.getGuilds().get(panel.getIndex());
+        panel.updatePanel((AudioHandler)guild.getAudioManager().getSendingHandler());
+    }
+
+    @Override
+    public void onGuildJoin(GuildJoinEvent event) {
+        if(panel!=null)
+            panel.updateList(event.getJDA().getGuilds());
+    }
+
+    @Override
+    public void onGuildLeave(GuildLeaveEvent event) {
+        if(panel!=null)
+            panel.updateList(event.getJDA().getGuilds());
+    }
+
+    @Override
+    public void onShutdown(ShutdownEvent event) {
+        ((GUI)panel.getTopLevelAncestor()).dispose();
+    }*/
+    
 }

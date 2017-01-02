@@ -21,7 +21,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import me.jagrosh.jmusicbot.queue.FairQueue;
 import net.dv8tion.jda.core.audio.AudioSendHandler;

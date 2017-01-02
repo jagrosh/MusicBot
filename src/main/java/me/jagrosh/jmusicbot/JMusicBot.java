@@ -17,17 +17,18 @@ package me.jagrosh.jmusicbot;
 
 import java.awt.Color;
 import javax.security.auth.login.LoginException;
-import javax.swing.JOptionPane;
 import me.jagrosh.jdautilities.commandclient.CommandClient;
 import me.jagrosh.jdautilities.commandclient.CommandClientBuilder;
 import me.jagrosh.jdautilities.commandclient.examples.*;
 import me.jagrosh.jdautilities.waiter.EventWaiter;
 import me.jagrosh.jmusicbot.commands.*;
+import me.jagrosh.jmusicbot.gui.GUI;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import net.dv8tion.jda.core.utils.SimpleLog;
 
 /**
  *
@@ -85,6 +86,14 @@ public class JMusicBot {
                         new ShutdownCmd(bot)
                 ).build();
         
+        
+        if(!nogui)
+        {
+            GUI gui = new GUI(bot);
+            bot.setGUI(gui);
+            gui.init();
+        }
+        
         // attempt to log in and start
         try {
             new JDABuilder(AccountType.BOT)
@@ -97,12 +106,7 @@ public class JMusicBot {
                     .addListener(bot)
                     .buildAsync();
         } catch (LoginException | IllegalArgumentException | RateLimitedException ex) {
-            if(nogui)
-                System.out.println("[ERROR] Could not log in: "+ex);
-            else
-                JOptionPane.showMessageDialog(null, "Could not log in:\n"+ex, "JMusicBot", JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
+            SimpleLog.getLog("Login").fatal(ex);
         }
-        
     }
 }

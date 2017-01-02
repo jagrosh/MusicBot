@@ -18,7 +18,6 @@ package me.jagrosh.jmusicbot.commands;
 import me.jagrosh.jdautilities.commandclient.Command;
 import me.jagrosh.jdautilities.commandclient.CommandEvent;
 import me.jagrosh.jmusicbot.Bot;
-import me.jagrosh.jmusicbot.audio.AudioHandler;
 
 /**
  *
@@ -26,8 +25,10 @@ import me.jagrosh.jmusicbot.audio.AudioHandler;
  */
 public class ShutdownCmd extends Command {
 
+    private final Bot bot;
     public ShutdownCmd(Bot bot)
     {
+        this.bot = bot;
         this.name = "shutdown";
         this.help = "safely shuts down";
         this.ownerCommand = true;
@@ -37,12 +38,7 @@ public class ShutdownCmd extends Command {
     @Override
     protected void execute(CommandEvent event) {
         event.reply(event.getClient().getWarning()+" Shutting down...");
-        event.getJDA().getGuilds().stream()
-                .forEach(g -> g.getAudioManager().closeAudioConnection());
-        event.getJDA().getGuilds().stream()
-                .filter(g -> g.getAudioManager().getSendingHandler()!=null)
-                .forEach(g -> ((AudioHandler)g.getAudioManager().getSendingHandler()).getPlayer().destroy());
-        event.getJDA().shutdown();
+        bot.shutdown();
     }
     
 }

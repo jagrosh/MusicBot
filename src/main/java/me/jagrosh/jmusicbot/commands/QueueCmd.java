@@ -73,7 +73,7 @@ public class QueueCmd extends MusicCommand {
             total += list.get(i).getTrack().getDuration();
             songs[i] = list.get(i).toString();
         }
-        builder.setText(event.getClient().getSuccess()+" Current Queue | "+songs.length+" entries | `"+FormatUtil.formatTime(total)+"` ~ ")
+        builder.setText(event.getClient().getSuccess()+" Current Queue | "+songs.length+" entries | `"+FormatUtil.formatTime(total)+"` ")
                 .setItems(songs)
                 .setUsers(event.getAuthor())
                 .setColor(event.getSelfMember().getColor())
