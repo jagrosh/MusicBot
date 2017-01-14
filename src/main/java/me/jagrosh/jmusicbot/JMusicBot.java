@@ -54,6 +54,8 @@ public class JMusicBot {
         EventWaiter waiter = new EventWaiter();
         Bot bot = new Bot(waiter);
         
+        AboutCommand.IS_AUTHOR = false;
+        
         // set up the command client
         CommandClient client = new CommandClientBuilder()
                 .setPrefix(config.getPrefix())
