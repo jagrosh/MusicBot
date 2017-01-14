@@ -74,7 +74,7 @@ public abstract class MusicCommand extends Command {
                         +" to use that!");
                 return;
             }
-            if(current==null)
+            if(!event.getGuild().getSelfMember().getVoiceState().inVoiceChannel())
                 event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
         }
         doCommand(event);

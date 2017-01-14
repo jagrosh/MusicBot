@@ -63,6 +63,8 @@ public class Bot extends ListenerAdapter {
     public final Category MUSIC = new Category("Music");
     public final Category DJ = new Category("DJ", event -> 
     {
+        if(event.getAuthor().getId().equals(event.getClient().getOwnerId()))
+            return true;
         if(event.getGuild()==null)
             return true;
         if(PermissionUtil.checkPermission(event.getGuild(), event.getMember(), Permission.MANAGE_SERVER))
@@ -72,6 +74,8 @@ public class Bot extends ListenerAdapter {
     });
     public final Category ADMIN = new Category("Admin", event -> 
     {
+        if(event.getAuthor().getId().equals(event.getClient().getOwnerId()))
+            return true;
         if(event.getGuild()==null)
             return true;
         return PermissionUtil.checkPermission(event.getGuild(), event.getMember(), Permission.MANAGE_SERVER);
@@ -141,9 +145,9 @@ public class Bot extends ListenerAdapter {
             if(tchan.getTopic()==null || tchan.getTopic().isEmpty())
                 otherText = "";
             else if(tchan.getTopic().contains("\u200B"))
-                otherText = tchan.getTopic().substring(tchan.getTopic().indexOf("\u200B")).trim();
+                otherText = tchan.getTopic().substring(tchan.getTopic().indexOf("\u200B"));
             else
-                otherText = "\n\u200B "+tchan.getTopic();
+                otherText = "\u200B\n "+tchan.getTopic();
             String text = FormatUtil.formattedAudio(handler, guild.getJDA(), true)+otherText;
             if(!text.equals(tchan.getTopic()))
                 tchan.getManager().setTopic(text).queue();

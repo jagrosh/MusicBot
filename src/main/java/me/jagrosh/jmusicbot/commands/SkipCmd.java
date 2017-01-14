@@ -42,7 +42,7 @@ public class SkipCmd extends MusicCommand {
         if(event.getAuthor().getId().equals(handler.getCurrentTrack().getIdentifier()))
         {
             event.reply(event.getClient().getSuccess()+" Skipped **"+handler.getCurrentTrack().getTrack().getInfo().title
-                    +"** (requested by **"+event.getAuthor().getName()+"**)");
+                    +"**");
             handler.getPlayer().stopTrack();
         }
         else

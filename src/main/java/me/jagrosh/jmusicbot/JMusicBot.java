@@ -26,6 +26,7 @@ import me.jagrosh.jmusicbot.gui.GUI;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.utils.SimpleLog;
@@ -61,8 +62,10 @@ public class JMusicBot {
                 .addCommands(
                         new AboutCommand(Color.BLUE.brighter(),
                                 "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot)",
-                                "https://github.com/jagrosh/MusicBot",
-                                new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"}),
+                                new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
+                                Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
+                                Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
+                                Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE),
                         new PingCommand(),
                         new SettingsCmd(bot),
                         
@@ -71,9 +74,11 @@ public class JMusicBot {
                         new QueueCmd(bot),
                         new RemoveCmd(bot),
                         new SearchCmd(bot),
+                        new ShuffleCmd(bot),
                         new SkipCmd(bot),
                         
                         new ForceskipCmd(bot),
+                        new SkiptoCmd(bot),
                         new StopCmd(bot),
                         new VolumeCmd(bot),
                         
@@ -81,7 +86,9 @@ public class JMusicBot {
                         new SettcCmd(bot),
                         new SetvcCmd(bot),
                         
+                        new GuildlistCommand(waiter),
                         new SetavatarCmd(bot),
+                        new SetgameCmd(bot),
                         new SetnameCmd(bot),
                         new ShutdownCmd(bot)
                 ).build();

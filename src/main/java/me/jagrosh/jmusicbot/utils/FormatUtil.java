@@ -32,6 +32,8 @@ public class FormatUtil {
     
     public static String formatTime(long duration)
     {
+        if(duration == Long.MAX_VALUE)
+            return "LIVE";
         long seconds = Math.round(duration/1000.0);
         long hours = seconds/(60*60);
         seconds %= 60*60;
@@ -42,10 +44,10 @@ public class FormatUtil {
     
     public static String formattedAudio(AudioHandler handler, JDA jda, boolean inTopic)
     {
-        if(handler==null || handler.getCurrentTrack()==null)
-        {
+        if(handler==null)
+            return "No music playing\n\u23F9 "+progressBar(-1)+" "+volumeIcon(100);
+        else if (handler.getCurrentTrack()==null)
             return "No music playing\n\u23F9 "+progressBar(-1)+" "+volumeIcon(handler.getPlayer().getVolume());
-        }
         else
         {
             String userid = handler.getCurrentTrack().getIdentifier();

@@ -53,7 +53,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
         {
             current = qt;
             audioPlayer.playTrack(track);
-            return 0;
+            return -1;
         }
         else
         {
