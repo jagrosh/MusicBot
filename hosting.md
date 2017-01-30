@@ -1,6 +1,5 @@
 ---
 title: Paid Hosting
-permalink: pretty
 ---
 
 # Paid JMusicBot Hosting
