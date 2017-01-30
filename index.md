@@ -1,9 +1,7 @@
 ---
 title: MusicBot
+permalink: pretty
 ---
-
-# JMusicBot
-A Discord music bot with a clean interface, and that is easy to set up and run yourself
 
 # Features
 * Easy to run (just make sure Java is installed, and run!)
