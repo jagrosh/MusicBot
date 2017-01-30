@@ -1,6 +1,5 @@
 ---
 title: MusicBot
-permalink: pretty
 ---
 
 # Features
