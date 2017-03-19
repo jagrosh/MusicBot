@@ -9,12 +9,14 @@ A Discord music bot with a clean interface, and that is easy to set up and run y
 * Server-specific setup for the "DJ" role that can moderate the music
 * Clean and beautiful menus
 * Channel-topic playback bar
+* Supports many sites, including Youtube, Soundcloud, and more
+* Playlist support
 
 # Setup
 Please see the [Setup Page](https://github.com/jagrosh/MusicBot/wiki/Setup) in the wiki to run this bot yourself!
 
 # Questions/Suggestions/Bug Reports
-If you'd like to suggest changes to how the bot functions, recommend more customization options, or report bugs, feel free to either open an Issue on this repository, or join [my Discord server](https://discord.gg/0p9LSGoRLu6Pet0k).
+If you'd like to suggest changes to how the bot functions, recommend more customization options, or report bugs, feel free to either open an [Issue](https://github.com/jagrosh/MusicBot/issues) on this repository, or join [my Discord server](https://discord.gg/0p9LSGoRLu6Pet0k). If you like this bot, be sure to add a star to the libraries that make this possible: [**JDA**](https://github.com/DV8FromTheWorld/JDA) and [**lavaplayer**](https://github.com/sedmelluq/lavaplayer)
 
 # Example
 ![Example](http://i.imgur.com/gxDdlRL.png)
