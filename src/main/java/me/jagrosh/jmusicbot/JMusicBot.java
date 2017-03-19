@@ -88,7 +88,7 @@ public class JMusicBot {
                         new SettcCmd(bot),
                         new SetvcCmd(bot),
                         
-                        new GuildlistCommand(waiter),
+                        //new GuildlistCommand(waiter),
                         new SetavatarCmd(bot),
                         new SetgameCmd(bot),
                         new SetnameCmd(bot),
