@@ -108,9 +108,15 @@ public class JMusicBot {
         
         if(!config.getNoGui())
         {
-            GUI gui = new GUI(bot);
-            bot.setGUI(gui);
-            gui.init();
+            try {
+                GUI gui = new GUI(bot);
+                bot.setGUI(gui);
+                gui.init();
+            } catch(Exception e) {
+                SimpleLog.getLog("Startup").fatal("Could not start GUI. If you are "
+                        + "running on a server or in a location where you cannot display a "
+                        + "window, please run in nogui mode using the -nogui flag.");
+            }
         }
         
         // attempt to log in and start
