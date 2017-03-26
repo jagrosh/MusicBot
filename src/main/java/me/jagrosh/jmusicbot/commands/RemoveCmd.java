@@ -20,7 +20,6 @@ import me.jagrosh.jmusicbot.Bot;
 import me.jagrosh.jmusicbot.audio.AudioHandler;
 import me.jagrosh.jmusicbot.audio.QueuedTrack;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.PermissionUtil;
 
@@ -35,7 +34,7 @@ public class RemoveCmd extends MusicCommand {
         super(bot);
         this.name = "remove";
         this.help = "removes a song from the queue";
-        this.arguments = "<position>";
+        this.arguments = "<position|ALL>";
         this.aliases = new String[]{"delete"};
         this.beListening = true;
         this.bePlaying = true;
@@ -47,6 +46,15 @@ public class RemoveCmd extends MusicCommand {
         if(handler.getQueue().isEmpty())
         {
             event.reply(event.getClient().getError()+" There is nothing in the queue!");
+            return;
+        }
+        if(event.getArgs().equalsIgnoreCase("all"))
+        {
+            int count = handler.getQueue().removeAll(event.getAuthor().getId());
+            if(count==0)
+                event.reply(event.getClient().getWarning()+" You don't have any songs in the queue!");
+            else
+                event.reply(event.getClient().getSuccess()+" Successfully removed your "+count+" entries.");
             return;
         }
         int pos;

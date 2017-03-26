@@ -37,6 +37,9 @@ import net.dv8tion.jda.core.utils.SimpleLog;
  */
 public class JMusicBot {
     
+    public static Permission[] RECOMMENDED_PERMS = new Permission[]{Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
+                                Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
+                                Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
     /**
      * @param args the command line arguments
      */
@@ -57,25 +60,27 @@ public class JMusicBot {
         AboutCommand.IS_AUTHOR = false;
         
         // set up the command client
-        CommandClient client = new CommandClientBuilder()
+        
+        CommandClientBuilder cb = new CommandClientBuilder()
                 .setPrefix(config.getPrefix())
                 .setOwnerId(config.getOwnerId())
                 .setEmojis(config.getSuccess(), config.getWarning(), config.getError())
+                .setHelpWord(config.getHelp())
                 .addCommands(
                         new AboutCommand(Color.BLUE.brighter(),
                                 "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot)",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
-                                Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
-                                Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
-                                Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE),
+                                RECOMMENDED_PERMS),
                         new PingCommand(),
                         new SettingsCmd(bot),
                         
                         new NowplayingCmd(bot),
                         new PlayCmd(bot),
+                        new PlaylistsCmd(bot),
                         new QueueCmd(bot),
                         new RemoveCmd(bot),
                         new SearchCmd(bot),
+                        new SCSearchCmd(bot),
                         new ShuffleCmd(bot),
                         new SkipCmd(bot),
                         
@@ -89,14 +94,19 @@ public class JMusicBot {
                         new SetvcCmd(bot),
                         
                         //new GuildlistCommand(waiter),
+                        new PlaylistCmd(bot),
                         new SetavatarCmd(bot),
                         new SetgameCmd(bot),
                         new SetnameCmd(bot),
                         new ShutdownCmd(bot)
-                ).build();
+                );
+        if(config.getGame()==null)
+            cb.useDefaultGame();
+        else
+            cb.setGame(Game.of(config.getGame()));
+        CommandClient client = cb.build();
         
-        
-        if(!nogui)
+        if(!config.getNoGui())
         {
             GUI gui = new GUI(bot);
             bot.setGUI(gui);

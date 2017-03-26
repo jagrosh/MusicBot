@@ -55,7 +55,9 @@ public class SettingsCmd extends Command {
                 .setColor(event.getSelfMember().getColor())
                 .setDescription("Text Channel: "+(tchan==null ? "Any" : "**#"+tchan.getName()+"**")
                         + "\nVoice Channel: "+(vchan==null ? "Any" : "**"+vchan.getName()+"**")
-                        + "\nDJ Role: "+(role==null ? "None" : "**"+role.getName()+"**"))
+                        + "\nDJ Role: "+(role==null ? "None" : "**"+role.getName()+"**")
+                        + "\nDefault Playlist: "+(s.getDefaultPlaylist()==null ? "None" : "**"+s.getDefaultPlaylist()+"**")
+                        )
                 .setFooter(event.getJDA().getGuilds().size()+" servers | "
                         +event.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count()
                         +" audio connections", null);

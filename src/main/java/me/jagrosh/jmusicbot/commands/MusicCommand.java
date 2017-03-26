@@ -49,7 +49,7 @@ public abstract class MusicCommand extends Command {
         if(tchannel!=null && !event.getTextChannel().equals(tchannel))
         {
             try {
-                event.getMessage().deleteMessage().queue();
+                event.getMessage().delete().queue();
             } catch(PermissionException e){}
             event.replyInDM(event.getClient().getError()+" You can only use that command in <#"+settings.getTextId()+">!");
             return;
@@ -75,7 +75,12 @@ public abstract class MusicCommand extends Command {
                 return;
             }
             if(!event.getGuild().getSelfMember().getVoiceState().inVoiceChannel())
-                event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
+                try {
+                    event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
+                }catch(PermissionException ex) {
+                    event.reply(event.getClient().getError()+" I am unable to connect to **"+userState.getChannel().getName()+"**!");
+                    return;
+                }
         }
         doCommand(event);
     }

@@ -28,13 +28,15 @@ import javax.swing.JOptionPane;
  * @author John Grosh (jagrosh)
  */
 public class Config {
-    private final boolean nogui;
+    private boolean nogui;
     private String prefix;
     private String token;
     private String owner;
     private String success;
     private String warning;
     private String error;
+    private String game;
+    private String help;
     
     public Config(boolean nogui)
     {
@@ -66,6 +68,12 @@ public class Config {
                         break;
                     case "error":
                         error = value;
+                        break;
+                    case "game":
+                        game = value;
+                        break;
+                    case "help":
+                        help = value;
                         break;
                 }
             }
@@ -151,13 +159,34 @@ public class Config {
         return error==null ? "\uD83D\uDEAB" : error;
     }
     
+    public String getGame()
+    {
+        return game;
+    }
+    
+    public String getHelp()
+    {
+        return help==null ? "help" : help;
+    }
+    
+    public boolean getNoGui()
+    {
+        return nogui;
+    }
+    
     private void alert(String message)
     {
         if(nogui)
             System.out.println("[WARNING] "+message);
         else
         {
-            JOptionPane.showMessageDialog(null, message, "JMusicBot", JOptionPane.WARNING_MESSAGE);
+            try {
+                JOptionPane.showMessageDialog(null, message, "JMusicBot", JOptionPane.WARNING_MESSAGE);
+            } catch(Exception e) {
+                nogui = true;
+                alert("Switching to nogui mode. You can manually start in nogui mode by including the -nogui flag.");
+                alert(message);
+            }
         }
     }
     
@@ -171,7 +200,13 @@ public class Config {
         }
         else
         {
-            return JOptionPane.showInputDialog(null, content, "JMusicBot", JOptionPane.WARNING_MESSAGE);
+            try {
+                return JOptionPane.showInputDialog(null, content, "JMusicBot", JOptionPane.WARNING_MESSAGE);
+            } catch(Exception e) {
+                nogui = true;
+                alert("Switching to nogui mode. You can manually start in nogui mode by including the -nogui flag.");
+                return prompt(content);
+            }
         }
     }
 }

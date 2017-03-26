@@ -20,8 +20,10 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import me.jagrosh.jdautilities.commandclient.Command;
 import me.jagrosh.jdautilities.commandclient.CommandEvent;
 import me.jagrosh.jmusicbot.Bot;
+import me.jagrosh.jmusicbot.playlist.Playlist;
 import me.jagrosh.jmusicbot.utils.FormatUtil;
 import net.dv8tion.jda.core.entities.Message;
 
@@ -35,17 +37,23 @@ public class PlayCmd extends MusicCommand {
     {
         super(bot);
         this.name = "play";
-        this.arguments = "<title|URL>";
+        this.arguments = "<title|URL|subcommand>";
         this.help = "plays the provided song";
         this.beListening = true;
         this.bePlaying = false;
+        this.children = new Command[]{new PlaylistCmd(bot)};
     }
 
     @Override
     public void doCommand(CommandEvent event) {
         if(event.getArgs().isEmpty())
         {
-            event.reply(event.getClient().getError()+" Please include a url or song title.");
+            StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" Play Commands:\n");
+            builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <song title>` - plays the first result from Youtube");
+            builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <URL>` - plays the provided song, playlist, or stream");
+            for(Command cmd: children)
+                builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" ").append(cmd.getName()).append(" ").append(cmd.getArguments()).append("` - ").append(cmd.getHelp());
+            event.reply(builder.toString());
             return;
         }
         String args = event.getArgs().startsWith("<") && event.getArgs().endsWith(">") 
@@ -89,7 +97,7 @@ public class PlayCmd extends MusicCommand {
             {
                 m.editMessage(event.getClient().getSuccess()+" Found "
                         +(playlist.getName()==null?"a playlist":"playlist **"+playlist.getName()+"**")+" with `"
-                        +playlist.getTracks().size()+"` entries; adding to the queue.").queue();
+                        +playlist.getTracks().size()+"` entries; added to the queue!").queue();
                 playlist.getTracks().stream().forEach((track) -> {
                     bot.queueTrack(event, track);
                 });
@@ -110,6 +118,50 @@ public class PlayCmd extends MusicCommand {
                 m.editMessage(event.getClient().getError()+" Error loading: "+throwable.getMessage()).queue();
             else
                 m.editMessage(event.getClient().getError()+" Error loading track.").queue();
+        }
+    }
+    
+    public class PlaylistCmd extends MusicCommand {
+
+        public PlaylistCmd(Bot bot)
+        {
+            super(bot);
+            this.name = "playlist";
+            this.aliases = new String[]{"pl"};
+            this.arguments = "<name>";
+            this.help = "plays the provided playlist";
+            this.beListening = true;
+            this.bePlaying = false;
+        }
+
+        @Override
+        public void doCommand(CommandEvent event) {
+            if(event.getArgs().isEmpty())
+            {
+                event.reply(event.getClient().getError()+" Please include a playlist name.");
+                return;
+            }
+            Playlist playlist = Playlist.loadPlaylist(event.getArgs());
+            if(playlist==null)
+            {
+                event.reply(event.getClient().getError()+" I could not find `"+event.getArgs()+".txt` in the Playlists folder.");
+                return;
+            }
+            event.getChannel().sendMessage("\u231A Loading playlist **"+event.getArgs()+"**...").queue(m -> {
+                playlist.loadTracks(bot.getAudioManager(), () -> {
+                    StringBuilder builder = new StringBuilder(playlist.getTracks().isEmpty() 
+                            ? event.getClient().getWarning()+" No tracks were loaded!" 
+                            : event.getClient().getSuccess()+" Loaded **"+playlist.getTracks().size()+"** tracks!");
+                    if(!playlist.getErrors().isEmpty())
+                        builder.append("\nThe following tracks failed to load:");
+                    playlist.getErrors().forEach(err -> builder.append("\n`[").append(err.getIndex()+1).append("]` **").append(err.getItem()).append("**: ").append(err.getReason()));
+                    String str = builder.toString();
+                    if(str.length()>2000)
+                        str = str.substring(0,1994)+" (...)";
+                    m.editMessage(str).queue();
+                    playlist.getTracks().forEach(track -> bot.queueTrack(event, track));
+                });
+            });
         }
     }
 }

@@ -30,6 +30,7 @@ public class VolumeCmd extends MusicCommand {
     {
         super(bot);
         this.name = "volume";
+        this.aliases = new String[]{"vol"};
         this.help = "sets or shows volume";
         this.arguments = "[0-150]";
         this.category = bot.DJ;
@@ -38,7 +39,7 @@ public class VolumeCmd extends MusicCommand {
     @Override
     public void doCommand(CommandEvent event) {
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        int volume = handler==null ? 100 : handler.getPlayer().getVolume();
+        int volume = handler==null && bot.getSettings(event.getGuild())==null ? 100 : (handler==null ? bot.getSettings(event.getGuild()).getVolume() : handler.getPlayer().getVolume());
         if(event.getArgs().isEmpty())
         {
             event.reply(FormatUtil.volumeIcon(volume)+" Current volume is `"+volume+"`");
@@ -56,6 +57,7 @@ public class VolumeCmd extends MusicCommand {
             else
             {
                 bot.setUpHandler(event).getPlayer().setVolume(nvolume);
+                bot.setVolume(event.getGuild(), nvolume);
                 event.reply(FormatUtil.volumeIcon(nvolume)+" Volume changed from `"+volume+"` to `"+nvolume+"`");
             }
         }

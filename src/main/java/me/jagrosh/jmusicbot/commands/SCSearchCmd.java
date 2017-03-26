@@ -32,16 +32,15 @@ import net.dv8tion.jda.core.entities.Message;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SearchCmd extends MusicCommand {
+public class SCSearchCmd extends MusicCommand {
 
     private final OrderedMenuBuilder builder;
-    public SearchCmd(Bot bot)
+    public SCSearchCmd(Bot bot)
     {
         super(bot);
-        this.name = "search";
-        this.aliases = new String[]{"ytsearch"};
+        this.name = "scsearch";
         this.arguments = "<query>";
-        this.help = "searches Youtube for a provided query";
+        this.help = "searches Soundcloud for a provided query";
         this.beListening = true;
         this.bePlaying = false;
         this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
@@ -61,7 +60,7 @@ public class SearchCmd extends MusicCommand {
             return;
         }
         event.getChannel().sendMessage("\uD83D\uDD0E Searching... `["+event.getArgs()+"]`").queue(m -> {
-            bot.getAudioManager().loadItemOrdered(event.getGuild(), "ytsearch:"+event.getArgs(), new ResultHandler(m,event));
+            bot.getAudioManager().loadItemOrdered(event.getGuild(), "scsearch:"+event.getArgs(), new ResultHandler(m,event));
         });
     }
     

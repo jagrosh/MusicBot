@@ -30,7 +30,7 @@ public class SkiptoCmd extends MusicCommand {
     {
         super(bot);
         this.name = "skipto";
-        this.help = "skips to the current song";
+        this.help = "skips to the specified song";
         this.arguments = "<position>";
         this.aliases = new String[]{"jumpto"};
         this.bePlaying = true;

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.jagrosh</groupId>
     <artifactId>JMusicBot</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <packaging>jar</packaging>
     
     <repositories>
@@ -23,17 +23,22 @@
         <dependency>
             <groupId>net.dv8tion</groupId> 
             <artifactId>JDA</artifactId> 
-            <version>3.0.BETA2_120</version>
+            <version>3.0.0_162</version>
         </dependency>
         <dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>1.1.45</version>
+            <version>1.2.34</version>
         </dependency>
         <dependency>
             <groupId>me.jagrosh</groupId>
             <artifactId>JDA-Utilities</artifactId>
-            <version>0.6</version>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160810</version>
         </dependency>
     </dependencies>
     

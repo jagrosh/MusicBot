@@ -21,7 +21,11 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
+import me.jagrosh.jmusicbot.Bot;
+import me.jagrosh.jmusicbot.playlist.Playlist;
 import me.jagrosh.jmusicbot.queue.FairQueue;
 import net.dv8tion.jda.core.audio.AudioSendHandler;
 import net.dv8tion.jda.core.entities.Guild;
@@ -36,14 +40,18 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
     private final Guild guild;
     private final FairQueue<QueuedTrack> queue;
     private final Set<String> votes;
+    private final List<AudioTrack> defaultQueue;
+    private final Bot bot;
     private AudioFrame lastFrame;
     private QueuedTrack current;
 
-    public AudioHandler(AudioPlayer audioPlayer, Guild guild) {
+    public AudioHandler(AudioPlayer audioPlayer, Guild guild, Bot bot) {
       this.audioPlayer = audioPlayer;
       this.guild = guild;
+      this.bot = bot;
       queue = new FairQueue<>();
       votes = new HashSet<>();
+      defaultQueue = new LinkedList<>();
     }
 
     public int addTrack(AudioTrack track, User user)
@@ -81,12 +89,43 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
         return audioPlayer;
     }
     
+    public boolean playFromDefault()
+    {
+        if(!defaultQueue.isEmpty())
+        {
+            current = new QueuedTrack(defaultQueue.remove(0), null);
+            audioPlayer.playTrack(current.getTrack());
+            return true;
+        }
+        if(bot.getSettings(guild)==null || bot.getSettings(guild).getDefaultPlaylist()==null)
+            return false;
+        Playlist pl = Playlist.loadPlaylist(bot.getSettings(guild).getDefaultPlaylist());
+        if(pl==null || pl.getItems().isEmpty())
+            return false;
+        pl.loadTracks(bot.getAudioManager(), () -> {
+            if(pl.getTracks().isEmpty())
+            {
+                current = null;
+                guild.getAudioManager().closeAudioConnection();
+            }
+            else
+            {
+                defaultQueue.addAll(pl.getTracks());
+                playFromDefault();
+            }
+        });
+        return true;
+    }
+    
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if(queue.isEmpty())
         {
-            current = null;
-            guild.getAudioManager().closeAudioConnection();
+            if(!playFromDefault())
+            {
+                current = null;
+                guild.getAudioManager().closeAudioConnection();
+            }
         }
         else
         {

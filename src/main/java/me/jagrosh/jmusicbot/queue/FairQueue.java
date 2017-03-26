@@ -23,6 +23,7 @@ import java.util.Set;
 /**
  *
  * @author John Grosh (jagrosh)
+ * @param <T>
  */
 public class FairQueue<T extends Queueable> {
     private final List<T> list = new ArrayList<>();
@@ -74,6 +75,20 @@ public class FairQueue<T extends Queueable> {
     public T remove(int index)
     {
         return list.remove(index);
+    }
+    
+    public int removeAll(String identifier)
+    {
+        int count = 0;
+        for(int i=list.size()-1; i>=0; i--)
+        {
+            if(list.get(i).getIdentifier().equals(identifier))
+            {
+                list.remove(i);
+                count++;
+            }
+        }
+        return count;
     }
     
     public void clear()

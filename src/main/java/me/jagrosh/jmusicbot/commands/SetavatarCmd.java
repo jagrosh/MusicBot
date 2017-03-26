@@ -23,7 +23,6 @@ import me.jagrosh.jdautilities.commandclient.CommandEvent;
 import me.jagrosh.jmusicbot.Bot;
 import me.jagrosh.jmusicbot.utils.OtherUtil;
 import net.dv8tion.jda.core.entities.Icon;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 /**
  *
@@ -34,7 +33,7 @@ public class SetavatarCmd extends Command {
     public SetavatarCmd(Bot bot)
     {
         this.name = "setavatar";
-        this.help = "sets the name of the bot";
+        this.help = "sets the avatar of the bot";
         this.arguments = "<url>";
         this.ownerCommand = true;
         this.category = bot.OWNER;

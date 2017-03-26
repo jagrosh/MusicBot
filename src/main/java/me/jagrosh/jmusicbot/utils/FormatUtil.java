@@ -57,9 +57,10 @@ public class FormatUtil {
             if(inTopic && title.length()>30)
                 title = title.substring(0,27)+"...";
             double progress = (double)track.getPosition()/track.getDuration();
-            String str = "**"+title+"** ["+(user==null||inTopic ? "<@"+userid+">" : user.getName())+"]\n\u25B6 "+progressBar(progress)
+            String str = "**"+title+"** ["+(user==null||inTopic ? (userid==null ? "autoplay" : "<@"+userid+">") : user.getName())+"]\n\u25B6 "+progressBar(progress)
                     +" "+(inTopic ? "" : "`")+"["+formatTime(track.getPosition()) + "/" + formatTime(track.getDuration())
-                    +"]"+(inTopic ? "" : "`")+" " +volumeIcon(handler.getPlayer().getVolume());
+                    +"]"+(inTopic ? "" : "`")+" " +volumeIcon(handler.getPlayer().getVolume())
+                    +(inTopic ? "" : "\n**<"+track.getInfo().uri+">**");
             return str;
         }
     }
@@ -67,8 +68,8 @@ public class FormatUtil {
     private static String progressBar(double percent)
     {
         String str = "";
-        for(int i=0; i<10; i++)
-            if(i == (int)(percent*10))
+        for(int i=0; i<8; i++)
+            if(i == (int)(percent*8))
                 str+="\uD83D\uDD18";
             else
                 str+="▬";

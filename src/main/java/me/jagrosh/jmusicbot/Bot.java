@@ -72,6 +72,7 @@ public class Bot extends ListenerAdapter {
         Role dj = event.getGuild().getRoleById(getSettings(event.getGuild()).getRoleId());
         return event.getMember().getRoles().contains(dj);
     });
+    
     public final Category ADMIN = new Category("Admin", event -> 
     {
         if(event.getAuthor().getId().equals(event.getClient().getOwnerId()))
@@ -80,6 +81,7 @@ public class Bot extends ListenerAdapter {
             return true;
         return PermissionUtil.checkPermission(event.getGuild(), event.getMember(), Permission.MANAGE_SERVER);
     });
+    
     public final Category OWNER = new Category("Owner");
     
     public Bot(EventWaiter waiter)
@@ -91,13 +93,15 @@ public class Bot extends ListenerAdapter {
         AudioSourceManagers.registerRemoteSources(manager);
         try {
             JSONObject loadedSettings = new JSONObject(new String(Files.readAllBytes(Paths.get("serversettings.json"))));
-            for(String id: loadedSettings.keySet())
-            {
+            loadedSettings.keySet().forEach((id) -> {
                 JSONObject o = loadedSettings.getJSONObject(id);
-                settings.put(id, new Settings(o.has("text_channel_id")?o.getString("text_channel_id"):null,
-                                              o.has("voice_channel_id")?o.getString("voice_channel_id"):null,
-                                              o.has("dj_role_id")?o.getString("dj_role_id"):null));
-            }
+                settings.put(id, new Settings(
+                        o.has("text_channel_id") ? o.getString("text_channel_id") : null,
+                        o.has("voice_channel_id")? o.getString("voice_channel_id"): null,
+                        o.has("dj_role_id")      ? o.getString("dj_role_id")      : null,
+                        o.has("volume")          ? o.getInt("volume")             : 100,
+                        o.has("default_playlist")? o.getString("default_playlist"): null));
+            });
         } catch(IOException | JSONException e) {
             SimpleLog.getLog("Settings").warn("Failed to load server settings: "+e);
         }
@@ -120,19 +124,24 @@ public class Bot extends ListenerAdapter {
     
     public AudioHandler setUpHandler(CommandEvent event)
     {
+        return setUpHandler(event.getGuild());
+    }
+    
+    public AudioHandler setUpHandler(Guild guild)
+    {
         AudioHandler handler;
-        if(event.getGuild().getAudioManager().getSendingHandler()==null)
+        if(guild.getAudioManager().getSendingHandler()==null)
         {
             AudioPlayer player = manager.createPlayer();
-            handler = new AudioHandler(player, event.getGuild());
+            if(settings.containsKey(guild.getId()))
+                player.setVolume(settings.get(guild.getId()).getVolume());
+            handler = new AudioHandler(player, guild, this);
             player.addListener(handler);
-            event.getGuild().getAudioManager().setSendingHandler(handler);
-            threadpool.scheduleWithFixedDelay(() -> updateTopic(event.getGuild(),handler), 0, 5, TimeUnit.SECONDS);
+            guild.getAudioManager().setSendingHandler(handler);
+            threadpool.scheduleWithFixedDelay(() -> updateTopic(guild,handler), 0, 5, TimeUnit.SECONDS);
         }
         else
-        {
-            handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        }
+            handler = (AudioHandler)guild.getAudioManager().getSendingHandler();
         return handler;
     }
     
@@ -184,8 +193,23 @@ public class Bot extends ListenerAdapter {
     @Override
     public void onReady(ReadyEvent event) {
         this.jda = event.getJDA();
-        //if(panel!=null)
-        //    panel.updateList(event.getJDA().getGuilds());
+        if(jda.getGuilds().isEmpty())
+        {
+            SimpleLog.getLog("MusicBot").warn("This bot is not on any guilds! Use the following link to add the bot to your guilds!");
+            SimpleLog.getLog("MusicBot").warn(event.getJDA().asBot().getInviteUrl(JMusicBot.RECOMMENDED_PERMS));
+        }
+        jda.getGuilds().forEach((guild) -> {
+            try
+            {
+                String defpl = getSettings(guild).getDefaultPlaylist();
+                if(defpl!=null)
+                {
+                    if(setUpHandler(guild).playFromDefault())
+                        guild.getAudioManager().openAudioConnection(guild.getVoiceChannelById(getSettings(guild).getVoiceId()));
+                }
+            }
+            catch(Exception ex) {System.err.println(ex);}
+        });
     }
     
     
@@ -201,7 +225,7 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(channel.getGuild().getId());
         if(s==null)
         {
-            settings.put(channel.getGuild().getId(), new Settings(channel.getId(),null,null));
+            settings.put(channel.getGuild().getId(), new Settings(channel.getId(),null,null,100,null));
         }
         else
         {
@@ -215,7 +239,7 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(channel.getGuild().getId());
         if(s==null)
         {
-            settings.put(channel.getGuild().getId(), new Settings(null,channel.getId(),null));
+            settings.put(channel.getGuild().getId(), new Settings(null,channel.getId(),null,100,null));
         }
         else
         {
@@ -229,11 +253,39 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(role.getGuild().getId());
         if(s==null)
         {
-            settings.put(role.getGuild().getId(), new Settings(null,null,role.getId()));
+            settings.put(role.getGuild().getId(), new Settings(null,null,role.getId(),100,null));
         }
         else
         {
             s.setRoleId(role.getId());
+        }
+        writeSettings();
+    }
+    
+    public void setDefaultPlaylist(Guild guild, String playlist)
+    {
+        Settings s = settings.get(guild.getId());
+        if(s==null)
+        {
+            settings.put(guild.getId(), new Settings(null,null,null,100,playlist));
+        }
+        else
+        {
+            s.setDefaultPlaylist(playlist);
+        }
+        writeSettings();
+    }
+    
+    public void setVolume(Guild guild, int volume)
+    {
+        Settings s = settings.get(guild.getId());
+        if(s==null)
+        {
+            settings.put(guild.getId(), new Settings(null,null,null,volume,null));
+        }
+        else
+        {
+            s.setVolume(volume);
         }
         writeSettings();
     }
@@ -289,6 +341,10 @@ public class Bot extends ListenerAdapter {
                 o.put("voice_channel_id", s.getVoiceId());
             if(s.getRoleId()!=null)
                 o.put("dj_role_id", s.getRoleId());
+            if(s.getVolume()!=100)
+                o.put("volume",s.getVolume());
+            if(s.getDefaultPlaylist()!=null)
+                o.put("default_playlist", s.getDefaultPlaylist());
             obj.put(key, o);
         });
         try {

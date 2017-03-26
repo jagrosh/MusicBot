@@ -20,17 +20,21 @@ package me.jagrosh.jmusicbot;
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class Settings {
-    public final static Settings DEFAULT_SETTINGS = new Settings(null, null, null);
+    public final static Settings DEFAULT_SETTINGS = new Settings(null, null, null, 100, null);
     
     private String textId;
     private String voiceId;
     private String roleId;
+    private int volume;
+    private String defaultPlaylist;
     
-    public Settings(String textId, String voiceId, String roleId)
+    public Settings(String textId, String voiceId, String roleId, int volume, String defaultPlaylist)
     {
         this.textId = textId;
         this.voiceId = voiceId;
         this.roleId = roleId;
+        this.volume = volume;
+        this.defaultPlaylist = defaultPlaylist;
     }
     
     public String getTextId()
@@ -48,6 +52,16 @@ public class Settings {
         return roleId;
     }
     
+    public int getVolume()
+    {
+        return volume;
+    }
+    
+    public String getDefaultPlaylist()
+    {
+        return defaultPlaylist;
+    }
+    
     public void setTextId(String id)
     {
         this.textId = id;
@@ -62,4 +76,16 @@ public class Settings {
     {
         this.roleId = id;
     }
+    
+    public void setVolume(int volume)
+    {
+        this.volume = volume;
+    }
+    
+    public void setDefaultPlaylist(String defaultPlaylist)
+    {
+        this.defaultPlaylist = defaultPlaylist;
+    }
+    
+    
 }
