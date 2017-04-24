@@ -2,3 +2,4 @@ Dockerfile
 .dockerignore
 README.md
 target/
+config.txt.example
