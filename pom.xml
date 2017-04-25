@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>me.jagrosh</groupId>
+    <groupId>com.jagrosh</groupId>
     <artifactId>JMusicBot</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <packaging>jar</packaging>
     
     <repositories>
@@ -23,17 +23,17 @@
         <dependency>
             <groupId>net.dv8tion</groupId> 
             <artifactId>JDA</artifactId> 
-            <version>3.0.0_162</version>
+            <version>3.0.0_168</version>
         </dependency>
         <dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>1.2.34</version>
+            <version>1.2.36</version>
         </dependency>
         <dependency>
-            <groupId>me.jagrosh</groupId>
+            <groupId>com.jagrosh</groupId>
             <artifactId>JDA-Utilities</artifactId>
-            <version>1.0</version>
+            <version>1.1</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
@@ -52,7 +52,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>me.jagrosh.jmusicbot.JMusicBot</mainClass>
+                            <mainClass>com.jagrosh.jmusicbot.JMusicBot</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
