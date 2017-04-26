@@ -1,4 +1,4 @@
-FROM maven:3-jdk-8-onbuild-alpine
+FROM maven:3-jdk-8-onbuild
 
 
 
