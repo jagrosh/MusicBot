@@ -30,6 +30,8 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
  */
 public class FormatUtil {
     
+    public static boolean NO_PROGRESS_BAR_IN_TOPIC = false;
+    
     public static String formatTime(long duration)
     {
         if(duration == Long.MAX_VALUE)
@@ -51,17 +53,24 @@ public class FormatUtil {
         else
         {
             String userid = handler.getCurrentTrack().getIdentifier();
-            User user = jda.getUserById(userid);
+            User user;
+            try {
+                user = jda.getUserById(userid);
+            } catch(Exception e) {
+                user = null;
+            }
             AudioTrack track = handler.getCurrentTrack().getTrack();
             String title = track.getInfo().title;
-            if(inTopic && title.length()>30)
+            if(inTopic && !NO_PROGRESS_BAR_IN_TOPIC && title.length()>30)
                 title = title.substring(0,27)+"...";
             double progress = (double)track.getPosition()/track.getDuration();
-            String str = "**"+title+"** ["+(user==null||inTopic ? (userid==null ? "autoplay" : "<@"+userid+">") : user.getName())+"]\n\u25B6 "+progressBar(progress)
-                    +" "+(inTopic ? "" : "`")+"["+formatTime(track.getPosition()) + "/" + formatTime(track.getDuration())
-                    +"]"+(inTopic ? "" : "`")+" " +volumeIcon(handler.getPlayer().getVolume())
-                    +(inTopic ? "" : "\n**<"+track.getInfo().uri+">**");
-            return str;
+            String str = "**"+title+"** ["+(user==null||inTopic ? (userid==null ? "autoplay" : "<@"+userid+">") : user.getName())+"]";
+            String str2 = "\n\u25B6 "
+                    +(NO_PROGRESS_BAR_IN_TOPIC&&inTopic ? "["+formatTime(track.getDuration())+"] " : progressBar(progress)
+                    +" "+(inTopic ? "" : "`")+"["+formatTime(track.getPosition()) + "/" + formatTime(track.getDuration())+"]"+(inTopic ? "" : "`") + " ")
+                    +volumeIcon(handler.getPlayer().getVolume());
+            String str3 = inTopic ? "" : "\n**<"+track.getInfo().uri+">**";
+            return str+str2+str3;
         }
     }
     

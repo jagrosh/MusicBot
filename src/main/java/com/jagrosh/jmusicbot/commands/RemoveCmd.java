@@ -68,7 +68,7 @@ public class RemoveCmd extends MusicCommand {
             event.reply(event.getClient().getError()+" Position must be a valid integer between 1 and "+handler.getQueue().size()+"!");
             return;
         }
-        boolean isDJ = PermissionUtil.checkPermission(event.getGuild(), event.getMember(), Permission.MANAGE_SERVER);
+        boolean isDJ = event.getMember().hasPermission(Permission.MANAGE_SERVER);
         if(!isDJ)
             isDJ = event.getMember().getRoles().contains(event.getGuild().getRoleById(bot.getSettings(event.getGuild()).getRoleId()));
         QueuedTrack qt = handler.getQueue().get(pos-1);
@@ -80,7 +80,12 @@ public class RemoveCmd extends MusicCommand {
         else if(isDJ)
         {
             handler.getQueue().remove(pos-1);
-            User u = event.getJDA().getUserById(qt.getIdentifier());
+            User u;
+            try {
+                u = event.getJDA().getUserById(qt.getIdentifier());
+            } catch(Exception e) {
+                u = null;
+            }
             event.reply(event.getClient().getSuccess()+" Removed **"+qt.getTrack().getInfo().title
                     +"** from the queue (requested by "+(u==null ? "someone" : "**"+u.getName()+"**")+")");
         }

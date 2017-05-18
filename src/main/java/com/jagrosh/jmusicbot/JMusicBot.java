@@ -68,7 +68,7 @@ public class JMusicBot {
                 .setHelpWord(config.getHelp())
                 .addCommands(
                         new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot)",
+                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.0.5)",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
                                 RECOMMENDED_PERMS),
                         new PingCommand(),
@@ -126,9 +126,9 @@ public class JMusicBot {
                     .setAudioEnabled(true)
                     .setGame(Game.of("loading..."))
                     .setStatus(OnlineStatus.DO_NOT_DISTURB)
-                    .addListener(client)
-                    .addListener(waiter)
-                    .addListener(bot)
+                    .addEventListener(client)
+                    .addEventListener(waiter)
+                    .addEventListener(bot)
                     .buildAsync();
         } catch (LoginException | IllegalArgumentException | RateLimitedException ex) {
             SimpleLog.getLog("Login").fatal(ex);

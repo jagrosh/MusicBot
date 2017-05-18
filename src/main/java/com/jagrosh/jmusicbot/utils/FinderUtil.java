@@ -29,12 +29,21 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
  */
 public class FinderUtil {
     
+    public final static String DISCORD_ID = "\\d{17,20}";
+    
     public static List<TextChannel> findTextChannel(String query, Guild guild)
     {
         String id;
         if(query.matches("<#\\d+>"))
         {
             id = query.replaceAll("<#(\\d+)>", "$1");
+            TextChannel tc = guild.getJDA().getTextChannelById(id);
+            if(tc!=null && tc.getGuild().equals(guild))
+                return Collections.singletonList(tc);
+        }
+        else if(query.matches(DISCORD_ID))
+        {
+            id = query;
             TextChannel tc = guild.getJDA().getTextChannelById(id);
             if(tc!=null && tc.getGuild().equals(guild))
                 return Collections.singletonList(tc);
@@ -69,24 +78,31 @@ public class FinderUtil {
         if(query.matches("<#\\d+>"))
         {
             id = query.replaceAll("<#(\\d+)>", "$1");
-            VoiceChannel tc = guild.getJDA().getVoiceChannelById(id);
-            if(tc!=null && tc.getGuild().equals(guild))
-                return Collections.singletonList(tc);
+            VoiceChannel vc = guild.getJDA().getVoiceChannelById(id);
+            if(vc!=null && vc.getGuild().equals(guild))
+                return Collections.singletonList(vc);
+        }
+        else if(query.matches(DISCORD_ID))
+        {
+            id = query;
+            VoiceChannel vc = guild.getJDA().getVoiceChannelById(id);
+            if(vc!=null && vc.getGuild().equals(guild))
+                return Collections.singletonList(vc);
         }
         ArrayList<VoiceChannel> exact = new ArrayList<>();
         ArrayList<VoiceChannel> wrongcase = new ArrayList<>();
         ArrayList<VoiceChannel> startswith = new ArrayList<>();
         ArrayList<VoiceChannel> contains = new ArrayList<>();
         String lowerquery = query.toLowerCase();
-        guild.getVoiceChannels().stream().forEach((tc) -> {
-            if(tc.getName().equals(lowerquery))
-                exact.add(tc);
-            else if (tc.getName().equalsIgnoreCase(lowerquery) && exact.isEmpty())
-                wrongcase.add(tc);
-            else if (tc.getName().toLowerCase().startsWith(lowerquery) && wrongcase.isEmpty())
-                startswith.add(tc);
-            else if (tc.getName().toLowerCase().contains(lowerquery) && startswith.isEmpty())
-                contains.add(tc);
+        guild.getVoiceChannels().stream().forEach((vc) -> {
+            if(vc.getName().equals(lowerquery))
+                exact.add(vc);
+            else if (vc.getName().equalsIgnoreCase(lowerquery) && exact.isEmpty())
+                wrongcase.add(vc);
+            else if (vc.getName().toLowerCase().startsWith(lowerquery) && wrongcase.isEmpty())
+                startswith.add(vc);
+            else if (vc.getName().toLowerCase().contains(lowerquery) && startswith.isEmpty())
+                contains.add(vc);
         });
         if(!exact.isEmpty())
             return exact;
@@ -103,16 +119,16 @@ public class FinderUtil {
         if(query.matches("<@&\\d+>"))
         {
             id = query.replaceAll("<@&(\\d+)>", "$1");
-            Role role = guild.getRoleById(id);
-            if(role!=null)
-                return Collections.singletonList(role);
+            Role r = guild.getRoleById(id);
+            if(r!=null)
+                return Collections.singletonList(r);
         }
-        if(query.matches("[Ii][Dd]\\s*:\\s*\\d+"))
+        else if(query.matches(DISCORD_ID))
         {
-            id = query.replaceAll("[Ii][Dd]\\s*:\\s*(\\d+)", "$1");
-            for(Role role: guild.getRoles())
-                if(role.getId().equals(id))
-                    return Collections.singletonList(role);
+            id = query;
+            Role r = guild.getRoleById(id);
+            if(r!=null)
+                return Collections.singletonList(r);
         }
         ArrayList<Role> exact = new ArrayList<>();
         ArrayList<Role> wrongcase = new ArrayList<>();

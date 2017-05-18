@@ -63,7 +63,12 @@ public class SkipCmd extends MusicCommand {
             msg+= skippers+" votes, "+required+"/"+listeners+" needed]`";
             if(skippers>=required)
             {
-                User u = event.getJDA().getUserById(handler.getCurrentTrack().getIdentifier());
+                User u;
+                try {
+                    u = event.getJDA().getUserById(handler.getCurrentTrack().getIdentifier());
+                } catch(Exception e) {
+                    u = null;
+                }
                 msg+="\n"+event.getClient().getSuccess()+" Skipped **"+handler.getCurrentTrack().getTrack().getInfo().title
                     +"**"+(handler.getCurrentTrack().getIdentifier()==null ? "" : " (requested by "+(u==null ? "someone" : "**"+u.getName()+"**")+")");
                 handler.getPlayer().stopTrack();

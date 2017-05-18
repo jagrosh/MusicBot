@@ -15,6 +15,7 @@
  */
 package com.jagrosh.jmusicbot;
 
+import com.jagrosh.jmusicbot.utils.FormatUtil;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -74,6 +75,9 @@ public class Config {
                         break;
                     case "help":
                         help = value;
+                        break;
+                    case "noprogressintopic":
+                        FormatUtil.NO_PROGRESS_BAR_IN_TOPIC = "true".equalsIgnoreCase(value);
                         break;
                 }
             }
