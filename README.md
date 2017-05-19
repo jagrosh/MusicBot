@@ -1,6 +1,8 @@
 # JMusicBot
 A Discord music bot with a clean interface, and that is easy to set up and run yourself
 
+[![Setup](http://i.imgur.com/VvXYp5j.png)](https://github.com/jagrosh/MusicBot/wiki/Setup)
+
 # Features
 * Easy to run (just make sure Java is installed, and run!)
 * Fast loading of songs
@@ -10,7 +12,7 @@ A Discord music bot with a clean interface, and that is easy to set up and run y
 * Clean and beautiful menus
 * Channel-topic playback bar
 * Supports many sites, including Youtube, Soundcloud, and more
-* Playlist support
+* Playlist support (both web/youtube, and local)
 
 # Setup
 Please see the [Setup Page](https://github.com/jagrosh/MusicBot/wiki/Setup) in the wiki to run this bot yourself!
