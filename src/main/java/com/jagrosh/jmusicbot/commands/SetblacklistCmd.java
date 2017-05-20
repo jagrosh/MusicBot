@@ -60,7 +60,7 @@ public class SetblacklistCmd extends Command {
                 event.reply(event.getClient().getWarning()+FormatUtil.listOfRoles(list, event.getArgs()));
             else
             {
-                bot.setRole(list.get(0));
+                bot.setBlacklistRole(list.get(0));
                 event.reply(event.getClient().getSuccess()+" standard music commands can now only be used by users without the **"+list.get(0).getName()+"** role.");
             }
         }

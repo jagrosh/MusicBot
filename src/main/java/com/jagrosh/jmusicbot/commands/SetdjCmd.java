@@ -39,7 +39,7 @@ public class SetdjCmd extends Command {
         this.guildOnly = true;
         this.category = bot.ADMIN;
     }
-    
+
     @Override
     protected void execute(CommandEvent event) {
         if(event.getArgs().isEmpty())
@@ -60,10 +60,10 @@ public class SetdjCmd extends Command {
                 event.reply(event.getClient().getWarning()+FormatUtil.listOfRoles(list, event.getArgs()));
             else
             {
-                bot.setRole(list.get(0));
+                bot.setDjRole(list.get(0));
                 event.reply(event.getClient().getSuccess()+" DJ commands can now be used by users with the **"+list.get(0).getName()+"** role.");
             }
         }
     }
-    
+
 }

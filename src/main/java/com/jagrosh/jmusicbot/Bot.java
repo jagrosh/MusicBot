@@ -264,7 +264,7 @@ public class Bot extends ListenerAdapter {
         writeSettings();
     }
 
-    public void setRole(Role role)
+    public void setBlacklistRole(Role role)
     {
         Settings s = settings.get(role.getGuild().getId());
         if(s==null)
@@ -273,10 +273,25 @@ public class Bot extends ListenerAdapter {
         }
         else
         {
-            s.setRoleId(role.getIdLong());
+            s.setBlacklistRole(role.getIdLong());
         }
         writeSettings();
     }
+
+    public void setDjRole(Role role)
+    {
+        Settings s = settings.get(role.getGuild().getId());
+        if(s==null)
+        {
+            settings.put(role.getGuild().getId(), new Settings(null,null,role.getId(),100,null));
+        }
+        else
+        {
+            s.setDjRole(role.getIdLong());
+        }
+        writeSettings();
+    }
+
 
     public void setDefaultPlaylist(Guild guild, String playlist)
     {
@@ -332,7 +347,7 @@ public class Bot extends ListenerAdapter {
         }
     }
 
-    public void clearRole(Guild guild)
+    public void clearBlacklistRole(Guild guild)
     {
         Settings s = getSettings(guild);
         if(s!=Settings.DEFAULT_SETTINGS)
@@ -340,7 +355,20 @@ public class Bot extends ListenerAdapter {
             if(s.getVoiceId()==0 && s.getTextId()==0)
                 settings.remove(guild.getId());
             else
-                s.setRoleId(0);
+                s.setBlacklistRole(0);
+            writeSettings();
+        }
+    }
+
+    public void clearDjRole(Guild guild)
+    {
+        Settings s = getSettings(guild);
+        if(s!=Settings.DEFAULT_SETTINGS)
+        {
+            if(s.getVoiceId()==0 && s.getTextId()==0)
+                settings.remove(guild.getId());
+            else
+                s.setDjRoleId(0);
             writeSettings();
         }
     }
