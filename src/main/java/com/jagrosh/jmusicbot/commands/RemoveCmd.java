@@ -70,7 +70,7 @@ public class RemoveCmd extends MusicCommand {
         }
         boolean isDJ = event.getMember().hasPermission(Permission.MANAGE_SERVER);
         if(!isDJ)
-            isDJ = event.getMember().getRoles().contains(event.getGuild().getRoleById(bot.getSettings(event.getGuild()).getRoleId()));
+            isDJ = event.getMember().getRoles().contains(event.getGuild().getRoleById(bot.getSettings(event.getGuild()).getDjRoleId()));
         QueuedTrack qt = handler.getQueue().get(pos-1);
         if(qt.getIdentifier().equals(event.getAuthor().getId()))
         {
@@ -94,5 +94,5 @@ public class RemoveCmd extends MusicCommand {
             event.reply(event.getClient().getError()+" You cannot remove **"+qt.getTrack().getInfo().title+"** because you didn't add it!");
         }
     }
-    
+
 }

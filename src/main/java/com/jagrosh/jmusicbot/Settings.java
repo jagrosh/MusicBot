@@ -21,14 +21,15 @@ package com.jagrosh.jmusicbot;
  */
 public class Settings {
     public final static Settings DEFAULT_SETTINGS = new Settings(0, 0, 0, 100, null);
-    
+
     private long textId;
     private long voiceId;
-    private long roleId;
+    private long djRoleId;
+    private long blacklistRoleId;
     private int volume;
     private String defaultPlaylist;
-    
-    public Settings(String textId, String voiceId, String roleId, int volume, String defaultPlaylist)
+
+    public Settings(String textId, String voiceId, String djRoleId, String blacklistRoleId int volume, String defaultPlaylist)
     {
         try
         {
@@ -48,74 +49,93 @@ public class Settings {
         }
         try
         {
-            this.roleId = Long.parseLong(roleId);
+            this.djRoleId = Long.parseLong(djRoleId);
         }
         catch(NumberFormatException e)
         {
-            this.roleId = 0;
+            this.djRoleId = 0;
+        }
+        try
+        {
+            this.blacklistRoleId = Long.parseLong(blacklistRoleId);
+        }
+        catch(NumberFormatException e)
+        {
+            this.blacklistRoleId = 0;
         }
         this.volume = volume;
         this.defaultPlaylist = defaultPlaylist;
     }
-    
-    public Settings(long textId, long voiceId, long roleId, int volume, String defaultPlaylist)
+
+    public Settings(long textId, long voiceId, long roleId, long blacklistRoleId, int volume, String defaultPlaylist)
     {
         this.textId = textId;
         this.voiceId = voiceId;
-        this.roleId = roleId;
+        this.djRoleId = djRoleId;
+        this.blacklistRoleId = blacklistRoleId;
         this.volume = volume;
         this.defaultPlaylist = defaultPlaylist;
     }
-    
+
     public long getTextId()
     {
         return textId;
     }
-    
+
     public long getVoiceId()
     {
         return voiceId;
     }
-    
-    public long getRoleId()
+
+    public long getDjRoleId()
     {
-        return roleId;
+        return djRoleId;
     }
-    
+
+    public long getBlacklistRoleId()
+    {
+        return blacklistRoleId;
+    }
+
     public int getVolume()
     {
         return volume;
     }
-    
+
     public String getDefaultPlaylist()
     {
         return defaultPlaylist;
     }
-    
+
     public void setTextId(long id)
     {
         this.textId = id;
     }
-    
+
     public void setVoiceId(long id)
     {
         this.voiceId = id;
     }
-    
-    public void setRoleId(long id)
+
+    public void setDjRoleId(long id)
     {
-        this.roleId = id;
+        this.djRoleId = id;
     }
-    
+
+    public void setBlacklistRoleId(long id)
+    {
+        this.blacklistRoleId = id;
+    }
+
     public void setVolume(int volume)
     {
         this.volume = volume;
     }
-    
+
     public void setDefaultPlaylist(String defaultPlaylist)
     {
         this.defaultPlaylist = defaultPlaylist;
     }
-    
-    
+
+
 }

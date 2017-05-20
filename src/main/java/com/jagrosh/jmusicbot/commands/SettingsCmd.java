@@ -40,7 +40,7 @@ public class SettingsCmd extends Command {
         this.aliases = new String[]{"status"};
         this.guildOnly = true;
     }
-    
+
     @Override
     protected void execute(CommandEvent event) {
         Settings s = bot.getSettings(event.getGuild());
@@ -50,7 +50,7 @@ public class SettingsCmd extends Command {
                 .append("** settings:");
         TextChannel tchan = event.getGuild().getTextChannelById(s.getTextId());
         VoiceChannel vchan = event.getGuild().getVoiceChannelById(s.getVoiceId());
-        Role role = event.getGuild().getRoleById(s.getRoleId());
+        Role role = event.getGuild().getRoleById(s.getDjRoleId());
         EmbedBuilder ebuilder = new EmbedBuilder()
                 .setColor(event.getSelfMember().getColor())
                 .setDescription("Text Channel: "+(tchan==null ? "Any" : "**#"+tchan.getName()+"**")
@@ -63,5 +63,5 @@ public class SettingsCmd extends Command {
                         +" audio connections", null);
         event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
     }
-    
+
 }

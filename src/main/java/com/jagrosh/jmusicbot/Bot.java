@@ -52,7 +52,7 @@ import org.json.JSONObject;
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class Bot extends ListenerAdapter {
-    
+
     private final HashMap<String,Settings> settings;
     private final AudioPlayerManager manager;
     private final EventWaiter waiter;
@@ -60,8 +60,22 @@ public class Bot extends ListenerAdapter {
     private JDA jda;
     private GUI gui;
     //private GuildsPanel panel;
-    public final Category MUSIC = new Category("Music");
-    public final Category DJ = new Category("DJ", event -> 
+    public final Category MUSIC = new Category("Music", event ->
+    {
+        if(event.getAuthor().getId().equals(event.getClient().getOwnerId()))
+            return true;
+        if(event.getGuild() == null)
+            return true;
+        if(event.getMember().hasPermission(Permission.MANAGE_SERVER))
+            return true;
+        List<Role> roles = event.getMember().getRoles();
+        Role dj = event.getGuild().getRoleById(getSettings(event.getGuild()).getDjRoleId());
+        if (roles.contains(dj))
+          return true;
+        Role blacklist = event.getGuild().getRoleById(getSettings(event.getGuild()).getBlacklistRoleId());
+        return !roles.contains(roles);
+    });
+    public final Category DJ = new Category("DJ", event ->
     {
         if(event.getAuthor().getId().equals(event.getClient().getOwnerId()))
             return true;
@@ -69,11 +83,11 @@ public class Bot extends ListenerAdapter {
             return true;
         if(event.getMember().hasPermission(Permission.MANAGE_SERVER))
             return true;
-        Role dj = event.getGuild().getRoleById(getSettings(event.getGuild()).getRoleId());
+        Role dj = event.getGuild().getRoleById(getSettings(event.getGuild()).getDjRoleId());
         return event.getMember().getRoles().contains(dj);
     });
-    
-    public final Category ADMIN = new Category("Admin", event -> 
+
+    public final Category ADMIN = new Category("Admin", event ->
     {
         if(event.getAuthor().getId().equals(event.getClient().getOwnerId()))
             return true;
@@ -81,9 +95,9 @@ public class Bot extends ListenerAdapter {
             return true;
         return event.getMember().hasPermission(Permission.MANAGE_SERVER);
     });
-    
+
     public final Category OWNER = new Category("Owner");
-    
+
     public Bot(EventWaiter waiter)
     {
         this.waiter = waiter;
@@ -96,7 +110,7 @@ public class Bot extends ListenerAdapter {
             JSONObject loadedSettings = new JSONObject(new String(Files.readAllBytes(Paths.get("serversettings.json"))));
             loadedSettings.keySet().forEach((id) -> {
                 JSONObject o = loadedSettings.getJSONObject(id);
-                
+
                 settings.put(id, new Settings(
                         o.has("text_channel_id") ? o.getString("text_channel_id") : null,
                         o.has("voice_channel_id")? o.getString("voice_channel_id"): null,
@@ -108,27 +122,27 @@ public class Bot extends ListenerAdapter {
             SimpleLog.getLog("Settings").warn("Failed to load server settings: "+e);
         }
     }
-    
+
     public EventWaiter getWaiter()
     {
         return waiter;
     }
-    
+
     public AudioPlayerManager getAudioManager()
     {
         return manager;
     }
-    
+
     public int queueTrack(CommandEvent event, AudioTrack track)
     {
         return setUpHandler(event).addTrack(track, event.getAuthor());
     }
-    
+
     public AudioHandler setUpHandler(CommandEvent event)
     {
         return setUpHandler(event.getGuild());
     }
-    
+
     public AudioHandler setUpHandler(Guild guild)
     {
         AudioHandler handler;
@@ -146,7 +160,7 @@ public class Bot extends ListenerAdapter {
             handler = (AudioHandler)guild.getAudioManager().getSendingHandler();
         return handler;
     }
-    
+
     private void updateTopic(Guild guild, AudioHandler handler)
     {
         TextChannel tchan = guild.getTextChannelById(getSettings(guild).getTextId());
@@ -185,7 +199,7 @@ public class Bot extends ListenerAdapter {
     {
         this.gui = gui;
     }
-    
+
     @Override
     public void onShutdown(ShutdownEvent event) {
         if(gui!=null)
@@ -213,15 +227,15 @@ public class Bot extends ListenerAdapter {
             catch(Exception ex) {System.err.println(ex);}
         });
     }
-    
-    
+
+
     // settings
-    
+
     public Settings getSettings(Guild guild)
     {
         return settings.getOrDefault(guild.getId(), Settings.DEFAULT_SETTINGS);
     }
-    
+
     public void setTextChannel(TextChannel channel)
     {
         Settings s = settings.get(channel.getGuild().getId());
@@ -235,7 +249,7 @@ public class Bot extends ListenerAdapter {
         }
         writeSettings();
     }
-    
+
     public void setVoiceChannel(VoiceChannel channel)
     {
         Settings s = settings.get(channel.getGuild().getId());
@@ -249,7 +263,7 @@ public class Bot extends ListenerAdapter {
         }
         writeSettings();
     }
-    
+
     public void setRole(Role role)
     {
         Settings s = settings.get(role.getGuild().getId());
@@ -263,7 +277,7 @@ public class Bot extends ListenerAdapter {
         }
         writeSettings();
     }
-    
+
     public void setDefaultPlaylist(Guild guild, String playlist)
     {
         Settings s = settings.get(guild.getId());
@@ -277,7 +291,7 @@ public class Bot extends ListenerAdapter {
         }
         writeSettings();
     }
-    
+
     public void setVolume(Guild guild, int volume)
     {
         Settings s = settings.get(guild.getId());
@@ -291,33 +305,33 @@ public class Bot extends ListenerAdapter {
         }
         writeSettings();
     }
-    
+
     public void clearTextChannel(Guild guild)
     {
         Settings s = getSettings(guild);
         if(s!=Settings.DEFAULT_SETTINGS)
         {
-            if(s.getVoiceId()==0 && s.getRoleId()==0)
+            if(s.getVoiceId()==0 && s.getDjRoleId()==0)
                 settings.remove(guild.getId());
             else
                 s.setTextId(0);
             writeSettings();
         }
     }
-    
+
     public void clearVoiceChannel(Guild guild)
     {
         Settings s = getSettings(guild);
         if(s!=Settings.DEFAULT_SETTINGS)
         {
-            if(s.getTextId()==0 && s.getRoleId()==0)
+            if(s.getTextId()==0 && s.getDjRoleId()==0)
                 settings.remove(guild.getId());
             else
                 s.setVoiceId(0);
             writeSettings();
         }
     }
-    
+
     public void clearRole(Guild guild)
     {
         Settings s = getSettings(guild);
@@ -330,7 +344,7 @@ public class Bot extends ListenerAdapter {
             writeSettings();
         }
     }
-    
+
     private void writeSettings()
     {
         JSONObject obj = new JSONObject();
@@ -341,8 +355,8 @@ public class Bot extends ListenerAdapter {
                 o.put("text_channel_id", Long.toString(s.getTextId()));
             if(s.getVoiceId()!=0)
                 o.put("voice_channel_id", Long.toString(s.getVoiceId()));
-            if(s.getRoleId()!=0)
-                o.put("dj_role_id", Long.toString(s.getRoleId()));
+            if(s.getDjRoleId()!=0)
+                o.put("dj_role_id", Long.toString(s.getDjRoleId()));
             if(s.getVolume()!=100)
                 o.put("volume",s.getVolume());
             if(s.getDefaultPlaylist()!=null)
@@ -355,14 +369,14 @@ public class Bot extends ListenerAdapter {
             SimpleLog.getLog("Settings").warn("Failed to write to file: "+ex);
         }
     }
-    
+
     //gui stuff
     /*public void registerPanel(GuildsPanel panel)
     {
         this.panel = panel;
         threadpool.scheduleWithFixedDelay(() -> updatePanel(), 0, 5, TimeUnit.SECONDS);
     }
-    
+
     public void updatePanel()
     {
         System.out.println("updating...");
@@ -386,5 +400,5 @@ public class Bot extends ListenerAdapter {
     public void onShutdown(ShutdownEvent event) {
         ((GUI)panel.getTopLevelAncestor()).dispose();
     }*/
-    
+
 }
