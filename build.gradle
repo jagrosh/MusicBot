@@ -1,0 +1,18 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
+    id 'application'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'me.jagrosh:JDA-Utilities:0.8'
+    compile 'net.dv8tion:JDA:3.0.BETA2_126'
+    compile 'com.sedmelluq:lavaplayer:1.2.9'
+}
+
+mainClassName = 'me.jagrosh.jmusicbot.JMusicBot'
+compileJava.options.encoding = 'UTF-8'
+shadowJar.archiveName = 'JMusicBot.jar'
