@@ -48,7 +48,7 @@ public class SetdjCmd extends Command {
         }
         else if(event.getArgs().equalsIgnoreCase("none"))
         {
-            bot.clearTextChannel(event.getGuild());
+            bot.clearRole(event.getGuild());
             event.reply(event.getClient().getSuccess()+" DJ role cleared; Only Admins can use the DJ commands.");
         }
         else
