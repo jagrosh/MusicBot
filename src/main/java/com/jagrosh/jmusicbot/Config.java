@@ -38,6 +38,8 @@ public class Config {
     private String error;
     private String game;
     private String help;
+    private boolean stay;
+    private boolean dbots;
     
     public Config(boolean nogui)
     {
@@ -78,6 +80,12 @@ public class Config {
                         break;
                     case "noprogressintopic":
                         FormatUtil.NO_PROGRESS_BAR_IN_TOPIC = "true".equalsIgnoreCase(value);
+                        break;
+                    case "stayinchannel":
+                        stay = "true".equalsIgnoreCase(value);
+                        break;
+                    case "dbots":
+                        dbots = "110373943822540800".equals(value);
                         break;
                 }
             }
@@ -177,6 +185,16 @@ public class Config {
     public boolean getNoGui()
     {
         return nogui;
+    }
+    
+    public boolean getStay()
+    {
+        return stay;
+    }
+    
+    public boolean getDBots()
+    {
+        return dbots;
     }
     
     private void alert(String message)

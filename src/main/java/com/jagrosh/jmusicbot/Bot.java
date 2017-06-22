@@ -41,6 +41,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.ShutdownEvent;
+import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.dv8tion.jda.core.utils.SimpleLog;
 import org.json.JSONException;
@@ -56,6 +57,7 @@ public class Bot extends ListenerAdapter {
     private final AudioPlayerManager manager;
     private final EventWaiter waiter;
     private final ScheduledExecutorService threadpool;
+    private final Config config;
     private JDA jda;
     private GUI gui;
     //private GuildsPanel panel;
@@ -83,8 +85,9 @@ public class Bot extends ListenerAdapter {
     
     public final Category OWNER = new Category("Owner");
     
-    public Bot(EventWaiter waiter)
+    public Bot(EventWaiter waiter, Config config)
     {
+        this.config = config;
         this.waiter = waiter;
         this.settings = new HashMap<>();
         manager = new DefaultAudioPlayerManager();
@@ -199,6 +202,7 @@ public class Bot extends ListenerAdapter {
             SimpleLog.getLog("MusicBot").warn("This bot is not on any guilds! Use the following link to add the bot to your guilds!");
             SimpleLog.getLog("MusicBot").warn(event.getJDA().asBot().getInviteUrl(JMusicBot.RECOMMENDED_PERMS));
         }
+        credit(event.getJDA());
         jda.getGuilds().forEach((guild) -> {
             try
             {
@@ -212,7 +216,24 @@ public class Bot extends ListenerAdapter {
             catch(Exception ex) {System.err.println(ex);}
         });
     }
+
+    @Override
+    public void onGuildJoin(GuildJoinEvent event) {
+        credit(event.getJDA());
+    }
     
+    // make sure people aren't adding clones to dbots
+    private void credit(JDA jda)
+    {
+        Guild dbots = jda.getGuildById(110373943822540800L);
+        if(dbots==null)
+            return;
+        if(config.getDBots())
+            return;
+        jda.getTextChannelById(119222314964353025L)
+                .sendMessage("<@113156185389092864>: This account is running JMusicBot. Please do not list bot clones on this server, <@"+config.getOwnerId()+">.").complete();
+        dbots.leave().queue();
+    }
     
     // settings
     

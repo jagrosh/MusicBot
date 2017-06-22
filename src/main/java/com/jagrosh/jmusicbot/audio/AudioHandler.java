@@ -44,6 +44,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
     private final Bot bot;
     private AudioFrame lastFrame;
     private QueuedTrack current;
+    public static boolean STAY_IN_CHANNEL;
 
     public AudioHandler(AudioPlayer audioPlayer, Guild guild, Bot bot) {
       this.audioPlayer = audioPlayer;
@@ -106,7 +107,8 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
             if(pl.getTracks().isEmpty())
             {
                 current = null;
-                guild.getAudioManager().closeAudioConnection();
+                if(!STAY_IN_CHANNEL)
+                    guild.getAudioManager().closeAudioConnection();
             }
             else
             {
@@ -124,7 +126,8 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
             if(!playFromDefault())
             {
                 current = null;
-                guild.getAudioManager().closeAudioConnection();
+                if(!STAY_IN_CHANNEL)
+                    guild.getAudioManager().closeAudioConnection();
             }
         }
         else

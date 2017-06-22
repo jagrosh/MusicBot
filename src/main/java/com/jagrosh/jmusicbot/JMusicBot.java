@@ -21,6 +21,7 @@ import com.jagrosh.jdautilities.commandclient.CommandClient;
 import com.jagrosh.jdautilities.commandclient.CommandClientBuilder;
 import com.jagrosh.jdautilities.commandclient.examples.*;
 import com.jagrosh.jdautilities.waiter.EventWaiter;
+import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.*;
 import com.jagrosh.jmusicbot.gui.GUI;
 import net.dv8tion.jda.core.AccountType;
@@ -55,9 +56,10 @@ public class JMusicBot {
         
         // set up the listener
         EventWaiter waiter = new EventWaiter();
-        Bot bot = new Bot(waiter);
+        Bot bot = new Bot(waiter, config);
         
         AboutCommand.IS_AUTHOR = false;
+        AudioHandler.STAY_IN_CHANNEL = config.getStay();
         
         // set up the command client
         
@@ -68,7 +70,7 @@ public class JMusicBot {
                 .setHelpWord(config.getHelp())
                 .addCommands(
                         new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.0.5)",
+                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.0.6)",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
                                 RECOMMENDED_PERMS),
                         new PingCommand(),
