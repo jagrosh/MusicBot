@@ -158,7 +158,7 @@ public class Bot extends ListenerAdapter {
                 otherText = tchan.getTopic().substring(tchan.getTopic().indexOf("\u200B"));
             else
                 otherText = "\u200B\n "+tchan.getTopic();
-            String text = FormatUtil.formattedAudio(handler, guild.getJDA(), true)+otherText;
+            String text = FormatUtil.formattedAudio(handler, guild.getJDA())+otherText;
             if(!text.equals(tchan.getTopic()))
                 tchan.getManager().setTopic(text).queue();
         }

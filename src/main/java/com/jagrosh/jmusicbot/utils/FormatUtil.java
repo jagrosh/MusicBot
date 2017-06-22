@@ -44,7 +44,7 @@ public class FormatUtil {
         return (hours>0 ? hours+":" : "") + (minutes<10 ? "0"+minutes : minutes) + ":" + (seconds<10 ? "0"+seconds : seconds);
     }
     
-    public static String formattedAudio(AudioHandler handler, JDA jda, boolean inTopic)
+    public static String formattedAudio(AudioHandler handler, JDA jda)
     {
         if(handler==null)
             return "No music playing\n\u23F9 "+progressBar(-1)+" "+volumeIcon(100);
@@ -61,20 +61,19 @@ public class FormatUtil {
             }
             AudioTrack track = handler.getCurrentTrack().getTrack();
             String title = track.getInfo().title;
-            if(inTopic && !NO_PROGRESS_BAR_IN_TOPIC && title.length()>30)
+            if(!NO_PROGRESS_BAR_IN_TOPIC && title.length()>30)
                 title = title.substring(0,27)+"...";
             double progress = (double)track.getPosition()/track.getDuration();
-            String str = "**"+title+"** ["+(user==null||inTopic ? (userid==null ? "autoplay" : "<@"+userid+">") : user.getName())+"]";
-            String str2 = "\n\u25B6 "
-                    +(NO_PROGRESS_BAR_IN_TOPIC&&inTopic ? "["+formatTime(track.getDuration())+"] " : progressBar(progress)
-                    +" "+(inTopic ? "" : "`")+"["+formatTime(track.getPosition()) + "/" + formatTime(track.getDuration())+"]"+(inTopic ? "" : "`") + " ")
+            String str = "**"+title+"** ["+(userid==null ? "autoplay" : "<@"+userid+">")+"]";
+            String str2 = "\n"+(handler.getPlayer().isPaused()?"\u23F8":"\u25B6")+" "
+                    +(NO_PROGRESS_BAR_IN_TOPIC ? "["+formatTime(track.getDuration())+"] " :
+                    progressBar(progress)+" ["+formatTime(track.getPosition()) + "/" + formatTime(track.getDuration())+"] ")
                     +volumeIcon(handler.getPlayer().getVolume());
-            String str3 = inTopic ? "" : "\n**<"+track.getInfo().uri+">**";
-            return str+str2+str3;
+            return str+str2;
         }
     }
     
-    private static String progressBar(double percent)
+    public static String progressBar(double percent)
     {
         String str = "";
         for(int i=0; i<8; i++)

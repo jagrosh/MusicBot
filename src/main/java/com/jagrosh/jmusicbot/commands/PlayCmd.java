@@ -23,8 +23,10 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.jagrosh.jdautilities.commandclient.Command;
 import com.jagrosh.jdautilities.commandclient.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.playlist.Playlist;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 
 /**
@@ -48,6 +50,21 @@ public class PlayCmd extends MusicCommand {
     public void doCommand(CommandEvent event) {
         if(event.getArgs().isEmpty())
         {
+            AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
+            if(handler!=null && handler.getCurrentTrack()!=null && handler.getPlayer().isPaused())
+            {
+                boolean isDJ = event.getMember().hasPermission(Permission.MANAGE_SERVER);
+                if(!isDJ)
+                    isDJ = event.getMember().getRoles().contains(event.getGuild().getRoleById(bot.getSettings(event.getGuild()).getRoleId()));
+                if(!isDJ)
+                    event.replyError("Only DJs can unpause the player!");
+                else
+                {
+                    handler.getPlayer().setPaused(false);
+                    event.replySuccess("Resumed **"+handler.getCurrentTrack().getTrack().getInfo().title+"**.");
+                }
+                return;
+            }
             StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" Play Commands:\n");
             builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <song title>` - plays the first result from Youtube");
             builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <URL>` - plays the provided song, playlist, or stream");
