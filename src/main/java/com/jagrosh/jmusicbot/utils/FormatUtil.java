@@ -48,17 +48,11 @@ public class FormatUtil {
     {
         if(handler==null)
             return "No music playing\n\u23F9 "+progressBar(-1)+" "+volumeIcon(100);
-        else if (handler.getCurrentTrack()==null)
+        else if (!handler.isMusicPlaying())
             return "No music playing\n\u23F9 "+progressBar(-1)+" "+volumeIcon(handler.getPlayer().getVolume());
         else
         {
             String userid = handler.getCurrentTrack().getIdentifier();
-            User user;
-            try {
-                user = jda.getUserById(userid);
-            } catch(Exception e) {
-                user = null;
-            }
             AudioTrack track = handler.getCurrentTrack().getTrack();
             String title = track.getInfo().title;
             if(!NO_PROGRESS_BAR_IN_TOPIC && title.length()>30)
@@ -71,6 +65,13 @@ public class FormatUtil {
                     +volumeIcon(handler.getPlayer().getVolume());
             return str+str2;
         }
+    }
+    
+    public static String embedformattedAudio(AudioHandler ah)
+    {
+        return (ah.getPlayer().isPaused()?"\u23F8":"\u25B6")+" "+progressBar((double)ah.getCurrentTrack().getTrack().getPosition()/ah.getCurrentTrack().getTrack().getDuration())
+                +" `["+formatTime(ah.getCurrentTrack().getTrack().getPosition()) + "/" + formatTime(ah.getCurrentTrack().getTrack().getDuration()) +"]` "
+                +volumeIcon(ah.getPlayer().getVolume());
     }
     
     public static String progressBar(double percent)

@@ -60,10 +60,12 @@ public class QueueCmd extends MusicCommand {
         try{
             pagenum = Integer.parseInt(event.getArgs());
         }catch(NumberFormatException e){}
-        List<QueuedTrack> list = ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).getQueue().getList();
+        AudioHandler ah = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
+        List<QueuedTrack> list = ah.getQueue().getList();
         if(list.isEmpty())
         {
-            event.reply(event.getClient().getWarning()+" There is no music in the queue!");
+            event.replyWarning("There is no music in the queue!"
+                    +(!ah.isMusicPlaying() ? "" : " Now playing:\n\n**"+ah.getCurrentTrack().getTrack().getInfo().title+"**\n"+FormatUtil.embedformattedAudio(ah)));
             return;
         }
         String[] songs = new String[list.size()];
@@ -73,7 +75,8 @@ public class QueueCmd extends MusicCommand {
             total += list.get(i).getTrack().getDuration();
             songs[i] = list.get(i).toString();
         }
-        builder.setText(event.getClient().getSuccess()+" Current Queue | "+songs.length+" entries | `"+FormatUtil.formatTime(total)+"` ")
+        long fintotal = total;
+        builder.setText((i1,i2) -> getQueueTitle(ah, event.getClient().getSuccess(), songs.length, fintotal))
                 .setItems(songs)
                 .setUsers(event.getAuthor())
                 .setColor(event.getSelfMember().getColor())
@@ -81,4 +84,11 @@ public class QueueCmd extends MusicCommand {
         builder.build().paginate(event.getChannel(), pagenum);
     }
     
+    private String getQueueTitle(AudioHandler ah, String success, int songslength, long total)
+    {
+        StringBuilder sb = new StringBuilder();
+        if(ah.getCurrentTrack()!=null)
+            sb.append("**").append(ah.getCurrentTrack().getTrack().getInfo().title).append("**\n").append(FormatUtil.embedformattedAudio(ah)).append("\n\n");
+        return sb.append(success).append(" Current Queue | ").append(songslength).append(" entries | `").append(FormatUtil.formatTime(total)).append("` ").toString();
+    }
 }

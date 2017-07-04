@@ -56,7 +56,7 @@ public abstract class MusicCommand extends Command {
         }
         if(bePlaying
                 && (event.getGuild().getAudioManager().getSendingHandler()==null
-                || ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).getCurrentTrack()==null))
+                || !((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).isMusicPlaying()))
         {
             event.reply(event.getClient().getError()+" There must be music playing to use that!");
             return;

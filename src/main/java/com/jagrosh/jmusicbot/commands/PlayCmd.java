@@ -164,8 +164,8 @@ public class PlayCmd extends MusicCommand {
                 event.reply(event.getClient().getError()+" I could not find `"+event.getArgs()+".txt` in the Playlists folder.");
                 return;
             }
-            event.getChannel().sendMessage("\u231A Loading playlist **"+event.getArgs()+"**...").queue(m -> {
-                playlist.loadTracks(bot.getAudioManager(), () -> {
+            event.getChannel().sendMessage("\u231A Loading playlist **"+event.getArgs()+"**... ("+playlist.getItems().size()+" items)").queue(m -> {
+                playlist.loadTracks(bot.getAudioManager(), (at)->bot.queueTrack(event, at), () -> {
                     StringBuilder builder = new StringBuilder(playlist.getTracks().isEmpty() 
                             ? event.getClient().getWarning()+" No tracks were loaded!" 
                             : event.getClient().getSuccess()+" Loaded **"+playlist.getTracks().size()+"** tracks!");
@@ -176,7 +176,6 @@ public class PlayCmd extends MusicCommand {
                     if(str.length()>2000)
                         str = str.substring(0,1994)+" (...)";
                     m.editMessage(str).queue();
-                    playlist.getTracks().forEach(track -> bot.queueTrack(event, track));
                 });
             });
         }

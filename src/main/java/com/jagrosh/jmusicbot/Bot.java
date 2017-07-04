@@ -207,10 +207,11 @@ public class Bot extends ListenerAdapter {
             try
             {
                 String defpl = getSettings(guild).getDefaultPlaylist();
-                if(defpl!=null)
+                VoiceChannel vc = guild.getVoiceChannelById(getSettings(guild).getVoiceId());
+                if(defpl!=null && vc!=null)
                 {
                     if(setUpHandler(guild).playFromDefault())
-                        guild.getAudioManager().openAudioConnection(guild.getVoiceChannelById(getSettings(guild).getVoiceId()));
+                        guild.getAudioManager().openAudioConnection(vc);
                 }
             }
             catch(Exception ex) {System.err.println(ex);}

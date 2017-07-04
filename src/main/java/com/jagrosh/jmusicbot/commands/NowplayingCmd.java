@@ -46,7 +46,7 @@ public class NowplayingCmd extends MusicCommand {
         eb.setColor(event.getSelfMember().getColor());
         AudioHandler ah = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
         
-        if(ah==null || ah.getCurrentTrack()==null)
+        if(ah==null || !ah.isMusicPlaying())
         {
             eb.setTitle("No music playing");
             eb.setDescription("\u23F9 "+FormatUtil.progressBar(-1)+" "+FormatUtil.volumeIcon(ah==null?100:ah.getPlayer().getVolume()));
@@ -54,16 +54,19 @@ public class NowplayingCmd extends MusicCommand {
             return;
         }
         
-        User u;
-        try {
-            u = event.getJDA().getUserById(ah.getCurrentTrack().getIdentifier());
-        } catch(Exception e) {
-            u = null;
+        if(ah.getCurrentTrack().getIdentifier()!=null)
+        {
+            User u;
+            try {
+                u = event.getJDA().getUserById(ah.getCurrentTrack().getIdentifier());
+            } catch(Exception e) {
+                u = null;
+            }
+            if(u==null)
+                eb.setAuthor("Unknown (ID:"+ah.getCurrentTrack().getIdentifier()+")", null, null);
+            else
+                eb.setAuthor(u.getName()+"#"+u.getDiscriminator(), null, u.getEffectiveAvatarUrl());
         }
-        if(u==null)
-            eb.setAuthor("Unknown (ID:"+ah.getCurrentTrack().getIdentifier()+")", null, null);
-        else
-            eb.setAuthor(u.getName()+"#"+u.getDiscriminator(), null, u.getEffectiveAvatarUrl());
         
         try {
             eb.setTitle(ah.getCurrentTrack().getTrack().getInfo().title, ah.getCurrentTrack().getTrack().getInfo().uri);
@@ -74,9 +77,7 @@ public class NowplayingCmd extends MusicCommand {
         if(ah.getCurrentTrack().getTrack() instanceof YoutubeAudioTrack)
             eb.setThumbnail("https://img.youtube.com/vi/"+ah.getCurrentTrack().getTrack().getIdentifier()+"/maxresdefault.jpg");
         
-        eb.setDescription((ah.getPlayer().isPaused()?"\u23F8":"\u25B6")+" "+FormatUtil.progressBar((double)ah.getCurrentTrack().getTrack().getPosition()/ah.getCurrentTrack().getTrack().getDuration())
-                +" `["+FormatUtil.formatTime(ah.getCurrentTrack().getTrack().getPosition()) + "/" + FormatUtil.formatTime(ah.getCurrentTrack().getTrack().getDuration()) +"]` "
-                +FormatUtil.volumeIcon(ah.getPlayer().getVolume()));
+        eb.setDescription(FormatUtil.embedformattedAudio(ah));
         
         event.reply(eb.build());
     }

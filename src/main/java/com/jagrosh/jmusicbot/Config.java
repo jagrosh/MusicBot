@@ -47,6 +47,7 @@ public class Config {
         List<String> lines;
         try {
             lines = Files.readAllLines(Paths.get("config.txt"));
+            System.out.println("[INFO] Loading config: "+Paths.get("config.txt").toFile().getAbsolutePath());
             for(String line: lines)
             {
                 String[] parts = line.split("=",2);

@@ -80,6 +80,19 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
         return queue;
     }
     
+    public void stopAndClear()
+    {
+        queue.clear();
+        defaultQueue.clear();
+        audioPlayer.stopTrack();
+        //current = null;
+    }
+    
+    public boolean isMusicPlaying()
+    {
+        return guild.getSelfMember().getVoiceState().inVoiceChannel() && current!=null;
+    }
+    
     public Set<String> getVotes()
     {
         return votes;
@@ -103,17 +116,20 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
         Playlist pl = Playlist.loadPlaylist(bot.getSettings(guild).getDefaultPlaylist());
         if(pl==null || pl.getItems().isEmpty())
             return false;
-        pl.loadTracks(bot.getAudioManager(), () -> {
+        pl.loadTracks(bot.getAudioManager(), (at) -> {
+            if(current==null)
+            {
+                current = new QueuedTrack(at, null);
+                audioPlayer.playTrack(at);
+            }
+            else
+                defaultQueue.add(at);
+        }, () -> {
             if(pl.getTracks().isEmpty())
             {
                 current = null;
                 if(!STAY_IN_CHANNEL)
                     guild.getAudioManager().closeAudioConnection();
-            }
-            else
-            {
-                defaultQueue.addAll(pl.getTracks());
-                playFromDefault();
             }
         });
         return true;
@@ -123,6 +139,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if(queue.isEmpty())
         {
+            current = null;
             if(!playFromDefault())
             {
                 current = null;

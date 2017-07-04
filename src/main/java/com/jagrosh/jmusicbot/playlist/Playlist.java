@@ -5,6 +5,7 @@
  */
 package com.jagrosh.jmusicbot.playlist;
 
+import com.jagrosh.jmusicbot.Bot;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -30,16 +32,14 @@ public class Playlist {
     private final List<String> items;
     private List<AudioTrack> tracks;
     private List<PlaylistLoadError> errors;
-    private final boolean shuffle;
     
-    private Playlist(String name, List<String> items, boolean shuffle)
+    private Playlist(String name, List<String> items)
     {
         this.name = name;
         this.items = items;
-        this.shuffle = shuffle;
     }
     
-    public void loadTracks(AudioPlayerManager manager, Runnable callback)
+    public void loadTracks(AudioPlayerManager manager, Consumer<AudioTrack> consumer, Runnable callback)
     {
         if(tracks==null)
         {
@@ -53,10 +53,9 @@ public class Playlist {
                     @Override
                     public void trackLoaded(AudioTrack at) {
                         tracks.add(at);
+                        consumer.accept(at);
                         if(last)
                         {
-                            if(shuffle)
-                                shuffleTracks();
                             if(callback!=null)
                                 callback.run();
                         }
@@ -64,15 +63,22 @@ public class Playlist {
                     @Override
                     public void playlistLoaded(AudioPlaylist ap) {
                         if(ap.isSearchResult())
+                        {
                             tracks.add(ap.getTracks().get(0));
+                            consumer.accept(ap.getTracks().get(0));
+                        }
                         else if(ap.getSelectedTrack()!=null)
+                        {
                             tracks.add(ap.getSelectedTrack());
+                            consumer.accept(ap.getSelectedTrack());
+                        }
                         else
+                        {
                             tracks.addAll(ap.getTracks());
+                            ap.getTracks().forEach(at -> consumer.accept(at));
+                        }
                         if(last)
                         {
-                            if(shuffle)
-                                shuffleTracks();
                             if(callback!=null)
                                 callback.run();
                         }
@@ -83,8 +89,6 @@ public class Playlist {
                         errors.add(new PlaylistLoadError(index, items.get(index), "No matches found."));
                         if(last)
                         {
-                            if(shuffle)
-                                shuffleTracks();
                             if(callback!=null)
                                 callback.run();
                         }
@@ -95,8 +99,6 @@ public class Playlist {
                         errors.add(new PlaylistLoadError(index, items.get(index), "Failed to load track: "+fe.getLocalizedMessage()));
                         if(last)
                         {
-                            if(shuffle)
-                                shuffleTracks();
                             if(callback!=null)
                                 callback.run();
                         }
@@ -190,7 +192,17 @@ public class Playlist {
                     else
                         list.add(s);
                 });
-                return new Playlist(name, list, shuffle[0]);
+                if(shuffle[0])
+                {
+                    for(int first =0; first<list.size(); first++)
+                    {
+                        int second = (int)(Math.random()*list.size());
+                        String tmp = list.get(first);
+                        list.set(first, list.get(second));
+                        list.set(second, tmp);
+                    }
+                }
+                return new Playlist(name, list);
             }
             else
             {

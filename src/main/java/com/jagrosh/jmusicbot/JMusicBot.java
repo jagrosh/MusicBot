@@ -70,7 +70,7 @@ public class JMusicBot {
                 .setHelpWord(config.getHelp())
                 .addCommands(
                         new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.0.6)",
+                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.0.7)",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
                                 RECOMMENDED_PERMS),
                         new PingCommand(),
