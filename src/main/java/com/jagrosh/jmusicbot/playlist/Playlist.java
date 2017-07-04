@@ -32,11 +32,13 @@ public class Playlist {
     private final List<String> items;
     private List<AudioTrack> tracks;
     private List<PlaylistLoadError> errors;
+    private final boolean shuffle;
     
-    private Playlist(String name, List<String> items)
+    private Playlist(String name, List<String> items, boolean shuffle)
     {
         this.name = name;
         this.items = items;
+        this.shuffle = shuffle;
     }
     
     public void loadTracks(AudioPlayerManager manager, Consumer<AudioTrack> consumer, Runnable callback)
@@ -74,8 +76,17 @@ public class Playlist {
                         }
                         else
                         {
-                            tracks.addAll(ap.getTracks());
-                            ap.getTracks().forEach(at -> consumer.accept(at));
+                            List<AudioTrack> loaded = new ArrayList<>(ap.getTracks());
+                            if(shuffle)
+                                for(int first =0; first<loaded.size(); first++)
+                                {
+                                    int second = (int)(Math.random()*loaded.size());
+                                    AudioTrack tmp = loaded.get(first);
+                                    loaded.set(first, loaded.get(second));
+                                    loaded.set(second, tmp);
+                                }
+                            tracks.addAll(loaded);
+                            loaded.forEach(at -> consumer.accept(at));
                         }
                         if(last)
                         {
@@ -202,7 +213,7 @@ public class Playlist {
                         list.set(second, tmp);
                     }
                 }
-                return new Playlist(name, list);
+                return new Playlist(name, list, shuffle[0]);
             }
             else
             {
