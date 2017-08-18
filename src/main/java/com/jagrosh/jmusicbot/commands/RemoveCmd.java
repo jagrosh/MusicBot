@@ -21,7 +21,6 @@ import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.utils.PermissionUtil;
 
 /**
  *
@@ -50,7 +49,7 @@ public class RemoveCmd extends MusicCommand {
         }
         if(event.getArgs().equalsIgnoreCase("all"))
         {
-            int count = handler.getQueue().removeAll(event.getAuthor().getId());
+            int count = handler.getQueue().removeAll(event.getAuthor().getIdLong());
             if(count==0)
                 event.reply(event.getClient().getWarning()+" You don't have any songs in the queue!");
             else
@@ -72,7 +71,7 @@ public class RemoveCmd extends MusicCommand {
         if(!isDJ)
             isDJ = event.getMember().getRoles().contains(event.getGuild().getRoleById(bot.getSettings(event.getGuild()).getRoleId()));
         QueuedTrack qt = handler.getQueue().get(pos-1);
-        if(qt.getIdentifier().equals(event.getAuthor().getId()))
+        if(qt.getIdentifier()==event.getAuthor().getIdLong())
         {
             handler.getQueue().remove(pos-1);
             event.reply(event.getClient().getSuccess()+" Removed **"+qt.getTrack().getInfo().title+"** from the queue");

@@ -31,6 +31,7 @@ import javax.swing.JOptionPane;
 public class Config {
     private boolean nogui;
     private String prefix;
+    private String altprefix;
     private String token;
     private String owner;
     private String success;
@@ -40,6 +41,7 @@ public class Config {
     private String help;
     private boolean stay;
     private boolean dbots;
+    private boolean songingame;
     
     public Config(boolean nogui)
     {
@@ -61,6 +63,9 @@ public class Config {
                     case "prefix":
                         prefix = value;
                         break;
+                    case "altprefix":
+                        altprefix = value;
+                        break;
                     case "owner":
                         owner = value;
                         break;
@@ -81,6 +86,9 @@ public class Config {
                         break;
                     case "noprogressintopic":
                         FormatUtil.NO_PROGRESS_BAR_IN_TOPIC = "true".equalsIgnoreCase(value);
+                        break;
+                    case "songinstatus":
+                        songingame = "true".equalsIgnoreCase(value);
                         break;
                     case "stayinchannel":
                         stay = "true".equalsIgnoreCase(value);
@@ -148,6 +156,11 @@ public class Config {
         return prefix;
     }
     
+    public String getAltPrefix()
+    {
+        return altprefix;
+    }
+    
     public String getToken()
     {
         return token;
@@ -191,6 +204,11 @@ public class Config {
     public boolean getStay()
     {
         return stay;
+    }
+    
+    public boolean getSongInStatus()
+    {
+        return songingame;
     }
     
     public boolean getDBots()

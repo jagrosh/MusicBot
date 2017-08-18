@@ -19,7 +19,6 @@ import com.jagrosh.jdautilities.commandclient.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
-import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
@@ -54,28 +53,23 @@ public class NowplayingCmd extends MusicCommand {
             return;
         }
         
-        if(ah.getCurrentTrack().getIdentifier()!=null)
+        if(ah.getRequester()!=0)
         {
-            User u;
-            try {
-                u = event.getJDA().getUserById(ah.getCurrentTrack().getIdentifier());
-            } catch(Exception e) {
-                u = null;
-            }
+            User u = event.getJDA().getUserById(ah.getRequester());
             if(u==null)
-                eb.setAuthor("Unknown (ID:"+ah.getCurrentTrack().getIdentifier()+")", null, null);
+                eb.setAuthor("Unknown (ID:"+ah.getRequester()+")", null, null);
             else
                 eb.setAuthor(u.getName()+"#"+u.getDiscriminator(), null, u.getEffectiveAvatarUrl());
         }
         
         try {
-            eb.setTitle(ah.getCurrentTrack().getTrack().getInfo().title, ah.getCurrentTrack().getTrack().getInfo().uri);
+            eb.setTitle(ah.getPlayer().getPlayingTrack().getInfo().title, ah.getPlayer().getPlayingTrack().getInfo().uri);
         } catch(Exception e) {
-            eb.setTitle(ah.getCurrentTrack().getTrack().getInfo().title);
+            eb.setTitle(ah.getPlayer().getPlayingTrack().getInfo().title);
         }
         
-        if(ah.getCurrentTrack().getTrack() instanceof YoutubeAudioTrack)
-            eb.setThumbnail("https://img.youtube.com/vi/"+ah.getCurrentTrack().getTrack().getIdentifier()+"/maxresdefault.jpg");
+        if(ah.getPlayer().getPlayingTrack() instanceof YoutubeAudioTrack)
+            eb.setThumbnail("https://img.youtube.com/vi/"+ah.getPlayer().getPlayingTrack().getIdentifier()+"/maxresdefault.jpg");
         
         eb.setDescription(FormatUtil.embedformattedAudio(ah));
         

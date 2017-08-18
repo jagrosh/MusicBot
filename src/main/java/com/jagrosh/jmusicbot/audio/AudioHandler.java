@@ -28,6 +28,7 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.playlist.Playlist;
 import com.jagrosh.jmusicbot.queue.FairQueue;
 import net.dv8tion.jda.core.audio.AudioSendHandler;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
 
@@ -43,8 +44,9 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
     private final List<AudioTrack> defaultQueue;
     private final Bot bot;
     private AudioFrame lastFrame;
-    private QueuedTrack current;
+    private long requester;
     public static boolean STAY_IN_CHANNEL;
+    public static boolean SONG_IN_STATUS;
 
     public AudioHandler(AudioPlayer audioPlayer, Guild guild, Bot bot) {
       this.audioPlayer = audioPlayer;
@@ -57,22 +59,14 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
 
     public int addTrack(AudioTrack track, User user)
     {
-        QueuedTrack qt = new QueuedTrack(track, user.getId());
-        if(current==null)
+        if(requester==0)
         {
-            current = qt;
+            requester = user.getIdLong();
             audioPlayer.playTrack(track);
             return -1;
         }
         else
-        {
-            return queue.add(qt);
-        }
-    }
-    
-    public QueuedTrack getCurrentTrack()
-    {
-        return current;
+            return queue.add(new QueuedTrack(track, user.getIdLong()));
     }
     
     public FairQueue<QueuedTrack> getQueue()
@@ -90,7 +84,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
     
     public boolean isMusicPlaying()
     {
-        return guild.getSelfMember().getVoiceState().inVoiceChannel() && current!=null;
+        return guild.getSelfMember().getVoiceState().inVoiceChannel() && audioPlayer.getPlayingTrack()!=null;
     }
     
     public Set<String> getVotes()
@@ -103,12 +97,16 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
         return audioPlayer;
     }
     
+    public long getRequester()
+    {
+        return requester;
+    }
+    
     public boolean playFromDefault()
     {
         if(!defaultQueue.isEmpty())
         {
-            current = new QueuedTrack(defaultQueue.remove(0), null);
-            audioPlayer.playTrack(current.getTrack());
+            audioPlayer.playTrack(defaultQueue.remove(0));
             return true;
         }
         if(bot.getSettings(guild)==null || bot.getSettings(guild).getDefaultPlaylist()==null)
@@ -117,46 +115,44 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
         if(pl==null || pl.getItems().isEmpty())
             return false;
         pl.loadTracks(bot.getAudioManager(), (at) -> {
-            if(current==null)
-            {
-                current = new QueuedTrack(at, null);
+            if(audioPlayer.getPlayingTrack()==null)
                 audioPlayer.playTrack(at);
-            }
             else
                 defaultQueue.add(at);
         }, () -> {
-            if(pl.getTracks().isEmpty())
-            {
-                current = null;
-                if(!STAY_IN_CHANNEL)
-                    guild.getAudioManager().closeAudioConnection();
-            }
+            if(pl.getTracks().isEmpty() && !STAY_IN_CHANNEL)
+                guild.getAudioManager().closeAudioConnection();
         });
         return true;
     }
     
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        requester = 0;
         if(queue.isEmpty())
         {
-            current = null;
             if(!playFromDefault())
             {
-                current = null;
+                bot.resetGame();
                 if(!STAY_IN_CHANNEL)
                     guild.getAudioManager().closeAudioConnection();
             }
         }
         else
         {
-            current = queue.pull();
-            player.playTrack(current.getTrack());
+            QueuedTrack qt = queue.pull();
+            requester = qt.getIdentifier();
+            player.playTrack(qt.getTrack());
         }
     }
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         votes.clear();
+        if(SONG_IN_STATUS && guild.getJDA().getGuilds().size()==1)
+        {
+            guild.getJDA().getPresence().setGame(Game.of(track.getInfo().title));
+        }
     }
     
     @Override

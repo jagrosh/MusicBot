@@ -39,10 +39,9 @@ public class SkipCmd extends MusicCommand {
     @Override
     public void doCommand(CommandEvent event) {
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        if(event.getAuthor().getId().equals(handler.getCurrentTrack().getIdentifier()))
+        if(event.getAuthor().getIdLong()==handler.getRequester())
         {
-            event.reply(event.getClient().getSuccess()+" Skipped **"+handler.getCurrentTrack().getTrack().getInfo().title
-                    +"**");
+            event.reply(event.getClient().getSuccess()+" Skipped **"+handler.getPlayer().getPlayingTrack().getInfo().title+"**");
             handler.getPlayer().stopTrack();
         }
         else
@@ -63,14 +62,9 @@ public class SkipCmd extends MusicCommand {
             msg+= skippers+" votes, "+required+"/"+listeners+" needed]`";
             if(skippers>=required)
             {
-                User u;
-                try {
-                    u = event.getJDA().getUserById(handler.getCurrentTrack().getIdentifier());
-                } catch(Exception e) {
-                    u = null;
-                }
-                msg+="\n"+event.getClient().getSuccess()+" Skipped **"+handler.getCurrentTrack().getTrack().getInfo().title
-                    +"**"+(handler.getCurrentTrack().getIdentifier()==null ? "" : " (requested by "+(u==null ? "someone" : "**"+u.getName()+"**")+")");
+                User u = event.getJDA().getUserById(handler.getRequester());
+                msg+="\n"+event.getClient().getSuccess()+" Skipped **"+handler.getPlayer().getPlayingTrack().getInfo().title
+                    +"**"+(handler.getRequester()==0 ? "" : " (requested by "+(u==null ? "someone" : "**"+u.getName()+"**")+")");
                 handler.getPlayer().stopTrack();
             }
             event.reply(msg);

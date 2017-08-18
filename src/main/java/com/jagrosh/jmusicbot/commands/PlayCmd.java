@@ -51,7 +51,7 @@ public class PlayCmd extends MusicCommand {
         if(event.getArgs().isEmpty())
         {
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-            if(handler!=null && handler.getCurrentTrack()!=null && handler.getPlayer().isPaused())
+            if(handler!=null && handler.getPlayer().getPlayingTrack()!=null && handler.getPlayer().isPaused())
             {
                 boolean isDJ = event.getMember().hasPermission(Permission.MANAGE_SERVER);
                 if(!isDJ)
@@ -61,7 +61,7 @@ public class PlayCmd extends MusicCommand {
                 else
                 {
                     handler.getPlayer().setPaused(false);
-                    event.replySuccess("Resumed **"+handler.getCurrentTrack().getTrack().getInfo().title+"**.");
+                    event.replySuccess("Resumed **"+handler.getPlayer().getPlayingTrack().getInfo().title+"**.");
                 }
                 return;
             }

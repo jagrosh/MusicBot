@@ -35,6 +35,7 @@ import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -147,6 +148,14 @@ public class Bot extends ListenerAdapter {
         else
             handler = (AudioHandler)guild.getAudioManager().getSendingHandler();
         return handler;
+    }
+    
+    public void resetGame()
+    {
+        if(config.getGame()==null || config.getGame().equalsIgnoreCase("none"))
+            jda.getPresence().setGame(null);
+        else
+            jda.getPresence().setGame(Game.of(config.getGame()));
     }
     
     private void updateTopic(Guild guild, AudioHandler handler)

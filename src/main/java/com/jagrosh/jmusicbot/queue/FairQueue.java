@@ -27,13 +27,13 @@ import java.util.Set;
  */
 public class FairQueue<T extends Queueable> {
     private final List<T> list = new ArrayList<>();
-    private final Set<String> set = new HashSet<>();
+    private final Set<Long> set = new HashSet<>();
     
     public int add(T item)
     {
         int lastIndex;
         for(lastIndex=list.size()-1; lastIndex>-1; lastIndex--)
-            if(list.get(lastIndex).getIdentifier().equals(item.getIdentifier()))
+            if(list.get(lastIndex).getIdentifier()==item.getIdentifier())
                 break;
         lastIndex++;
         set.clear();
@@ -77,12 +77,12 @@ public class FairQueue<T extends Queueable> {
         return list.remove(index);
     }
     
-    public int removeAll(String identifier)
+    public int removeAll(long identifier)
     {
         int count = 0;
         for(int i=list.size()-1; i>=0; i--)
         {
-            if(list.get(i).getIdentifier().equals(identifier))
+            if(list.get(i).getIdentifier()==identifier)
             {
                 list.remove(i);
                 count++;
@@ -96,12 +96,12 @@ public class FairQueue<T extends Queueable> {
         list.clear();
     }
     
-    public int shuffle(String identifier)
+    public int shuffle(long identifier)
     {
         List<Integer> iset = new ArrayList<>();
         for(int i=0; i<list.size(); i++)
         {
-            if(list.get(i).getIdentifier().equals(identifier))
+            if(list.get(i).getIdentifier()==identifier)
                 iset.add(i);
         }
         for(int j=0; j<iset.size(); j++)

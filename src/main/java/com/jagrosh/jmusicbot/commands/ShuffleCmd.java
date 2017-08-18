@@ -37,7 +37,7 @@ public class ShuffleCmd extends MusicCommand {
     @Override
     public void doCommand(CommandEvent event) {
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        int s = handler.getQueue().shuffle(event.getAuthor().getId());
+        int s = handler.getQueue().shuffle(event.getAuthor().getIdLong());
         switch (s) {
             case 0:
                 event.reply(event.getClient().getError()+" You don't have any music in the queue to shuffle!");

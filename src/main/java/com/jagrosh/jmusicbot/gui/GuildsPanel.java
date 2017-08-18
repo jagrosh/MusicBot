@@ -89,7 +89,7 @@ public class GuildsPanel extends JPanel {
         return guildList.getSelectedIndex();
     }
     
-    public void updatePanel(AudioHandler handler) {
+    /*public void updatePanel(AudioHandler handler) {
         StringBuilder builder = new StringBuilder("Now Playing: ");
         if(handler==null || handler.getCurrentTrack()==null)
         {
@@ -106,6 +106,6 @@ public class GuildsPanel extends JPanel {
         }
         guildQueue.setText(builder.toString());
         guildQueue.updateUI();
-    }
+    }*/
     
 }

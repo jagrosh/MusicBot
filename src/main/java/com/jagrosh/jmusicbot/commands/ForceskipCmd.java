@@ -39,13 +39,8 @@ public class ForceskipCmd extends MusicCommand {
     @Override
     public void doCommand(CommandEvent event) {
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        User u;
-        try {
-            u = event.getJDA().getUserById(handler.getCurrentTrack().getIdentifier());
-        } catch(Exception e) {
-            u = null;
-        }
-        event.reply(event.getClient().getSuccess()+" Skipped **"+handler.getCurrentTrack().getTrack().getInfo().title
+        User u = event.getJDA().getUserById(handler.getRequester());
+        event.reply(event.getClient().getSuccess()+" Skipped **"+handler.getPlayer().getPlayingTrack().getInfo().title
                 +"** (requested by "+(u==null ? "someone" : "**"+u.getName()+"**")+")");
         handler.getPlayer().stopTrack();
     }

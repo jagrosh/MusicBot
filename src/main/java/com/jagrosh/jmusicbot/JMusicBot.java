@@ -59,18 +59,21 @@ public class JMusicBot {
         Bot bot = new Bot(waiter, config);
         
         AboutCommand.IS_AUTHOR = false;
+        AboutCommand.REPLACEMENT_ICON = "\uD83C\uDFB6";
         AudioHandler.STAY_IN_CHANNEL = config.getStay();
+        AudioHandler.SONG_IN_STATUS = config.getSongInStatus();
         
         // set up the command client
         
         CommandClientBuilder cb = new CommandClientBuilder()
                 .setPrefix(config.getPrefix())
+                .setAlternativePrefix(config.getAltPrefix())
                 .setOwnerId(config.getOwnerId())
                 .setEmojis(config.getSuccess(), config.getWarning(), config.getError())
                 .setHelpWord(config.getHelp())
                 .addCommands(
                         new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.0.7)",
+                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.0.8)",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
                                 RECOMMENDED_PERMS),
                         new PingCommand(),
@@ -101,10 +104,13 @@ public class JMusicBot {
                         new SetavatarCmd(bot),
                         new SetgameCmd(bot),
                         new SetnameCmd(bot),
+                        new SetstatusCmd(bot),
                         new ShutdownCmd(bot)
                 );
         if(config.getGame()==null)
             cb.useDefaultGame();
+        else if(config.getGame().equalsIgnoreCase("none"))
+            cb.setGame(null);
         else
             cb.setGame(Game.of(config.getGame()));
         CommandClient client = cb.build();

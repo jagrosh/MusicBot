@@ -26,16 +26,16 @@ import com.jagrosh.jmusicbot.utils.FormatUtil;
 public class QueuedTrack implements Queueable {
 
     private final AudioTrack track;
-    private final String owner;
+    private final long owner;
     
-    public QueuedTrack(AudioTrack track, String owner)
+    public QueuedTrack(AudioTrack track, long owner)
     {
         this.track = track;
         this.owner = owner;
     }
     
     @Override
-    public String getIdentifier() {
+    public long getIdentifier() {
         return owner;
     }
     

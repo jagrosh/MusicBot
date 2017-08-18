@@ -52,13 +52,13 @@ public class FormatUtil {
             return "No music playing\n\u23F9 "+progressBar(-1)+" "+volumeIcon(handler.getPlayer().getVolume());
         else
         {
-            String userid = handler.getCurrentTrack().getIdentifier();
-            AudioTrack track = handler.getCurrentTrack().getTrack();
+            long userid = handler.getRequester();
+            AudioTrack track = handler.getPlayer().getPlayingTrack();
             String title = track.getInfo().title;
             if(!NO_PROGRESS_BAR_IN_TOPIC && title.length()>30)
                 title = title.substring(0,27)+"...";
             double progress = (double)track.getPosition()/track.getDuration();
-            String str = "**"+title+"** ["+(userid==null ? "autoplay" : "<@"+userid+">")+"]";
+            String str = "**"+title+"** ["+(userid==0 ? "autoplay" : "<@"+userid+">")+"]";
             String str2 = "\n"+(handler.getPlayer().isPaused()?"\u23F8":"\u25B6")+" "
                     +(NO_PROGRESS_BAR_IN_TOPIC ? "["+formatTime(track.getDuration())+"] " :
                     progressBar(progress)+" ["+formatTime(track.getPosition()) + "/" + formatTime(track.getDuration())+"] ")
@@ -69,8 +69,8 @@ public class FormatUtil {
     
     public static String embedformattedAudio(AudioHandler ah)
     {
-        return (ah.getPlayer().isPaused()?"\u23F8":"\u25B6")+" "+progressBar((double)ah.getCurrentTrack().getTrack().getPosition()/ah.getCurrentTrack().getTrack().getDuration())
-                +" `["+formatTime(ah.getCurrentTrack().getTrack().getPosition()) + "/" + formatTime(ah.getCurrentTrack().getTrack().getDuration()) +"]` "
+        return (ah.getPlayer().isPaused()?"\u23F8":"\u25B6")+" "+progressBar((double)ah.getPlayer().getPlayingTrack().getPosition()/ah.getPlayer().getPlayingTrack().getDuration())
+                +" `["+formatTime(ah.getPlayer().getPlayingTrack().getPosition()) + "/" + formatTime(ah.getPlayer().getPlayingTrack().getDuration()) +"]` "
                 +volumeIcon(ah.getPlayer().getVolume());
     }
     
