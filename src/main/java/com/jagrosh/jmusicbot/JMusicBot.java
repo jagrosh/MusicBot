@@ -107,10 +107,14 @@ public class JMusicBot {
                         new SetstatusCmd(bot),
                         new ShutdownCmd(bot)
                 );
+        boolean nogame = false;
         if(config.getGame()==null)
             cb.useDefaultGame();
         else if(config.getGame().equalsIgnoreCase("none"))
+        {
             cb.setGame(null);
+            nogame = true;
+        }
         else
             cb.setGame(Game.of(config.getGame()));
         CommandClient client = cb.build();
@@ -133,7 +137,7 @@ public class JMusicBot {
             new JDABuilder(AccountType.BOT)
                     .setToken(config.getToken())
                     .setAudioEnabled(true)
-                    .setGame(Game.of("loading..."))
+                    .setGame(nogame ? null : Game.of("loading..."))
                     .setStatus(OnlineStatus.DO_NOT_DISTURB)
                     .addEventListener(client)
                     .addEventListener(waiter)
