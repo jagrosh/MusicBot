@@ -30,7 +30,7 @@ public class SetstatusCmd extends Command {
     {
         this.name = "setstatus";
         this.help = "sets the status the bot displays";
-        this.arguments = "[game]";
+        this.arguments = "<status>";
         this.ownerCommand = true;
         this.category = bot.OWNER;
     }

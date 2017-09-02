@@ -6,6 +6,7 @@
 package com.jagrosh.jmusicbot.playlist;
 
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -54,8 +55,13 @@ public class Playlist {
                 manager.loadItemOrdered(name, items.get(i), new AudioLoadResultHandler() {
                     @Override
                     public void trackLoaded(AudioTrack at) {
-                        tracks.add(at);
-                        consumer.accept(at);
+                        if(AudioHandler.isTooLong(at))
+                            errors.add(new PlaylistLoadError(index, items.get(index), "This track is longer than the allowed maximum"));
+                        else
+                        {
+                            tracks.add(at);
+                            consumer.accept(at);
+                        }
                         if(last)
                         {
                             if(callback!=null)
@@ -66,13 +72,23 @@ public class Playlist {
                     public void playlistLoaded(AudioPlaylist ap) {
                         if(ap.isSearchResult())
                         {
-                            tracks.add(ap.getTracks().get(0));
-                            consumer.accept(ap.getTracks().get(0));
+                            if(AudioHandler.isTooLong(ap.getTracks().get(0)))
+                                errors.add(new PlaylistLoadError(index, items.get(index), "This track is longer than the allowed maximum"));
+                            else
+                            {
+                                tracks.add(ap.getTracks().get(0));
+                                consumer.accept(ap.getTracks().get(0));
+                            }
                         }
                         else if(ap.getSelectedTrack()!=null)
                         {
-                            tracks.add(ap.getSelectedTrack());
-                            consumer.accept(ap.getSelectedTrack());
+                            if(AudioHandler.isTooLong(ap.getSelectedTrack()))
+                                errors.add(new PlaylistLoadError(index, items.get(index), "This track is longer than the allowed maximum"));
+                            else
+                            {
+                                tracks.add(ap.getSelectedTrack());
+                                consumer.accept(ap.getSelectedTrack());
+                            }
                         }
                         else
                         {
@@ -85,6 +101,7 @@ public class Playlist {
                                     loaded.set(first, loaded.get(second));
                                     loaded.set(second, tmp);
                                 }
+                            loaded.removeIf(track -> AudioHandler.isTooLong(track));
                             tracks.addAll(loaded);
                             loaded.forEach(at -> consumer.accept(at));
                         }

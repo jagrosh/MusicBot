@@ -58,10 +58,16 @@ public class JMusicBot {
         EventWaiter waiter = new EventWaiter();
         Bot bot = new Bot(waiter, config);
         
-        AboutCommand.IS_AUTHOR = false;
-        AboutCommand.REPLACEMENT_ICON = "\uD83C\uDFB6";
+        AboutCommand ab = new AboutCommand(Color.BLUE.brighter(),
+                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.0.9)",
+                                new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
+                                RECOMMENDED_PERMS);
+        ab.setIsAuthor(false);
+        ab.setReplacementCharacter("\uD83C\uDFB6");
         AudioHandler.STAY_IN_CHANNEL = config.getStay();
         AudioHandler.SONG_IN_STATUS = config.getSongInStatus();
+        AudioHandler.MAX_SECONDS = config.getMaxSeconds();
+        AudioHandler.USE_NP_REFRESH = !config.useNPImages();
         
         // set up the command client
         
@@ -72,10 +78,7 @@ public class JMusicBot {
                 .setEmojis(config.getSuccess(), config.getWarning(), config.getError())
                 .setHelpWord(config.getHelp())
                 .addCommands(
-                        new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.0.8)",
-                                new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
-                                RECOMMENDED_PERMS),
+                        ab,
                         new PingCommand(),
                         new SettingsCmd(bot),
                         
@@ -100,6 +103,7 @@ public class JMusicBot {
                         new SetvcCmd(bot),
                         
                         //new GuildlistCommand(waiter),
+                        new AutoplaylistCmd(bot),
                         new PlaylistCmd(bot),
                         new SetavatarCmd(bot),
                         new SetgameCmd(bot),
@@ -107,7 +111,11 @@ public class JMusicBot {
                         new SetstatusCmd(bot),
                         new ShutdownCmd(bot)
                 );
+        if(config.useEval())
+            cb.addCommand(new EvalCmd(bot));
         boolean nogame = false;
+        if(config.getStatus()!=OnlineStatus.UNKNOWN)
+            cb.setStatus(config.getStatus());
         if(config.getGame()==null)
             cb.useDefaultGame();
         else if(config.getGame().equalsIgnoreCase("none"))
@@ -138,7 +146,7 @@ public class JMusicBot {
                     .setToken(config.getToken())
                     .setAudioEnabled(true)
                     .setGame(nogame ? null : Game.of("loading..."))
-                    .setStatus(OnlineStatus.DO_NOT_DISTURB)
+                    .setStatus(config.getStatus()==OnlineStatus.INVISIBLE||config.getStatus()==OnlineStatus.OFFLINE ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
                     .addEventListener(client)
                     .addEventListener(waiter)
                     .addEventListener(bot)

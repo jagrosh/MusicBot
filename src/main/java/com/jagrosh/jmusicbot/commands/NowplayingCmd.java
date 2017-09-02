@@ -17,12 +17,8 @@ package com.jagrosh.jmusicbot.commands;
 
 import com.jagrosh.jdautilities.commandclient.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.User;
 
 /**
  *
@@ -41,39 +37,7 @@ public class NowplayingCmd extends MusicCommand {
 
     @Override
     public void doCommand(CommandEvent event) {
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setColor(event.getSelfMember().getColor());
-        AudioHandler ah = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        
-        if(ah==null || !ah.isMusicPlaying())
-        {
-            eb.setTitle("No music playing");
-            eb.setDescription("\u23F9 "+FormatUtil.progressBar(-1)+" "+FormatUtil.volumeIcon(ah==null?100:ah.getPlayer().getVolume()));
-            event.reply(eb.build());
-            return;
-        }
-        
-        if(ah.getRequester()!=0)
-        {
-            User u = event.getJDA().getUserById(ah.getRequester());
-            if(u==null)
-                eb.setAuthor("Unknown (ID:"+ah.getRequester()+")", null, null);
-            else
-                eb.setAuthor(u.getName()+"#"+u.getDiscriminator(), null, u.getEffectiveAvatarUrl());
-        }
-        
-        try {
-            eb.setTitle(ah.getPlayer().getPlayingTrack().getInfo().title, ah.getPlayer().getPlayingTrack().getInfo().uri);
-        } catch(Exception e) {
-            eb.setTitle(ah.getPlayer().getPlayingTrack().getInfo().title);
-        }
-        
-        if(ah.getPlayer().getPlayingTrack() instanceof YoutubeAudioTrack)
-            eb.setThumbnail("https://img.youtube.com/vi/"+ah.getPlayer().getPlayingTrack().getIdentifier()+"/maxresdefault.jpg");
-        
-        eb.setDescription(FormatUtil.embedformattedAudio(ah));
-        
-        event.reply(eb.build());
+        event.reply(FormatUtil.nowPlayingMessage(event.getGuild(), event.getClient().getSuccess()), m->bot.setLastNP(m));
     }
     
 }

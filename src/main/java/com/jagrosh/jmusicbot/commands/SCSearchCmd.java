@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import com.jagrosh.jdautilities.commandclient.CommandEvent;
 import com.jagrosh.jdautilities.menu.orderedmenu.OrderedMenuBuilder;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
@@ -75,6 +76,12 @@ public class SCSearchCmd extends MusicCommand {
         
         @Override
         public void trackLoaded(AudioTrack track) {
+            if(AudioHandler.isTooLong(track))
+            {
+                m.editMessage(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
+                        +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`").queue();
+                return;
+            }
             int pos = bot.queueTrack(event, track)+1;
             m.editMessage(event.getClient().getSuccess()+" Added **"+track.getInfo().title
                     +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0 ? "to begin playing" 
@@ -88,6 +95,12 @@ public class SCSearchCmd extends MusicCommand {
                     .setChoices(new String[0])
                     .setAction(i -> {
                         AudioTrack track = playlist.getTracks().get(i-1);
+                        if(AudioHandler.isTooLong(track))
+                        {
+                            event.getChannel().sendMessage(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
+                                    +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`").queue();
+                            return;
+                        }
                         int pos = bot.queueTrack(event, track)+1;
                         event.getChannel().sendMessage(event.getClient().getSuccess()+" Added **"+track.getInfo().title
                                 +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0 ? "to begin playing" 

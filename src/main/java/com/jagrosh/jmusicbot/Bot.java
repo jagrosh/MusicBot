@@ -33,16 +33,21 @@ import com.jagrosh.jdautilities.waiter.EventWaiter;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import java.util.Objects;
+import javafx.util.Pair;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.ShutdownEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.core.events.message.MessageDeleteEvent;
+import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.dv8tion.jda.core.utils.SimpleLog;
 import org.json.JSONException;
@@ -55,6 +60,7 @@ import org.json.JSONObject;
 public class Bot extends ListenerAdapter {
     
     private final HashMap<String,Settings> settings;
+    private final HashMap<Long,Pair<Long,Long>> lastNP; // guild -> channel,message
     private final AudioPlayerManager manager;
     private final EventWaiter waiter;
     private final ScheduledExecutorService threadpool;
@@ -91,6 +97,7 @@ public class Bot extends ListenerAdapter {
         this.config = config;
         this.waiter = waiter;
         this.settings = new HashMap<>();
+        this.lastNP = new HashMap<>();
         manager = new DefaultAudioPlayerManager();
         threadpool = Executors.newSingleThreadScheduledExecutor();
         AudioSourceManagers.registerRemoteSources(manager);
@@ -110,6 +117,11 @@ public class Bot extends ListenerAdapter {
         } catch(IOException | JSONException e) {
             SimpleLog.getLog("Settings").warn("Failed to load server settings: "+e);
         }
+    }
+    
+    public JDA getJDA()
+    {
+        return jda;
     }
     
     public EventWaiter getWaiter()
@@ -143,7 +155,8 @@ public class Bot extends ListenerAdapter {
             handler = new AudioHandler(player, guild, this);
             player.addListener(handler);
             guild.getAudioManager().setSendingHandler(handler);
-            threadpool.scheduleWithFixedDelay(() -> updateTopic(guild,handler), 0, 5, TimeUnit.SECONDS);
+            if(AudioHandler.USE_NP_REFRESH)
+                threadpool.scheduleWithFixedDelay(() -> updateLastNP(guild.getIdLong()), 0, 5, TimeUnit.SECONDS);
         }
         else
             handler = (AudioHandler)guild.getAudioManager().getSendingHandler();
@@ -152,14 +165,54 @@ public class Bot extends ListenerAdapter {
     
     public void resetGame()
     {
-        if(config.getGame()==null || config.getGame().equalsIgnoreCase("none"))
-            jda.getPresence().setGame(null);
-        else
-            jda.getPresence().setGame(Game.of(config.getGame()));
+        Game game = config.getGame()==null || config.getGame().equalsIgnoreCase("none") ? null : Game.of(config.getGame());
+        if(!Objects.equals(jda.getPresence().getGame(), game))
+            jda.getPresence().setGame(game);
     }
     
-    private void updateTopic(Guild guild, AudioHandler handler)
+    public void setLastNP(Message m)
     {
+        lastNP.put(m.getGuild().getIdLong(), new Pair<>(m.getTextChannel().getIdLong(), m.getIdLong()));
+    }
+
+    @Override
+    public void onMessageDelete(MessageDeleteEvent event) {
+        if(lastNP.containsKey(event.getGuild().getIdLong()))
+        {
+            Pair<Long,Long> pair = lastNP.get(event.getGuild().getIdLong());
+            if(pair.getValue()==event.getMessageIdLong())
+                lastNP.remove(event.getGuild().getIdLong());
+        }
+    }
+    
+    private void updateLastNP(long guildId)
+    {
+        Guild guild = jda.getGuildById(guildId);
+        if(guild==null)
+            return;
+        if(!lastNP.containsKey(guildId))
+            return;
+        Pair<Long,Long> pair = lastNP.get(guildId);
+        if(pair==null)
+            return;
+        TextChannel tc = guild.getTextChannelById(pair.getKey());
+        if(tc==null)
+        {
+            lastNP.remove(guildId);
+            return;
+        }
+        try {
+            tc.editMessageById(pair.getValue(), FormatUtil.nowPlayingMessage(guild, config.getSuccess())).queue(m->{}, t -> lastNP.remove(guildId));
+        } catch(Exception e) {
+            lastNP.remove(guildId);
+        }
+    }
+    
+    public void updateTopic(long guildId, AudioHandler handler)
+    {
+        Guild guild = jda.getGuildById(guildId);
+        if(guild==null)
+            return;
         TextChannel tchan = guild.getTextChannelById(getSettings(guild).getTextId());
         if(tchan!=null && guild.getSelfMember().hasPermission(tchan, Permission.MANAGE_CHANNEL))
         {
@@ -167,12 +220,14 @@ public class Bot extends ListenerAdapter {
             if(tchan.getTopic()==null || tchan.getTopic().isEmpty())
                 otherText = "\u200B";
             else if(tchan.getTopic().contains("\u200B"))
-                otherText = tchan.getTopic().substring(tchan.getTopic().indexOf("\u200B"));
+                otherText = tchan.getTopic().substring(tchan.getTopic().lastIndexOf("\u200B"));
             else
                 otherText = "\u200B\n "+tchan.getTopic();
-            String text = FormatUtil.formattedAudio(handler, guild.getJDA())+otherText;
+            String text = FormatUtil.topicFormat(handler, guild.getJDA())+otherText;
             if(!text.equals(tchan.getTopic()))
-                tchan.getManager().setTopic(text).queue();
+                try {
+                    tchan.getManager().setTopic(text).queue();
+                } catch(PermissionException e){}
         }
     }
 
@@ -186,7 +241,7 @@ public class Bot extends ListenerAdapter {
             {
                 ah.getQueue().clear();
                 ah.getPlayer().destroy();
-                updateTopic(g, ah);
+                updateTopic(g.getIdLong(), ah);
             }
         });
         jda.shutdown();

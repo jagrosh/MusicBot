@@ -15,14 +15,15 @@
  */
 package com.jagrosh.jmusicbot;
 
-import com.jagrosh.jmusicbot.utils.FormatUtil;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
+import net.dv8tion.jda.core.OnlineStatus;
 
 /**
  *
@@ -42,13 +43,17 @@ public class Config {
     private boolean stay;
     private boolean dbots;
     private boolean songingame;
+    private boolean useEval;
+    private boolean npimages;
+    private long maxSeconds;
+    private OnlineStatus status = OnlineStatus.UNKNOWN;
     
     public Config(boolean nogui)
     {
         this.nogui = nogui;
         List<String> lines;
         try {
-            lines = Files.readAllLines(Paths.get("config.txt"));
+            lines = Files.readAllLines(Paths.get("config.txt"), Charset.forName("ISO-8859-1"));
             System.out.println("[INFO] Loading config: "+Paths.get("config.txt").toFile().getAbsolutePath());
             for(String line: lines)
             {
@@ -84,17 +89,28 @@ public class Config {
                     case "help":
                         help = value;
                         break;
-                    case "noprogressintopic":
-                        FormatUtil.NO_PROGRESS_BAR_IN_TOPIC = "true".equalsIgnoreCase(value);
-                        break;
                     case "songinstatus":
                         songingame = "true".equalsIgnoreCase(value);
                         break;
                     case "stayinchannel":
                         stay = "true".equalsIgnoreCase(value);
                         break;
+                    case "eval":
+                        useEval = "true".equalsIgnoreCase(value);
+                        break;
                     case "dbots":
                         dbots = "110373943822540800".equals(value);
+                        break;
+                    case "npimages":
+                        npimages = "true".equalsIgnoreCase(value);
+                        break;
+                    case "maxtime":
+                        try{
+                            maxSeconds = Long.parseLong(value);
+                        }catch(NumberFormatException e){}
+                        break;
+                    case "status":
+                        status = OnlineStatus.fromKey(value);
                         break;
                 }
             }
@@ -214,6 +230,26 @@ public class Config {
     public boolean getDBots()
     {
         return dbots;
+    }
+    
+    public boolean useEval()
+    {
+        return useEval;
+    }
+    
+    public boolean useNPImages()
+    {
+        return npimages;
+    }
+    
+    public long getMaxSeconds()
+    {
+        return maxSeconds;
+    }
+    
+    public OnlineStatus getStatus()
+    {
+        return status;
     }
     
     private void alert(String message)

@@ -38,7 +38,7 @@ import net.dv8tion.jda.core.entities.User;
  */
 public class AudioHandler extends AudioEventAdapter implements AudioSendHandler {
     private final AudioPlayer audioPlayer;
-    private final Guild guild;
+    private final long guildId;
     private final FairQueue<QueuedTrack> queue;
     private final Set<String> votes;
     private final List<AudioTrack> defaultQueue;
@@ -47,10 +47,12 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
     private long requester;
     public static boolean STAY_IN_CHANNEL;
     public static boolean SONG_IN_STATUS;
+    public static long MAX_SECONDS = -1;
+    public static boolean USE_NP_REFRESH;
 
     public AudioHandler(AudioPlayer audioPlayer, Guild guild, Bot bot) {
       this.audioPlayer = audioPlayer;
-      this.guild = guild;
+      this.guildId = guild.getIdLong();
       this.bot = bot;
       queue = new FairQueue<>();
       votes = new HashSet<>();
@@ -59,7 +61,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
 
     public int addTrack(AudioTrack track, User user)
     {
-        if(requester==0)
+        if(audioPlayer.getPlayingTrack()==null)
         {
             requester = user.getIdLong();
             audioPlayer.playTrack(track);
@@ -84,7 +86,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
     
     public boolean isMusicPlaying()
     {
-        return guild.getSelfMember().getVoiceState().inVoiceChannel() && audioPlayer.getPlayingTrack()!=null;
+        return bot.getJDA().getGuildById(guildId).getSelfMember().getVoiceState().inVoiceChannel() && audioPlayer.getPlayingTrack()!=null;
     }
     
     public Set<String> getVotes()
@@ -109,6 +111,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
             audioPlayer.playTrack(defaultQueue.remove(0));
             return true;
         }
+        Guild guild = bot.getJDA().getGuildById(guildId);
         if(bot.getSettings(guild)==null || bot.getSettings(guild).getDefaultPlaylist()==null)
             return false;
         Playlist pl = Playlist.loadPlaylist(bot.getSettings(guild).getDefaultPlaylist());
@@ -133,9 +136,11 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
         {
             if(!playFromDefault())
             {
-                bot.resetGame();
+                if(SONG_IN_STATUS)
+                    bot.resetGame();
                 if(!STAY_IN_CHANNEL)
-                    guild.getAudioManager().closeAudioConnection();
+                    bot.getJDA().getGuildById(guildId).getAudioManager().closeAudioConnection();
+                bot.updateTopic(guildId, this);
             }
         }
         else
@@ -149,10 +154,14 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         votes.clear();
-        if(SONG_IN_STATUS && guild.getJDA().getGuilds().size()==1)
+        if(SONG_IN_STATUS)
         {
-            guild.getJDA().getPresence().setGame(Game.of(track.getInfo().title));
+            if(bot.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count()<=1)
+                bot.getJDA().getPresence().setGame(Game.of(track.getInfo().title));
+            else
+                bot.resetGame();
         }
+        bot.updateTopic(guildId, this);
     }
     
     @Override
@@ -169,5 +178,12 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
     @Override
     public boolean isOpus() {
       return true;
+    }
+    
+    public static boolean isTooLong(AudioTrack track)
+    {
+        if(MAX_SECONDS<=0)
+            return false;
+        return Math.round(track.getDuration()/1000.0) > MAX_SECONDS;
     }
 }

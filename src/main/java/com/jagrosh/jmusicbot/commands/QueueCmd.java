@@ -65,7 +65,7 @@ public class QueueCmd extends MusicCommand {
         if(list.isEmpty())
         {
             event.replyWarning("There is no music in the queue!"
-                    +(!ah.isMusicPlaying() ? "" : " Now playing:\n\n**"+ah.getPlayer().getPlayingTrack().getInfo().title+"**\n"+FormatUtil.embedformattedAudio(ah)));
+                    +(!ah.isMusicPlaying() ? "" : " Now playing:\n\n**"+ah.getPlayer().getPlayingTrack().getInfo().title+"**\n"+FormatUtil.embedFormat(ah)));
             return;
         }
         String[] songs = new String[list.size()];
@@ -88,7 +88,7 @@ public class QueueCmd extends MusicCommand {
     {
         StringBuilder sb = new StringBuilder();
         if(ah.getPlayer().getPlayingTrack()!=null)
-            sb.append("**").append(ah.getPlayer().getPlayingTrack().getInfo().title).append("**\n").append(FormatUtil.embedformattedAudio(ah)).append("\n\n");
+            sb.append("**").append(ah.getPlayer().getPlayingTrack().getInfo().title).append("**\n").append(FormatUtil.embedFormat(ah)).append("\n\n");
         return sb.append(success).append(" Current Queue | ").append(songslength).append(" entries | `").append(FormatUtil.formatTime(total)).append("` ").toString();
     }
 }

@@ -30,9 +30,10 @@ public class SetgameCmd extends Command {
     {
         this.name = "setgame";
         this.help = "sets the game the bot is playing";
-        this.arguments = "[game]";
+        this.arguments = "[game] OR stream <username> <game>";
         this.ownerCommand = true;
         this.category = bot.OWNER;
+        this.children = new Command[]{new SetstreamCmd(bot)};
     }
     
     @Override
@@ -46,4 +47,33 @@ public class SetgameCmd extends Command {
         }
     }
     
+    private class SetstreamCmd extends Command {
+        
+        private SetstreamCmd(Bot bot)
+        {
+            this.name = "stream";
+            this.aliases = new String[]{"twitch","streaming"};
+            this.help = "sets the game the bot is playing to a stream";
+            this.arguments = "<username> <game>";
+            this.ownerCommand = true;
+            this.category = bot.OWNER;
+        }
+
+        @Override
+        protected void execute(CommandEvent event) {
+            String[] parts = event.getArgs().split("\\s+", 2);
+            if(parts.length<2)
+            {
+                event.replyError("Please include a twitch username and the name of the game to 'stream'");
+                return;
+            }
+            try {
+                event.getJDA().getPresence().setGame(Game.of(parts[1], "https://twitch.tv/"+parts[0]));
+                event.replySuccess("**"+event.getSelfUser().getName()
+                        +"** is now streaming `"+parts[1]+"`");
+            } catch(Exception e) {
+                event.reply(event.getClient().getError()+" The game could not be set!");
+            }
+        }
+    }
 }

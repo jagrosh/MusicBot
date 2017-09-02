@@ -18,7 +18,12 @@ package com.jagrosh.jmusicbot.utils;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import java.util.List;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -29,8 +34,6 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class FormatUtil {
-    
-    public static boolean NO_PROGRESS_BAR_IN_TOPIC = false;
     
     public static String formatTime(long duration)
     {
@@ -44,7 +47,44 @@ public class FormatUtil {
         return (hours>0 ? hours+":" : "") + (minutes<10 ? "0"+minutes : minutes) + ":" + (seconds<10 ? "0"+seconds : seconds);
     }
     
-    public static String formattedAudio(AudioHandler handler, JDA jda)
+    public static Message nowPlayingMessage(Guild guild, String successEmoji)
+    {
+        MessageBuilder mb = new MessageBuilder();
+        mb.append(successEmoji+" **Now Playing...**");
+        EmbedBuilder eb = new EmbedBuilder();
+        AudioHandler ah = (AudioHandler)guild.getAudioManager().getSendingHandler();
+        eb.setColor(guild.getSelfMember().getColor());
+        if(ah==null || !ah.isMusicPlaying())
+        {
+            eb.setTitle("No music playing");
+            eb.setDescription("\u23F9 "+FormatUtil.progressBar(-1)+" "+FormatUtil.volumeIcon(ah==null?100:ah.getPlayer().getVolume()));
+        }
+        else
+        {
+            if(ah.getRequester()!=0)
+            {
+                User u = guild.getJDA().getUserById(ah.getRequester());
+                if(u==null)
+                    eb.setAuthor("Unknown (ID:"+ah.getRequester()+")", null, null);
+                else
+                    eb.setAuthor(u.getName()+"#"+u.getDiscriminator(), null, u.getEffectiveAvatarUrl());
+            }
+
+            try {
+                eb.setTitle(ah.getPlayer().getPlayingTrack().getInfo().title, ah.getPlayer().getPlayingTrack().getInfo().uri);
+            } catch(Exception e) {
+                eb.setTitle(ah.getPlayer().getPlayingTrack().getInfo().title);
+            }
+
+            if(!AudioHandler.USE_NP_REFRESH && ah.getPlayer().getPlayingTrack() instanceof YoutubeAudioTrack)
+                eb.setThumbnail("https://img.youtube.com/vi/"+ah.getPlayer().getPlayingTrack().getIdentifier()+"/mqdefault.jpg");
+
+            eb.setDescription(FormatUtil.embedFormat(ah));
+        }
+        return mb.setEmbed(eb.build()).build();
+    }
+    
+    public static String topicFormat(AudioHandler handler, JDA jda)
     {
         if(handler==null)
             return "No music playing\n\u23F9 "+progressBar(-1)+" "+volumeIcon(100);
@@ -55,25 +95,30 @@ public class FormatUtil {
             long userid = handler.getRequester();
             AudioTrack track = handler.getPlayer().getPlayingTrack();
             String title = track.getInfo().title;
-            if(!NO_PROGRESS_BAR_IN_TOPIC && title.length()>30)
-                title = title.substring(0,27)+"...";
-            double progress = (double)track.getPosition()/track.getDuration();
-            String str = "**"+title+"** ["+(userid==0 ? "autoplay" : "<@"+userid+">")+"]";
-            String str2 = "\n"+(handler.getPlayer().isPaused()?"\u23F8":"\u25B6")+" "
-                    +(NO_PROGRESS_BAR_IN_TOPIC ? "["+formatTime(track.getDuration())+"] " :
-                    progressBar(progress)+" ["+formatTime(track.getPosition()) + "/" + formatTime(track.getDuration())+"] ")
+            return "**"+title+"** ["+(userid==0 ? "autoplay" : "<@"+userid+">")+"]"
+                    + "\n"+(handler.getPlayer().isPaused()?"\u23F8":"\u25B6")+" "
+                    +"["+formatTime(track.getDuration())+"] "
                     +volumeIcon(handler.getPlayer().getVolume());
-            return str+str2;
         }
     }
     
-    public static String embedformattedAudio(AudioHandler ah)
+    public static String embedFormat(AudioHandler handler)
     {
-        return (ah.getPlayer().isPaused()?"\u23F8":"\u25B6")+" "+progressBar((double)ah.getPlayer().getPlayingTrack().getPosition()/ah.getPlayer().getPlayingTrack().getDuration())
-                +" `["+formatTime(ah.getPlayer().getPlayingTrack().getPosition()) + "/" + formatTime(ah.getPlayer().getPlayingTrack().getDuration()) +"]` "
-                +volumeIcon(ah.getPlayer().getVolume());
+        if(handler==null)
+            return "No music playing\n\u23F9 "+progressBar(-1)+" "+volumeIcon(100);
+        else if (!handler.isMusicPlaying())
+            return "No music playing\n\u23F9 "+progressBar(-1)+" "+volumeIcon(handler.getPlayer().getVolume());
+        else
+        {
+            AudioTrack track = handler.getPlayer().getPlayingTrack();
+            double progress = (double)track.getPosition()/track.getDuration();
+            return (handler.getPlayer().isPaused()?"\u23F8":"\u25B6")
+                    +" "+progressBar(progress)
+                    +" `["+formatTime(track.getPosition()) + "/" + formatTime(track.getDuration()) +"]` "
+                    +volumeIcon(handler.getPlayer().getVolume());
+        }
     }
-    
+        
     public static String progressBar(double percent)
     {
         String str = "";
