@@ -61,9 +61,7 @@ public class SearchCmd extends MusicCommand {
             event.reply(event.getClient().getError()+" Please include a query.");
             return;
         }
-        event.getChannel().sendMessage("\uD83D\uDD0E Searching... `["+event.getArgs()+"]`").queue(m -> {
-            bot.getAudioManager().loadItemOrdered(event.getGuild(), "ytsearch:"+event.getArgs(), new ResultHandler(m,event));
-        });
+        event.reply("\uD83D\uDD0E Searching... `["+event.getArgs()+"]`",m ->bot.getAudioManager().loadItemOrdered(event.getGuild(), "ytsearch:"+event.getArgs(), new ResultHandler(m,event)));
     }
     
     private class ResultHandler implements AudioLoadResultHandler {
@@ -79,35 +77,35 @@ public class SearchCmd extends MusicCommand {
         public void trackLoaded(AudioTrack track) {
             if(AudioHandler.isTooLong(track))
             {
-                m.editMessage(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
-                        +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`").queue();
+                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
+                        +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`")).queue();
                 return;
             }
             int pos = bot.queueTrack(event, track)+1;
-            m.editMessage(event.getClient().getSuccess()+" Added **"+track.getInfo().title
+            m.editMessage(FormatUtil.filter(event.getClient().getSuccess()+" Added **"+track.getInfo().title
                     +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0 ? "to begin playing" 
-                        : " to the queue at position "+pos)).queue();
+                        : " to the queue at position "+pos))).queue();
         }
 
         @Override
         public void playlistLoaded(AudioPlaylist playlist) {
             builder.setColor(event.getSelfMember().getColor())
-                    .setText(event.getClient().getSuccess()+" Search results for `"+event.getArgs()+"`:")
+                    .setText(FormatUtil.filter(event.getClient().getSuccess()+" Search results for `"+event.getArgs()+"`:"))
                     .setChoices(new String[0])
                     .setAction(i -> {
                         AudioTrack track = playlist.getTracks().get(i-1);
                         if(AudioHandler.isTooLong(track))
                         {
-                            event.getChannel().sendMessage(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
-                                    +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`").queue();
+                            event.replyWarning("This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
+                                    +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`");
                             return;
                         }
                         int pos = bot.queueTrack(event, track)+1;
-                        event.getChannel().sendMessage(event.getClient().getSuccess()+" Added **"+track.getInfo().title
+                        event.replySuccess("Added **"+track.getInfo().title
                                 +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0 ? "to begin playing" 
-                                    : " to the queue at position "+pos)).queue();
+                                    : " to the queue at position "+pos));
                     })
-                    .setCancel(() -> m.delete().queue())
+                    .setCancel(() -> {})
                     .setUsers(event.getAuthor())
                     ;
             for(int i=0; i<4&&i<playlist.getTracks().size(); i++)
@@ -121,7 +119,7 @@ public class SearchCmd extends MusicCommand {
 
         @Override
         public void noMatches() {
-            m.editMessage(event.getClient().getWarning()+" No results found for `"+event.getArgs()+"`.").queue();
+            m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" No results found for `"+event.getArgs()+"`.")).queue();
         }
 
         @Override

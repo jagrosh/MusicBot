@@ -150,6 +150,7 @@ public class FormatUtil {
             out+="\n**And "+(list.size()-6)+" more...**";
         return out;
     }
+    
     public static String listOfVChannels(List<VoiceChannel> list, String query)
     {
         String out = " Multiple voice channels found matching \""+query+"\":";
@@ -159,6 +160,7 @@ public class FormatUtil {
             out+="\n**And "+(list.size()-6)+" more...**";
         return out;
     }
+    
     public static String listOfRoles(List<Role> list, String query)
     {
         String out = " Multiple text channels found matching \""+query+"\":";
@@ -167,5 +169,10 @@ public class FormatUtil {
         if(list.size()>6)
             out+="\n**And "+(list.size()-6)+" more...**";
         return out;
+    }
+    
+    public static String filter(String input)
+    {
+        return input.replace("@everyone", "@\u0435veryone").replace("@here", "@h\u0435re").trim();
     }
 }

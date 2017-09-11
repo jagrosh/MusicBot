@@ -33,6 +33,7 @@ import com.jagrosh.jdautilities.waiter.EventWaiter;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import java.util.Objects;
 import javafx.util.Pair;
 import net.dv8tion.jda.core.JDA;
@@ -102,6 +103,7 @@ public class Bot extends ListenerAdapter {
         threadpool = Executors.newSingleThreadScheduledExecutor();
         AudioSourceManagers.registerRemoteSources(manager);
         AudioSourceManagers.registerLocalSource(manager);
+        manager.source(YoutubeAudioSourceManager.class).setPlaylistPageCount(10);
         try {
             JSONObject loadedSettings = new JSONObject(new String(Files.readAllBytes(Paths.get("serversettings.json"))));
             loadedSettings.keySet().forEach((id) -> {

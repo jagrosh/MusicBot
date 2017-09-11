@@ -16,7 +16,7 @@
 package com.jagrosh.jmusicbot;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
@@ -53,7 +53,7 @@ public class Config {
         this.nogui = nogui;
         List<String> lines;
         try {
-            lines = Files.readAllLines(Paths.get("config.txt"), Charset.forName("ISO-8859-1"));
+            lines = Files.readAllLines(Paths.get("config.txt"), StandardCharsets.UTF_8);
             System.out.println("[INFO] Loading config: "+Paths.get("config.txt").toFile().getAbsolutePath());
             for(String line: lines)
             {

@@ -89,6 +89,6 @@ public class QueueCmd extends MusicCommand {
         StringBuilder sb = new StringBuilder();
         if(ah.getPlayer().getPlayingTrack()!=null)
             sb.append("**").append(ah.getPlayer().getPlayingTrack().getInfo().title).append("**\n").append(FormatUtil.embedFormat(ah)).append("\n\n");
-        return sb.append(success).append(" Current Queue | ").append(songslength).append(" entries | `").append(FormatUtil.formatTime(total)).append("` ").toString();
+        return FormatUtil.filter(sb.append(success).append(" Current Queue | ").append(songslength).append(" entries | `").append(FormatUtil.formatTime(total)).append("` ").toString());
     }
 }

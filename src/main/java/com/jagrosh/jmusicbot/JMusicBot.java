@@ -24,6 +24,7 @@ import com.jagrosh.jdautilities.waiter.EventWaiter;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.*;
 import com.jagrosh.jmusicbot.gui.GUI;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
@@ -59,7 +60,7 @@ public class JMusicBot {
         Bot bot = new Bot(waiter, config);
         
         AboutCommand ab = new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.0.9)",
+                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.1.0)",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
                                 RECOMMENDED_PERMS);
         ab.setIsAuthor(false);
@@ -68,7 +69,6 @@ public class JMusicBot {
         AudioHandler.SONG_IN_STATUS = config.getSongInStatus();
         AudioHandler.MAX_SECONDS = config.getMaxSeconds();
         AudioHandler.USE_NP_REFRESH = !config.useNPImages();
-        
         // set up the command client
         
         CommandClientBuilder cb = new CommandClientBuilder()

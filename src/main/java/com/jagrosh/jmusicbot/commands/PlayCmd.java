@@ -78,9 +78,7 @@ public class PlayCmd extends MusicCommand {
         String args = event.getArgs().startsWith("<") && event.getArgs().endsWith(">") 
                 ? event.getArgs().substring(1,event.getArgs().length()-1) 
                 : event.getArgs();
-        event.getChannel().sendMessage("\u231A Loading... `["+args+"]`").queue(m -> {
-            bot.getAudioManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m,event,false));
-        });
+        event.reply("\u231A Loading... `["+args+"]`", m -> bot.getAudioManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m,event,false)));
     }
     
     private class ResultHandler implements AudioLoadResultHandler {
@@ -98,14 +96,14 @@ public class PlayCmd extends MusicCommand {
         public void trackLoaded(AudioTrack track) {
             if(AudioHandler.isTooLong(track))
             {
-                m.editMessage(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
-                        +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`").queue();
+                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
+                        +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`")).queue();
                 return;
             }
             int pos = bot.queueTrack(event, track)+1;
-            m.editMessage(event.getClient().getSuccess()+" Added **"+track.getInfo().title
+            m.editMessage(FormatUtil.filter(event.getClient().getSuccess()+" Added **"+track.getInfo().title
                     +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0 ? "to begin playing" 
-                        : " to the queue at position "+pos)).queue();
+                        : " to the queue at position "+pos))).queue();
         }
 
         @Override
@@ -115,14 +113,14 @@ public class PlayCmd extends MusicCommand {
                 AudioTrack single = playlist.getSelectedTrack()==null?playlist.getTracks().get(0):playlist.getSelectedTrack();
                 if(AudioHandler.isTooLong(single))
                 {
-                    m.editMessage(event.getClient().getWarning()+" This track (**"+single.getInfo().title+"**) is longer than the allowed maximum: `"
-                            +FormatUtil.formatTime(single.getDuration())+"` > `"+FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`").queue();
+                    m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" This track (**"+single.getInfo().title+"**) is longer than the allowed maximum: `"
+                            +FormatUtil.formatTime(single.getDuration())+"` > `"+FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`")).queue();
                     return;
                 }
                 int pos = bot.queueTrack(event, single)+1;
-                m.editMessage(event.getClient().getSuccess()+" Added **"+single.getInfo().title
+                m.editMessage(FormatUtil.filter(event.getClient().getSuccess()+" Added **"+single.getInfo().title
                     +"** (`"+FormatUtil.formatTime(single.getDuration())+"`) "+(pos==0 ? "to begin playing" 
-                        : " to the queue at position "+pos)).queue();
+                        : " to the queue at position "+pos))).queue();
             }
             else
             {
@@ -136,16 +134,16 @@ public class PlayCmd extends MusicCommand {
                 });
                 if(count[0]==0)
                 {
-                    m.editMessage(event.getClient().getWarning()+" All entries in this playlist "+(playlist.getName()==null ? "" : "(**"+playlist.getName()
-                            +"**) ")+"were longer than the allowed maximum (`"+FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`)").queue();
+                    m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" All entries in this playlist "+(playlist.getName()==null ? "" : "(**"+playlist.getName()
+                            +"**) ")+"were longer than the allowed maximum (`"+FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`)")).queue();
                 }
                 else
                 {
-                    m.editMessage(event.getClient().getSuccess()+" Found "
+                    m.editMessage(FormatUtil.filter(event.getClient().getSuccess()+" Found "
                             +(playlist.getName()==null?"a playlist":"playlist **"+playlist.getName()+"**")+" with `"
                             + playlist.getTracks().size()+"` entries; added to the queue!"
                             + (count[0]<playlist.getTracks().size() ? "\n"+event.getClient().getWarning()+" Tracks longer than the allowed maximum (`"
-                            + FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`) have been omitted." : "")).queue();
+                            + FormatUtil.formatTime(AudioHandler.MAX_SECONDS*1000)+"`) have been omitted." : ""))).queue();
                 }
             }
         }
@@ -153,7 +151,7 @@ public class PlayCmd extends MusicCommand {
         @Override
         public void noMatches() {
             if(ytsearch)
-                m.editMessage(event.getClient().getWarning()+" No results found for `"+event.getArgs()+"`.").queue();
+                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" No results found for `"+event.getArgs()+"`.")).queue();
             else
                 bot.getAudioManager().loadItemOrdered(event.getGuild(), "ytsearch:"+event.getArgs(), new ResultHandler(m,event,true));
         }
@@ -204,7 +202,7 @@ public class PlayCmd extends MusicCommand {
                     String str = builder.toString();
                     if(str.length()>2000)
                         str = str.substring(0,1994)+" (...)";
-                    m.editMessage(str).queue();
+                    m.editMessage(FormatUtil.filter(str)).queue();
                 });
             });
         }
