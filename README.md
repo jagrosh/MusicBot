@@ -3,8 +3,10 @@
 [![License](https://img.shields.io/github/license/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/blob/master/LICENSE)
 [![Discord](https://discordapp.com/api/guilds/147698382092238848/widget.png)](https://discord.gg/0p9LSGoRLu6Pet0k)
 
+<img align="right" src="https://i.imgur.com/zrE80HY.png" height="200" width="200">
+
 # JMusicBot
-A Discord music bot with a clean interface, and that is easy to set up and run yourself 🎶
+A Discord music bot with a clean interface, and that is easy to set up and run yourself
 
 [![Setup](http://i.imgur.com/VvXYp5j.png)](https://github.com/jagrosh/MusicBot/wiki/Setup)
 
