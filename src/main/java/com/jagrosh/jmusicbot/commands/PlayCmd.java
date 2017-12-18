@@ -110,18 +110,14 @@ public class PlayCmd extends MusicCommand
             int pos = bot.queueTrack(event, track)+1;
             String addMsg = FormatUtil.filter(event.getClient().getSuccess()+" Added **"+track.getInfo().title
                     +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0?"to begin playing":" to the queue at position "+pos));
-            if(playlist==null)
+            if(playlist==null || !event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ADD_REACTION))
                 m.editMessage(addMsg).queue();
             else
             {
                 m.editMessage(addMsg+"\n"+event.getClient().getWarning()+" This track has a playlist of **"+playlist.getTracks().size()+"** tracks attached. Load playlist?")
                         .queue(m -> 
                         {
-                            Emote emote = event.getJDA().getEmoteById(event.getClient().getSuccess().replaceAll("<:.+:(\\d+)>", "$1"));
-                            if(emote == null)
-                                m.addReaction(event.getClient().getSuccess()).queue();
-                            else
-                                m.addReaction(emote).queue();
+                            m.addReaction("\u2705").queue();
                             bot.getWaiter().waitForEvent(MessageReactionAddEvent.class, 
                                     e -> e.getMessageIdLong()==m.getIdLong() && e.getUser().getIdLong()==event.getAuthor().getIdLong(), 
                                     e -> 
