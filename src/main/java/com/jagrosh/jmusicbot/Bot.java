@@ -50,9 +50,10 @@ import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import net.dv8tion.jda.core.utils.SimpleLog;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -114,10 +115,11 @@ public class Bot extends ListenerAdapter {
                         o.has("voice_channel_id")? o.getString("voice_channel_id"): null,
                         o.has("dj_role_id")      ? o.getString("dj_role_id")      : null,
                         o.has("volume")          ? o.getInt("volume")             : 100,
-                        o.has("default_playlist")? o.getString("default_playlist"): null));
+                        o.has("default_playlist")? o.getString("default_playlist"): null,
+                        o.has("repeat")          ? o.getBoolean("repeat")         : false));
             });
         } catch(IOException | JSONException e) {
-            SimpleLog.getLog("Settings").warn("Failed to load server settings: "+e);
+            LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
         }
     }
     
@@ -134,6 +136,11 @@ public class Bot extends ListenerAdapter {
     public AudioPlayerManager getAudioManager()
     {
         return manager;
+    }
+    
+    public ScheduledExecutorService getThreadpool()
+    {
+        return threadpool;
     }
     
     public int queueTrack(CommandEvent event, AudioTrack track)
@@ -167,7 +174,7 @@ public class Bot extends ListenerAdapter {
     
     public void resetGame()
     {
-        Game game = config.getGame()==null || config.getGame().equalsIgnoreCase("none") ? null : Game.of(config.getGame());
+        Game game = config.getGame()==null || config.getGame().getName().equalsIgnoreCase("none") ? null : config.getGame();
         if(!Objects.equals(jda.getPresence().getGame(), game))
             jda.getPresence().setGame(game);
     }
@@ -265,8 +272,9 @@ public class Bot extends ListenerAdapter {
         this.jda = event.getJDA();
         if(jda.getGuilds().isEmpty())
         {
-            SimpleLog.getLog("MusicBot").warn("This bot is not on any guilds! Use the following link to add the bot to your guilds!");
-            SimpleLog.getLog("MusicBot").warn(event.getJDA().asBot().getInviteUrl(JMusicBot.RECOMMENDED_PERMS));
+            Logger log = LoggerFactory.getLogger("MusicBot");
+            log.warn("This bot is not on any guilds! Use the following link to add the bot to your guilds!");
+            log.warn(event.getJDA().asBot().getInviteUrl(JMusicBot.RECOMMENDED_PERMS));
         }
         credit(event.getJDA());
         jda.getGuilds().forEach((guild) -> {
@@ -314,7 +322,7 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(channel.getGuild().getId());
         if(s==null)
         {
-            settings.put(channel.getGuild().getId(), new Settings(channel.getId(),null,null,100,null));
+            settings.put(channel.getGuild().getId(), new Settings(channel.getId(),null,null,100,null,false));
         }
         else
         {
@@ -328,7 +336,7 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(channel.getGuild().getId());
         if(s==null)
         {
-            settings.put(channel.getGuild().getId(), new Settings(null,channel.getId(),null,100,null));
+            settings.put(channel.getGuild().getId(), new Settings(null,channel.getId(),null,100,null,false));
         }
         else
         {
@@ -342,7 +350,7 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(role.getGuild().getId());
         if(s==null)
         {
-            settings.put(role.getGuild().getId(), new Settings(null,null,role.getId(),100,null));
+            settings.put(role.getGuild().getId(), new Settings(null,null,role.getId(),100,null,false));
         }
         else
         {
@@ -356,7 +364,7 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(guild.getId());
         if(s==null)
         {
-            settings.put(guild.getId(), new Settings(null,null,null,100,playlist));
+            settings.put(guild.getId(), new Settings(null,null,null,100,playlist,false));
         }
         else
         {
@@ -370,11 +378,25 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(guild.getId());
         if(s==null)
         {
-            settings.put(guild.getId(), new Settings(null,null,null,volume,null));
+            settings.put(guild.getId(), new Settings(null,null,null,volume,null,false));
         }
         else
         {
             s.setVolume(volume);
+        }
+        writeSettings();
+    }
+    
+    public void setRepeatMode(Guild guild, boolean mode)
+    {
+        Settings s = settings.get(guild.getId());
+        if(s==null)
+        {
+            settings.put(guild.getId(), new Settings(null,null,null,100,null,mode));
+        }
+        else
+        {
+            s.setRepeatMode(mode);
         }
         writeSettings();
     }
@@ -434,12 +456,14 @@ public class Bot extends ListenerAdapter {
                 o.put("volume",s.getVolume());
             if(s.getDefaultPlaylist()!=null)
                 o.put("default_playlist", s.getDefaultPlaylist());
+            if(s.getRepeatMode())
+                o.put("repeat", true);
             obj.put(key, o);
         });
         try {
             Files.write(Paths.get("serversettings.json"), obj.toString(4).getBytes());
         } catch(IOException ex){
-            SimpleLog.getLog("Settings").warn("Failed to write to file: "+ex);
+            LoggerFactory.getLogger("Settings").warn("Failed to write to file: "+ex);
         }
     }
     

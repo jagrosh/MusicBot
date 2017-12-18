@@ -24,14 +24,13 @@ import com.jagrosh.jdautilities.waiter.EventWaiter;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.*;
 import com.jagrosh.jmusicbot.gui.GUI;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import net.dv8tion.jda.core.utils.SimpleLog;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -60,7 +59,7 @@ public class JMusicBot {
         Bot bot = new Bot(waiter, config);
         
         AboutCommand ab = new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.1.0)",
+                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.1.1)",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
                                 RECOMMENDED_PERMS);
         ab.setIsAuthor(false);
@@ -94,6 +93,7 @@ public class JMusicBot {
                         
                         new ForceskipCmd(bot),
                         new PauseCmd(bot),
+                        new RepeatCmd(bot),
                         new SkiptoCmd(bot),
                         new StopCmd(bot),
                         new VolumeCmd(bot),
@@ -118,13 +118,13 @@ public class JMusicBot {
             cb.setStatus(config.getStatus());
         if(config.getGame()==null)
             cb.useDefaultGame();
-        else if(config.getGame().equalsIgnoreCase("none"))
+        else if(config.getGame().getName().equalsIgnoreCase("none"))
         {
             cb.setGame(null);
             nogame = true;
         }
         else
-            cb.setGame(Game.of(config.getGame()));
+            cb.setGame(config.getGame());
         CommandClient client = cb.build();
         
         if(!config.getNoGui())
@@ -134,7 +134,7 @@ public class JMusicBot {
                 bot.setGUI(gui);
                 gui.init();
             } catch(Exception e) {
-                SimpleLog.getLog("Startup").fatal("Could not start GUI. If you are "
+                LoggerFactory.getLogger("Startup").error("Could not start GUI. If you are "
                         + "running on a server or in a location where you cannot display a "
                         + "window, please run in nogui mode using the -nogui flag.");
             }
@@ -151,8 +151,15 @@ public class JMusicBot {
                     .addEventListener(waiter)
                     .addEventListener(bot)
                     .buildAsync();
-        } catch (LoginException | IllegalArgumentException | RateLimitedException ex) {
-            SimpleLog.getLog("Login").fatal(ex);
+        } catch (LoginException ex)
+        {
+            LoggerFactory.getLogger("Startup").error(ex+"\nPlease make sure you are "
+                    + "editing the correct config.txt file, and that you have used the "
+                    + "correct token (not the 'secret'!)");
+        }
+        catch(IllegalArgumentException | RateLimitedException ex)
+        {
+            LoggerFactory.getLogger("Startup").error(""+ex);
         }
     }
 }

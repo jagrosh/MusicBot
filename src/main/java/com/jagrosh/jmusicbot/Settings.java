@@ -20,15 +20,16 @@ package com.jagrosh.jmusicbot;
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class Settings {
-    public final static Settings DEFAULT_SETTINGS = new Settings(0, 0, 0, 100, null);
+    public final static Settings DEFAULT_SETTINGS = new Settings(0, 0, 0, 100, null, false);
     
     private long textId;
     private long voiceId;
     private long roleId;
     private int volume;
     private String defaultPlaylist;
+    private boolean repeatMode;
     
-    public Settings(String textId, String voiceId, String roleId, int volume, String defaultPlaylist)
+    public Settings(String textId, String voiceId, String roleId, int volume, String defaultPlaylist, boolean repeatMode)
     {
         try
         {
@@ -56,15 +57,17 @@ public class Settings {
         }
         this.volume = volume;
         this.defaultPlaylist = defaultPlaylist;
+        this.repeatMode = repeatMode;
     }
     
-    public Settings(long textId, long voiceId, long roleId, int volume, String defaultPlaylist)
+    public Settings(long textId, long voiceId, long roleId, int volume, String defaultPlaylist, boolean repeatMode)
     {
         this.textId = textId;
         this.voiceId = voiceId;
         this.roleId = roleId;
         this.volume = volume;
         this.defaultPlaylist = defaultPlaylist;
+        this.repeatMode = repeatMode;
     }
     
     public long getTextId()
@@ -92,6 +95,11 @@ public class Settings {
         return defaultPlaylist;
     }
     
+    public boolean getRepeatMode()
+    {
+        return repeatMode;
+    }
+    
     public void setTextId(long id)
     {
         this.textId = id;
@@ -117,5 +125,8 @@ public class Settings {
         this.defaultPlaylist = defaultPlaylist;
     }
     
-    
+    public void setRepeatMode(boolean mode)
+    {
+        this.repeatMode = mode;
+    }
 }

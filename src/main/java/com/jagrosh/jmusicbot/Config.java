@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 import net.dv8tion.jda.core.OnlineStatus;
+import net.dv8tion.jda.core.entities.Game;
 
 /**
  *
@@ -202,9 +203,19 @@ public class Config {
         return error==null ? "\uD83D\uDEAB" : error;
     }
     
-    public String getGame()
+    public Game getGame()
     {
-        return game;
+        if(game==null || game.isEmpty())
+            return null;
+        if(game.toLowerCase().startsWith("playing"))
+            return Game.playing(game.substring(7).trim());
+        if(game.toLowerCase().startsWith("listening to"))
+            return Game.listening(game.substring(12).trim());
+        if(game.toLowerCase().startsWith("listening"))
+            return Game.listening(game.substring(9).trim());
+        if(game.toLowerCase().startsWith("watching"))
+            return Game.watching(game.substring(8).trim());
+        return Game.playing(game);
     }
     
     public String getHelp()

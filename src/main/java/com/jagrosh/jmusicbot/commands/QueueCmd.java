@@ -50,12 +50,12 @@ public class QueueCmd extends MusicCommand {
                 .useNumberedItems(true)
                 .showPageNumbers(true)
                 .setEventWaiter(bot.getWaiter())
-                .setTimeout(1, TimeUnit.MINUTES)
-                ;
+                .setTimeout(1, TimeUnit.MINUTES);
     }
 
     @Override
-    public void doCommand(CommandEvent event) {
+    public void doCommand(CommandEvent event)
+    {
         int pagenum = 1;
         try{
             pagenum = Integer.parseInt(event.getArgs());
@@ -76,7 +76,7 @@ public class QueueCmd extends MusicCommand {
             songs[i] = list.get(i).toString();
         }
         long fintotal = total;
-        builder.setText((i1,i2) -> getQueueTitle(ah, event.getClient().getSuccess(), songs.length, fintotal))
+        builder.setText((i1,i2) -> getQueueTitle(ah, event.getClient().getSuccess(), songs.length, fintotal, bot.getSettings(event.getGuild()).getRepeatMode()))
                 .setItems(songs)
                 .setUsers(event.getAuthor())
                 .setColor(event.getSelfMember().getColor())
@@ -84,11 +84,13 @@ public class QueueCmd extends MusicCommand {
         builder.build().paginate(event.getChannel(), pagenum);
     }
     
-    private String getQueueTitle(AudioHandler ah, String success, int songslength, long total)
+    private String getQueueTitle(AudioHandler ah, String success, int songslength, long total, boolean repeatmode)
     {
         StringBuilder sb = new StringBuilder();
         if(ah.getPlayer().getPlayingTrack()!=null)
             sb.append("**").append(ah.getPlayer().getPlayingTrack().getInfo().title).append("**\n").append(FormatUtil.embedFormat(ah)).append("\n\n");
-        return FormatUtil.filter(sb.append(success).append(" Current Queue | ").append(songslength).append(" entries | `").append(FormatUtil.formatTime(total)).append("` ").toString());
+        return FormatUtil.filter(sb.append(success).append(" Current Queue | ").append(songslength)
+                .append(" entries | `").append(FormatUtil.formatTime(total)).append("` ")
+                .append(repeatmode ? "| \uD83D\uDD01" : "").toString());
     }
 }

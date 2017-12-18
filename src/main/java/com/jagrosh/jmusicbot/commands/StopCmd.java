@@ -30,14 +30,15 @@ public class StopCmd extends MusicCommand {
         super(bot);
         this.name = "stop";
         this.help = "stops the current song and clears the queue";
-        this.bePlaying = true;
+        this.bePlaying = false;
         this.category = bot.DJ;
     }
 
     @Override
     public void doCommand(CommandEvent event) {
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        handler.stopAndClear();
+        if(handler!=null)
+            handler.stopAndClear();
         event.getGuild().getAudioManager().closeAudioConnection();
         event.reply(event.getClient().getSuccess()+" The player has stopped and the queue has been cleared.");
     }

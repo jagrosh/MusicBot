@@ -131,6 +131,10 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
     
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        if(endReason==AudioTrackEndReason.FINISHED && bot.getSettings(bot.getJDA().getGuildById(guildId)).getRepeatMode())
+        {
+            queue.add(new QueuedTrack(track.makeClone(), requester));
+        }
         requester = 0;
         if(queue.isEmpty())
         {
@@ -139,7 +143,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
                 if(SONG_IN_STATUS)
                     bot.resetGame();
                 if(!STAY_IN_CHANNEL)
-                    bot.getJDA().getGuildById(guildId).getAudioManager().closeAudioConnection();
+                    bot.getThreadpool().submit(() -> bot.getJDA().getGuildById(guildId).getAudioManager().closeAudioConnection());
                 bot.updateTopic(guildId, this);
             }
         }
@@ -157,7 +161,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
         if(SONG_IN_STATUS)
         {
             if(bot.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count()<=1)
-                bot.getJDA().getPresence().setGame(Game.of(track.getInfo().title));
+                bot.getJDA().getPresence().setGame(Game.listening(track.getInfo().title));
             else
                 bot.resetGame();
         }
