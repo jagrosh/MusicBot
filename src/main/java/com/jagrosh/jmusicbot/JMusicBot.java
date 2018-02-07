@@ -75,6 +75,7 @@ public class JMusicBot {
                 .setOwnerId(config.getOwnerId())
                 .setEmojis(config.getSuccess(), config.getWarning(), config.getError())
                 .setHelpWord(config.getHelp())
+                .setLinkedCacheSize(200)
                 .addCommands(
                         ab,
                         new PingCommand(),
