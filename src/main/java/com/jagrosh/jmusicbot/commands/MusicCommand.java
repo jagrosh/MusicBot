@@ -15,8 +15,8 @@
  */
 package com.jagrosh.jmusicbot.commands;
 
-import com.jagrosh.jdautilities.commandclient.Command;
-import com.jagrosh.jdautilities.commandclient.CommandEvent;
+import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.Settings;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
@@ -51,7 +51,7 @@ public abstract class MusicCommand extends Command {
             try {
                 event.getMessage().delete().queue();
             } catch(PermissionException e){}
-            event.replyInDM(event.getClient().getError()+" You can only use that command in <#"+settings.getTextId()+">!");
+            event.replyInDm(event.getClient().getError()+" You can only use that command in <#"+settings.getTextId()+">!");
             return;
         }
         if(bePlaying

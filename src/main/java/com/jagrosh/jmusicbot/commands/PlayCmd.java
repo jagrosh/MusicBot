@@ -20,18 +20,16 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.jagrosh.jdautilities.commandclient.Command;
-import com.jagrosh.jdautilities.commandclient.CommandEvent;
-import com.jagrosh.jdautilities.waiter.EventWaiter;
+import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.menu.ButtonMenu;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.playlist.Playlist;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 
 /**
@@ -40,9 +38,14 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
  */
 public class PlayCmd extends MusicCommand
 {
-    public PlayCmd(Bot bot)
+    public final static String LOAD = "\uD83D\uDCE5";
+    public final static String CANCEL = "\uD83D\uDEAB";
+    private final String loadingEmoji;
+    
+    public PlayCmd(Bot bot, String loadingEmoji)
     {
         super(bot);
+        this.loadingEmoji = loadingEmoji;
         this.name = "play";
         this.arguments = "<title|URL|subcommand>";
         this.help = "plays the provided song";
@@ -60,7 +63,7 @@ public class PlayCmd extends MusicCommand
             {
                 boolean isDJ = event.getMember().hasPermission(Permission.MANAGE_SERVER);
                 if(!isDJ)
-                    isDJ = event.isOwner() || event.isCoOwner();
+                    isDJ = event.isOwner();
                 if(!isDJ)
                     isDJ = event.getMember().getRoles().contains(event.getGuild().getRoleById(bot.getSettings(event.getGuild()).getRoleId()));
                 if(!isDJ)
@@ -83,7 +86,7 @@ public class PlayCmd extends MusicCommand
         String args = event.getArgs().startsWith("<") && event.getArgs().endsWith(">") 
                 ? event.getArgs().substring(1,event.getArgs().length()-1) 
                 : event.getArgs();
-        event.reply("\u231A Loading... `["+args+"]`", m -> bot.getAudioManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m,event,false)));
+        event.reply(loadingEmoji+" Loading... `["+args+"]`", m -> bot.getAudioManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m,event,false)));
     }
     
     private class ResultHandler implements AudioLoadResultHandler
@@ -114,19 +117,21 @@ public class PlayCmd extends MusicCommand
                 m.editMessage(addMsg).queue();
             else
             {
-                m.editMessage(addMsg+"\n"+event.getClient().getWarning()+" This track has a playlist of **"+playlist.getTracks().size()+"** tracks attached. Load playlist?")
-                        .queue(m -> 
+                new ButtonMenu.Builder()
+                        .setText(addMsg+"\n"+event.getClient().getWarning()+" This track has a playlist of **"+playlist.getTracks().size()+"** tracks attached. Select "+LOAD+" to load playlist.")
+                        .setChoices(LOAD, CANCEL)
+                        .setEventWaiter(bot.getWaiter())
+                        .setTimeout(30, TimeUnit.SECONDS)
+                        .setAction(re ->
                         {
-                            m.addReaction("\u2705").queue();
-                            bot.getWaiter().waitForEvent(MessageReactionAddEvent.class, 
-                                    e -> e.getMessageIdLong()==m.getIdLong() && e.getUser().getIdLong()==event.getAuthor().getIdLong(), 
-                                    e -> 
-                                    {
-                                        m.editMessage(addMsg+"\n"+event.getClient().getSuccess()+" Loaded **"+loadPlaylist(playlist, track)+"** additional tracks!").queue();
-                                        try{m.clearReactions().queue();}catch(PermissionException ex){}
-                                    }, 
-                                    2, TimeUnit.MINUTES, () -> {try{m.clearReactions().queue();}catch(PermissionException e){}});
-                        });
+                            if(re.getName().equals(LOAD))
+                                m.editMessage(addMsg+"\n"+event.getClient().getSuccess()+" Loaded **"+loadPlaylist(playlist, track)+"** additional tracks!").queue();
+                            else
+                                m.editMessage(addMsg).queue();
+                        }).setFinalAction(m ->
+                        {
+                            try{m.clearReactions().queue();}catch(PermissionException ex){}
+                        }).build().display(m);
             }
         }
         
@@ -226,7 +231,7 @@ public class PlayCmd extends MusicCommand
                 event.reply(event.getClient().getError()+" I could not find `"+event.getArgs()+".txt` in the Playlists folder.");
                 return;
             }
-            event.getChannel().sendMessage("\u231A Loading playlist **"+event.getArgs()+"**... ("+playlist.getItems().size()+" items)").queue(m -> {
+            event.getChannel().sendMessage(loadingEmoji+" Loading playlist **"+event.getArgs()+"**... ("+playlist.getItems().size()+" items)").queue(m -> {
                 playlist.loadTracks(bot.getAudioManager(), (at)->bot.queueTrack(event, at), () -> {
                     StringBuilder builder = new StringBuilder(playlist.getTracks().isEmpty() 
                             ? event.getClient().getWarning()+" No tracks were loaded!" 

@@ -32,20 +32,9 @@ import net.dv8tion.jda.core.entities.Game;
  */
 public class Config {
     private boolean nogui;
-    private String prefix;
-    private String altprefix;
-    private String token;
-    private String owner;
-    private String success;
-    private String warning;
-    private String error;
-    private String game;
-    private String help;
-    private boolean stay;
-    private boolean dbots;
-    private boolean songingame;
-    private boolean useEval;
-    private boolean npimages;
+    private String prefix, altprefix, token, owner, success, warning, error, game, 
+            help, loadingEmoji, searchingEmoji;
+    private boolean stay, dbots, songingame, useEval, npimages;
     private long maxSeconds;
     private OnlineStatus status = OnlineStatus.UNKNOWN;
     
@@ -83,6 +72,12 @@ public class Config {
                         break;
                     case "error":
                         error = value;
+                        break;
+                    case "loading":
+                        loadingEmoji = value;
+                        break;
+                    case "searching":
+                        searchingEmoji = value;
                         break;
                     case "game":
                         game = value;
@@ -201,6 +196,16 @@ public class Config {
     public String getError()
     {
         return error==null ? "\uD83D\uDEAB" : error;
+    }
+    
+    public String getLoading()
+    {
+        return loadingEmoji==null ? "\u231A" : loadingEmoji;
+    }
+    
+    public String getSearching()
+    {
+        return searchingEmoji==null ? "\uD83D\uDD0E" : searchingEmoji;
     }
     
     public Game getGame()

@@ -16,7 +16,7 @@
 package com.jagrosh.jmusicbot.commands;
 
 import java.util.List;
-import com.jagrosh.jdautilities.commandclient.CommandEvent;
+import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.playlist.Playlist;
 

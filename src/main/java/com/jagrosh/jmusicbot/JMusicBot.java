@@ -17,10 +17,10 @@ package com.jagrosh.jmusicbot;
 
 import java.awt.Color;
 import javax.security.auth.login.LoginException;
-import com.jagrosh.jdautilities.commandclient.CommandClient;
-import com.jagrosh.jdautilities.commandclient.CommandClientBuilder;
-import com.jagrosh.jdautilities.commandclient.examples.*;
-import com.jagrosh.jdautilities.waiter.EventWaiter;
+import com.jagrosh.jdautilities.command.CommandClient;
+import com.jagrosh.jdautilities.command.CommandClientBuilder;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.jagrosh.jdautilities.examples.command.*;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.*;
 import com.jagrosh.jmusicbot.gui.GUI;
@@ -29,7 +29,6 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -59,7 +58,7 @@ public class JMusicBot {
         Bot bot = new Bot(waiter, config);
         
         AboutCommand ab = new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.1.1)",
+                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.1.2)",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
                                 RECOMMENDED_PERMS);
         ab.setIsAuthor(false);
@@ -82,12 +81,12 @@ public class JMusicBot {
                         new SettingsCmd(bot),
                         
                         new NowplayingCmd(bot),
-                        new PlayCmd(bot),
+                        new PlayCmd(bot, config.getLoading()),
                         new PlaylistsCmd(bot),
                         new QueueCmd(bot),
                         new RemoveCmd(bot),
-                        new SearchCmd(bot),
-                        new SCSearchCmd(bot),
+                        new SearchCmd(bot, config.getSearching()),
+                        new SCSearchCmd(bot, config.getSearching()),
                         new ShuffleCmd(bot),
                         new SkipCmd(bot),
                         
@@ -145,7 +144,7 @@ public class JMusicBot {
             new JDABuilder(AccountType.BOT)
                     .setToken(config.getToken())
                     .setAudioEnabled(true)
-                    .setGame(nogame ? null : Game.of("loading..."))
+                    .setGame(nogame ? null : Game.playing("loading..."))
                     .setStatus(config.getStatus()==OnlineStatus.INVISIBLE||config.getStatus()==OnlineStatus.OFFLINE ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
                     .addEventListener(client)
                     .addEventListener(waiter)
@@ -157,7 +156,7 @@ public class JMusicBot {
                     + "editing the correct config.txt file, and that you have used the "
                     + "correct token (not the 'secret'!)");
         }
-        catch(IllegalArgumentException | RateLimitedException ex)
+        catch(IllegalArgumentException ex)
         {
             LoggerFactory.getLogger("Startup").error(""+ex);
         }

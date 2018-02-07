@@ -17,8 +17,8 @@ package com.jagrosh.jmusicbot.commands;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import com.jagrosh.jdautilities.commandclient.CommandEvent;
-import com.jagrosh.jdautilities.menu.pagination.PaginatorBuilder;
+import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.menu.Paginator;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
@@ -32,7 +32,7 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
  */
 public class QueueCmd extends MusicCommand {
 
-    private final PaginatorBuilder builder;
+    private final Paginator.Builder builder;
     public QueueCmd(Bot bot)
     {
         super(bot);
@@ -42,7 +42,7 @@ public class QueueCmd extends MusicCommand {
         this.aliases = new String[]{"list"};
         this.bePlaying = true;
         this.botPermissions = new Permission[]{Permission.MESSAGE_ADD_REACTION,Permission.MESSAGE_EMBED_LINKS};
-        builder = new PaginatorBuilder()
+        builder = new Paginator.Builder()
                 .setColumns(1)
                 .setFinalAction(m -> {try{m.clearReactions().queue();}catch(PermissionException e){}})
                 .setItemsPerPage(10)
@@ -76,7 +76,7 @@ public class QueueCmd extends MusicCommand {
             songs[i] = list.get(i).toString();
         }
         long fintotal = total;
-        builder.setText((i1,i2) -> getQueueTitle(ah, event.getClient().getSuccess(), songs.length, fintotal, bot.getSettings(event.getGuild()).getRepeatMode()))
+        builder.setText((i1,i2) -> event.getClient().getSuccess()+" "+getQueueTitle(ah, event.getClient().getSuccess(), songs.length, fintotal, bot.getSettings(event.getGuild()).getRepeatMode()))
                 .setItems(songs)
                 .setUsers(event.getAuthor())
                 .setColor(event.getSelfMember().getColor())

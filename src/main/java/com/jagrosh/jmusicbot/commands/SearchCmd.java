@@ -21,8 +21,8 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import java.util.concurrent.TimeUnit;
-import com.jagrosh.jdautilities.commandclient.CommandEvent;
-import com.jagrosh.jdautilities.menu.orderedmenu.OrderedMenuBuilder;
+import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.menu.OrderedMenu;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
@@ -35,10 +35,12 @@ import net.dv8tion.jda.core.entities.Message;
  */
 public class SearchCmd extends MusicCommand {
 
-    private final OrderedMenuBuilder builder;
-    public SearchCmd(Bot bot)
+    private final OrderedMenu.Builder builder;
+    private final String searchingEmoji;
+    public SearchCmd(Bot bot, String searchingEmoji)
     {
         super(bot);
+        this.searchingEmoji = searchingEmoji;
         this.name = "search";
         this.aliases = new String[]{"ytsearch"};
         this.arguments = "<query>";
@@ -46,7 +48,7 @@ public class SearchCmd extends MusicCommand {
         this.beListening = true;
         this.bePlaying = false;
         this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
-        builder = new OrderedMenuBuilder()
+        builder = new OrderedMenu.Builder()
                 .allowTextInput(true)
                 .useNumbers()
                 .useCancelButton(true)
@@ -61,7 +63,7 @@ public class SearchCmd extends MusicCommand {
             event.reply(event.getClient().getError()+" Please include a query.");
             return;
         }
-        event.reply("\uD83D\uDD0E Searching... `["+event.getArgs()+"]`",m ->bot.getAudioManager().loadItemOrdered(event.getGuild(), "ytsearch:"+event.getArgs(), new ResultHandler(m,event)));
+        event.reply(searchingEmoji+" Searching... `["+event.getArgs()+"]`",m ->bot.getAudioManager().loadItemOrdered(event.getGuild(), "ytsearch:"+event.getArgs(), new ResultHandler(m,event)));
     }
     
     private class ResultHandler implements AudioLoadResultHandler {
@@ -88,11 +90,12 @@ public class SearchCmd extends MusicCommand {
         }
 
         @Override
-        public void playlistLoaded(AudioPlaylist playlist) {
+        public void playlistLoaded(AudioPlaylist playlist)
+        {
             builder.setColor(event.getSelfMember().getColor())
                     .setText(FormatUtil.filter(event.getClient().getSuccess()+" Search results for `"+event.getArgs()+"`:"))
                     .setChoices(new String[0])
-                    .setAction(i -> {
+                    .setSelection((msg,i) -> {
                         AudioTrack track = playlist.getTracks().get(i-1);
                         if(AudioHandler.isTooLong(track))
                         {
@@ -105,7 +108,7 @@ public class SearchCmd extends MusicCommand {
                                 +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0 ? "to begin playing" 
                                     : " to the queue at position "+pos));
                     })
-                    .setCancel(() -> {})
+                    .setCancel((msg) -> {})
                     .setUsers(event.getAuthor())
                     ;
             for(int i=0; i<4&&i<playlist.getTracks().size(); i++)
