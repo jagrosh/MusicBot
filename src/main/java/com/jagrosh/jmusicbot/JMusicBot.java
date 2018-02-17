@@ -58,7 +58,7 @@ public class JMusicBot {
         Bot bot = new Bot(waiter, config);
         
         AboutCommand ab = new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.1.2)",
+                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.1.3)",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
                                 RECOMMENDED_PERMS);
         ab.setIsAuthor(false);
