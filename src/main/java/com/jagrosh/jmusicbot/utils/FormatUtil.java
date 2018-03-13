@@ -95,6 +95,8 @@ public class FormatUtil {
             long userid = handler.getRequester();
             AudioTrack track = handler.getPlayer().getPlayingTrack();
             String title = track.getInfo().title;
+            if(title==null || title.equals("Unknown Title"))
+                title = track.getInfo().uri;
             return "**"+title+"** ["+(userid==0 ? "autoplay" : "<@"+userid+">")+"]"
                     + "\n"+(handler.getPlayer().isPaused()?"\u23F8":"\u25B6")+" "
                     +"["+formatTime(track.getDuration())+"] "

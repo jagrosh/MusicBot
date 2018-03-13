@@ -29,21 +29,24 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Game;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author John Grosh (jagrosh)
  */
-public class JMusicBot {
-    
-    public static Permission[] RECOMMENDED_PERMS = new Permission[]{Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
+public class JMusicBot 
+{
+    public final static Permission[] RECOMMENDED_PERMS = new Permission[]{Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
                                 Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
                                 Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
+    public final static Logger LOG = LoggerFactory.getLogger("Startup"); 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args){
+    public static void main(String[] args)
+    {
         // check run mode(s)
         boolean nogui = false;
         for(String arg: args)
@@ -129,19 +132,25 @@ public class JMusicBot {
         
         if(!config.getNoGui())
         {
-            try {
+            try 
+            {
                 GUI gui = new GUI(bot);
                 bot.setGUI(gui);
                 gui.init();
-            } catch(Exception e) {
-                LoggerFactory.getLogger("Startup").error("Could not start GUI. If you are "
+            } 
+            catch(Exception e) 
+            {
+                LOG.error("Could not start GUI. If you are "
                         + "running on a server or in a location where you cannot display a "
                         + "window, please run in nogui mode using the -nogui flag.");
             }
         }
         
+        LOG.info("Loaded config from "+config.getConfigLocation());
+        
         // attempt to log in and start
-        try {
+        try
+        {
             new JDABuilder(AccountType.BOT)
                     .setToken(config.getToken())
                     .setAudioEnabled(true)
@@ -151,15 +160,16 @@ public class JMusicBot {
                     .addEventListener(waiter)
                     .addEventListener(bot)
                     .buildAsync();
-        } catch (LoginException ex)
+        }
+        catch (LoginException ex)
         {
-            LoggerFactory.getLogger("Startup").error(ex+"\nPlease make sure you are "
+            LOG.error(ex+"\nPlease make sure you are "
                     + "editing the correct config.txt file, and that you have used the "
                     + "correct token (not the 'secret'!)");
         }
         catch(IllegalArgumentException ex)
         {
-            LoggerFactory.getLogger("Startup").error(""+ex);
+            LOG.error("Some aspect of the configuration is invalid: "+ex);
         }
     }
 }

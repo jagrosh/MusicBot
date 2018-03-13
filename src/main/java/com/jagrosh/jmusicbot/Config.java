@@ -25,13 +25,18 @@ import java.util.Scanner;
 import javax.swing.JOptionPane;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author John Grosh (jagrosh)
  */
-public class Config {
+public class Config
+{
+    private final static Logger LOG = LoggerFactory.getLogger(Config.class);
     private boolean nogui;
+    private String configLocation = null;
     private String prefix, altprefix, token, owner, success, warning, error, game, 
             help, loadingEmoji, searchingEmoji;
     private boolean stay, dbots, songingame, useEval, npimages;
@@ -42,9 +47,11 @@ public class Config {
     {
         this.nogui = nogui;
         List<String> lines;
-        try {
+        try 
+        {
+            configLocation = Paths.get("config.txt").toFile().getAbsolutePath();
             lines = Files.readAllLines(Paths.get("config.txt"), StandardCharsets.UTF_8);
-            System.out.println("[INFO] Loading config: "+Paths.get("config.txt").toFile().getAbsolutePath());
+            //System.out.println("[INFO] Loading config: "+location);
             for(String line: lines)
             {
                 String[] parts = line.split("=",2);
@@ -110,8 +117,10 @@ public class Config {
                         break;
                 }
             }
-        } catch (IOException ex) {
-            alert("'config.txt' was not found!");
+        }
+        catch (IOException ex) 
+        {
+            alert("'config.txt' was not found at "+configLocation+"!");
             lines = new LinkedList<>();
         }
         boolean write = false;
@@ -154,13 +163,21 @@ public class Config {
         {
             StringBuilder builder = new StringBuilder();
             lines.stream().forEach(s -> builder.append(s).append("\r\n"));
-            try {
+            try 
+            {
                 Files.write(Paths.get("config.txt"), builder.toString().trim().getBytes());
-            } catch(IOException ex) {
+            }
+            catch(IOException ex) 
+            {
                 alert("Failed to write new config options to config.txt: "+ex
                     + "\nPlease make sure that the files are not on your desktop or some other restricted area.");
             }
         }
+    }
+    
+    public String getConfigLocation()
+    {
+        return configLocation;
     }
     
     public String getPrefix()
