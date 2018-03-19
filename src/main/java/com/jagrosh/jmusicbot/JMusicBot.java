@@ -24,6 +24,8 @@ import com.jagrosh.jdautilities.examples.command.*;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.*;
 import com.jagrosh.jmusicbot.gui.GUI;
+import com.jagrosh.jmusicbot.utils.OtherUtil;
+import javax.swing.JOptionPane;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
@@ -53,6 +55,38 @@ public class JMusicBot
             if("-nogui".equalsIgnoreCase(arg))
                 nogui = true;
         
+        // Get version number
+        String version;
+        if(JMusicBot.class.getPackage()!=null && JMusicBot.class.getPackage().getImplementationVersion()!=null)
+            version = JMusicBot.class.getPackage().getImplementationVersion();
+        else
+            version = "UNKNOWN";
+        
+        // Check for new version
+        String latestVersion = OtherUtil.getLatestVersion();
+        if(latestVersion!=null && !latestVersion.equals(version))
+        {
+            String msg = "There is a new version of JMusicBot available!\n"
+                    + "Current version: "+version+"\n"
+                    + "New Version: "+latestVersion+"\n\n"
+                    + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
+            if(nogui)
+                LOG.warn(msg);
+            else
+            {
+                try 
+                {
+                    JOptionPane.showMessageDialog(null, msg, "JMusicBot", JOptionPane.WARNING_MESSAGE);
+                }
+                catch(Exception e) 
+                {
+                    nogui = true;
+                    LOG.warn("Switching to nogui mode. You can manually start in nogui mode by including the -nogui flag.");
+                    LOG.warn(msg);
+                }
+            }
+        }
+        
         // load config
         Config config = new Config(nogui);
         
@@ -61,7 +95,7 @@ public class JMusicBot
         Bot bot = new Bot(waiter, config);
         
         AboutCommand ab = new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v0.1.3)",
+                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v"+version+")",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
                                 RECOMMENDED_PERMS);
         ab.setIsAuthor(false);

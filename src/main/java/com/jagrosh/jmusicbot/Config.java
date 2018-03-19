@@ -288,7 +288,7 @@ public class Config
     private void alert(String message)
     {
         if(nogui)
-            System.out.println("[WARNING] "+message);
+            LOG.warn(message);
         else
         {
             try {

@@ -17,15 +17,20 @@ package com.jagrosh.jmusicbot.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
+import okhttp3.*;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /**
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class OtherUtil {
-    
+public class OtherUtil
+{
     public static InputStream imageFromUrl(String url)
     {
         if(url==null)
@@ -38,5 +43,28 @@ public class OtherUtil {
         } catch(IOException|IllegalArgumentException e) {
         }
         return null;
+    }
+    
+    public static String getLatestVersion()
+    {
+        try
+        {
+            Response response = new OkHttpClient.Builder().build()
+                    .newCall(new Request.Builder().get().url("https://api.github.com/repos/jagrosh/MusicBot/releases/latest").build())
+                    .execute();
+            try(Reader reader = response.body().charStream())
+            {
+                JSONObject obj = new JSONObject(new JSONTokener(reader));
+                return obj.getString("tag_name");
+            }
+            finally
+            {
+                response.close();
+            }
+        }
+        catch(IOException | JSONException | NullPointerException ex)
+        {
+            return null;
+        }
     }
 }
