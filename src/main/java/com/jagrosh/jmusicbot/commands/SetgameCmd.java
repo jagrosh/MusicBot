@@ -33,6 +33,7 @@ public class SetgameCmd extends Command
         this.arguments = "[action] [game]";
         this.ownerCommand = true;
         this.category = bot.OWNER;
+        this.guildOnly = false;
         this.children = new Command[]{
             new SetlistenCmd(bot),
             new SetstreamCmd(bot),
@@ -65,6 +66,7 @@ public class SetgameCmd extends Command
             this.arguments = "<username> <game>";
             this.ownerCommand = true;
             this.category = bot.OWNER;
+            this.guildOnly = false;
         }
 
         @Override
@@ -99,6 +101,7 @@ public class SetgameCmd extends Command
             this.arguments = "<title>";
             this.ownerCommand = true;
             this.category = bot.OWNER;
+            this.guildOnly = false;
         }
 
         @Override
@@ -130,6 +133,7 @@ public class SetgameCmd extends Command
             this.arguments = "<title>";
             this.ownerCommand = true;
             this.category = bot.OWNER;
+            this.guildOnly = false;
         }
 
         @Override

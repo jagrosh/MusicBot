@@ -33,6 +33,7 @@ public class ShutdownCmd extends Command {
         this.help = "safely shuts down";
         this.ownerCommand = true;
         this.category = bot.OWNER;
+        this.guildOnly = false;
     }
     
     @Override
