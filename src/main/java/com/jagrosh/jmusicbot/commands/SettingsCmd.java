@@ -26,21 +26,20 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class SettingsCmd extends Command {
 
     private final Bot bot;
-    public SettingsCmd(Bot bot)
-    {
+
+    public SettingsCmd(Bot bot) {
         this.bot = bot;
         this.name = "settings";
         this.help = "shows the bots settings";
         this.aliases = new String[]{"status"};
         this.guildOnly = true;
     }
-    
+
     @Override
     protected void execute(CommandEvent event) {
         Settings s = bot.getSettings(event.getGuild());
@@ -53,16 +52,16 @@ public class SettingsCmd extends Command {
         Role role = event.getGuild().getRoleById(s.getRoleId());
         EmbedBuilder ebuilder = new EmbedBuilder()
                 .setColor(event.getSelfMember().getColor())
-                .setDescription("Text Channel: "+(tchan==null ? "Any" : "**#"+tchan.getName()+"**")
-                        + "\nVoice Channel: "+(vchan==null ? "Any" : "**"+vchan.getName()+"**")
-                        + "\nDJ Role: "+(role==null ? "None" : "**"+role.getName()+"**")
-                        + "\nRepeat Mode: **"+(s.getRepeatMode() ? "On" : "Off")+"**"
-                        + "\nDefault Playlist: "+(s.getDefaultPlaylist()==null ? "None" : "**"+s.getDefaultPlaylist()+"**")
-                        )
-                .setFooter(event.getJDA().getGuilds().size()+" servers | "
-                        +event.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count()
-                        +" audio connections", null);
+                .setDescription("Text Channel: " + (tchan == null ? "Any" : "**#" + tchan.getName() + "**")
+                        + "\nVoice Channel: " + (vchan == null ? "Any" : "**" + vchan.getName() + "**")
+                        + "\nDJ Role: " + (role == null ? "None" : "**" + role.getName() + "**")
+                        + "\nRepeat Mode: **" + (s.getRepeatMode() ? "On" : "Off") + "**"
+                        + "\nDefault Playlist: " + (s.getDefaultPlaylist() == null ? "None" : "**" + s.getDefaultPlaylist() + "**")
+                )
+                .setFooter(event.getJDA().getGuilds().size() + " servers | "
+                        + event.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count()
+                        + " audio connections", null);
         event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
     }
-    
+
 }

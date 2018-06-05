@@ -20,25 +20,24 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class ShutdownCmd extends Command {
 
     private final Bot bot;
-    public ShutdownCmd(Bot bot)
-    {
+
+    public ShutdownCmd(Bot bot) {
         this.bot = bot;
         this.name = "shutdown";
         this.help = "safely shuts down";
         this.ownerCommand = true;
         this.category = bot.OWNER;
     }
-    
+
     @Override
     protected void execute(CommandEvent event) {
-        event.reply(event.getClient().getWarning()+" Shutting down...");
+        event.reply(event.getClient().getWarning() + " Shutting down...");
         bot.shutdown();
     }
-    
+
 }
