@@ -21,46 +21,38 @@ import com.jagrosh.jmusicbot.Bot;
 import net.dv8tion.jda.core.entities.Game;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SetgameCmd extends Command
-{
-    public SetgameCmd(Bot bot)
-    {
+public class SetgameCmd extends Command {
+    public SetgameCmd(Bot bot) {
         this.name = "setgame";
         this.help = "sets the game the bot is playing";
         this.arguments = "[action] [game]";
         this.ownerCommand = true;
         this.category = bot.OWNER;
         this.children = new Command[]{
-            new SetlistenCmd(bot),
-            new SetstreamCmd(bot),
-            new SetwatchCmd(bot)
+                new SetlistenCmd(bot),
+                new SetstreamCmd(bot),
+                new SetwatchCmd(bot)
         };
     }
-    
+
     @Override
     protected void execute(CommandEvent event) {
         String title = event.getArgs().toLowerCase().startsWith("playing") ? event.getArgs().substring(7).trim() : event.getArgs();
-        try
-        {
+        try {
             event.getJDA().getPresence().setGame(title.isEmpty() ? null : Game.playing(title));
-            event.reply(event.getClient().getSuccess()+" **"+event.getSelfUser().getName()
-                    +"** is "+(title.isEmpty() ? "no longer playing anything." : "now playing `"+title+"`"));
-        }
-        catch(Exception e)
-        {
-            event.reply(event.getClient().getError()+" The game could not be set!");
+            event.reply(event.getClient().getSuccess() + " **" + event.getSelfUser().getName()
+                    + "** is " + (title.isEmpty() ? "no longer playing anything." : "now playing `" + title + "`"));
+        } catch (Exception e) {
+            event.reply(event.getClient().getError() + " The game could not be set!");
         }
     }
-    
-    private class SetstreamCmd extends Command
-    {
-        private SetstreamCmd(Bot bot)
-        {
+
+    private class SetstreamCmd extends Command {
+        private SetstreamCmd(Bot bot) {
             this.name = "stream";
-            this.aliases = new String[]{"twitch","streaming"};
+            this.aliases = new String[]{"twitch", "streaming"};
             this.help = "sets the game the bot is playing to a stream";
             this.arguments = "<username> <game>";
             this.ownerCommand = true;
@@ -68,31 +60,24 @@ public class SetgameCmd extends Command
         }
 
         @Override
-        protected void execute(CommandEvent event)
-        {
+        protected void execute(CommandEvent event) {
             String[] parts = event.getArgs().split("\\s+", 2);
-            if(parts.length<2)
-            {
+            if (parts.length < 2) {
                 event.replyError("Please include a twitch username and the name of the game to 'stream'");
                 return;
             }
-            try
-            {
-                event.getJDA().getPresence().setGame(Game.streaming(parts[1], "https://twitch.tv/"+parts[0]));
-                event.replySuccess("**"+event.getSelfUser().getName()
-                        +"** is now streaming `"+parts[1]+"`");
-            }
-            catch(Exception e)
-            {
-                event.reply(event.getClient().getError()+" The game could not be set!");
+            try {
+                event.getJDA().getPresence().setGame(Game.streaming(parts[1], "https://twitch.tv/" + parts[0]));
+                event.replySuccess("**" + event.getSelfUser().getName()
+                        + "** is now streaming `" + parts[1] + "`");
+            } catch (Exception e) {
+                event.reply(event.getClient().getError() + " The game could not be set!");
             }
         }
     }
-    
-    private class SetlistenCmd extends Command
-    {
-        private SetlistenCmd(Bot bot)
-        {
+
+    private class SetlistenCmd extends Command {
+        private SetlistenCmd(Bot bot) {
             this.name = "listen";
             this.aliases = new String[]{"listening"};
             this.help = "sets the game the bot is listening to";
@@ -102,28 +87,23 @@ public class SetgameCmd extends Command
         }
 
         @Override
-        protected void execute(CommandEvent event)
-        {
-            if(event.getArgs().isEmpty())
-            {
+        protected void execute(CommandEvent event) {
+            if (event.getArgs().isEmpty()) {
                 event.replyError("Please include a title to listen to!");
                 return;
             }
             String title = event.getArgs().toLowerCase().startsWith("to") ? event.getArgs().substring(2).trim() : event.getArgs();
-            try
-            {
+            try {
                 event.getJDA().getPresence().setGame(Game.listening(title));
-                event.replySuccess("**"+event.getSelfUser().getName()+"** is now listening to `"+title+"`");
-            } catch(Exception e) {
-                event.reply(event.getClient().getError()+" The game could not be set!");
+                event.replySuccess("**" + event.getSelfUser().getName() + "** is now listening to `" + title + "`");
+            } catch (Exception e) {
+                event.reply(event.getClient().getError() + " The game could not be set!");
             }
         }
     }
-    
-    private class SetwatchCmd extends Command
-    {
-        private SetwatchCmd(Bot bot)
-        {
+
+    private class SetwatchCmd extends Command {
+        private SetwatchCmd(Bot bot) {
             this.name = "watch";
             this.aliases = new String[]{"watching"};
             this.help = "sets the game the bot is watching";
@@ -133,20 +113,17 @@ public class SetgameCmd extends Command
         }
 
         @Override
-        protected void execute(CommandEvent event)
-        {
-            if(event.getArgs().isEmpty())
-            {
+        protected void execute(CommandEvent event) {
+            if (event.getArgs().isEmpty()) {
                 event.replyError("Please include a title to watch!");
                 return;
             }
             String title = event.getArgs();
-            try
-            {
+            try {
                 event.getJDA().getPresence().setGame(Game.watching(title));
-                event.replySuccess("**"+event.getSelfUser().getName()+"** is now watching `"+title+"`");
-            } catch(Exception e) {
-                event.reply(event.getClient().getError()+" The game could not be set!");
+                event.replySuccess("**" + event.getSelfUser().getName() + "** is now watching `" + title + "`");
+            } catch (Exception e) {
+                event.reply(event.getClient().getError() + " The game could not be set!");
             }
         }
     }

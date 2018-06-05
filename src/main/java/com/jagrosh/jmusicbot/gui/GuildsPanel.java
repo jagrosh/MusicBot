@@ -15,46 +15,36 @@
  */
 package com.jagrosh.jmusicbot.gui;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.util.List;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.audio.AudioHandler;
-import com.jagrosh.jmusicbot.utils.FormatUtil;
 import net.dv8tion.jda.core.entities.Guild;
 
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import java.awt.*;
+import java.util.List;
+
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class GuildsPanel extends JPanel {
-    
+
     private final Bot bot;
     private final JList guildList;
     private final JTextArea guildQueue;
     private int index = -1;
-    
-    public GuildsPanel(Bot bot)
-    {
+
+    public GuildsPanel(Bot bot) {
         super();
         super.setLayout(new GridBagLayout());
         this.bot = bot;
-        
+
         guildList = new JList();
         guildQueue = new JTextArea();
         guildList.setModel(new DefaultListModel());
         guildList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         guildList.setFixedCellHeight(20);
-        guildList.setPreferredSize(new Dimension(100,300));
-        guildQueue.setPreferredSize(new Dimension(300,300));
+        guildList.setPreferredSize(new Dimension(100, 300));
+        guildQueue.setPreferredSize(new Dimension(300, 300));
         guildQueue.setEditable(false);
         JScrollPane pane = new JScrollPane();
         JScrollPane pane2 = new JScrollPane();
@@ -75,17 +65,15 @@ public class GuildsPanel extends JPanel {
             //bot.updatePanel();
         });
     }
-    
-    public void updateList(List<Guild> guilds)
-    {
+
+    public void updateList(List<Guild> guilds) {
         String[] strs = new String[guilds.size()];
-        for(int i=0; i<guilds.size(); i++)
+        for (int i = 0; i < guilds.size(); i++)
             strs[i] = guilds.get(i).getName();
         guildList.setListData(strs);
     }
-    
-    public int getIndex()
-    {
+
+    public int getIndex() {
         return guildList.getSelectedIndex();
     }
     
@@ -107,5 +95,5 @@ public class GuildsPanel extends JPanel {
         guildQueue.setText(builder.toString());
         guildQueue.updateUI();
     }*/
-    
+
 }

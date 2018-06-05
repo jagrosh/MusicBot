@@ -15,38 +15,35 @@
  */
 package com.jagrosh.jmusicbot.audio;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.jagrosh.jmusicbot.queue.Queueable;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class QueuedTrack implements Queueable {
 
     private final AudioTrack track;
     private final long owner;
-    
-    public QueuedTrack(AudioTrack track, long owner)
-    {
+
+    public QueuedTrack(AudioTrack track, long owner) {
         this.track = track;
         this.owner = owner;
     }
-    
+
     @Override
     public long getIdentifier() {
         return owner;
     }
-    
-    public AudioTrack getTrack()
-    {
+
+    public AudioTrack getTrack() {
         return track;
     }
 
     @Override
     public String toString() {
-        return "`["+FormatUtil.formatTime(track.getDuration())+"]` **" + track.getInfo().title +"** - <@"+owner+">";
+        return "`[" + FormatUtil.formatTime(track.getDuration()) + "]` **" + track.getInfo().title + "** - <@" + owner + ">";
     }
-    
+
 }
