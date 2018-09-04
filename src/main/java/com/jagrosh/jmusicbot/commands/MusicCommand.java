@@ -21,9 +21,12 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.Settings;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import net.dv8tion.jda.core.entities.GuildVoiceState;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.exceptions.PermissionException;
+
+import java.util.Optional;
 
 /**
  *
@@ -76,6 +79,13 @@ public abstract class MusicCommand extends Command {
             }
             if(!event.getGuild().getSelfMember().getVoiceState().inVoiceChannel())
                 try {
+                    if (settings.getAvoidOtherBots()) {
+                        Optional<Member> otherBot = userState.getChannel().getMembers().stream().filter(m -> m.getUser().isBot()).findFirst();
+                        if (otherBot.isPresent()) {
+                            event.reply(event.getClient().getError() + " I am unable to connect to **"+userState.getChannel().getName()+"**; another bot detected");
+                            return;
+                        }
+                    }
                     event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
                 }catch(PermissionException ex) {
                     event.reply(event.getClient().getError()+" I am unable to connect to **"+userState.getChannel().getName()+"**!");

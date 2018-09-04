@@ -20,7 +20,7 @@ package com.jagrosh.jmusicbot;
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class Settings {
-    public final static Settings DEFAULT_SETTINGS = new Settings(0, 0, 0, 100, null, false);
+    public final static Settings DEFAULT_SETTINGS = new Settings(0, 0, 0, 100, null, false, false);
     
     private long textId;
     private long voiceId;
@@ -28,8 +28,9 @@ public class Settings {
     private int volume;
     private String defaultPlaylist;
     private boolean repeatMode;
+    private boolean avoidOtherBots;
     
-    public Settings(String textId, String voiceId, String roleId, int volume, String defaultPlaylist, boolean repeatMode)
+    public Settings(String textId, String voiceId, String roleId, int volume, String defaultPlaylist, boolean repeatMode, boolean avoidOtherBots)
     {
         try
         {
@@ -58,9 +59,10 @@ public class Settings {
         this.volume = volume;
         this.defaultPlaylist = defaultPlaylist;
         this.repeatMode = repeatMode;
+        this.avoidOtherBots = avoidOtherBots;
     }
     
-    public Settings(long textId, long voiceId, long roleId, int volume, String defaultPlaylist, boolean repeatMode)
+    public Settings(long textId, long voiceId, long roleId, int volume, String defaultPlaylist, boolean repeatMode, boolean avoidOtherBots)
     {
         this.textId = textId;
         this.voiceId = voiceId;
@@ -68,6 +70,7 @@ public class Settings {
         this.volume = volume;
         this.defaultPlaylist = defaultPlaylist;
         this.repeatMode = repeatMode;
+        this.avoidOtherBots = avoidOtherBots;
     }
     
     public long getTextId()
@@ -128,5 +131,15 @@ public class Settings {
     public void setRepeatMode(boolean mode)
     {
         this.repeatMode = mode;
+    }
+
+    public boolean getAvoidOtherBots()
+    {
+        return this.avoidOtherBots;
+    }
+
+    public void setAvoidOtherBots(boolean avoidOtherBots)
+    {
+        this.avoidOtherBots = avoidOtherBots;
     }
 }

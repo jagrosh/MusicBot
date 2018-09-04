@@ -116,7 +116,8 @@ public class Bot extends ListenerAdapter {
                         o.has("dj_role_id")      ? o.getString("dj_role_id")      : null,
                         o.has("volume")          ? o.getInt("volume")             : 100,
                         o.has("default_playlist")? o.getString("default_playlist"): null,
-                        o.has("repeat")          ? o.getBoolean("repeat")         : false));
+                        o.has("repeat")          ? o.getBoolean("repeat")         : false,
+                        o.has("avoidOtherBots")  ? o.getBoolean("avoidOtherBots") : false));
             });
         } catch(IOException | JSONException e) {
             LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
@@ -328,7 +329,7 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(channel.getGuild().getId());
         if(s==null)
         {
-            settings.put(channel.getGuild().getId(), new Settings(channel.getId(),null,null,100,null,false));
+            settings.put(channel.getGuild().getId(), new Settings(channel.getId(),null,null,100,null,false, false));
         }
         else
         {
@@ -342,7 +343,7 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(channel.getGuild().getId());
         if(s==null)
         {
-            settings.put(channel.getGuild().getId(), new Settings(null,channel.getId(),null,100,null,false));
+            settings.put(channel.getGuild().getId(), new Settings(null,channel.getId(),null,100,null,false, false));
         }
         else
         {
@@ -356,7 +357,7 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(role.getGuild().getId());
         if(s==null)
         {
-            settings.put(role.getGuild().getId(), new Settings(null,null,role.getId(),100,null,false));
+            settings.put(role.getGuild().getId(), new Settings(null,null,role.getId(),100,null,false, false));
         }
         else
         {
@@ -370,7 +371,7 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(guild.getId());
         if(s==null)
         {
-            settings.put(guild.getId(), new Settings(null,null,null,100,playlist,false));
+            settings.put(guild.getId(), new Settings(null,null,null,100,playlist,false, false));
         }
         else
         {
@@ -384,7 +385,7 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(guild.getId());
         if(s==null)
         {
-            settings.put(guild.getId(), new Settings(null,null,null,volume,null,false));
+            settings.put(guild.getId(), new Settings(null,null,null,volume,null,false, false));
         }
         else
         {
@@ -398,11 +399,25 @@ public class Bot extends ListenerAdapter {
         Settings s = settings.get(guild.getId());
         if(s==null)
         {
-            settings.put(guild.getId(), new Settings(null,null,null,100,null,mode));
+            settings.put(guild.getId(), new Settings(null,null,null,100,null,mode, false));
         }
         else
         {
             s.setRepeatMode(mode);
+        }
+        writeSettings();
+    }
+
+    public void setAvoidBots(Guild guild, boolean mode)
+    {
+        Settings s = settings.get(guild.getId());
+        if(s==null)
+        {
+            settings.put(guild.getId(), new Settings(null,null,null,100,null,false, mode));
+        }
+        else
+        {
+            s.setAvoidOtherBots(mode);
         }
         writeSettings();
     }
@@ -464,6 +479,8 @@ public class Bot extends ListenerAdapter {
                 o.put("default_playlist", s.getDefaultPlaylist());
             if(s.getRepeatMode())
                 o.put("repeat", true);
+            if (s.getAvoidOtherBots())
+                o.put("avoidOtherBots", true);
             obj.put(key, o);
         });
         try {
