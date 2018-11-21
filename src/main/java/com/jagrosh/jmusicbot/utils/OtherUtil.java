@@ -35,6 +35,11 @@ import org.json.JSONTokener;
  */
 public class OtherUtil
 {
+    public final static String NEW_VERSION_AVAILABLE = "There is a new version of JMusicBot available!\n"
+                    + "Current version: %s\n"
+                    + "New Version: %s\n\n"
+                    + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
+    
     public static InputStream imageFromUrl(String url)
     {
         if(url==null)
@@ -84,28 +89,29 @@ public class OtherUtil
     public static String checkVersion(Prompt prompt)
     {
         // Get current version number
-        String version;
-        if(JMusicBot.class.getPackage()!=null && JMusicBot.class.getPackage().getImplementationVersion()!=null)
-            version = JMusicBot.class.getPackage().getImplementationVersion();
-        else
-            version = "UNKNOWN";
+        String version = getCurrentVersion();
         
         // Check for new version
         String latestVersion = getLatestVersion();
+        
         if(latestVersion!=null && !latestVersion.equals(version))
         {
-            String msg = "There is a new version of JMusicBot available!\n"
-                    + "Current version: "+version+"\n"
-                    + "New Version: "+latestVersion+"\n\n"
-                    + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
-            prompt.alert(Prompt.Level.WARNING, "Version", msg);
+            prompt.alert(Prompt.Level.WARNING, "Version", String.format(NEW_VERSION_AVAILABLE, version, latestVersion));
         }
         
         // Return the current version
         return version;
     }
     
-    private static String getLatestVersion()
+    public static String getCurrentVersion()
+    {
+        if(JMusicBot.class.getPackage()!=null && JMusicBot.class.getPackage().getImplementationVersion()!=null)
+            return JMusicBot.class.getPackage().getImplementationVersion();
+        else
+            return "UNKNOWN";
+    }
+    
+    public static String getLatestVersion()
     {
         try
         {

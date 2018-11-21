@@ -45,7 +45,7 @@ public class BotConfig
     private Path path = null;
     private String token, prefix, altprefix, helpWord, playlistsFolder,
             successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
-    private boolean stayInChannel, songInGame, npImages, useEval, dbots;
+    private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
     private long owner, maxSeconds;
     private OnlineStatus status;
     private Game game;
@@ -96,6 +96,7 @@ public class BotConfig
             stayInChannel = config.getBoolean("stayinchannel");
             songInGame = config.getBoolean("songinstatus");
             npImages = config.getBoolean("npimages");
+            updatealerts = config.getBoolean("updatealerts");
             useEval = config.getBoolean("eval");
             maxSeconds = config.getLong("maxtime");
             playlistsFolder = config.getString("playlistsfolder");
@@ -266,6 +267,11 @@ public class BotConfig
     public boolean getDBots()
     {
         return dbots;
+    }
+    
+    public boolean useUpdateAlerts()
+    {
+        return updatealerts;
     }
     
     public boolean useEval()

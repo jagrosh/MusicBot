@@ -15,8 +15,11 @@
  */
 package com.jagrosh.jmusicbot;
 
+import com.jagrosh.jmusicbot.utils.OtherUtil;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.ShutdownEvent;
@@ -63,6 +66,23 @@ public class Listener extends ListenerAdapter
             }
             catch(Exception ex) {}
         });
+        if(bot.getConfig().useUpdateAlerts())
+        {
+            bot.getThreadpool().scheduleWithFixedDelay(() -> 
+            {
+                User owner = bot.getJDA().getUserById(bot.getConfig().getOwnerId());
+                if(owner!=null)
+                {
+                    String currentVersion = OtherUtil.getCurrentVersion();
+                    String latestVersion = OtherUtil.getLatestVersion();
+                    if(latestVersion!=null && !currentVersion.equalsIgnoreCase(latestVersion))
+                    {
+                        String msg = String.format(OtherUtil.NEW_VERSION_AVAILABLE, currentVersion, latestVersion);
+                        owner.openPrivateChannel().queue(pc -> pc.sendMessage(msg).queue());
+                    }
+                }
+            }, 0, 24, TimeUnit.HOURS);
+        }
     }
     
     @Override
