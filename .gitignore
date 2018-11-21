@@ -1,0 +1,5 @@
+/target/
+/Playlists/
+*.json
+*.txt
+/nbproject/

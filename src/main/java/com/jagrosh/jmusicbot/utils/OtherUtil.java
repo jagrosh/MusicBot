@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 John Grosh <john.a.grosh@gmail.com>.
+ * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,15 @@
  */
 package com.jagrosh.jmusicbot.utils;
 
+import com.jagrosh.jmusicbot.JMusicBot;
+import com.jagrosh.jmusicbot.entities.Prompt;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
+import net.dv8tion.jda.core.OnlineStatus;
+import net.dv8tion.jda.core.entities.Game;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,22 +49,84 @@ public class OtherUtil
         return null;
     }
     
-    public static String getLatestVersion()
+    public static Game parseGame(String game)
+    {
+        if(game==null || game.trim().isEmpty() || game.trim().equalsIgnoreCase("default"))
+            return null;
+        String lower = game.toLowerCase();
+        if(lower.startsWith("playing"))
+            return Game.playing(game.substring(7).trim());
+        if(lower.startsWith("listening to"))
+            return Game.listening(game.substring(12).trim());
+        if(lower.startsWith("listening"))
+            return Game.listening(game.substring(9).trim());
+        if(lower.startsWith("watching"))
+            return Game.watching(game.substring(8).trim());
+        if(lower.startsWith("streaming"))
+        {
+            String[] parts = game.substring(9).trim().split("\\s+", 2);
+            if(parts.length == 2)
+            {
+                return Game.streaming(parts[1], "https://twitch.tv/"+parts[0]);
+            }
+        }
+        return Game.playing(game);
+    }
+    
+    public static OnlineStatus parseStatus(String status)
+    {
+        if(status==null || status.trim().isEmpty())
+            return OnlineStatus.ONLINE;
+        OnlineStatus st = OnlineStatus.fromKey(status);
+        return st == null ? OnlineStatus.ONLINE : st;
+    }
+    
+    public static String checkVersion(Prompt prompt)
+    {
+        // Get current version number
+        String version;
+        if(JMusicBot.class.getPackage()!=null && JMusicBot.class.getPackage().getImplementationVersion()!=null)
+            version = JMusicBot.class.getPackage().getImplementationVersion();
+        else
+            version = "UNKNOWN";
+        
+        // Check for new version
+        String latestVersion = getLatestVersion();
+        if(latestVersion!=null && !latestVersion.equals(version))
+        {
+            String msg = "There is a new version of JMusicBot available!\n"
+                    + "Current version: "+version+"\n"
+                    + "New Version: "+latestVersion+"\n\n"
+                    + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
+            prompt.alert(Prompt.Level.WARNING, "Version", msg);
+        }
+        
+        // Return the current version
+        return version;
+    }
+    
+    private static String getLatestVersion()
     {
         try
         {
             Response response = new OkHttpClient.Builder().build()
                     .newCall(new Request.Builder().get().url("https://api.github.com/repos/jagrosh/MusicBot/releases/latest").build())
                     .execute();
-            try(Reader reader = response.body().charStream())
+            ResponseBody body = response.body();
+            if(body != null)
             {
-                JSONObject obj = new JSONObject(new JSONTokener(reader));
-                return obj.getString("tag_name");
+                try(Reader reader = body.charStream())
+                {
+                    JSONObject obj = new JSONObject(new JSONTokener(reader));
+                    return obj.getString("tag_name");
+                }
+                finally
+                {
+                    response.close();
+                }
             }
-            finally
-            {
-                response.close();
-            }
+            else
+                return null;
         }
         catch(IOException | JSONException | NullPointerException ex)
         {

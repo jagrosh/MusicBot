@@ -18,25 +18,31 @@ package com.jagrosh.jmusicbot.audio;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.jagrosh.jmusicbot.queue.Queueable;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import net.dv8tion.jda.core.entities.User;
 
 /**
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class QueuedTrack implements Queueable {
-
+public class QueuedTrack implements Queueable
+{
     private final AudioTrack track;
-    private final long owner;
+    
+    public QueuedTrack(AudioTrack track, User owner)
+    {
+        this(track, owner.getIdLong());
+    }
     
     public QueuedTrack(AudioTrack track, long owner)
     {
         this.track = track;
-        this.owner = owner;
+        this.track.setUserData(owner);
     }
     
     @Override
-    public long getIdentifier() {
-        return owner;
+    public long getIdentifier() 
+    {
+        return track.getUserData(Long.class);
     }
     
     public AudioTrack getTrack()
@@ -45,8 +51,8 @@ public class QueuedTrack implements Queueable {
     }
 
     @Override
-    public String toString() {
-        return "`["+FormatUtil.formatTime(track.getDuration())+"]` **" + track.getInfo().title +"** - <@"+owner+">";
+    public String toString() 
+    {
+        return "`[" + FormatUtil.formatTime(track.getDuration()) + "]` **" + track.getInfo().title + "** - <@" + track.getUserData(Long.class) + ">";
     }
-    
 }

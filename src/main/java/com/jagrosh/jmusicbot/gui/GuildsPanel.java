@@ -35,8 +35,8 @@ import net.dv8tion.jda.core.entities.Guild;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class GuildsPanel extends JPanel {
-    
+public class GuildsPanel extends JPanel 
+{
     private final Bot bot;
     private final JList guildList;
     private final JTextArea guildQueue;

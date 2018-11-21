@@ -15,21 +15,22 @@
  */
 package com.jagrosh.jmusicbot;
 
-import java.awt.Color;
-import javax.security.auth.login.LoginException;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.*;
-import com.jagrosh.jmusicbot.audio.AudioHandler;
-import com.jagrosh.jmusicbot.commands.*;
+import com.jagrosh.jmusicbot.commands.admin.*;
+import com.jagrosh.jmusicbot.commands.dj.*;
+import com.jagrosh.jmusicbot.commands.general.*;
+import com.jagrosh.jmusicbot.commands.music.*;
+import com.jagrosh.jmusicbot.commands.owner.*;
+import com.jagrosh.jmusicbot.entities.Prompt;
 import com.jagrosh.jmusicbot.gui.GUI;
+import com.jagrosh.jmusicbot.settings.SettingsManager;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
-import javax.swing.JOptionPane;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.Permission;
+import java.awt.Color;
+import javax.security.auth.login.LoginException;
+import net.dv8tion.jda.core.*;
 import net.dv8tion.jda.core.entities.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,83 +41,66 @@ import org.slf4j.LoggerFactory;
  */
 public class JMusicBot 
 {
+    public final static String PLAY_EMOJI  = "\u25B6";
+    public final static String PAUSE_EMOJI = "\u23F8";
+    public final static String STOP_EMOJI  = "\u23F9";
     public final static Permission[] RECOMMENDED_PERMS = new Permission[]{Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
                                 Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
                                 Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
-    public final static Logger LOG = LoggerFactory.getLogger("Startup"); 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args)
     {
-        // check run mode(s)
-        boolean nogui = false;
+        // startup log
+        Logger log = LoggerFactory.getLogger("Startup");
+        
+        // create prompt to handle startup
+        Prompt prompt = new Prompt("JMusicBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.", 
+                "true".equalsIgnoreCase(System.getProperty("nogui", "false")));
+        
+        // check deprecated nogui mode (new way of setting it is -Dnogui=true)
         for(String arg: args)
             if("-nogui".equalsIgnoreCase(arg))
-                nogui = true;
-        
-        // Get version number
-        String version;
-        if(JMusicBot.class.getPackage()!=null && JMusicBot.class.getPackage().getImplementationVersion()!=null)
-            version = JMusicBot.class.getPackage().getImplementationVersion();
-        else
-            version = "UNKNOWN";
-        
-        // Check for new version
-        String latestVersion = OtherUtil.getLatestVersion();
-        if(latestVersion!=null && !latestVersion.equals(version))
-        {
-            String msg = "There is a new version of JMusicBot available!\n"
-                    + "Current version: "+version+"\n"
-                    + "New Version: "+latestVersion+"\n\n"
-                    + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
-            if(nogui)
-                LOG.warn(msg);
-            else
             {
-                try 
-                {
-                    JOptionPane.showMessageDialog(null, msg, "JMusicBot", JOptionPane.WARNING_MESSAGE);
-                }
-                catch(Exception e) 
-                {
-                    nogui = true;
-                    LOG.warn("Switching to nogui mode. You can manually start in nogui mode by including the -nogui flag.");
-                    LOG.warn(msg);
-                }
+                prompt.alert(Prompt.Level.WARNING, "GUI", "The -nogui flag has been deprecated. "
+                        + "Please use the -Dnogui=true flag before the name of the jar. Example: java -jar -Dnogui=true JMusicBot.jar");
+                break;
             }
-        }
+        
+        // get and check latest version
+        String version = OtherUtil.checkVersion(prompt);
         
         // load config
-        Config config = new Config(nogui);
+        BotConfig config = new BotConfig(prompt);
+        config.load();
+        if(!config.isValid())
+            return;
         
         // set up the listener
         EventWaiter waiter = new EventWaiter();
-        Bot bot = new Bot(waiter, config);
+        SettingsManager settings = new SettingsManager();
+        Bot bot = new Bot(waiter, config, settings);
         
-        AboutCommand ab = new AboutCommand(Color.BLUE.brighter(),
+        AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(),
                                 "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v"+version+")",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
                                 RECOMMENDED_PERMS);
-        ab.setIsAuthor(false);
-        ab.setReplacementCharacter("\uD83C\uDFB6");
-        AudioHandler.STAY_IN_CHANNEL = config.getStay();
-        AudioHandler.SONG_IN_STATUS = config.getSongInStatus();
-        AudioHandler.MAX_SECONDS = config.getMaxSeconds();
-        AudioHandler.USE_NP_REFRESH = !config.useNPImages();
-        // set up the command client
+        aboutCommand.setIsAuthor(false);
+        aboutCommand.setReplacementCharacter("\uD83C\uDFB6");
         
+        // set up the command client
         CommandClientBuilder cb = new CommandClientBuilder()
                 .setPrefix(config.getPrefix())
                 .setAlternativePrefix(config.getAltPrefix())
-                .setOwnerId(config.getOwnerId())
+                .setOwnerId(Long.toString(config.getOwnerId()))
                 .setEmojis(config.getSuccess(), config.getWarning(), config.getError())
                 .setHelpWord(config.getHelp())
                 .setLinkedCacheSize(200)
-                .addCommands(
-                        ab,
+                .setGuildSettingsManager(settings)
+                .addCommands(aboutCommand,
                         new PingCommand(),
-                        new SettingsCmd(bot),
+                        new SettingsCmd(),
                         
                         new NowplayingCmd(bot),
                         new PlayCmd(bot, config.getLoading()),
@@ -135,17 +119,17 @@ public class JMusicBot
                         new StopCmd(bot),
                         new VolumeCmd(bot),
                         
-                        new SetdjCmd(bot),
-                        new SettcCmd(bot),
-                        new SetvcCmd(bot),
+                        new SetdjCmd(),
+                        new SettcCmd(),
+                        new SetvcCmd(),
                         
                         //new GuildlistCommand(waiter),
                         new AutoplaylistCmd(bot),
                         new PlaylistCmd(bot),
-                        new SetavatarCmd(bot),
-                        new SetgameCmd(bot),
+                        new SetavatarCmd(),
+                        new SetgameCmd(),
                         new SetnameCmd(bot),
-                        new SetstatusCmd(bot),
+                        new SetstatusCmd(),
                         new ShutdownCmd(bot)
                 );
         if(config.useEval())
@@ -164,7 +148,7 @@ public class JMusicBot
             cb.setGame(config.getGame());
         CommandClient client = cb.build();
         
-        if(!config.getNoGui())
+        if(!prompt.isNoGUI())
         {
             try 
             {
@@ -174,36 +158,38 @@ public class JMusicBot
             } 
             catch(Exception e) 
             {
-                LOG.error("Could not start GUI. If you are "
+                log.error("Could not start GUI. If you are "
                         + "running on a server or in a location where you cannot display a "
-                        + "window, please run in nogui mode using the -nogui flag.");
+                        + "window, please run in nogui mode using the -Dnogui=true flag.");
             }
         }
         
-        LOG.info("Loaded config from "+config.getConfigLocation());
+        log.info("Loaded config from "+config.getConfigLocation());
         
         // attempt to log in and start
         try
         {
-            new JDABuilder(AccountType.BOT)
+            JDA jda = new JDABuilder(AccountType.BOT)
                     .setToken(config.getToken())
                     .setAudioEnabled(true)
                     .setGame(nogame ? null : Game.playing("loading..."))
                     .setStatus(config.getStatus()==OnlineStatus.INVISIBLE||config.getStatus()==OnlineStatus.OFFLINE ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
-                    .addEventListener(client)
-                    .addEventListener(waiter)
-                    .addEventListener(bot)
-                    .buildAsync();
+                    .addEventListener(client, waiter, new Listener(bot))
+                    .setBulkDeleteSplittingEnabled(true)
+                    .build();
+            bot.setJDA(jda);
         }
         catch (LoginException ex)
         {
-            LOG.error(ex+"\nPlease make sure you are "
+            log.error(ex+"\nPlease make sure you are "
                     + "editing the correct config.txt file, and that you have used the "
                     + "correct token (not the 'secret'!)");
+            System.exit(1);
         }
         catch(IllegalArgumentException ex)
         {
-            LOG.error("Some aspect of the configuration is invalid: "+ex);
+            log.error("Some aspect of the configuration is invalid: "+ex);
+            System.exit(1);
         }
     }
 }

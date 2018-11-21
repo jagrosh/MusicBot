@@ -27,17 +27,16 @@ import com.jagrosh.jmusicbot.Bot;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class GUI extends JFrame {
-    
+public class GUI extends JFrame 
+{
     private final ConsolePanel console;
-    private final GuildsPanel guilds;
     private final Bot bot;
     
-    public GUI(Bot bot) {
+    public GUI(Bot bot) 
+    {
         super();
         this.bot = bot;
         console = new ConsolePanel();
-        guilds = new GuildsPanel(bot);
     }
     
     public void init()
@@ -45,15 +44,25 @@ public class GUI extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("JMusicBot");
         JTabbedPane tabs = new JTabbedPane();
-        //tabs.add("Guilds", guilds);
         tabs.add("Console", console);
         getContentPane().add(tabs);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-        addWindowListener(new WindowListener() {
+        addWindowListener(new WindowListener() 
+        {
             @Override public void windowOpened(WindowEvent e) {}
-            @Override public void windowClosing(WindowEvent e) {bot.shutdown();}
+            @Override public void windowClosing(WindowEvent e) 
+            {
+                try
+                {
+                    bot.shutdown();
+                }
+                catch(Exception ex)
+                {
+                    System.exit(0);
+                }
+            }
             @Override public void windowClosed(WindowEvent e) {}
             @Override public void windowIconified(WindowEvent e) {}
             @Override public void windowDeiconified(WindowEvent e) {}

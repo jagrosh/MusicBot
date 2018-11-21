@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 John Grosh <john.a.grosh@gmail.com>.
+ * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package com.jagrosh.jmusicbot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.Settings;
+import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import net.dv8tion.jda.core.entities.GuildVoiceState;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -29,8 +29,8 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public abstract class MusicCommand extends Command {
-
+public abstract class MusicCommand extends Command 
+{
     protected final Bot bot;
     protected boolean bePlaying;
     protected boolean beListening;
@@ -39,24 +39,25 @@ public abstract class MusicCommand extends Command {
     {
         this.bot = bot;
         this.guildOnly = true;
-        this.category = bot.MUSIC;
+        this.category = new Category("Music");
     }
     
     @Override
-    protected void execute(CommandEvent event) {
-        Settings settings = bot.getSettings(event.getGuild());
-        TextChannel tchannel = event.getGuild().getTextChannelById(settings.getTextId());
+    protected void execute(CommandEvent event) 
+    {
+        Settings settings = event.getClient().getSettingsFor(event.getGuild());
+        TextChannel tchannel = settings.getTextChannel(event.getGuild());
         if(tchannel!=null && !event.getTextChannel().equals(tchannel))
         {
-            try {
+            try 
+            {
                 event.getMessage().delete().queue();
             } catch(PermissionException e){}
-            event.replyInDm(event.getClient().getError()+" You can only use that command in <#"+settings.getTextId()+">!");
+            event.replyInDm(event.getClient().getError()+" You can only use that command in "+tchannel.getAsMention()+"!");
             return;
         }
-        if(bePlaying
-                && (event.getGuild().getAudioManager().getSendingHandler()==null
-                || !((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).isMusicPlaying()))
+        bot.getPlayerManager().setUpHandler(event.getGuild()); // no point constantly checking for this later
+        if(bePlaying && !((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).isMusicPlaying(event.getJDA()))
         {
             event.reply(event.getClient().getError()+" There must be music playing to use that!");
             return;
@@ -65,23 +66,27 @@ public abstract class MusicCommand extends Command {
         {
             VoiceChannel current = event.getGuild().getSelfMember().getVoiceState().getChannel();
             if(current==null)
-                current = event.getGuild().getVoiceChannelById(settings.getVoiceId());
+                current = settings.getVoiceChannel(event.getGuild());
             GuildVoiceState userState = event.getMember().getVoiceState();
             if(!userState.inVoiceChannel() || userState.isDeafened() || (current!=null && !userState.getChannel().equals(current)))
             {
-                event.reply(event.getClient().getError()
-                        +" You must be listening in "+(current==null ? "a voice channel" : "**"+current.getName()+"**")
-                        +" to use that!");
+                event.replyError("You must be listening in "+(current==null ? "a voice channel" : "**"+current.getName()+"**")+" to use that!");
                 return;
             }
             if(!event.getGuild().getSelfMember().getVoiceState().inVoiceChannel())
-                try {
+            {
+                try 
+                {
                     event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
-                }catch(PermissionException ex) {
+                }
+                catch(PermissionException ex) 
+                {
                     event.reply(event.getClient().getError()+" I am unable to connect to **"+userState.getChannel().getName()+"**!");
                     return;
                 }
+            }
         }
+        
         doCommand(event);
     }
     
