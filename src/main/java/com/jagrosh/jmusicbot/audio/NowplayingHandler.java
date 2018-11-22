@@ -99,7 +99,7 @@ public class NowplayingHandler
         toRemove.forEach(id -> lastNP.remove(id));
     }
     
-    public void updateTopic(long guildId, AudioHandler handler)
+    public void updateTopic(long guildId, AudioHandler handler, boolean wait)
     {
         Guild guild = bot.getJDA().getGuildById(guildId);
         if(guild==null)
@@ -120,7 +120,10 @@ public class NowplayingHandler
             {
                 try 
                 {
-                    tchan.getManager().setTopic(text).queue();
+                    if(wait)
+                        tchan.getManager().setTopic(text).complete();
+                    else
+                        tchan.getManager().setTopic(text).queue();
                 } 
                 catch(PermissionException e) {}
             }
@@ -140,7 +143,7 @@ public class NowplayingHandler
         }
         
         // update channel topic if applicable
-        updateTopic(guildId, handler);
+        updateTopic(guildId, handler, false);
     }
     
     public void onMessageDelete(Guild guild, long messageId)

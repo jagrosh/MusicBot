@@ -167,15 +167,9 @@ public class BotConfig
             // if we get through the whole config, it's good to go
             valid = true;
         }
-        catch (ConfigException.Missing | ConfigException.WrongType ex)
+        catch (ConfigException ex)
         {
-            prompt.alert(Prompt.Level.ERROR, CONTEXT, ex.getMessage());
-            ex.printStackTrace();
-        }
-        catch (ConfigException ex) 
-        {
-            prompt.alert(Prompt.Level.WARNING, CONTEXT, "'"+getConfigLocation()+"' was not found!");
-            ex.printStackTrace();
+            prompt.alert(Prompt.Level.ERROR, CONTEXT, ex + ": " + ex.getMessage());
         }
     }
     

@@ -32,7 +32,6 @@ import com.jagrosh.jmusicbot.utils.FormatUtil;
 import static com.jagrosh.jmusicbot.utils.FormatUtil.formatTime;
 import static com.jagrosh.jmusicbot.utils.FormatUtil.volumeIcon;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -64,6 +63,20 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         this.guildId = guild.getIdLong();
     }
 
+    public int addTrackToFront(QueuedTrack qtrack)
+    {
+        if(audioPlayer.getPlayingTrack()==null)
+        {
+            audioPlayer.playTrack(qtrack.getTrack());
+            return -1;
+        }
+        else
+        {
+            queue.addAt(0, qtrack);
+            return 0;
+        }
+    }
+    
     public int addTrack(QueuedTrack qtrack)
     {
         if(audioPlayer.getPlayingTrack()==null)
@@ -105,7 +118,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
     
     public long getRequester()
     {
-        if(audioPlayer.getPlayingTrack()==null)
+        if(audioPlayer.getPlayingTrack()==null || audioPlayer.getPlayingTrack().getUserData(Long.class)==null)
             return 0;
         return audioPlayer.getPlayingTrack().getUserData(Long.class);
     }
@@ -145,7 +158,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         // if the track ended normally, and we're in repeat mode, re-add it to the queue
         if(endReason==AudioTrackEndReason.FINISHED && manager.getBot().getSettingsManager().getSettings(guildId).getRepeatMode())
         {
-            queue.add(new QueuedTrack(track.makeClone(), track.getUserData(Long.class)));
+            queue.add(new QueuedTrack(track.makeClone(), track.getUserData(Long.class)==null ? 0L : track.getUserData(Long.class)));
         }
         
         if(queue.isEmpty())

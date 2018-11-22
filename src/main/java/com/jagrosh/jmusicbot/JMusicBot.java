@@ -114,6 +114,7 @@ public class JMusicBot
                         
                         new ForceskipCmd(bot),
                         new PauseCmd(bot),
+                        new PlaynextCmd(bot, config.getLoading()),
                         new RepeatCmd(bot),
                         new SkiptoCmd(bot),
                         new StopCmd(bot),
@@ -123,7 +124,6 @@ public class JMusicBot
                         new SettcCmd(),
                         new SetvcCmd(),
                         
-                        //new GuildlistCommand(waiter),
                         new AutoplaylistCmd(bot),
                         new PlaylistCmd(bot),
                         new SetavatarCmd(),

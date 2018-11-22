@@ -39,7 +39,7 @@ public abstract class DJCommand extends MusicCommand
                 return true;
             Settings settings = event.getClient().getSettingsFor(event.getGuild());
             Role dj = settings.getRole(event.getGuild());
-            return dj!=null && event.getMember().getRoles().contains(dj);
+            return dj!=null && (event.getMember().getRoles().contains(dj) || dj.getIdLong()==event.getGuild().getIdLong());
         });
     }
 }

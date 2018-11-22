@@ -173,6 +173,7 @@ public class PlaylistLoader
                                 errors.add(new PlaylistLoadError(index, items.get(index), "This track is longer than the allowed maximum"));
                             else
                             {
+                                at.setUserData(0L);
                                 tracks.add(at);
                                 consumer.accept(at);
                             }
@@ -189,6 +190,7 @@ public class PlaylistLoader
                                     errors.add(new PlaylistLoadError(index, items.get(index), "This track is longer than the allowed maximum"));
                                 else
                                 {
+                                    ap.getTracks().get(0).setUserData(0L);
                                     tracks.add(ap.getTracks().get(0));
                                     consumer.accept(ap.getTracks().get(0));
                                 }
@@ -199,6 +201,7 @@ public class PlaylistLoader
                                     errors.add(new PlaylistLoadError(index, items.get(index), "This track is longer than the allowed maximum"));
                                 else
                                 {
+                                    ap.getSelectedTrack().setUserData(0L);
                                     tracks.add(ap.getSelectedTrack());
                                     consumer.accept(ap.getSelectedTrack());
                                 }
@@ -207,7 +210,6 @@ public class PlaylistLoader
                             {
                                 List<AudioTrack> loaded = new ArrayList<>(ap.getTracks());
                                 if(shuffle)
-                                    
                                     for(int first =0; first<loaded.size(); first++)
                                     {
                                         int second = (int)(Math.random()*loaded.size());
@@ -216,6 +218,7 @@ public class PlaylistLoader
                                         loaded.set(second, tmp);
                                     }
                                 loaded.removeIf(track -> config.isTooLong(track));
+                                loaded.forEach(at -> at.setUserData(0L));
                                 tracks.addAll(loaded);
                                 loaded.forEach(at -> consumer.accept(at));
                             }
