@@ -5,6 +5,9 @@
 [![License](https://img.shields.io/github/license/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/blob/master/LICENSE)
 [![Discord](https://discordapp.com/api/guilds/147698382092238848/widget.png)](https://discord.gg/0p9LSGoRLu6Pet0k)
 
+[![CircleCI](https://img.shields.io/circleci/project/github/jagrosh/MusicBot/master.svg)](https://circleci.com/gh/jagrosh/MusicBot)
+[![Travis-CI](https://travis-ci.com/jagrosh/MusicBot.svg?branch=master)](https://travis-ci.com/jagrosh/MusicBot)
+
 # JMusicBot
 A Discord music bot with a clean interface, and that is easy to set up and run yourself
 
