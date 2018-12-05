@@ -37,10 +37,9 @@
             <type>pom</type>
         </dependency>
         <dependency>
-            <groupId>com.jagrosh</groupId> 
-            <artifactId>JLyrics</artifactId> 
-            <version>0.1</version> 
-            <type>pom</type> 
+            <groupId>com.jagrosh</groupId>
+            <artifactId>JLyrics</artifactId>
+            <version>0.1</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
