@@ -99,9 +99,9 @@ public class PlayCmd extends MusicCommand
     
     private class ResultHandler implements AudioLoadResultHandler
     {
-        final Message m;
-        final CommandEvent event;
-        final boolean ytsearch;
+        private final Message m;
+        private final CommandEvent event;
+        private final boolean ytsearch;
         
         private ResultHandler(Message m, CommandEvent event, boolean ytsearch)
         {

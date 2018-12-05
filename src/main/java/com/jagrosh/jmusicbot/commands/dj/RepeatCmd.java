@@ -63,5 +63,5 @@ public class RepeatCmd extends DJCommand
     }
 
     @Override
-    public void doCommand(CommandEvent event) {}
+    public void doCommand(CommandEvent event) { /* Intentionally Empty */ }
 }

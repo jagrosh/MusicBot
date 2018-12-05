@@ -55,6 +55,7 @@ public synchronized void close() {
 
 @Override
 public synchronized void flush() {
+    /* empty */
     }
 
 @Override
@@ -85,6 +86,9 @@ static private String bytesToString(byte[] ba, int str, int len) {
     static class Appender
     implements Runnable
     {
+    static private final String         EOL1="\n";
+    static private final String         EOL2=System.getProperty("line.separator",EOL1);
+    
     private final JTextArea             textArea;
     private final int                   maxLines;                                                   // maximum lines allowed in text area
     private final LinkedList<Integer>   lengths;                                                    // length of lines within text area
@@ -105,12 +109,12 @@ static private String bytesToString(byte[] ba, int str, int len) {
         queue    =true;
         }
 
-    synchronized void append(String val) {
+    private synchronized void append(String val) {
         values.add(val);
         if(queue) { queue=false; EventQueue.invokeLater(this); }
         }
 
-    synchronized void clear() {
+    private synchronized void clear() {
         clear=true;
         curLength=0;
         lengths.clear();
@@ -139,9 +143,5 @@ static private String bytesToString(byte[] ba, int str, int len) {
         clear =false;
         queue =true;
         }
-
-    static private final String         EOL1="\n";
-    static private final String         EOL2=System.getProperty("line.separator",EOL1);
     }
-
 } /* END PUBLIC CLASS */

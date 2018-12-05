@@ -16,23 +16,16 @@
 package com.jagrosh.jmusicbot.commands.dj;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jdautilities.menu.ButtonMenu;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.DJCommand;
-import com.jagrosh.jmusicbot.commands.music.PlayCmd;
-import static com.jagrosh.jmusicbot.commands.music.PlayCmd.CANCEL;
-import static com.jagrosh.jmusicbot.commands.music.PlayCmd.LOAD;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import java.util.concurrent.TimeUnit;
-import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.exceptions.PermissionException;
 
 /**
  *
@@ -69,9 +62,9 @@ public class PlaynextCmd extends DJCommand
     
     private class ResultHandler implements AudioLoadResultHandler
     {
-        final Message m;
-        final CommandEvent event;
-        final boolean ytsearch;
+        private final Message m;
+        private final CommandEvent event;
+        private final boolean ytsearch;
         
         private ResultHandler(Message m, CommandEvent event, boolean ytsearch)
         {

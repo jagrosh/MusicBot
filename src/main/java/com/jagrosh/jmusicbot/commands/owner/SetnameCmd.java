@@ -26,7 +26,7 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
  */
 public class SetnameCmd extends OwnerCommand
 {
-    public SetnameCmd(Bot bot)
+    public SetnameCmd()
     {
         this.name = "setname";
         this.help = "sets the name of the bot";
@@ -37,13 +37,18 @@ public class SetnameCmd extends OwnerCommand
     @Override
     protected void execute(CommandEvent event) 
     {
-        try {
+        try 
+        {
             String oldname = event.getSelfUser().getName();
             event.getSelfUser().getManager().setName(event.getArgs()).complete(false);
             event.reply(event.getClient().getSuccess()+" Name changed from `"+oldname+"` to `"+event.getArgs()+"`");
-        } catch(RateLimitedException e) {
+        } 
+        catch(RateLimitedException e) 
+        {
             event.reply(event.getClient().getError()+" Name can only be changed twice per hour!");
-        } catch(Exception e) {
+        }
+        catch(Exception e) 
+        {
             event.reply(event.getClient().getError()+" That name is not valid!");
         }
     }

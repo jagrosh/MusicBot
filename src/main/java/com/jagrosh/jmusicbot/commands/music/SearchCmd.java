@@ -73,8 +73,9 @@ public class SearchCmd extends MusicCommand
     
     private class ResultHandler implements AudioLoadResultHandler 
     {
-        final Message m;
-        final CommandEvent event;
+        private final Message m;
+        private final CommandEvent event;
+        
         private ResultHandler(Message m, CommandEvent event)
         {
             this.m = m;

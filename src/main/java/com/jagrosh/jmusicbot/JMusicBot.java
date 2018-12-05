@@ -128,7 +128,7 @@ public class JMusicBot
                         new PlaylistCmd(bot),
                         new SetavatarCmd(),
                         new SetgameCmd(),
-                        new SetnameCmd(bot),
+                        new SetnameCmd(),
                         new SetstatusCmd(),
                         new ShutdownCmd(bot)
                 );

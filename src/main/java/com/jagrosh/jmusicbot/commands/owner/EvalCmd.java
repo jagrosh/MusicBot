@@ -27,8 +27,11 @@ import com.jagrosh.jmusicbot.commands.OwnerCommand;
  */
 public class EvalCmd extends OwnerCommand 
 {
+    private final Bot bot;
+    
     public EvalCmd(Bot bot)
     {
+        this.bot = bot;
         this.name = "eval";
         this.help = "evaluates nashorn code";
         this.guildOnly = false;
@@ -38,6 +41,7 @@ public class EvalCmd extends OwnerCommand
     protected void execute(CommandEvent event) 
     {
         ScriptEngine se = new ScriptEngineManager().getEngineByName("Nashorn");
+        se.put("bot", bot);
         se.put("event", event);
         se.put("jda", event.getJDA());
         se.put("guild", event.getGuild());
