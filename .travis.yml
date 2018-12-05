@@ -1,0 +1,2 @@
+language: java
+install: mvn install -Dmaven.javadoc.skip=true --batch-mode --show-version --settings .travis.settings.xml
