@@ -63,7 +63,7 @@ public class Listener extends ListenerAdapter
                     guild.getAudioManager().openAudioConnection(vc);
                 }
             }
-            catch(Exception ex) {}
+            catch(Exception ignore) {}
         });
         if(bot.getConfig().useUpdateAlerts())
         {

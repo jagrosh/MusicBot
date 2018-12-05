@@ -52,7 +52,7 @@ public abstract class MusicCommand extends Command
             try 
             {
                 event.getMessage().delete().queue();
-            } catch(PermissionException e){}
+            } catch(PermissionException ignore){}
             event.replyInDm(event.getClient().getError()+" You can only use that command in "+tchannel.getAsMention()+"!");
             return;
         }

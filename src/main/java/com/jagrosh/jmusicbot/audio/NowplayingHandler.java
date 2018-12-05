@@ -123,7 +123,7 @@ public class NowplayingHandler
                     else
                         tchan.getManager().setTopic(text).queue();
                 } 
-                catch(PermissionException e) {}
+                catch(PermissionException ignore) {}
             }
         }
     }

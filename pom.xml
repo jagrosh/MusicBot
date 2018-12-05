@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.jagrosh</groupId>
     <artifactId>JMusicBot</artifactId>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
     <packaging>jar</packaging>
     
     <repositories>
@@ -11,6 +11,11 @@
             <id>central</id>
             <name>bintray</name>
             <url>http://jcenter.bintray.com</url>
+        </repository>
+        <repository>
+            <id>bintray-jagrosh-maven</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/jagrosh/maven</url>
         </repository>
     </repositories>
     
@@ -30,6 +35,12 @@
             <artifactId>jda-utilities</artifactId>
             <version>2.1.4</version>
             <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.jagrosh</groupId> 
+            <artifactId>JLyrics</artifactId> 
+            <version>0.1</version> 
+            <type>pom</type> 
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

@@ -49,7 +49,7 @@ public class QueueCmd extends MusicCommand
         this.botPermissions = new Permission[]{Permission.MESSAGE_ADD_REACTION,Permission.MESSAGE_EMBED_LINKS};
         builder = new Paginator.Builder()
                 .setColumns(1)
-                .setFinalAction(m -> {try{m.clearReactions().queue();}catch(PermissionException e){}})
+                .setFinalAction(m -> {try{m.clearReactions().queue();}catch(PermissionException ignore){}})
                 .setItemsPerPage(10)
                 .waitOnSinglePage(false)
                 .useNumberedItems(true)
@@ -66,7 +66,7 @@ public class QueueCmd extends MusicCommand
         {
             pagenum = Integer.parseInt(event.getArgs());
         }
-        catch(NumberFormatException e){}
+        catch(NumberFormatException ignore){}
         AudioHandler ah = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
         List<QueuedTrack> list = ah.getQueue().getList();
         if(list.isEmpty())

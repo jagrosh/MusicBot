@@ -61,9 +61,18 @@ public class Prompt
             Logger log = LoggerFactory.getLogger(context);
             switch(level)
             {
-                case INFO: log.info(message); break;
-                case WARNING: log.warn(message); break;
-                case ERROR: log.error(message); break;
+                case INFO: 
+                    log.info(message); 
+                    break;
+                case WARNING: 
+                    log.warn(message); 
+                    break;
+                case ERROR: 
+                    log.error(message); 
+                    break;
+                default: 
+                    log.info(message); 
+                    break;
             }
         }
         else
@@ -73,9 +82,18 @@ public class Prompt
                 int option = 0;
                 switch(level)
                 {
-                    case INFO: option = JOptionPane.INFORMATION_MESSAGE; break;
-                    case WARNING: option = JOptionPane.WARNING_MESSAGE; break;
-                    case ERROR: option = JOptionPane.ERROR_MESSAGE; break;
+                    case INFO: 
+                        option = JOptionPane.INFORMATION_MESSAGE; 
+                        break;
+                    case WARNING: 
+                        option = JOptionPane.WARNING_MESSAGE; 
+                        break;
+                    case ERROR: 
+                        option = JOptionPane.ERROR_MESSAGE; 
+                        break;
+                    default:
+                        option = JOptionPane.PLAIN_MESSAGE;
+                        break;
                 }
                 JOptionPane.showMessageDialog(null, "<html><body><p style='width: 400px;'>"+message, title, option);
             }

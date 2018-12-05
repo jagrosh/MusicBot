@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public class QueueTests
+public class FairQueueTest
 {
     @Test
     public void differentIdentifierSize()

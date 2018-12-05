@@ -63,7 +63,7 @@ public class PlaylistLoader
         {
             Files.createDirectory(Paths.get(config.getPlaylistsFolder()));
         } 
-        catch (IOException ex) {}
+        catch (IOException ignore) {}
     }
     
     public boolean folderExists()
