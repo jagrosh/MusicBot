@@ -92,6 +92,6 @@ public class FormatUtil {
     
     public static String filter(String input)
     {
-        return input.replace("@everyone", "@\u0435veryone").replace("@here", "@h\u0435re").trim();
+        return input.replace("@everyone", "@\u0435veryone").replace("@here", "@h\u0435re").trim(); // cyrillic letter e
     }
 }

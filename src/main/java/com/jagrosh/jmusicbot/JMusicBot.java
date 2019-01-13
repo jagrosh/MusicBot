@@ -87,7 +87,7 @@ public class JMusicBot
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
                                 RECOMMENDED_PERMS);
         aboutCommand.setIsAuthor(false);
-        aboutCommand.setReplacementCharacter("\uD83C\uDFB6");
+        aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
         
         // set up the command client
         CommandClientBuilder cb = new CommandClientBuilder()
