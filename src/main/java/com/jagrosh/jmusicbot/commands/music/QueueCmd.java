@@ -37,7 +37,10 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
  */
 public class QueueCmd extends MusicCommand 
 {
+    private final static String REPEAT = "\uD83D\uDD01"; // 🔁
+    
     private final Paginator.Builder builder;
+    
     public QueueCmd(Bot bot)
     {
         super(bot);
@@ -110,6 +113,6 @@ public class QueueCmd extends MusicCommand
         }
         return FormatUtil.filter(sb.append(success).append(" Current Queue | ").append(songslength)
                 .append(" entries | `").append(FormatUtil.formatTime(total)).append("` ")
-                .append(repeatmode ? "| \uD83D\uDD01" : "").toString());
+                .append(repeatmode ? "| " + REPEAT : "").toString());
     }
 }

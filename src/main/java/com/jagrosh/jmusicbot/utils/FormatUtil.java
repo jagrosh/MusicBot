@@ -37,30 +37,13 @@ public class FormatUtil {
         seconds %= 60;
         return (hours>0 ? hours+":" : "") + (minutes<10 ? "0"+minutes : minutes) + ":" + (seconds<10 ? "0"+seconds : seconds);
     }
-    
-    /*public static String embedFormat(AudioHandler handler)
-    {
-        if(handler==null)
-            return "No music playing\n\u23F9 "+progressBar(-1)+" "+volumeIcon(100);
-        else if (!handler.isMusicPlaying())
-            return "No music playing\n\u23F9 "+progressBar(-1)+" "+volumeIcon(handler.getPlayer().getVolume());
-        else
-        {
-            AudioTrack track = handler.getPlayer().getPlayingTrack();
-            double progress = (double)track.getPosition()/track.getDuration();
-            return (handler.getPlayer().isPaused()?"\u23F8":"\u25B6")
-                    +" "+progressBar(progress)
-                    +" `["+formatTime(track.getPosition()) + "/" + formatTime(track.getDuration()) +"]` "
-                    +volumeIcon(handler.getPlayer().getVolume());
-        }
-    }//*/
         
     public static String progressBar(double percent)
     {
         String str = "";
         for(int i=0; i<12; i++)
             if(i == (int)(percent*12))
-                str+="\uD83D\uDD18";
+                str+="\uD83D\uDD18"; // 🔘
             else
                 str+="▬";
         return str;
@@ -69,12 +52,12 @@ public class FormatUtil {
     public static String volumeIcon(int volume)
     {
         if(volume == 0)
-            return "\uD83D\uDD07";
+            return "\uD83D\uDD07"; // 🔇
         if(volume < 30)
-            return "\uD83D\uDD08";
+            return "\uD83D\uDD08"; // 🔈
         if(volume < 70)
-            return "\uD83D\uDD09";
-        return "\uD83D\uDD0A";
+            return "\uD83D\uDD09"; // 🔉
+        return "\uD83D\uDD0A";     // 🔊
     }
     
     public static String listOfTChannels(List<TextChannel> list, String query)

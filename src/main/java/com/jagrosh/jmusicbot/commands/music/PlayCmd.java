@@ -42,8 +42,8 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
  */
 public class PlayCmd extends MusicCommand
 {
-    public final static String LOAD = "\uD83D\uDCE5";
-    public final static String CANCEL = "\uD83D\uDEAB";
+    private final static String LOAD = "\uD83D\uDCE5"; // 📥
+    private final static String CANCEL = "\uD83D\uDEAB"; // 🚫
     
     private final String loadingEmoji;
     
@@ -139,7 +139,7 @@ public class PlayCmd extends MusicCommand
                                 m.editMessage(addMsg).queue();
                         }).setFinalAction(m ->
                         {
-                            try{m.clearReactions().queue();}catch(PermissionException ex){}
+                            try{ m.clearReactions().queue(); }catch(PermissionException ignore) {}
                         }).build().display(m);
             }
         }

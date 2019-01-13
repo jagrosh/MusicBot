@@ -77,9 +77,6 @@ public class BotConfig
             //Config config = ConfigFactory.parseFile(path.toFile()).withFallback(ConfigFactory.load());
             Config config = ConfigFactory.load();
             
-            // info on where the config is being loaded from
-            prompt.alert(Prompt.Level.INFO, CONTEXT, "Loading config from "+path.toAbsolutePath().toString());
-            
             // set values
             token = config.getString("token");
             prefix = config.getString("prefix");
@@ -114,12 +111,12 @@ public class BotConfig
                         + "\nBot Token: ");
                 if(token==null)
                 {
-                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "No token provided! Exiting.");
+                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "No token provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
                     return;
                 }
                 else
                 {
-                    lines.add("token="+token);
+                    lines.add("token = "+token);
                 }
             }
             
@@ -140,12 +137,12 @@ public class BotConfig
                 }
                 if(owner<=0)
                 {
-                    prompt.alert(Prompt.Level.ERROR, CONTEXT, "Invalid User ID! Exiting.");
+                    prompt.alert(Prompt.Level.ERROR, CONTEXT, "Invalid User ID! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
                     System.exit(0);
                 }
                 else
                 {
-                    lines.add("owner="+owner);
+                    lines.add("owner = "+owner);
                 }
             }
             
@@ -160,7 +157,8 @@ public class BotConfig
                 catch(IOException ex) 
                 {
                     prompt.alert(Prompt.Level.WARNING, CONTEXT, "Failed to write new config options to config.txt: "+ex
-                        + "\nPlease make sure that the files are not on your desktop or some other restricted area.");
+                        + "\nPlease make sure that the files are not on your desktop or some other restricted area.\n\nConfig Location: " 
+                        + path.toAbsolutePath().toString());
                 }
             }
             
@@ -169,7 +167,7 @@ public class BotConfig
         }
         catch (ConfigException ex)
         {
-            prompt.alert(Prompt.Level.ERROR, CONTEXT, ex + ": " + ex.getMessage());
+            prompt.alert(Prompt.Level.ERROR, CONTEXT, ex + ": " + ex.getMessage() + "\n\nConfig Location: " + path.toAbsolutePath().toString());
         }
     }
     

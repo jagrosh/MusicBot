@@ -30,6 +30,8 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
  */
 public class SettingsCmd extends Command 
 {
+    private final static String EMOJI = "\uD83C\uDFA7"; // 🎧
+    
     public SettingsCmd()
     {
         this.name = "settings";
@@ -43,7 +45,7 @@ public class SettingsCmd extends Command
     {
         Settings s = event.getClient().getSettingsFor(event.getGuild());
         MessageBuilder builder = new MessageBuilder()
-                .append("\uD83C\uDFA7 **")
+                .append(EMOJI + " **")
                 .append(event.getSelfUser().getName())
                 .append("** settings:");
         TextChannel tchan = s.getTextChannel(event.getGuild());

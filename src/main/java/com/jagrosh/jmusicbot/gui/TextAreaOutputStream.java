@@ -76,7 +76,11 @@ public synchronized void write(byte[] ba,int str,int len) {
 
 //@edu.umd.cs.findbugs.annotations.SuppressWarnings("DM_DEFAULT_ENCODING")
 static private String bytesToString(byte[] ba, int str, int len) {
-    try { return new String(ba,str,len,"UTF-8"); } catch(UnsupportedEncodingException thr) { return new String(ba,str,len); } // all JVMs are required to support UTF-8
+    try { 
+        return new String(ba,str,len,"UTF-8"); 
+    } catch(UnsupportedEncodingException thr) { 
+        return new String(ba,str,len); 
+    } // all JVMs are required to support UTF-8
     }
 
 // *************************************************************************************************
@@ -111,7 +115,10 @@ static private String bytesToString(byte[] ba, int str, int len) {
 
     private synchronized void append(String val) {
         values.add(val);
-        if(queue) { queue=false; EventQueue.invokeLater(this); }
+        if(queue) { 
+            queue=false; 
+            EventQueue.invokeLater(this); 
+        }
         }
 
     private synchronized void clear() {
@@ -119,7 +126,10 @@ static private String bytesToString(byte[] ba, int str, int len) {
         curLength=0;
         lengths.clear();
         values.clear();
-        if(queue) { queue=false; EventQueue.invokeLater(this); }
+        if(queue) { 
+            queue=false; 
+            EventQueue.invokeLater(this); 
+        }
         }
 
     // MUST BE THE ONLY METHOD THAT TOUCHES textArea!
