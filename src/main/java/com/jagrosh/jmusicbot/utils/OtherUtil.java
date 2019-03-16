@@ -17,9 +17,7 @@ package com.jagrosh.jmusicbot.utils;
 
 import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.entities.Prompt;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import net.dv8tion.jda.core.OnlineStatus;
@@ -39,6 +37,20 @@ public class OtherUtil
                     + "Current version: %s\n"
                     + "New Version: %s\n\n"
                     + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
+    
+    public static String loadResource(Object clazz, String name)
+    {
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(clazz.getClass().getResourceAsStream(name))))
+        {
+            StringBuilder sb = new StringBuilder();
+            reader.lines().forEach(line -> sb.append("\r\n").append(line));
+            return sb.toString().trim();
+        }
+        catch(IOException ex)
+        {
+            return null;
+        }
+    }
     
     public static InputStream imageFromUrl(String url)
     {

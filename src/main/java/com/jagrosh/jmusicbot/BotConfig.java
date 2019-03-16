@@ -20,19 +20,16 @@ import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.typesafe.config.*;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedList;
-import java.util.List;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 
 /**
- * @author Your Name
- * Changes from original source:
- *  - Changed "searching" to "finding"
  * 
  * 
  * @author John Grosh (jagrosh)
@@ -41,6 +38,8 @@ public class BotConfig
 {
     private final Prompt prompt;
     private final static String CONTEXT = "Config";
+    private final static String START_TOKEN = "/// START OF JMUSICBOT CONFIG ///";
+    private final static String END_TOKEN = "/// END OF JMUSICBOT CONFIG ///";
     
     private Path path = null;
     private String token, prefix, altprefix, helpWord, playlistsFolder,
@@ -99,8 +98,8 @@ public class BotConfig
             playlistsFolder = config.getString("playlistsfolder");
             dbots = owner == 113156185389092864L;
             
-            // we may need to get some additional data and write a new config file
-            List<String> lines = new LinkedList<>();
+            // we may need to write a new config file
+            boolean write = false;
 
             // validate bot token
             if(token==null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
@@ -116,7 +115,7 @@ public class BotConfig
                 }
                 else
                 {
-                    lines.add("token = "+token);
+                    write = true;
                 }
             }
             
@@ -142,17 +141,28 @@ public class BotConfig
                 }
                 else
                 {
-                    lines.add("owner = "+owner);
+                    write = true;
                 }
             }
             
-            if(!lines.isEmpty())
+            if(write)
             {
-                StringBuilder builder = new StringBuilder();
-                lines.stream().forEach(s -> builder.append(s).append("\r\n"));
+                String original = OtherUtil.loadResource(this, "/reference.conf");
+                byte[] bytes;
+                if(original==null)
+                {
+                    bytes = ("token = "+token+"\r\nowner = "+owner).getBytes();
+                }
+                else
+                {
+                    bytes = original.substring(original.indexOf(START_TOKEN)+START_TOKEN.length(), original.indexOf(END_TOKEN))
+                        .replace("BOT_TOKEN_HERE", token)
+                        .replace("0 // OWNER ID", Long.toString(owner))
+                        .trim().getBytes();
+                }
                 try 
                 {
-                    Files.write(path, builder.toString().trim().getBytes());
+                    Files.write(path, bytes);
                 }
                 catch(IOException ex) 
                 {
