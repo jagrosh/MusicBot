@@ -128,4 +128,17 @@ public class FairQueue<T extends Queueable> {
         for(int i=0; i<number; i++)
             list.remove(0);
     }
+
+    /**
+     * Move an item to a different position in the list
+     * @param from The position of the item
+     * @param to The new position of the item
+     * @return the moved item
+     */
+    public T moveItem(int from, int to)
+    {
+        T item = list.remove(from);
+        list.add(to, item);
+        return item;
+    }
 }
