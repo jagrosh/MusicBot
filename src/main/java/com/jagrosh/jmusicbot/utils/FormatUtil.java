@@ -41,7 +41,7 @@ public class FormatUtil {
     public static String progressBar(double percent)
     {
         String str = "";
-        for(int i=0; i<12; i++)
+        for(int i=1; i<12; i++)
             if(i == (int)(percent*12))
                 str+="\uD83D\uDD18"; // 🔘
             else
