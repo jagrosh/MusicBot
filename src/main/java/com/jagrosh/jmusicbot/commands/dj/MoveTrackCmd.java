@@ -33,7 +33,7 @@ public class MoveTrackCmd extends DJCommand
         String[] parts = event.getArgs().split("\\s+", 2);
         if(parts.length < 2)
         {
-            event.replyError("Please include two valid indexes.'");
+            event.replyError("Please include two valid indexes.");
             return;
         }
 
@@ -74,7 +74,7 @@ public class MoveTrackCmd extends DJCommand
         // Move the track
         QueuedTrack track = queue.moveItem(from - 1, to - 1);
         String trackTitle = track.getTrack().getInfo().title;
-        String reply = String.format("Moved **%s** from position `%d` to `%d.`", trackTitle, from, to);
+        String reply = String.format("Moved **%s** from position `%d` to `%d`.", trackTitle, from, to);
         event.replySuccess(reply);
     }
 
