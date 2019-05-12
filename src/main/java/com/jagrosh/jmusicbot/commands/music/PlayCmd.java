@@ -52,9 +52,9 @@ public class PlayCmd extends MusicCommand
         super(bot);
         this.loadingEmoji = loadingEmoji;
         this.name = "play";
-        this.aliases = new String[]{"p"};
         this.arguments = "<title|URL|subcommand>";
         this.help = "plays the provided song";
+        this.aliases = new String[]{"p"};
         this.beListening = true;
         this.bePlaying = false;
         this.children = new Command[]{new PlaylistCmd(bot)};
