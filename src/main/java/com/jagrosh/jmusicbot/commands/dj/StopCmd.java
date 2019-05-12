@@ -30,6 +30,7 @@ public class StopCmd extends DJCommand
     {
         super(bot);
         this.name = "stop";
+        this.aliases = new String[]{"s", "leave", "l"};
         this.help = "stops the current song and clears the queue";
         this.bePlaying = false;
     }

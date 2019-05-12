@@ -45,6 +45,7 @@ public class QueueCmd extends MusicCommand
     {
         super(bot);
         this.name = "queue";
+        this.aliases = new String[]{"q"};
         this.help = "shows the current queue";
         this.arguments = "[pagenum]";
         this.aliases = new String[]{"list"};

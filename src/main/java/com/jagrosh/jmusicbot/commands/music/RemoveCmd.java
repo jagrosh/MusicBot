@@ -36,7 +36,7 @@ public class RemoveCmd extends MusicCommand
         this.name = "remove";
         this.help = "removes a song from the queue";
         this.arguments = "<position|ALL>";
-        this.aliases = new String[]{"delete"};
+        this.aliases = new String[]{"delete", "r", "d"};
         this.beListening = true;
         this.bePlaying = true;
     }
