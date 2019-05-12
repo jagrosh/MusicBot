@@ -52,6 +52,7 @@ public class PlayCmd extends MusicCommand
         super(bot);
         this.loadingEmoji = loadingEmoji;
         this.name = "play";
+        this.aliases = new String[]{"p"};
         this.arguments = "<title|URL|subcommand>";
         this.help = "plays the provided song";
         this.beListening = true;
@@ -83,12 +84,23 @@ public class PlayCmd extends MusicCommand
                 }
                 return;
             }
-            StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" Play Commands:\n");
-            builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <song title>` - plays the first result from Youtube");
-            builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <URL>` - plays the provided song, playlist, or stream");
-            for(Command cmd: children)
-                builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" ").append(cmd.getName()).append(" ").append(cmd.getArguments()).append("` - ").append(cmd.getHelp());
-            event.reply(builder.toString());
+            else if (handler.getPlayer().getPlayingTrack()!=null && !handler.getPlayer().isPaused())
+            {
+                //currently playing
+                handler.getPlayer().setPaused(true);
+                event.replySuccess("Paused **"+handler.getPlayer().getPlayingTrack().getInfo().title+"**. Type `"+event.getClient().getPrefix()+"play` to unpause!");
+            }
+            else{
+                //not currently playing and send play with no arguments
+                StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" Play Commands:\n");
+                builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <song title>` - plays the first result from Youtube");
+                builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <URL>` - plays the provided song, playlist, or stream");
+                for(Command cmd: children)
+                    builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" ").append(cmd.getName()).append(" ").append(cmd.getArguments()).append("` - ").append(cmd.getHelp());
+                event.reply(builder.toString());
+                return;
+            }
+
             return;
         }
         String args = event.getArgs().startsWith("<") && event.getArgs().endsWith(">") 
