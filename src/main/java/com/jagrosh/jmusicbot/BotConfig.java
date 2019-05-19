@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
+import com.jagrosh.jmusicbot.utils.Message;
 
 /**
  * @author Your Name
@@ -65,102 +66,24 @@ public class BotConfig
         try 
         {
             // get the path to the config, default config.txt
-            path = Paths.get(System.getProperty("config.file", System.getProperty("config", "config.txt")));
-            if(path.toFile().exists())
-            {
-                if(System.getProperty("config.file") == null)
-                    System.setProperty("config.file", System.getProperty("config", "config.txt"));
-                ConfigFactory.invalidateCaches();
-            }
+            getPath();
             
             // load in the config file, plus the default values
-            //Config config = ConfigFactory.parseFile(path.toFile()).withFallback(ConfigFactory.load());
-            Config config = ConfigFactory.load();
-            
-            // set values
-            token = config.getString("token");
-            prefix = config.getString("prefix");
-            altprefix = config.getString("altprefix");
-            helpWord = config.getString("help");
-            owner = config.getLong("owner");
-            successEmoji = config.getString("success");
-            warningEmoji = config.getString("warning");
-            errorEmoji = config.getString("error");
-            loadingEmoji = config.getString("loading");
-            searchingEmoji = config.getString("searching");
-            game = OtherUtil.parseGame(config.getString("game"));
-            status = OtherUtil.parseStatus(config.getString("status"));
-            stayInChannel = config.getBoolean("stayinchannel");
-            songInGame = config.getBoolean("songinstatus");
-            npImages = config.getBoolean("npimages");
-            updatealerts = config.getBoolean("updatealerts");
-            useEval = config.getBoolean("eval");
-            maxSeconds = config.getLong("maxtime");
-            playlistsFolder = config.getString("playlistsfolder");
-            dbots = owner == 113156185389092864L;
+            setValues();
             
             // we may need to get some additional data and write a new config file
             List<String> lines = new LinkedList<>();
 
             // validate bot token
-            if(token==null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
-            {
-                token = prompt.prompt("Please provide a bot token."
-                        + "\nInstructions for obtaining a token can be found here:"
-                        + "\nhttps://github.com/jagrosh/MusicBot/wiki/Getting-a-Bot-Token."
-                        + "\nBot Token: ");
-                if(token==null)
-                {
-                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "No token provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
-                    return;
-                }
-                else
-                {
-                    lines.add("token = "+token);
-                }
-            }
+            if(isInvalidToken(lines))
+            	return;
             
             // validate bot owner
-            if(owner<=0)
-            {
-                try
-                {
-                    owner = Long.parseLong(prompt.prompt("Owner ID was missing, or the provided owner ID is not valid."
-                        + "\nPlease provide the User ID of the bot's owner."
-                        + "\nInstructions for obtaining your User ID can be found here:"
-                        + "\nhttps://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID"
-                        + "\nOwner User ID: "));
-                }
-                catch(NumberFormatException | NullPointerException ex)
-                {
-                    owner = 0;
-                }
-                if(owner<=0)
-                {
-                    prompt.alert(Prompt.Level.ERROR, CONTEXT, "Invalid User ID! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
-                    System.exit(0);
-                }
-                else
-                {
-                    lines.add("owner = "+owner);
-                }
-            }
+            if(isInvalidOwner(lines))
+            	System.exit(0);
             
             if(!lines.isEmpty())
-            {
-                StringBuilder builder = new StringBuilder();
-                lines.stream().forEach(s -> builder.append(s).append("\r\n"));
-                try 
-                {
-                    Files.write(path, builder.toString().trim().getBytes());
-                }
-                catch(IOException ex) 
-                {
-                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "Failed to write new config options to config.txt: "+ex
-                        + "\nPlease make sure that the files are not on your desktop or some other restricted area.\n\nConfig Location: " 
-                        + path.toAbsolutePath().toString());
-                }
-            }
+                writeFile(this.path, lines);
             
             // if we get through the whole config, it's good to go
             valid = true;
@@ -170,6 +93,103 @@ public class BotConfig
             prompt.alert(Prompt.Level.ERROR, CONTEXT, ex + ": " + ex.getMessage() + "\n\nConfig Location: " + path.toAbsolutePath().toString());
         }
     }
+
+	private void writeFile(Path path, List<String> lines) {
+		StringBuilder builder = new StringBuilder();
+		lines.stream().forEach(s -> builder.append(s).append("\r\n"));
+		try 
+		{
+		    Files.write(path, builder.toString().trim().getBytes());
+		}
+		catch(IOException ex) 
+		{
+		    prompt.alert(Prompt.Level.WARNING, CONTEXT, "Failed to write new config options to config.txt: "+ex
+		        + "\nPlease make sure that the files are not on your desktop or some other restricted area.\n\nConfig Location: " 
+		        + path.toAbsolutePath().toString());
+		}
+	}
+
+	private boolean isInvalidOwner(List<String> lines) {
+		if(owner<=0)
+		{
+		    try
+		    {
+		        owner = Long.parseLong(prompt.prompt("Owner ID was missing, or the provided owner ID is not valid."
+		            + "\nPlease provide the User ID of the bot's owner."
+		            + "\nInstructions for obtaining your User ID can be found here:"
+		            + "\nhttps://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID"
+		            + "\nOwner User ID: "));
+		    }
+		    catch(NumberFormatException | NullPointerException ex)
+		    {
+		        owner = 0;
+		    }
+		    if(owner<=0)
+		    {
+		        prompt.alert(Prompt.Level.ERROR, CONTEXT, "Invalid User ID! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
+		        return true;
+		    }
+		    else
+		    {
+		        lines.add("owner = "+owner);
+		    }
+		}
+		return false;
+	}
+
+	private boolean isInvalidToken(List<String> lines) {
+		if(token==null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
+		{
+		    token = prompt.prompt(Message.invalidateTokenMessage);
+		    if(token==null)
+		    {
+		        prompt.alert(Prompt.Level.WARNING, CONTEXT, "No token provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
+		        return true;
+		    }
+		    else
+		    {
+		        lines.add("token = "+token);
+		    }
+		}
+		return false;
+	}
+
+	private void setValues() {
+        //Config config = ConfigFactory.parseFile(path.toFile()).withFallback(ConfigFactory.load());
+		Config config = ConfigFactory.load();
+		
+		// set values
+		token = config.getString("token");
+		prefix = config.getString("prefix");
+		altprefix = config.getString("altprefix");
+		helpWord = config.getString("help");
+		owner = config.getLong("owner");
+		successEmoji = config.getString("success");
+		warningEmoji = config.getString("warning");
+		errorEmoji = config.getString("error");
+		loadingEmoji = config.getString("loading");
+		searchingEmoji = config.getString("searching");
+		game = OtherUtil.parseGame(config.getString("game"));
+		status = OtherUtil.parseStatus(config.getString("status"));
+		stayInChannel = config.getBoolean("stayinchannel");
+		songInGame = config.getBoolean("songinstatus");
+		npImages = config.getBoolean("npimages");
+		updatealerts = config.getBoolean("updatealerts");
+		useEval = config.getBoolean("eval");
+		maxSeconds = config.getLong("maxtime");
+		playlistsFolder = config.getString("playlistsfolder");
+		dbots = owner == 113156185389092864L;
+	}
+
+	private void getPath() {
+		path = Paths.get(System.getProperty("config.file", System.getProperty("config", "config.txt")));
+		if(path.toFile().exists())
+		{
+		    if(System.getProperty("config.file") == null)
+		        System.setProperty("config.file", System.getProperty("config", "config.txt"));
+		    ConfigFactory.invalidateCaches();
+		}
+	}
     
     public boolean isValid()
     {
