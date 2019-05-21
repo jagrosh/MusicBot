@@ -28,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
-import com.jagrosh.jmusicbot.utils.Message;
 
 /**
  * @author Your Name
@@ -140,7 +139,10 @@ public class BotConfig
 	private boolean isInvalidToken(List<String> lines) {
 		if(token==null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
 		{
-		    token = prompt.prompt(Message.invalidateTokenMessage);
+		    token = prompt.prompt("Please provide a bot token."
+		            + "\nInstructions for obtaining a token can be found here:"
+		            + "\nhttps://github.com/jagrosh/MusicBot/wiki/Getting-a-Bot-Token."
+		            + "\nBot Token: ");
 		    if(token==null)
 		    {
 		        prompt.alert(Prompt.Level.WARNING, CONTEXT, "No token provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
