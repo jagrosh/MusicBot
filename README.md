@@ -12,7 +12,7 @@
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/gdu6nyte5psj6xfk/branch/master?svg=true)](https://ci.appveyor.com/project/jagrosh/musicbot/branch/master)
 [![CodeFactor](https://www.codefactor.io/repository/github/jagrosh/musicbot/badge)](https://www.codefactor.io/repository/github/jagrosh/musicbot)
 
-A cross-platform Discord music bot with a clean interface, and that is easy to set up and run yourself
+A cross-platform Discord music bot with a clean interface, and that is easy to set up and run yourself!
 
 [![Setup](http://i.imgur.com/VvXYp5j.png)](https://github.com/jagrosh/MusicBot/wiki/Setup)
 
@@ -30,7 +30,7 @@ A cross-platform Discord music bot with a clean interface, and that is easy to s
   * Playlist support (both web/youtube, and local)
 
 ## Example
-![Example](https://i.imgur.com/kVtTKvS.gifv)
+![Loading Example...](https://i.imgur.com/kVtTKvS.gif)
 
 ## Setup
 Please see the [Setup Page](https://github.com/jagrosh/MusicBot/wiki/Setup) in the wiki to run this bot yourself!
