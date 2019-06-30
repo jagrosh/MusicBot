@@ -43,10 +43,7 @@ public class ForceRemoveCmd extends MusicCommand {
         } else {
             try {
                 target = Long.parseLong(args);
-            } catch (NumberFormatException ignored) {
-                event.replyError("You need to mention a user!");
-                return;
-            }
+            } catch (NumberFormatException ignored) {}
         }
         if (target <= 0) {
             event.replyError("You need to mention a user!");
