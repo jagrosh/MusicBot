@@ -112,7 +112,8 @@ public class JMusicBot
                         new SCSearchCmd(bot, config.getSearching()),
                         new ShuffleCmd(bot),
                         new SkipCmd(bot),
-                        
+
+                        new ForceRemoveCmd(bot),
                         new ForceskipCmd(bot),
                         new MoveTrackCmd(bot),
                         new PauseCmd(bot),
