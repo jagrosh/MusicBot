@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.jagrosh</groupId>
     <artifactId>JMusicBot</artifactId>
-    <version>0.2.4</version>
+    <version>0.2.5</version>
     <packaging>jar</packaging>
     
     <repositories>
@@ -11,11 +11,6 @@
             <id>central</id>
             <name>bintray</name>
             <url>http://jcenter.bintray.com</url>
-        </repository>
-        <repository>
-            <id>bintray-jagrosh-maven</id>
-            <name>bintray</name>
-            <url>https://dl.bintray.com/jagrosh/maven</url>
         </repository>
     </repositories>
     
@@ -28,7 +23,7 @@
         <dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>1.3.19</version>
+            <version>1.3.22</version>
         </dependency>
         <dependency>
             <groupId>com.jagrosh</groupId>
