@@ -117,6 +117,7 @@ public class JMusicBot
                         new MoveTrackCmd(bot),
                         new PauseCmd(bot),
                         new PlaynextCmd(bot, config.getLoading()),
+                        new PlaynowCmd(bot, config.getLoading()),
                         new RepeatCmd(bot),
                         new SkiptoCmd(bot),
                         new StopCmd(bot),
