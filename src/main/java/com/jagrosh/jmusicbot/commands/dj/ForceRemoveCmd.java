@@ -2,6 +2,7 @@ package com.jagrosh.jmusicbot.commands.dj;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
+import com.jagrosh.jdautilities.menu.OrderedMenu;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.DJCommand;
@@ -51,7 +52,36 @@ public class ForceRemoveCmd extends DJCommand
         }
         else if(found.size()>1)
         {
-            event.replyWarning("Found multiple users!");
+            OrderedMenu.Builder builder = new OrderedMenu.Builder();
+            for(int i=0; i<found.size() && i<4; i++)
+            {
+                Member member = found.get(i);
+                builder.addChoice("**"+member.getUser().getName()+"**#"+member.getUser().getDiscriminator());
+            }
+
+            builder.setSelection((msg, i) ->
+            {
+                User selectedUser = found.get(i-1).getUser();
+                int count = handler.getQueue().removeAll(selectedUser.getIdLong());
+                if (count == 0)
+                {
+                    event.replyWarning("**"+selectedUser.getName()+"** doesn't have any songs in the queue!");
+                }
+                else
+                {
+                    event.replySuccess("Successfully removed `"+count+"` entries from **"+selectedUser.getName()+"**#"+selectedUser.getDiscriminator()+".");
+                }
+            })
+            .setText("Found multiple users:")
+            .setColor(event.getSelfMember().getColor())
+            .useNumbers()
+            .setUsers(event.getAuthor())
+            .useCancelButton(true)
+            .setCancel((msg) -> {})
+            .setEventWaiter(bot.getWaiter())
+
+            .build().display(event.getChannel());
+
             return;
         }
         else
@@ -67,7 +97,7 @@ public class ForceRemoveCmd extends DJCommand
         }
         else
         {
-                event.replySuccess("Successfully removed `" + count + "` entries from **" + target.getName() + "**#" + target.getDiscriminator() + ".");
+            event.replySuccess("Successfully removed `"+count+"` entries from **"+target.getName()+"**#"+target.getDiscriminator()+".");
         }
 
     }
