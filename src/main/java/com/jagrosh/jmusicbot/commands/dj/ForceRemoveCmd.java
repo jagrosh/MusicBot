@@ -6,10 +6,12 @@ import com.jagrosh.jdautilities.menu.OrderedMenu;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.DJCommand;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class ForceRemoveCmd extends DJCommand
@@ -23,6 +25,7 @@ public class ForceRemoveCmd extends DJCommand
         this.aliases = new String[]{"forcedelete", "modremove", "moddelete"};
         this.beListening = false;
         this.bePlaying = true;
+        this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
     }
 
     @Override
@@ -59,19 +62,8 @@ public class ForceRemoveCmd extends DJCommand
                 builder.addChoice("**"+member.getUser().getName()+"**#"+member.getUser().getDiscriminator());
             }
 
-            builder.setSelection((msg, i) ->
-            {
-                User selectedUser = found.get(i-1).getUser();
-                int count = handler.getQueue().removeAll(selectedUser.getIdLong());
-                if (count == 0)
-                {
-                    event.replyWarning("**"+selectedUser.getName()+"** doesn't have any songs in the queue!");
-                }
-                else
-                {
-                    event.replySuccess("Successfully removed `"+count+"` entries from **"+selectedUser.getName()+"**#"+selectedUser.getDiscriminator()+".");
-                }
-            })
+            builder
+            .setSelection((msg, i) -> removeAllEntries(found.get(i-1).getUser(), event))
             .setText("Found multiple users:")
             .setColor(event.getSelfMember().getColor())
             .useNumbers()
@@ -79,6 +71,7 @@ public class ForceRemoveCmd extends DJCommand
             .useCancelButton(true)
             .setCancel((msg) -> {})
             .setEventWaiter(bot.getWaiter())
+            .setTimeout(1, TimeUnit.MINUTES)
 
             .build().display(event.getChannel());
 
@@ -89,8 +82,13 @@ public class ForceRemoveCmd extends DJCommand
             target = found.get(0).getUser();
         }
 
+        removeAllEntries(target, event);
 
-        int count = handler.getQueue().removeAll(target.getIdLong());
+    }
+
+    private void removeAllEntries(User target, CommandEvent event)
+    {
+        int count = ((AudioHandler) event.getGuild().getAudioManager().getSendingHandler()).getQueue().removeAll(target.getIdLong());
         if (count == 0)
         {
             event.replyWarning("**"+target.getName()+"** doesn't have any songs in the queue!");
@@ -99,6 +97,5 @@ public class ForceRemoveCmd extends DJCommand
         {
             event.replySuccess("Successfully removed `"+count+"` entries from **"+target.getName()+"**#"+target.getDiscriminator()+".");
         }
-
     }
 }
