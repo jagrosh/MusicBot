@@ -93,7 +93,7 @@ public class ForceRemoveCmd extends DJCommand
         int count = handler.getQueue().removeAll(target.getIdLong());
         if (count == 0)
         {
-            event.replyWarning(target.getName() + " doesn't have any songs in the queue!");
+            event.replyWarning("**"+target.getName()+"** doesn't have any songs in the queue!");
         }
         else
         {
