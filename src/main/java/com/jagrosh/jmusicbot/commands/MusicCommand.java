@@ -89,6 +89,17 @@ public abstract class MusicCommand extends Command
         
         doCommand(event);
     }
+
+    protected String getLoadingArgs(CommandEvent event)
+    {
+        String args = event.getArgs();
+        if (args.startsWith("<") && args.endsWith(">")) {
+            return args.substring(1, args.length() - 1) ;
+        } else if(args.isEmpty()) {
+            return event.getMessage().getAttachments().get(0).getUrl();
+        }
+        return args;
+    }
     
     public abstract void doCommand(CommandEvent event);
 }

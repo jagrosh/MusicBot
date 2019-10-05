@@ -91,9 +91,7 @@ public class PlayCmd extends MusicCommand
             event.reply(builder.toString());
             return;
         }
-        String args = event.getArgs().startsWith("<") && event.getArgs().endsWith(">") 
-                ? event.getArgs().substring(1,event.getArgs().length()-1) 
-                : event.getArgs().isEmpty() ? event.getMessage().getAttachments().get(0).getUrl() : event.getArgs();
+        String args = getLoadingArgs(event);
         event.reply(loadingEmoji+" Loading... `["+args+"]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m,event,false)));
     }
     

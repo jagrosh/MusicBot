@@ -43,9 +43,7 @@ public class PlaynowCmd extends PlayCommand
         }
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
         event.reply(event.getClient().getSuccess()+" Skipped **"+handler.getPlayer().getPlayingTrack().getInfo().title+"**");
-        String args = event.getArgs().startsWith("<") && event.getArgs().endsWith(">") 
-                ? event.getArgs().substring(1,event.getArgs().length()-1) 
-                : event.getArgs().isEmpty() ? event.getMessage().getAttachments().get(0).getUrl() : event.getArgs();
+        String args = getLoadingArgs(event);
         event.reply(loadingEmoji+" Loading... `["+args+"]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), args, new PlayResultHandler(m,event,false)));
     }
 }
