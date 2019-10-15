@@ -68,7 +68,7 @@ public abstract class MusicCommand extends Command
             if(current==null)
                 current = settings.getVoiceChannel(event.getGuild());
             GuildVoiceState userState = event.getMember().getVoiceState();
-            if(!userState.inVoiceChannel() || userState.isDeafened() || (current!=null && !userState.getChannel().equals(current)))
+            if(!userState.inVoiceChannel() || userState.isDeafened() || (current!=null && !userState.getChannel().equals(current)) || userState.getGuild().getAfkChannel().equals(userState.getChannel()))
             {
                 event.replyError("You must be listening in "+(current==null ? "a voice channel" : "**"+current.getName()+"**")+" to use that!");
                 return;
