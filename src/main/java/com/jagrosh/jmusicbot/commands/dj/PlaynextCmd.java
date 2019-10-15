@@ -79,6 +79,8 @@ public class PlaynextCmd extends DJCommand
             {
                 m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
                         +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(bot.getConfig().getMaxSeconds()*1000)+"`")).queue();
+
+                ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).onTrackLoadFailed();
                 return;
             }
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
@@ -114,6 +116,8 @@ public class PlaynextCmd extends DJCommand
                 m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" No results found for `"+event.getArgs()+"`.")).queue();
             else
                 bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+event.getArgs(), new ResultHandler(m,event,true));
+
+            ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).onTrackLoadFailed();
         }
 
         @Override
@@ -123,6 +127,8 @@ public class PlaynextCmd extends DJCommand
                 m.editMessage(event.getClient().getError()+" Error loading: "+throwable.getMessage()).queue();
             else
                 m.editMessage(event.getClient().getError()+" Error loading track.").queue();
+
+            ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).onTrackLoadFailed();
         }
     }
 }

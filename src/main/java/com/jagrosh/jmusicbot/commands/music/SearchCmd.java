@@ -89,6 +89,8 @@ public class SearchCmd extends MusicCommand
             {
                 m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
                         +FormatUtil.formatTime(track.getDuration())+"` > `"+bot.getConfig().getMaxTime()+"`")).queue();
+
+                ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).onTrackLoadFailed();
                 return;
             }
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
@@ -111,6 +113,8 @@ public class SearchCmd extends MusicCommand
                         {
                             event.replyWarning("This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
                                     +FormatUtil.formatTime(track.getDuration())+"` > `"+bot.getConfig().getMaxTime()+"`");
+
+                            ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).onTrackLoadFailed();
                             return;
                         }
                         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
@@ -119,7 +123,7 @@ public class SearchCmd extends MusicCommand
                                 +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0 ? "to begin playing" 
                                     : " to the queue at position "+pos));
                     })
-                    .setCancel((msg) -> {})
+                    .setCancel((msg) -> ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).onTrackLoadFailed())
                     .setUsers(event.getAuthor())
                     ;
             for(int i=0; i<4 && i<playlist.getTracks().size(); i++)
@@ -134,6 +138,8 @@ public class SearchCmd extends MusicCommand
         public void noMatches() 
         {
             m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" No results found for `"+event.getArgs()+"`.")).queue();
+
+            ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).onTrackLoadFailed();
         }
 
         @Override
@@ -143,6 +149,8 @@ public class SearchCmd extends MusicCommand
                 m.editMessage(event.getClient().getError()+" Error loading: "+throwable.getMessage()).queue();
             else
                 m.editMessage(event.getClient().getError()+" Error loading track.").queue();
+
+            ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).onTrackLoadFailed();
         }
     }
 }

@@ -184,6 +184,8 @@ public class PlayCmd extends MusicCommand
                 {
                     m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" All entries in this playlist "+(playlist.getName()==null ? "" : "(**"+playlist.getName()
                             +"**) ")+"were longer than the allowed maximum (`"+bot.getConfig().getMaxTime()+"`)")).queue();
+
+                    ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).onTrackLoadFailed();
                 }
                 else
                 {
@@ -203,6 +205,8 @@ public class PlayCmd extends MusicCommand
                 m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" No results found for `"+event.getArgs()+"`.")).queue();
             else
                 bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+event.getArgs(), new ResultHandler(m,event,true));
+
+            ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).onTrackLoadFailed();
         }
 
         @Override
@@ -212,6 +216,8 @@ public class PlayCmd extends MusicCommand
                 m.editMessage(event.getClient().getError()+" Error loading: "+throwable.getMessage()).queue();
             else
                 m.editMessage(event.getClient().getError()+" Error loading track.").queue();
+
+            ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).onTrackLoadFailed();
         }
     }
     
