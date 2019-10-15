@@ -28,13 +28,16 @@ import com.jagrosh.jmusicbot.utils.FormatUtil;
  */
 public class VolumeCmd extends DJCommand
 {
+    private final int maxVolume;
+
     public VolumeCmd(Bot bot)
     {
         super(bot);
+        this.maxVolume = bot.getConfig().getMaxVolume();
         this.name = "volume";
         this.aliases = new String[]{"vol"};
         this.help = "sets or shows volume";
-        this.arguments = "[0-150]";
+        this.arguments = "[0-"+maxVolume+"]";
     }
 
     @Override
@@ -55,8 +58,8 @@ public class VolumeCmd extends DJCommand
             }catch(NumberFormatException e){
                 nvolume = -1;
             }
-            if(nvolume<0 || nvolume>150)
-                event.reply(event.getClient().getError()+" Volume must be a valid integer between 0 and 150!");
+            if(nvolume<0 || nvolume>maxVolume)
+                event.reply(event.getClient().getError()+" Volume must be a valid integer between 0 and "+maxVolume+"!");
             else
             {
                 handler.getPlayer().setVolume(nvolume);

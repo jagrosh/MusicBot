@@ -44,6 +44,7 @@ public class BotConfig
             successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
     private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
     private long owner, maxSeconds;
+    private int maxVolume;
     private OnlineStatus status;
     private Game game;
     
@@ -93,6 +94,7 @@ public class BotConfig
             updatealerts = config.getBoolean("updatealerts");
             useEval = config.getBoolean("eval");
             maxSeconds = config.getLong("maxtime");
+            maxVolume = config.getInt("maxvolume");
             playlistsFolder = config.getString("playlistsfolder");
             dbots = owner == 113156185389092864L;
             
@@ -288,7 +290,12 @@ public class BotConfig
     {
         return maxSeconds;
     }
-    
+
+    public int getMaxVolume()
+    {
+            return maxVolume;
+    }
+
     public String getMaxTime()
     {
         return FormatUtil.formatTime(maxSeconds * 1000);
