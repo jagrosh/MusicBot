@@ -41,10 +41,10 @@ public class SearchCmd extends MusicCommand
     private final OrderedMenu.Builder builder;
     private final String searchingEmoji;
     
-    public SearchCmd(Bot bot, String searchingEmoji)
+    public SearchCmd(Bot bot)
     {
         super(bot);
-        this.searchingEmoji = searchingEmoji;
+        this.searchingEmoji = bot.getConfig().getSearching();
         this.name = "search";
         this.aliases = new String[]{"ytsearch"};
         this.arguments = "<query>";

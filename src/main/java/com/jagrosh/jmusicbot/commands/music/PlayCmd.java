@@ -26,14 +26,13 @@ import com.jagrosh.jdautilities.menu.ButtonMenu;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
+import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
-import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 
 /**
@@ -47,10 +46,10 @@ public class PlayCmd extends MusicCommand
     
     private final String loadingEmoji;
     
-    public PlayCmd(Bot bot, String loadingEmoji)
+    public PlayCmd(Bot bot)
     {
         super(bot);
-        this.loadingEmoji = loadingEmoji;
+        this.loadingEmoji = bot.getConfig().getLoading();
         this.name = "play";
         this.arguments = "<title|URL|subcommand>";
         this.help = "plays the provided song";
@@ -67,20 +66,13 @@ public class PlayCmd extends MusicCommand
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
             if(handler.getPlayer().getPlayingTrack()!=null && handler.getPlayer().isPaused())
             {
-                boolean isDJ = event.getMember().hasPermission(Permission.MANAGE_SERVER);
-                if(!isDJ)
-                    isDJ = event.isOwner();
-                Settings settings = event.getClient().getSettingsFor(event.getGuild());
-                Role dj = settings.getRole(event.getGuild());
-                if(!isDJ && dj!=null)
-                    isDJ = event.getMember().getRoles().contains(dj);
-                if(!isDJ)
-                    event.replyError("Only DJs can unpause the player!");
-                else
+                if(DJCommand.checkDJPermission(event))
                 {
                     handler.getPlayer().setPaused(false);
                     event.replySuccess("Resumed **"+handler.getPlayer().getPlayingTrack().getInfo().title+"**.");
                 }
+                else
+                    event.replyError("Only DJs can unpause the player!");
                 return;
             }
             StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" Play Commands:\n");

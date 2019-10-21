@@ -35,10 +35,10 @@ public class PlaynextCmd extends DJCommand
 {
     private final String loadingEmoji;
     
-    public PlaynextCmd(Bot bot, String loadingEmoji)
+    public PlaynextCmd(Bot bot)
     {
         super(bot);
-        this.loadingEmoji = loadingEmoji;
+        this.loadingEmoji = bot.getConfig().getLoading();
         this.name = "playnext";
         this.arguments = "<title|URL>";
         this.help = "plays a single song next";
