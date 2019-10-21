@@ -128,6 +128,7 @@ public class JMusicBot
                         new SetvcCmd(),
                         
                         new AutoplaylistCmd(bot),
+                        new DebugCmd(bot),
                         new PlaylistCmd(bot),
                         new SetavatarCmd(),
                         new SetgameCmd(),
