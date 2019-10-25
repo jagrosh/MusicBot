@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands.music;
 
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.JMusicBot;
 
 /**
  *
@@ -29,6 +30,6 @@ public class SCSearchCmd extends SearchCmd
         this.searchPrefix = "scsearch:";
         this.name = "scsearch";
         this.help = "searches Soundcloud for a provided query";
-        this.aliases = new String[]{};
+        this.aliases = JMusicBot.config.getAliases(this.name);
     }
 }

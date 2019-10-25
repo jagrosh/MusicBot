@@ -46,6 +46,7 @@ public class JMusicBot
     public final static Permission[] RECOMMENDED_PERMS = new Permission[]{Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
                                 Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
                                 Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
+    public static BotConfig config;
     /**
      * @param args the command line arguments
      */
@@ -71,7 +72,7 @@ public class JMusicBot
         String version = OtherUtil.checkVersion(prompt);
         
         // load config
-        BotConfig config = new BotConfig(prompt);
+        config = new BotConfig(prompt);
         config.load();
         if(!config.isValid())
             return;

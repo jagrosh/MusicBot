@@ -19,6 +19,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jlyrics.Lyrics;
 import com.jagrosh.jlyrics.LyricsClient;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import java.util.concurrent.ExecutionException;
@@ -39,6 +40,7 @@ public class LyricsCmd extends MusicCommand
         this.name = "lyrics";
         this.arguments = "[song name]";
         this.help = "shows the lyrics to the currently-playing song";
+        this.aliases = JMusicBot.config.getAliases(this.name);
         this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
         this.bePlaying = true;
     }

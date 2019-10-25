@@ -17,6 +17,7 @@ package com.jagrosh.jmusicbot.commands.dj;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 
@@ -31,6 +32,7 @@ public class StopCmd extends DJCommand
         super(bot);
         this.name = "stop";
         this.help = "stops the current song and clears the queue";
+        this.aliases = JMusicBot.config.getAliases(this.name);
         this.bePlaying = false;
     }
 

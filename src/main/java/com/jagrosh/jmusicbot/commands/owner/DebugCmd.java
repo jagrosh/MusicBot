@@ -18,6 +18,7 @@ package com.jagrosh.jmusicbot.commands.owner;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.JDAUtilitiesInfo;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary;
@@ -41,6 +42,7 @@ public class DebugCmd extends OwnerCommand
         this.bot = bot;
         this.name = "debug";
         this.help = "shows debug info";
+        this.aliases = JMusicBot.config.getAliases(this.name);
         this.guildOnly = false;
     }
 

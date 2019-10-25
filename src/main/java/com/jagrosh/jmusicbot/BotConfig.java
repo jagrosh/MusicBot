@@ -46,7 +46,8 @@ public class BotConfig
     private long owner, maxSeconds;
     private OnlineStatus status;
     private Game game;
-    
+
+    private Config config;
     private boolean valid = false;
     
     public BotConfig(Prompt prompt)
@@ -72,7 +73,7 @@ public class BotConfig
             
             // load in the config file, plus the default values
             //Config config = ConfigFactory.parseFile(path.toFile()).withFallback(ConfigFactory.load());
-            Config config = ConfigFactory.load();
+            config = ConfigFactory.load();
             
             // set values
             token = config.getString("token");
@@ -299,5 +300,13 @@ public class BotConfig
         if(maxSeconds<=0)
             return false;
         return Math.round(track.getDuration()/1000.0) > maxSeconds;
+    }
+
+    public String[] getAliases(String command)
+    {
+        String aliases = config.getString("alias."+command);
+        if(aliases == null || aliases.length() <= 0)
+            return new String[]{};
+        return aliases.split(" ");
     }
 }

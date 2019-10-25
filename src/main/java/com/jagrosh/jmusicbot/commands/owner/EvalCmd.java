@@ -19,6 +19,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 
 /**
@@ -34,6 +35,7 @@ public class EvalCmd extends OwnerCommand
         this.bot = bot;
         this.name = "eval";
         this.help = "evaluates nashorn code";
+        this.aliases = JMusicBot.config.getAliases(this.name);
         this.guildOnly = false;
     }
     

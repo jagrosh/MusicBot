@@ -17,6 +17,7 @@ package com.jagrosh.jmusicbot.commands.music;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import net.dv8tion.jda.core.Permission;
@@ -33,7 +34,7 @@ public class NowplayingCmd extends MusicCommand
         super(bot);
         this.name = "nowplaying";
         this.help = "shows the song that is currently playing";
-        this.aliases = new String[]{"np","current"};
+        this.aliases = JMusicBot.config.getAliases(this.name);
         this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
     }
 

@@ -3,6 +3,7 @@ package com.jagrosh.jmusicbot.commands.dj;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.DJCommand;
@@ -20,7 +21,7 @@ public class MoveTrackCmd extends DJCommand
         this.name = "movetrack";
         this.help = "move a track in the current queue to a different position";
         this.arguments = "<from> <to>";
-        this.aliases = new String[]{"move"};
+        this.aliases = JMusicBot.config.getAliases(this.name);
         this.bePlaying = true;
     }
 

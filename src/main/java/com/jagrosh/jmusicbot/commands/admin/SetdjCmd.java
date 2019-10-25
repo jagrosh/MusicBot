@@ -18,6 +18,7 @@ package com.jagrosh.jmusicbot.commands.admin;
 import java.util.List;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
+import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
@@ -34,6 +35,7 @@ public class SetdjCmd extends AdminCommand
         this.name = "setdj";
         this.help = "sets the DJ role for certain music commands";
         this.arguments = "<rolename|NONE>";
+        this.aliases = JMusicBot.config.getAliases(this.name);
     }
     
     @Override
