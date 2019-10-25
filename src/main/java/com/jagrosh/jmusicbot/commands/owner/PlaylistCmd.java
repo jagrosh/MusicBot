@@ -20,9 +20,7 @@ import java.util.List;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
-import com.jagrosh.jmusicbot.commands.owner.AutoplaylistCmd;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 
 /**
@@ -39,7 +37,7 @@ public class PlaylistCmd extends OwnerCommand
         this.name = "playlist";
         this.arguments = "<append|delete|make|setdefault>";
         this.help = "playlist management";
-        this.aliases = JMusicBot.config.getAliases(this.name);
+        this.aliases = bot.getConfig().getAliases(this.name);
         this.children = new OwnerCommand[]{
             new ListCmd(),
             new AppendlistCmd(),

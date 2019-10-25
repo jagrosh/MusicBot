@@ -18,7 +18,6 @@ package com.jagrosh.jmusicbot.commands.music;
 import java.util.List;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 
 /**
@@ -32,7 +31,7 @@ public class PlaylistsCmd extends MusicCommand
         super(bot);
         this.name = "playlists";
         this.help = "shows the available playlists";
-        this.aliases = JMusicBot.config.getAliases(this.name);
+        this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
         this.beListening = false;
         this.beListening = false;

@@ -17,7 +17,6 @@ package com.jagrosh.jmusicbot.commands.owner;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 
@@ -36,7 +35,7 @@ public class AutoplaylistCmd extends OwnerCommand
         this.name = "autoplaylist";
         this.arguments = "<name|NONE>";
         this.help = "sets the default playlist for the server";
-        this.aliases = JMusicBot.config.getAliases(this.name);
+        this.aliases = bot.getConfig().getAliases(this.name);
     }
 
     @Override

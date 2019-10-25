@@ -17,7 +17,6 @@ package com.jagrosh.jmusicbot.commands.owner;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 
 /**
@@ -33,7 +32,7 @@ public class ShutdownCmd extends OwnerCommand
         this.bot = bot;
         this.name = "shutdown";
         this.help = "safely shuts down";
-        this.aliases = JMusicBot.config.getAliases(this.name);
+        this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
     }
     

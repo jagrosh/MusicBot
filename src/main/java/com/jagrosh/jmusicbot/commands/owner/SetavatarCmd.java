@@ -18,7 +18,7 @@ package com.jagrosh.jmusicbot.commands.owner;
 import java.io.IOException;
 import java.io.InputStream;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jmusicbot.JMusicBot;
+import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import net.dv8tion.jda.core.entities.Icon;
@@ -29,12 +29,12 @@ import net.dv8tion.jda.core.entities.Icon;
  */
 public class SetavatarCmd extends OwnerCommand 
 {
-    public SetavatarCmd()
+    public SetavatarCmd(Bot bot)
     {
         this.name = "setavatar";
         this.help = "sets the avatar of the bot";
         this.arguments = "<url>";
-        this.aliases = JMusicBot.config.getAliases(this.name);
+        this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
     }
     

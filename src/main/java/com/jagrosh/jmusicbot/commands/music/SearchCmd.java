@@ -15,7 +15,6 @@
  */
 package com.jagrosh.jmusicbot.commands.music;
 
-import com.jagrosh.jmusicbot.JMusicBot;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
@@ -47,7 +46,7 @@ public class SearchCmd extends MusicCommand
         super(bot);
         this.searchingEmoji = bot.getConfig().getSearching();
         this.name = "search";
-        this.aliases = JMusicBot.config.getAliases(this.name);
+        this.aliases = bot.getConfig().getAliases(this.name);
         this.arguments = "<query>";
         this.help = "searches Youtube for a provided query";
         this.beListening = true;

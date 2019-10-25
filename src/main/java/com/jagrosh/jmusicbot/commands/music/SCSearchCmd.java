@@ -30,6 +30,6 @@ public class SCSearchCmd extends SearchCmd
         this.searchPrefix = "scsearch:";
         this.name = "scsearch";
         this.help = "searches Soundcloud for a provided query";
-        this.aliases = JMusicBot.config.getAliases(this.name);
+        this.aliases = bot.getConfig().getAliases(this.name);
     }
 }

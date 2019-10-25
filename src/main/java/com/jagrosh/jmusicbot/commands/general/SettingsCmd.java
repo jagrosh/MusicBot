@@ -17,7 +17,7 @@ package com.jagrosh.jmusicbot.commands.general;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jmusicbot.JMusicBot;
+import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.settings.Settings;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -33,11 +33,11 @@ public class SettingsCmd extends Command
 {
     private final static String EMOJI = "\uD83C\uDFA7"; // 🎧
     
-    public SettingsCmd()
+    public SettingsCmd(Bot bot)
     {
         this.name = "settings";
         this.help = "shows the bots settings";
-        this.aliases = JMusicBot.config.getAliases(this.name);
+        this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
     }
     
