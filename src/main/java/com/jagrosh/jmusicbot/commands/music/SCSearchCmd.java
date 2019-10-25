@@ -16,7 +16,6 @@
 package com.jagrosh.jmusicbot.commands.music;
 
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.JMusicBot;
 
 /**
  *
