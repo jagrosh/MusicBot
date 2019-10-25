@@ -51,6 +51,7 @@ public class PlayCmd extends MusicCommand
         super(bot);
         this.loadingEmoji = bot.getConfig().getLoading();
         this.name = "play";
+        this.aliases = new String[]{"p"};
         this.arguments = "<title|URL|subcommand>";
         this.help = "plays the provided song";
         this.beListening = true;
