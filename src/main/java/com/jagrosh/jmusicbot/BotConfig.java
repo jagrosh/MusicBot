@@ -310,7 +310,7 @@ public class BotConfig
         {
             return aliases.getStringList(command).toArray(new String[0]);
         }
-        catch(NullPointerException e)
+        catch(NullPointerException | ConfigException.Missing e)
         {
             return new String[0];
         }
