@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>1.3.24</version>
+            <version>1.3.25</version>
         </dependency>
         <dependency>
             <groupId>com.jagrosh</groupId>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>com.jagrosh</groupId>
             <artifactId>JLyrics</artifactId>
-            <version>0.3</version>
+            <version>0.4</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

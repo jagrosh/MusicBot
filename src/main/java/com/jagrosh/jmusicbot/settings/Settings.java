@@ -16,6 +16,8 @@
 package com.jagrosh.jmusicbot.settings;
 
 import com.jagrosh.jdautilities.command.GuildSettingsProvider;
+import java.util.Collection;
+import java.util.Collections;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -34,8 +36,9 @@ public class Settings implements GuildSettingsProvider
     private int volume;
     private String defaultPlaylist;
     private boolean repeatMode;
+    private String prefix;
     
-    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, boolean repeatMode)
+    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, boolean repeatMode, String prefix)
     {
         this.manager = manager;
         try
@@ -65,9 +68,10 @@ public class Settings implements GuildSettingsProvider
         this.volume = volume;
         this.defaultPlaylist = defaultPlaylist;
         this.repeatMode = repeatMode;
+        this.prefix = prefix;
     }
     
-    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, boolean repeatMode)
+    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, boolean repeatMode, String prefix)
     {
         this.manager = manager;
         this.textId = textId;
@@ -76,6 +80,7 @@ public class Settings implements GuildSettingsProvider
         this.volume = volume;
         this.defaultPlaylist = defaultPlaylist;
         this.repeatMode = repeatMode;
+        this.prefix = prefix;
     }
     
     // Getters
@@ -107,6 +112,17 @@ public class Settings implements GuildSettingsProvider
     public boolean getRepeatMode()
     {
         return repeatMode;
+    }
+    
+    public String getPrefix()
+    {
+        return prefix;
+    }
+    
+    @Override
+    public Collection<String> getPrefixes()
+    {
+        return prefix == null ? Collections.EMPTY_SET : Collections.singleton(prefix);
     }
     
     // Setters
@@ -143,6 +159,12 @@ public class Settings implements GuildSettingsProvider
     public void setRepeatMode(boolean mode)
     {
         this.repeatMode = mode;
+        this.manager.writeSettings();
+    }
+    
+    public void setPrefix(String prefix)
+    {
+        this.prefix = prefix;
         this.manager.writeSettings();
     }
 }
