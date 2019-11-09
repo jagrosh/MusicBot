@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands.owner;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import net.dv8tion.jda.core.OnlineStatus;
 
@@ -25,11 +26,12 @@ import net.dv8tion.jda.core.OnlineStatus;
  */
 public class SetstatusCmd extends OwnerCommand
 {
-    public SetstatusCmd()
+    public SetstatusCmd(Bot bot)
     {
         this.name = "setstatus";
         this.help = "sets the status the bot displays";
         this.arguments = "<status>";
+        this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
     }
     

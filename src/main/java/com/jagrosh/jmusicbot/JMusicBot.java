@@ -99,7 +99,7 @@ public class JMusicBot
                 .setGuildSettingsManager(settings)
                 .addCommands(aboutCommand,
                         new PingCommand(),
-                        new SettingsCmd(),
+                        new SettingsCmd(bot),
                         
                         new LyricsCmd(bot),
                         new NowplayingCmd(bot),
@@ -122,17 +122,17 @@ public class JMusicBot
                         new StopCmd(bot),
                         new VolumeCmd(bot),
                         
-                        new SetdjCmd(),
-                        new SettcCmd(),
-                        new SetvcCmd(),
+                        new SetdjCmd(bot),
+                        new SettcCmd(bot),
+                        new SetvcCmd(bot),
                         
                         new AutoplaylistCmd(bot),
                         new DebugCmd(bot),
                         new PlaylistCmd(bot),
-                        new SetavatarCmd(),
-                        new SetgameCmd(),
-                        new SetnameCmd(),
-                        new SetstatusCmd(),
+                        new SetavatarCmd(bot),
+                        new SetgameCmd(bot),
+                        new SetnameCmd(bot),
+                        new SetstatusCmd(bot),
                         new ShutdownCmd(bot)
                 );
         if(config.useEval())

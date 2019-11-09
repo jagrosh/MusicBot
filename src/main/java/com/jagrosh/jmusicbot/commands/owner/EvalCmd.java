@@ -34,6 +34,7 @@ public class EvalCmd extends OwnerCommand
         this.bot = bot;
         this.name = "eval";
         this.help = "evaluates nashorn code";
+        this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
     }
     

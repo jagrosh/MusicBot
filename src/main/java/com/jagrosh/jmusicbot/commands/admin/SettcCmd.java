@@ -18,6 +18,7 @@ package com.jagrosh.jmusicbot.commands.admin;
 import java.util.List;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
+import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
@@ -29,11 +30,12 @@ import net.dv8tion.jda.core.entities.TextChannel;
  */
 public class SettcCmd extends AdminCommand 
 {
-    public SettcCmd()
+    public SettcCmd(Bot bot)
     {
         this.name = "settc";
         this.help = "sets the text channel for music commands";
         this.arguments = "<channel|NONE>";
+        this.aliases = bot.getConfig().getAliases(this.name);
     }
     
     @Override
