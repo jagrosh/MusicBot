@@ -40,7 +40,7 @@ public class ForceRemoveCmd extends DJCommand
         this.name = "forceremove";
         this.help = "removes all entries by a user from the queue";
         this.arguments = "<user>";
-        this.aliases = new String[]{"forcedelete", "modremove", "moddelete"};
+        this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = false;
         this.bePlaying = true;
         this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};

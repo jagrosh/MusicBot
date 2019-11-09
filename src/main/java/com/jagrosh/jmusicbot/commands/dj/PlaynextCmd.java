@@ -42,6 +42,7 @@ public class PlaynextCmd extends DJCommand
         this.name = "playnext";
         this.arguments = "<title|URL>";
         this.help = "plays a single song next";
+        this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
         this.bePlaying = false;
     }

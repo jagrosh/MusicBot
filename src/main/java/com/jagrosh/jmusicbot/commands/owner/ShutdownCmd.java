@@ -32,6 +32,7 @@ public class ShutdownCmd extends OwnerCommand
         this.bot = bot;
         this.name = "shutdown";
         this.help = "safely shuts down";
+        this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
     }
     

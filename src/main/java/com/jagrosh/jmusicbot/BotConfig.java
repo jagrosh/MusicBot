@@ -46,7 +46,9 @@ public class BotConfig
     private long owner, maxSeconds;
     private OnlineStatus status;
     private Game game;
-    
+    private Config aliases;
+
+
     private boolean valid = false;
     
     public BotConfig(Prompt prompt)
@@ -94,6 +96,7 @@ public class BotConfig
             useEval = config.getBoolean("eval");
             maxSeconds = config.getLong("maxtime");
             playlistsFolder = config.getString("playlistsfolder");
+            aliases = config.getConfig("aliases");
             dbots = owner == 113156185389092864L;
             
             // we may need to write a new config file
@@ -299,5 +302,17 @@ public class BotConfig
         if(maxSeconds<=0)
             return false;
         return Math.round(track.getDuration()/1000.0) > maxSeconds;
+    }
+
+    public String[] getAliases(String command)
+    {
+        try
+        {
+            return aliases.getStringList(command).toArray(new String[0]);
+        }
+        catch(NullPointerException | ConfigException.Missing e)
+        {
+            return new String[0];
+        }
     }
 }

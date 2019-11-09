@@ -41,6 +41,7 @@ public class DebugCmd extends OwnerCommand
         this.bot = bot;
         this.name = "debug";
         this.help = "shows debug info";
+        this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
     }
 

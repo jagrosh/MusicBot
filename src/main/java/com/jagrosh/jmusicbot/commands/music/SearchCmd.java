@@ -46,7 +46,7 @@ public class SearchCmd extends MusicCommand
         super(bot);
         this.searchingEmoji = bot.getConfig().getSearching();
         this.name = "search";
-        this.aliases = new String[]{"ytsearch"};
+        this.aliases = bot.getConfig().getAliases(this.name);
         this.arguments = "<query>";
         this.help = "searches Youtube for a provided query";
         this.beListening = true;
