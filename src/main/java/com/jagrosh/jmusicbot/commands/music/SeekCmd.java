@@ -32,13 +32,11 @@ public class SeekCmd extends MusicCommand {
             AudioTrack currentTrack = handler.getPlayer().getPlayingTrack();
             Settings settings = event.getClient().getSettingsFor(event.getGuild());
 
-            if (!event.getMember().hasPermission(Permission.MANAGE_SERVER)) {
-                if (!event.getMember().getRoles().contains(settings.getRole(event.getGuild()))) {
-                    if (currentTrack.getUserData(Long.class) != event.getAuthor().getIdLong()) {
-                        event.replyError("You cannot seek **" + currentTrack.getInfo().title + "** because you didn't add it!");
-                        return;
-                    }
-                }
+            if (!event.getMember().hasPermission(Permission.MANAGE_SERVER)
+                    && !event.getMember().getRoles().contains(settings.getRole(event.getGuild()))
+                    && currentTrack.getUserData(Long.class) != event.getAuthor().getIdLong()) {
+                event.replyError("You cannot seek **" + currentTrack.getInfo().title + "** because you didn't add it!");
+                return;
             }
 
             String args = event.getArgs();
