@@ -29,8 +29,10 @@ import java.util.regex.Pattern;
 /**
  * @author Whew., Inc.
  */
-public class SeekCmd extends MusicCommand {
-    public SeekCmd(Bot bot) {
+public class SeekCmd extends MusicCommand
+{
+    public SeekCmd(Bot bot)
+    {
         super(bot);
         this.name = "seek";
         this.help = "seeks the current song";
@@ -41,15 +43,18 @@ public class SeekCmd extends MusicCommand {
     }
 
     @Override
-    public void doCommand(CommandEvent event) {
+    public void doCommand(CommandEvent event)
+    {
         AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
-        if (handler.getPlayer().getPlayingTrack().isSeekable()) {
+        if (handler.getPlayer().getPlayingTrack().isSeekable())
+        {
             AudioTrack currentTrack = handler.getPlayer().getPlayingTrack();
             Settings settings = event.getClient().getSettingsFor(event.getGuild());
 
             if (!event.getMember().hasPermission(Permission.MANAGE_SERVER)
                     && !event.getMember().getRoles().contains(settings.getRole(event.getGuild()))
-                    && currentTrack.getUserData(Long.class) != event.getAuthor().getIdLong()) {
+                    && currentTrack.getUserData(Long.class) != event.getAuthor().getIdLong())
+            {
                 event.replyError("You cannot seek **" + currentTrack.getInfo().title + "** because you didn't add it!");
                 return;
             }
@@ -61,28 +66,40 @@ public class SeekCmd extends MusicCommand {
             int minutes = 0;
             int hours = 0;
 
-            if (Pattern.matches("^([0-9]\\d):([0-5]\\d):([0-5]\\d)$", args)) {
+            if (Pattern.matches("^([0-9]\\d):([0-5]\\d):([0-5]\\d)$", args))
+            {
                 hours = Integer.parseInt(args.substring(0, 2));
                 minutes = Integer.parseInt(args.substring(3, 5));
                 seconds = Integer.parseInt(args.substring(6));
-            } else if (Pattern.matches("^([0-5]\\d):([0-5]\\d)$", args)) {
+            }
+            else if (Pattern.matches("^([0-5]\\d):([0-5]\\d)$", args))
+            {
                 minutes = Integer.parseInt(args.substring(0, 2));
                 seconds = Integer.parseInt(args.substring(3, 5));
-            } else if (Pattern.matches("^([0-5]\\d)$", args)) {
+            }
+            else if (Pattern.matches("^([0-5]\\d)$", args))
+            {
                 seconds = Integer.parseInt(args.substring(0, 2));
-            } else {
+            }
+            else
+            {
                 event.replyError("Invalid seek!");
                 return;
             }
 
             seek_milliseconds += hours * 3600000 + minutes * 60000 + seconds * 1000;
-            if (seek_milliseconds <= track_duration) {
+            if (seek_milliseconds <= track_duration)
+            {
                 handler.getPlayer().getPlayingTrack().setPosition(seek_milliseconds);
                 event.replySuccess("Successfully seeked!");
-            } else {
+            }
+            else
+            {
                 event.replyError("Current track is not that long!");
             }
-        } else {
+        }
+        else
+        {
             event.replyError("This track is not seekable.");
         }
     }
