@@ -20,6 +20,7 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
+import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import java.util.regex.Pattern;
@@ -89,7 +90,7 @@ public class SeekCmd extends MusicCommand
         seek_milliseconds += hours * 3600000 + minutes * 60000 + seconds * 1000;
         if (seek_milliseconds > track_duration)
         {
-            event.replyError("Current track is not that long!");
+            event.replyError("Current track (`" + FormatUtil.formatTime(track_duration) + "`) is not that long!");
             return;
         }
 
