@@ -97,6 +97,4 @@ public class SeekCmd extends MusicCommand
         handler.getPlayer().getPlayingTrack().setPosition(seek_milliseconds);
         event.replySuccess("Successfully seeked to `" + FormatUtil.formatTime(seek_milliseconds) + "`!");
     }
-
-
 }
