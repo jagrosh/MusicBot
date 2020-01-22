@@ -67,7 +67,7 @@ public class SeekCmd extends MusicCommand
         int minutes = 0;
         int hours = 0;
 
-        if (Pattern.matches("^([0-9]\\d):([0-5]\\d):([0-5]\\d)$", args))
+        if (Pattern.matches("^(\\d\\d):([0-5]\\d):([0-5]\\d)$", args))
         {
             hours = Integer.parseInt(args.substring(0, 2));
             minutes = Integer.parseInt(args.substring(3, 5));
