@@ -20,9 +20,7 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
-import com.jagrosh.jmusicbot.settings.Settings;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.core.Permission;
 
 import java.util.regex.Pattern;
 
@@ -98,4 +96,6 @@ public class SeekCmd extends MusicCommand
         handler.getPlayer().getPlayingTrack().setPosition(seek_milliseconds);
         event.replySuccess("Successfully seeked!");
     }
+
+
 }
