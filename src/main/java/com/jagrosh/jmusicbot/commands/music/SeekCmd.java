@@ -18,6 +18,7 @@ package com.jagrosh.jmusicbot.commands.music;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
+import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -53,11 +54,7 @@ public class SeekCmd extends MusicCommand
         }
 
         AudioTrack currentTrack = handler.getPlayer().getPlayingTrack();
-        Settings settings = event.getClient().getSettingsFor(event.getGuild());
-
-        if (!event.getMember().hasPermission(Permission.MANAGE_SERVER)
-                && !event.getMember().getRoles().contains(settings.getRole(event.getGuild()))
-                && currentTrack.getUserData(Long.class) != event.getAuthor().getIdLong())
+        if (!DJCommand.checkDJPermission(event))
         {
             event.replyError("You cannot seek **" + currentTrack.getInfo().title + "** because you didn't add it!");
             return;
