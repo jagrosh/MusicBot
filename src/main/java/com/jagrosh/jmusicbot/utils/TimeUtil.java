@@ -15,6 +15,8 @@
  */
 package com.jagrosh.jmusicbot.utils;
 
+import java.util.regex.Pattern;
+
 public class TimeUtil
 {
 
@@ -28,5 +30,34 @@ public class TimeUtil
         long minutes = seconds/60;
         seconds %= 60;
         return (hours>0 ? hours+":" : "") + (minutes<10 ? "0"+minutes : minutes) + ":" + (seconds<10 ? "0"+seconds : seconds);
+    }
+
+    public static Long parseTime(String args)
+    {
+        long seconds;
+        long minutes = 0;
+        long hours = 0;
+
+        if (Pattern.matches("^(\\d\\d):([0-5]\\d):([0-5]\\d)$", args))
+        {
+            hours = Integer.parseInt(args.substring(0, 2));
+            minutes = Integer.parseInt(args.substring(3, 5));
+            seconds = Integer.parseInt(args.substring(6));
+        }
+        else if (Pattern.matches("^([0-5]\\d):([0-5]\\d)$", args))
+        {
+            minutes = Integer.parseInt(args.substring(0, 2));
+            seconds = Integer.parseInt(args.substring(3, 5));
+        }
+        else if (Pattern.matches("^([0-5]\\d)$", args))
+        {
+            seconds = Integer.parseInt(args.substring(0, 2));
+        }
+        else
+        {
+            return null;
+        }
+
+        return hours * 3600000 + minutes * 60000 + seconds * 1000;
     }
 }

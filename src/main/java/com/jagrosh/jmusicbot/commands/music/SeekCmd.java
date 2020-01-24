@@ -23,8 +23,6 @@ import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.utils.TimeUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
-import java.util.regex.Pattern;
-
 
 /**
  * @author Whew., Inc.
@@ -36,7 +34,7 @@ public class SeekCmd extends MusicCommand
         super(bot);
         this.name = "seek";
         this.help = "seeks the current song";
-        this.arguments = "<HH:MM:SS>|<MM:SS>|<SS>";
+        this.arguments = "[+ | -] <HH:MM:SS | MM:SS | SS>";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
         this.bePlaying = true;
@@ -46,55 +44,36 @@ public class SeekCmd extends MusicCommand
     public void doCommand(CommandEvent event)
     {
         AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
-        if (!handler.getPlayer().getPlayingTrack().isSeekable())
+        AudioTrack playingTrack = handler.getPlayer().getPlayingTrack();
+        if (!playingTrack.isSeekable())
         {
             event.replyError("This track is not seekable.");
             return;
         }
 
-        AudioTrack currentTrack = handler.getPlayer().getPlayingTrack();
-        if (!DJCommand.checkDJPermission(event))
+
+        if (!DJCommand.checkDJPermission(event) && playingTrack.getUserData(Long.class) != event.getAuthor().getIdLong())
         {
-            event.replyError("You cannot seek **" + currentTrack.getInfo().title + "** because you didn't add it!");
+            event.replyError("You cannot seek **" + playingTrack.getInfo().title + "** because you didn't add it!");
             return;
         }
 
         String args = event.getArgs();
-        long track_duration = handler.getPlayer().getPlayingTrack().getDuration();
-        int seek_milliseconds = 0;
-        int seconds;
-        int minutes = 0;
-        int hours = 0;
-
-        if (Pattern.matches("^(\\d\\d):([0-5]\\d):([0-5]\\d)$", args))
+        Long seek_milliseconds = TimeUtil.parseTime(args);
+        if (seek_milliseconds == null)
         {
-            hours = Integer.parseInt(args.substring(0, 2));
-            minutes = Integer.parseInt(args.substring(3, 5));
-            seconds = Integer.parseInt(args.substring(6));
-        }
-        else if (Pattern.matches("^([0-5]\\d):([0-5]\\d)$", args))
-        {
-            minutes = Integer.parseInt(args.substring(0, 2));
-            seconds = Integer.parseInt(args.substring(3, 5));
-        }
-        else if (Pattern.matches("^([0-5]\\d)$", args))
-        {
-            seconds = Integer.parseInt(args.substring(0, 2));
-        }
-        else
-        {
-            event.replyError("Invalid seek!");
+            event.replyError("Invalid seek! Expected format:" + arguments);
             return;
         }
 
-        seek_milliseconds += hours * 3600000 + minutes * 60000 + seconds * 1000;
+        long track_duration = playingTrack.getDuration();
         if (seek_milliseconds > track_duration)
         {
             event.replyError("Current track (`" + TimeUtil.formatTime(track_duration) + "`) is not that long!");
             return;
         }
 
-        handler.getPlayer().getPlayingTrack().setPosition(seek_milliseconds);
-        event.replySuccess("Successfully seeked to `" + TimeUtil.formatTime(seek_milliseconds) + "`!");
+        playingTrack.setPosition(seek_milliseconds);
+        event.replySuccess("Successfully seeked to `" + TimeUtil.formatTime(seek_milliseconds) + "/" + TimeUtil.formatTime(playingTrack.getDuration()) + "`!");
     }
 }
