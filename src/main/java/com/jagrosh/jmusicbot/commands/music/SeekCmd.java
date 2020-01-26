@@ -59,6 +59,14 @@ public class SeekCmd extends MusicCommand
         }
 
         String args = event.getArgs();
+        Boolean seek_relative = null; // seek forward or backward
+        char charRelative = args.charAt(0);
+        if (args.charAt(0) == '+' || args.charAt(0) == '-')
+        {
+            args = args.substring(1);
+            seek_relative = charRelative == '+';
+
+        }
         Long seek_milliseconds = TimeUtil.parseTime(args);
         if (seek_milliseconds == null)
         {
@@ -67,13 +75,24 @@ public class SeekCmd extends MusicCommand
         }
 
         long track_duration = playingTrack.getDuration();
-        if (seek_milliseconds > track_duration)
+        long currentPosition = playingTrack.getPosition();
+        if (seek_relative != null)
+        {
+            if ((seek_relative && (seek_milliseconds > (track_duration - currentPosition))) || (!seek_relative && (seek_milliseconds > currentPosition)))
+            {
+                event.replyError("You can't seek past the length of the track! (" + TimeUtil.formatTime(currentPosition) + "/" + TimeUtil.formatTime(track_duration) + ")");
+                return;
+            }
+            playingTrack.setPosition(seek_relative ? currentPosition + seek_milliseconds : currentPosition - seek_milliseconds);
+        }
+
+        else if (seek_milliseconds > track_duration)
         {
             event.replyError("Current track (`" + TimeUtil.formatTime(track_duration) + "`) is not that long!");
             return;
         }
+        else playingTrack.setPosition(seek_milliseconds);
 
-        playingTrack.setPosition(seek_milliseconds);
-        event.replySuccess("Successfully seeked to `" + TimeUtil.formatTime(seek_milliseconds) + "/" + TimeUtil.formatTime(playingTrack.getDuration()) + "`!");
+        event.replySuccess("Successfully seeked to `" + TimeUtil.formatTime(playingTrack.getPosition()) + "/" + TimeUtil.formatTime(playingTrack.getDuration()) + "`!");
     }
 }
