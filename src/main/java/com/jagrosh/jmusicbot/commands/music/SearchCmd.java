@@ -115,8 +115,8 @@ public class SearchCmd extends MusicCommand
                         }
                         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
                         int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor()))+1;
-                        event.replySuccess("Added **"+track.getInfo().title
-                                +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0 ? "to begin playing" 
+                        event.replySuccess("Added **" + FormatUtil.filter(track.getInfo().title)
+                                + "** (`" + FormatUtil.formatTime(track.getDuration()) + "`) " + (pos==0 ? "to begin playing" 
                                     : " to the queue at position "+pos));
                     })
                     .setCancel((msg) -> {})
