@@ -59,36 +59,25 @@ public class SeekCmd extends MusicCommand
         }
 
         String args = event.getArgs();
-        Boolean seek_relative = null; // seek forward or backward
-        char charRelative = args.charAt(0);
-        if (args.charAt(0) == '+' || args.charAt(0) == '-')
+        TimeUtil.SeekTime seekTime = TimeUtil.parseTime(args);
+        if (seekTime == null)
         {
-            args = args.substring(1);
-            seek_relative = charRelative == '+';
-
-        }
-        Long seek_milliseconds = TimeUtil.parseTime(args);
-        if (seek_milliseconds == null)
-        {
-            event.replyError("Invalid seek! Expected format:" + arguments);
+            event.replyError("Invalid seek! Expected format: " + arguments);
             return;
         }
 
-        long track_duration = playingTrack.getDuration();
+        long seek_milliseconds = seekTime.milliseconds;
         long currentPosition = playingTrack.getPosition();
-        if (seek_relative != null)
+        long track_duration = playingTrack.getDuration();
+
+        if (seekTime.relative != null)
         {
-            if ((seek_relative && (seek_milliseconds > (track_duration - currentPosition))) || (!seek_relative && (seek_milliseconds > currentPosition)))
-            {
-                event.replyError("You can't seek past the length of the track! (" + TimeUtil.formatTime(currentPosition) + "/" + TimeUtil.formatTime(track_duration) + ")");
-                return;
-            }
-            playingTrack.setPosition(seek_relative ? currentPosition + seek_milliseconds : currentPosition - seek_milliseconds);
+            seek_milliseconds = seekTime.relative ? currentPosition + seekTime.milliseconds : currentPosition - seekTime.milliseconds;
         }
 
-        else if (seek_milliseconds > track_duration)
+        if (seek_milliseconds > track_duration)
         {
-            event.replyError("Current track (`" + TimeUtil.formatTime(track_duration) + "`) is not that long!");
+            event.replyError("Cannot seek to `" + TimeUtil.formatTime(seek_milliseconds) + "` because the current track is `" + TimeUtil.formatTime(track_duration) + "` long!");
             return;
         }
         else playingTrack.setPosition(seek_milliseconds);

@@ -32,12 +32,24 @@ public class TimeUtil
         return (hours>0 ? hours+":" : "") + (minutes<10 ? "0"+minutes : minutes) + ":" + (seconds<10 ? "0"+seconds : seconds);
     }
 
-    public static Long parseTime(String args)
+    /**
+     *
+     * @return Time in milliseconds
+     */
+    public static SeekTime parseTime(String args)
     {
+        Boolean seek_relative = null; // seek forward or backward
+        char charRelative = args.charAt(0);
+        if (args.charAt(0) == '+' || args.charAt(0) == '-')
+        {
+            args = args.substring(1);
+            seek_relative = charRelative == '+';
+
+        }
+
         long seconds;
         long minutes = 0;
         long hours = 0;
-
         if (Pattern.matches("^(\\d\\d):([0-5]\\d):([0-5]\\d)$", args))
         {
             hours = Integer.parseInt(args.substring(0, 2));
@@ -53,11 +65,22 @@ public class TimeUtil
         {
             seconds = Integer.parseInt(args.substring(0, 2));
         }
-        else
-        {
-            return null;
-        }
+        else return null;
 
-        return hours * 3600000 + minutes * 60000 + seconds * 1000;
+
+        return new SeekTime(seek_relative, hours * 3600000 + minutes * 60000 + seconds * 1000);
+    }
+
+
+    public static class SeekTime
+    {
+        public final long milliseconds;
+        public final Boolean relative;
+
+        public SeekTime(Boolean relative, long milliseconds)
+        {
+            this.relative = relative;
+            this.milliseconds = milliseconds;
+        }
     }
 }
