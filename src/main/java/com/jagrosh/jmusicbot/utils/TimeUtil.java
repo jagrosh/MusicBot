@@ -33,7 +33,7 @@ public class TimeUtil
     }
 
     /**
-     *
+     * @param args formatted as: [+ | -] &lt;HH:MM:SS | MM:SS | SS&gt;
      * @return Time in milliseconds
      */
     public static SeekTime parseTime(String args)
@@ -44,7 +44,6 @@ public class TimeUtil
         {
             args = args.substring(1);
             seek_relative = charRelative == '+';
-
         }
 
         long seconds;
