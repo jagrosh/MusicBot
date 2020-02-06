@@ -19,10 +19,12 @@ WORKDIR /usr/app
 ENV CONFIG_ENABLE 1
 # Coping the builded jars from the previous stage
 COPY --from=builder /build/target/JMusicBot-*-All.jar .
-# Declaring voluime
+# Declaring volume
 VOLUME /MusicBot
-# Creating symlink of configuration to the volume
-RUN ln  -s /MusicBot/serversettings.json /usr/app/serversettings.json
+# Creating symlink of configuration to the volume, because i don't want to include the jars in the volume
+RUN ln -s /MusicBot/serversettings.json /usr/app/serversettings.json
+# Coping config
+COPY .docker/env.conf /usr/app/config.txt
 # Coping entrypoint
 COPY .docker/entrypoint.sh /entrypoint.sh
 
