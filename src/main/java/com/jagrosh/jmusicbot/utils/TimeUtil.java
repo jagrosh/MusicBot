@@ -33,13 +33,14 @@ public class TimeUtil
     }
 
     /**
-     * @param args formatted as: [+ | -] &lt;HH:MM:SS | MM:SS | SS&gt;
+     * @param timestamp formatted as: [+ | -] &lt;HH:MM:SS | MM:SS | SS&gt;
      * @return Time in milliseconds, negative if seeking backwards relatively
      */
-    public static SeekTime parseTime(String args)
+    public static SeekTime parseTime(String timestamp)
     {
-        if (args.length() == 0) return null;
+        if (timestamp.length() == 0) return null;
 
+        String args = timestamp;
         boolean relative = false; // seek forward or backward
         boolean isSeekingBackwards = false;
         char first = args.charAt(0);
