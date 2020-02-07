@@ -34,52 +34,55 @@ public class TimeUtil
 
     /**
      * @param args formatted as: [+ | -] &lt;HH:MM:SS | MM:SS | SS&gt;
-     * @return Time in milliseconds
+     * @return Time in milliseconds, negative if seeking backwards relatively
      */
     public static SeekTime parseTime(String args)
     {
-        Boolean seek_relative = null; // seek forward or backward
-        char charRelative = args.charAt(0);
-        if (args.charAt(0) == '+' || args.charAt(0) == '-')
+        if (args.length() == 0) return null;
+
+        boolean relative = false; // seek forward or backward
+        boolean isSeekingBackwards = false;
+        char first = args.charAt(0);
+        if (first == '+' || first == '-')
         {
+            relative = true;
+            isSeekingBackwards = first == '-';
             args = args.substring(1);
-            seek_relative = charRelative == '+';
         }
 
         long seconds;
         long minutes = 0;
         long hours = 0;
-        if (Pattern.matches("^(\\d\\d):([0-5]\\d):([0-5]\\d)$", args))
+        if (Pattern.matches("^(\\d\\d):(\\d\\d):(\\d\\d)$", args))
         {
             hours = Integer.parseInt(args.substring(0, 2));
             minutes = Integer.parseInt(args.substring(3, 5));
             seconds = Integer.parseInt(args.substring(6));
-        }
-        else if (Pattern.matches("^([0-5]\\d):([0-5]\\d)$", args))
+        } else if (Pattern.matches("^(\\d\\d):(\\d\\d)$", args))
         {
             minutes = Integer.parseInt(args.substring(0, 2));
             seconds = Integer.parseInt(args.substring(3, 5));
-        }
-        else if (Pattern.matches("^([0-5]\\d)$", args))
+        } else if (Pattern.matches("^(\\d\\d)$", args))
         {
             seconds = Integer.parseInt(args.substring(0, 2));
-        }
-        else return null;
+        } else return null;
 
+        long milliseconds = hours * 3600000 + minutes * 60000 + seconds * 1000;
+        if (relative && isSeekingBackwards) milliseconds = -milliseconds;
 
-        return new SeekTime(seek_relative, hours * 3600000 + minutes * 60000 + seconds * 1000);
+        return new SeekTime(milliseconds, relative);
     }
 
 
     public static class SeekTime
     {
         public final long milliseconds;
-        public final Boolean relative;
+        public final boolean relative;
 
-        public SeekTime(Boolean relative, long milliseconds)
+        public SeekTime(long milliseconds, boolean relative)
         {
-            this.relative = relative;
             this.milliseconds = milliseconds;
+            this.relative = relative;
         }
     }
 }

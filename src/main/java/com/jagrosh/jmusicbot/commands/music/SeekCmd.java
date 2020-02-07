@@ -66,21 +66,15 @@ public class SeekCmd extends MusicCommand
             return;
         }
 
-        long seek_milliseconds = seekTime.milliseconds;
         long currentPosition = playingTrack.getPosition();
-        long track_duration = playingTrack.getDuration();
+        long trackDuration = playingTrack.getDuration();
 
-        if (seekTime.relative != null)
+        long seekMilliseconds = seekTime.relative ? currentPosition + seekTime.milliseconds : seekTime.milliseconds;
+        if (seekMilliseconds > trackDuration)
         {
-            seek_milliseconds = seekTime.relative ? currentPosition + seekTime.milliseconds : currentPosition - seekTime.milliseconds;
-        }
-
-        if (seek_milliseconds > track_duration)
-        {
-            event.replyError("Cannot seek to `" + TimeUtil.formatTime(seek_milliseconds) + "` because the current track is `" + TimeUtil.formatTime(track_duration) + "` long!");
+            event.replyError("Cannot seek to `" + TimeUtil.formatTime(seekMilliseconds) + "` because the current track is `" + TimeUtil.formatTime(trackDuration) + "` long!");
             return;
-        }
-        else playingTrack.setPosition(seek_milliseconds);
+        } else playingTrack.setPosition(seekMilliseconds);
 
         event.replySuccess("Successfully seeked to `" + TimeUtil.formatTime(playingTrack.getPosition()) + "/" + TimeUtil.formatTime(playingTrack.getDuration()) + "`!");
     }
