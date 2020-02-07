@@ -52,7 +52,7 @@ public class PrefixCmd extends AdminCommand
         else
         {
             s.setPrefix(event.getArgs());
-            event.replySuccess("Custom prefix set to `" + event.getArgs() + " on *" + event.getGuild().getName() + "*");
+            event.replySuccess("Custom prefix set to `" + event.getArgs() + "` on *" + event.getGuild().getName() + "*");
         }
     }
 }
