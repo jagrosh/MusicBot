@@ -25,4 +25,4 @@ if [ ! -f "$SERVER_SETTINGS" ]; then
 fi
 
 # Starts the bot
-java -Dnogui=true -Dconfig="$CONFIG_FILE" -jar JMusicBot-*-All.jar
+exec java -Dnogui=true -Dconfig="$CONFIG_FILE" $JAVA_OPTS -jar JMusicBot-*-All.jar

@@ -15,8 +15,8 @@ RUN mvn -o -B package
 
 FROM adoptopenjdk:8-jre-hotspot
 WORKDIR /usr/app
-# If set to 0, disable config.txt writes
-ENV CONFIG_ENABLE 1
+# Args passed to the java command
+ENV JAVA_OPTS ""
 # Coping the builded jars from the previous stage
 COPY --from=builder /build/target/JMusicBot-*-All.jar .
 # Declaring volume
