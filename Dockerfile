@@ -24,7 +24,7 @@ VOLUME /MusicBot
 # Creating symlink of configuration to the volume, because i don't want to include the jars in the volume
 RUN ln -s /MusicBot/serversettings.json /usr/app/serversettings.json
 # Coping config
-COPY .docker/env.conf /usr/app/config.txt
+COPY .docker/env.conf /usr/app/defaultConfig.txt
 # Coping entrypoint
 COPY .docker/entrypoint.sh /entrypoint.sh
 
