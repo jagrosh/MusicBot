@@ -52,31 +52,23 @@ public class TimeUtil
         int unitTotal = timestampSplitArray.length;
         if (unitTotal > 3) return null;
 
-        int seconds;
-        int minutes;
-        int hours;
         int[] timeUnitArray = new int[3]; // Hours, minutes, seconds
         int timeUnitIndex = 3 - unitTotal;
 
         for (String timeUnit : timestampSplitArray)
         {
-            if (timeUnit.length() > 2 || timeUnit.length() == 0) return null;
+            if (timeUnit.length() > 2 || timeUnit.length() == 0 || timeUnit.substring(0, 1).equals("+")) return null;
             try
             {
-                if (timeUnit.substring(0, 1).equals("+")) return null;
                 timeUnitArray[timeUnitIndex] = Integer.parseUnsignedInt(timeUnit);
-                timeUnitIndex++;
             } catch (NumberFormatException e)
             {
                 return null;
             }
+            timeUnitIndex++;
         }
 
-        hours = timeUnitArray[0];
-        minutes = timeUnitArray[1];
-        seconds = timeUnitArray[2];
-
-        long milliseconds = hours * 3600000 + minutes * 60000 + seconds * 1000;
+        long milliseconds = timeUnitArray[0] * 3600000 + timeUnitArray[1] * 60000 + timeUnitArray[2] * 1000;
         if (relative && isSeekingBackwards) milliseconds = -milliseconds;
 
         return new SeekTime(milliseconds, relative);
