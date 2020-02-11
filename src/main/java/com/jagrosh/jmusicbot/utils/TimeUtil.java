@@ -15,8 +15,6 @@
  */
 package com.jagrosh.jmusicbot.utils;
 
-import java.util.regex.Pattern;
-
 public class TimeUtil
 {
 
@@ -33,40 +31,50 @@ public class TimeUtil
     }
 
     /**
-     * @param timestamp formatted as: [+ | -] &lt;HH:MM:SS | MM:SS | SS&gt;
+     * @param args timestamp formatted as: [+ | -] &lt;HH:MM:SS | MM:SS | SS&gt;
      * @return Time in milliseconds, negative if seeking backwards relatively
      */
-    public static SeekTime parseTime(String timestamp)
+    public static SeekTime parseTime(String args)
     {
-        if (timestamp.length() == 0) return null;
-
-        String args = timestamp;
+        if (args.length() == 0 || args.length() > 8) return null;
+        String timestamp = args;
         boolean relative = false; // seek forward or backward
         boolean isSeekingBackwards = false;
-        char first = args.charAt(0);
+        char first = timestamp.charAt(0);
         if (first == '+' || first == '-')
         {
             relative = true;
             isSeekingBackwards = first == '-';
-            args = args.substring(1);
+            timestamp = timestamp.substring(1);
         }
 
-        long seconds;
-        long minutes = 0;
-        long hours = 0;
-        if (Pattern.matches("^(\\d\\d):(\\d\\d):(\\d\\d)$", args))
+        String[] timestampSplitArray = timestamp.split(":");
+        int unitTotal = timestampSplitArray.length;
+        if (unitTotal > 3) return null;
+
+        int seconds;
+        int minutes;
+        int hours;
+        int[] timeUnitArray = new int[3]; // Hours, minutes, seconds
+        int timeUnitIndex = 3 - unitTotal;
+
+        for (String timeUnit : timestampSplitArray)
         {
-            hours = Integer.parseInt(args.substring(0, 2));
-            minutes = Integer.parseInt(args.substring(3, 5));
-            seconds = Integer.parseInt(args.substring(6));
-        } else if (Pattern.matches("^(\\d\\d):(\\d\\d)$", args))
-        {
-            minutes = Integer.parseInt(args.substring(0, 2));
-            seconds = Integer.parseInt(args.substring(3, 5));
-        } else if (Pattern.matches("^(\\d\\d)$", args))
-        {
-            seconds = Integer.parseInt(args.substring(0, 2));
-        } else return null;
+            if (timeUnit.length() > 2 || timeUnit.length() == 0) return null;
+            try
+            {
+                if (timeUnit.substring(0, 1).equals("+")) return null;
+                timeUnitArray[timeUnitIndex] = Integer.parseUnsignedInt(timeUnit);
+                timeUnitIndex++;
+            } catch (NumberFormatException e)
+            {
+                return null;
+            }
+        }
+
+        hours = timeUnitArray[0];
+        minutes = timeUnitArray[1];
+        seconds = timeUnitArray[2];
 
         long milliseconds = hours * 3600000 + minutes * 60000 + seconds * 1000;
         if (relative && isSeekingBackwards) milliseconds = -milliseconds;
