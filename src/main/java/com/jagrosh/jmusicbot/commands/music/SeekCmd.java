@@ -33,7 +33,8 @@ public class SeekCmd extends MusicCommand
     {
         super(bot);
         this.name = "seek";
-        this.help = "seeks the current song";
+        this.help = "seeks the current song" +
+                "\nExamples: `1:02:23` `+1:10` `-90`";
         this.arguments = "[+ | -] <HH:MM:SS | MM:SS | SS>";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
