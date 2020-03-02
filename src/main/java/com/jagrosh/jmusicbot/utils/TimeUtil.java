@@ -36,7 +36,7 @@ public class TimeUtil
      */
     public static SeekTime parseTime(String args)
     {
-        if (args.length() == 0 || args.length() > 8) return null;
+        if (args.length() == 0) return null;
         String timestamp = args;
         boolean relative = false; // seek forward or backward
         boolean isSeekingBackwards = false;
@@ -48,28 +48,26 @@ public class TimeUtil
             timestamp = timestamp.substring(1);
         }
 
-        String[] timestampSplitArray = timestamp.split(":");
-        int unitTotal = timestampSplitArray.length;
-        if (unitTotal > 3) return null;
-
-        int[] timeUnitArray = new int[3]; // Hours, minutes, seconds
-        int timeUnitIndex = 3 - unitTotal;
-
-        for (String timeUnit : timestampSplitArray)
+        String[] timestampSplitArray = timestamp.split(":+");
+        if(timestampSplitArray.length > 3 )
+            return null;
+        double[] timeUnitArray = new double[3]; // hours, minutes, seconds
+        for(int index = 0; index < timestampSplitArray.length; index++)
         {
-            if (timeUnit.length() > 2 || timeUnit.length() == 0 || timeUnit.substring(0, 1).equals("+")) return null;
+            String unit = timestampSplitArray[index];
+            if (unit.startsWith("+")) return null;
+            unit = unit.replace(",", ".");
             try
             {
-                timeUnitArray[timeUnitIndex] = Integer.parseUnsignedInt(timeUnit);
-            } catch (NumberFormatException e)
+                timeUnitArray[index + 3 - timestampSplitArray.length] = Double.parseDouble(unit);
+            }
+            catch (NumberFormatException e)
             {
                 return null;
             }
-            timeUnitIndex++;
         }
-
-        long milliseconds = timeUnitArray[0] * 3600000 + timeUnitArray[1] * 60000 + timeUnitArray[2] * 1000;
-        if (relative && isSeekingBackwards) milliseconds = -milliseconds;
+        long milliseconds = Math.round(timeUnitArray[0] * 3600000 + timeUnitArray[1] * 60000 + timeUnitArray[2] * 1000);
+        milliseconds *= isSeekingBackwards ? -1 : 1;
 
         return new SeekTime(milliseconds, relative);
     }
@@ -80,7 +78,7 @@ public class TimeUtil
         public final long milliseconds;
         public final boolean relative;
 
-        public SeekTime(long milliseconds, boolean relative)
+        private SeekTime(long milliseconds, boolean relative)
         {
             this.milliseconds = milliseconds;
             this.relative = relative;
