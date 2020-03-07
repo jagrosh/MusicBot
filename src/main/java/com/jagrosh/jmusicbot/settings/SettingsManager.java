@@ -40,6 +40,16 @@ public class SettingsManager implements GuildSettingsManager
             JSONObject loadedSettings = new JSONObject(new String(Files.readAllBytes(Paths.get("serversettings.json"))));
             loadedSettings.keySet().forEach((id) -> {
                 JSONObject o = loadedSettings.getJSONObject(id);
+
+                // Legacy version support: On versions 0.2.7 and older, the repeat mode was represented as a boolean.
+                try
+                {
+                    if(o.getBoolean("repeat"))
+                        o.put("repeat", RepeatMode.REPEAT);
+                    else
+                        o.put("repeat", RepeatMode.NONE);
+                } catch(JSONException e) { /* ignored */ }
+
                 settings.put(Long.parseLong(id), new Settings(this,
                         o.has("text_channel_id") ? o.getString("text_channel_id")           : null,
                         o.has("voice_channel_id")? o.getString("voice_channel_id")          : null,
