@@ -45,9 +45,9 @@ public class SettingsManager implements GuildSettingsManager
                 try
                 {
                     if(o.getBoolean("repeat"))
-                        o.put("repeat", RepeatMode.REPEAT);
+                        o.put("repeat", RepeatMode.On);
                     else
-                        o.put("repeat", RepeatMode.NONE);
+                        o.put("repeat", RepeatMode.Off);
                 } catch(JSONException e) { /* ignored */ }
 
                 settings.put(Long.parseLong(id), new Settings(this,
@@ -56,7 +56,7 @@ public class SettingsManager implements GuildSettingsManager
                         o.has("dj_role_id")      ? o.getString("dj_role_id")                : null,
                         o.has("volume")          ? o.getInt("volume")                       : 100,
                         o.has("default_playlist")? o.getString("default_playlist")          : null,
-                        o.has("repeat")          ? o.getEnum(RepeatMode.class, "repeat"): RepeatMode.NONE,
+                        o.has("repeat")          ? o.getEnum(RepeatMode.class, "repeat"): RepeatMode.Off,
                         o.has("prefix")          ? o.getString("prefix")                    : null));
             });
         } catch(IOException | JSONException e) {
@@ -83,7 +83,7 @@ public class SettingsManager implements GuildSettingsManager
     
     private Settings createDefaultSettings()
     {
-        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.NONE, null);
+        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.Off, null);
     }
     
     protected void writeSettings()
@@ -102,7 +102,7 @@ public class SettingsManager implements GuildSettingsManager
                 o.put("volume",s.getVolume());
             if(s.getDefaultPlaylist() != null)
                 o.put("default_playlist", s.getDefaultPlaylist());
-            if(s.getRepeatMode()!=RepeatMode.NONE)
+            if(s.getRepeatMode()!=RepeatMode.Off)
                 o.put("repeat", s.getRepeatMode());
             if(s.getPrefix() != null)
                 o.put("prefix", s.getPrefix());

@@ -2,7 +2,7 @@ package com.jagrosh.jmusicbot.settings;
 
 public enum RepeatMode
 {
-    NONE,
-    REPEAT,
+    Off,
+    On,
     REPEAT_ONE
 }
