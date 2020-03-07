@@ -23,5 +23,5 @@ public enum RepeatMode
 {
     Off,
     On,
-    REPEAT_ONE
+    One
 }

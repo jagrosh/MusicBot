@@ -60,7 +60,7 @@ public class RepeatCmd extends DJCommand
         }
         else if(event.getArgs().equalsIgnoreCase("one") || event.getArgs().equalsIgnoreCase("single"))
         {
-            value = RepeatMode.REPEAT_ONE;
+            value = RepeatMode.One;
         }
         else
         {
