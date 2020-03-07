@@ -51,13 +51,13 @@ public class SettingsManager implements GuildSettingsManager
                 } catch(JSONException e) { /* ignored */ }
 
                 settings.put(Long.parseLong(id), new Settings(this,
-                        o.has("text_channel_id") ? o.getString("text_channel_id")           : null,
-                        o.has("voice_channel_id")? o.getString("voice_channel_id")          : null,
-                        o.has("dj_role_id")      ? o.getString("dj_role_id")                : null,
-                        o.has("volume")          ? o.getInt("volume")                       : 100,
-                        o.has("default_playlist")? o.getString("default_playlist")          : null,
+                        o.has("text_channel_id") ? o.getString("text_channel_id")       : null,
+                        o.has("voice_channel_id")? o.getString("voice_channel_id")      : null,
+                        o.has("dj_role_id")      ? o.getString("dj_role_id")            : null,
+                        o.has("volume")          ? o.getInt("volume")                   : 100,
+                        o.has("default_playlist")? o.getString("default_playlist")      : null,
                         o.has("repeat")          ? o.getEnum(RepeatMode.class, "repeat"): RepeatMode.Off,
-                        o.has("prefix")          ? o.getString("prefix")                    : null));
+                        o.has("prefix")          ? o.getString("prefix")                : null));
             });
         } catch(IOException | JSONException e) {
             LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
