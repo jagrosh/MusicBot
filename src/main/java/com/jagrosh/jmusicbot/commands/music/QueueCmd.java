@@ -24,6 +24,7 @@ import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
+import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -38,6 +39,7 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
 public class QueueCmd extends MusicCommand 
 {
     private final static String REPEAT = "\uD83D\uDD01"; // 🔁
+    private final static String REPEAT_ONE = "\uD83D\uDD02"; // 🔂
     
     private final Paginator.Builder builder;
     
@@ -104,7 +106,7 @@ public class QueueCmd extends MusicCommand
         builder.build().paginate(event.getChannel(), pagenum);
     }
     
-    private String getQueueTitle(AudioHandler ah, String success, int songslength, long total, boolean repeatmode)
+    private String getQueueTitle(AudioHandler ah, String success, int songslength, long total, RepeatMode repeatmode)
     {
         StringBuilder sb = new StringBuilder();
         if(ah.getPlayer().getPlayingTrack()!=null)
@@ -114,6 +116,6 @@ public class QueueCmd extends MusicCommand
         }
         return FormatUtil.filter(sb.append(success).append(" Current Queue | ").append(songslength)
                 .append(" entries | `").append(FormatUtil.formatTime(total)).append("` ")
-                .append(repeatmode ? "| " + REPEAT : "").toString());
+                .append(repeatmode!=RepeatMode.NONE ? "| "+(repeatmode==RepeatMode.REPEAT ? REPEAT : REPEAT_ONE) : "").toString());
     }
 }

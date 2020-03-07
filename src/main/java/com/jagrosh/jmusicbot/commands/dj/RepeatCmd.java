@@ -18,6 +18,7 @@ package com.jagrosh.jmusicbot.commands.dj;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.DJCommand;
+import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.jagrosh.jmusicbot.settings.Settings;
 
 /**
@@ -40,27 +41,31 @@ public class RepeatCmd extends DJCommand
     @Override
     protected void execute(CommandEvent event) 
     {
-        boolean value;
+        RepeatMode value;
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
         if(event.getArgs().isEmpty())
         {
-            value = !settings.getRepeatMode();
+            value = RepeatMode.NONE;
         }
         else if(event.getArgs().equalsIgnoreCase("true") || event.getArgs().equalsIgnoreCase("on"))
         {
-            value = true;
+            value = RepeatMode.REPEAT;
         }
         else if(event.getArgs().equalsIgnoreCase("false") || event.getArgs().equalsIgnoreCase("off"))
         {
-            value = false;
+            value = RepeatMode.NONE;
+        }
+        else if(event.getArgs().equalsIgnoreCase("one"))
+        {
+            value = RepeatMode.REPEAT_ONE;
         }
         else
         {
-            event.replyError("Valid options are `on` or `off` (or leave empty to toggle)");
+            event.replyError("Valid options are `on`, `off` or `one` (or leave empty to toggle)");
             return;
         }
         settings.setRepeatMode(value);
-        event.replySuccess("Repeat mode is now `"+(value ? "ON" : "OFF")+"`");
+        event.replySuccess("Repeat mode is now `"+value+"`");
     }
 
     @Override
