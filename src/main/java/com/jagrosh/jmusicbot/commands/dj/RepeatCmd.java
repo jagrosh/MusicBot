@@ -58,7 +58,7 @@ public class RepeatCmd extends DJCommand
         {
             value = RepeatMode.NONE;
         }
-        else if(event.getArgs().equalsIgnoreCase("one"))
+        else if(event.getArgs().equalsIgnoreCase("one") || event.getArgs().equalsIgnoreCase("single"))
         {
             value = RepeatMode.REPEAT_ONE;
         }
