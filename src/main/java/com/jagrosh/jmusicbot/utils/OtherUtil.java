@@ -18,8 +18,11 @@ package com.jagrosh.jmusicbot.utils;
 import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.entities.Prompt;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 import okhttp3.*;
@@ -37,7 +40,38 @@ public class OtherUtil
                     + "Current version: %s\n"
                     + "New Version: %s\n\n"
                     + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
+    private final static String WINDOWS_INVALID_PATH = "c:\\windows\\system32\\";
     
+    /**
+     * gets a Path from a String
+     * also fixes the windows tendency to try to start in system32
+     * any time the bot tries to access this path, it will instead start in the location of the jar file
+     * 
+     * @param path the string path
+     * @return the Path object
+     */
+    public static Path getPath(String path)
+    {
+        // special logic to prevent trying to access system32
+        if(path.toLowerCase().startsWith(WINDOWS_INVALID_PATH))
+        {
+            String filename = path.substring(WINDOWS_INVALID_PATH.length());
+            try
+            {
+                path = new File(JMusicBot.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath() + File.separator + filename;
+            }
+            catch(URISyntaxException ex) {}
+        }
+        return Paths.get(path);
+    }
+    
+    /**
+     * Loads a resource from the jar as a string
+     * 
+     * @param clazz class base object
+     * @param name name of resource
+     * @return string containing the contents of the resource
+     */
     public static String loadResource(Object clazz, String name)
     {
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(clazz.getClass().getResourceAsStream(name))))
@@ -52,6 +86,12 @@ public class OtherUtil
         }
     }
     
+    /**
+     * Loads image data from a URL
+     * 
+     * @param url url of image
+     * @return inputstream of url
+     */
     public static InputStream imageFromUrl(String url)
     {
         if(url==null)
@@ -67,28 +107,39 @@ public class OtherUtil
         return null;
     }
     
+    /**
+     * Parses an activity from a string
+     * 
+     * @param game the game, including the action such as 'playing' or 'watching'
+     * @return the parsed activity
+     */
     public static Game parseGame(String game)
     {
         if(game==null || game.trim().isEmpty() || game.trim().equalsIgnoreCase("default"))
             return null;
         String lower = game.toLowerCase();
         if(lower.startsWith("playing"))
-            return Game.playing(game.substring(7).trim());
+            return Game.playing(makeNonEmpty(game.substring(7).trim()));
         if(lower.startsWith("listening to"))
-            return Game.listening(game.substring(12).trim());
+            return Game.listening(makeNonEmpty(game.substring(12).trim()));
         if(lower.startsWith("listening"))
-            return Game.listening(game.substring(9).trim());
+            return Game.listening(makeNonEmpty(game.substring(9).trim()));
         if(lower.startsWith("watching"))
-            return Game.watching(game.substring(8).trim());
+            return Game.watching(makeNonEmpty(game.substring(8).trim()));
         if(lower.startsWith("streaming"))
         {
             String[] parts = game.substring(9).trim().split("\\s+", 2);
             if(parts.length == 2)
             {
-                return Game.streaming(parts[1], "https://twitch.tv/"+parts[0]);
+                return Game.streaming(makeNonEmpty(parts[1]), "https://twitch.tv/"+parts[0]);
             }
         }
         return Game.playing(game);
+    }
+   
+    public static String makeNonEmpty(String str)
+    {
+        return str == null || str.isEmpty() ? "\u200B" : str;
     }
     
     public static OnlineStatus parseStatus(String status)

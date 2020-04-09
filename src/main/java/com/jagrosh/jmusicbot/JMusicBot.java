@@ -167,7 +167,7 @@ public class JMusicBot
             }
         }
         
-        log.info("Loaded config from "+config.getConfigLocation());
+        log.info("Loaded config from " + config.getConfigLocation());
         
         // attempt to log in and start
         try
