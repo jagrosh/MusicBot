@@ -1,7 +1,15 @@
 package com.jagrosh.jmusicbot.settings;
 
+/**
+ * Replacement of the previous repeat boolean setting.
+ * - `off`: Same as the previous setting of `false` and disables any repeating.
+ * - `single`: Repeats the currently-playing track, as requested by the card references below.
+ * - `all`: Same as the previous setting of `true` by repeating the entire current queue.
+ */
 public enum RepeatMode {
-    off, single, all;
+    off,
+    single,
+    all;
 
     static RepeatMode fromString(String string) {
         if (string.equalsIgnoreCase(RepeatMode.single.toString()))
