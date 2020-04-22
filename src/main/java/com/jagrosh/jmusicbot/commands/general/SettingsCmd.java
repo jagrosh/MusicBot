@@ -30,21 +30,18 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SettingsCmd extends Command 
-{
+public class SettingsCmd extends Command {
     private final static String EMOJI = "\uD83C\uDFA7"; // 🎧
-    
-    public SettingsCmd(Bot bot)
-    {
+
+    public SettingsCmd(Bot bot) {
         this.name = "settings";
         this.help = "shows the bots settings";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
     }
-    
+
     @Override
-    protected void execute(CommandEvent event) 
-    {
+    protected void execute(CommandEvent event) {
         Settings s = event.getClient().getSettingsFor(event.getGuild());
         MessageBuilder builder = new MessageBuilder()
                 .append(EMOJI + " **")
@@ -59,13 +56,13 @@ public class SettingsCmd extends Command
                         + "\nVoice Channel: " + (vchan == null ? "Any" : "**" + vchan.getName() + "**")
                         + "\nDJ Role: " + (role == null ? "None" : "**" + role.getName() + "**")
                         + "\nCustom Prefix: " + (s.getPrefix() == null ? "None" : "`" + s.getPrefix() + "`")
-                        + "\nRepeat Mode: **" + (s.getRepeatMode().toString()) + "**"
+                        + "\nRepeat Mode: **" + s.getRepeatMode() + "**"
                         + "\nDefault Playlist: " + (s.getDefaultPlaylist() == null ? "None" : "**" + s.getDefaultPlaylist() + "**")
-                        )
+                )
                 .setFooter(event.getJDA().getGuilds().size() + " servers | "
                         + event.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count()
                         + " audio connections", null);
         event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
     }
-    
+
 }
