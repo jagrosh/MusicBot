@@ -18,6 +18,8 @@ package com.jagrosh.jmusicbot.commands.dj;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.DJCommand;
+import com.jagrosh.jmusicbot.commands.music.QueueCmd;
+import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.jagrosh.jmusicbot.settings.Settings;
 
 /**
@@ -30,8 +32,8 @@ public class RepeatCmd extends DJCommand
     {
         super(bot);
         this.name = "repeat";
-        this.help = "re-adds music to the queue when finished";
-        this.arguments = "[on|off]";
+        this.help = "replays the current song or re-adds music to the queue when finished";
+        this.arguments = "[off|single|all]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
     }
@@ -40,27 +42,32 @@ public class RepeatCmd extends DJCommand
     @Override
     protected void execute(CommandEvent event) 
     {
-        boolean value;
+        RepeatMode value;
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
         if(event.getArgs().isEmpty())
         {
-            value = !settings.getRepeatMode();
+            event.reply(QueueCmd.REPEAT+" Current repeat setting is `"+settings.getRepeatMode()+"`.");
+            return;
         }
-        else if(event.getArgs().equalsIgnoreCase("true") || event.getArgs().equalsIgnoreCase("on"))
+        else if(event.getArgs().equalsIgnoreCase(RepeatMode.off.toString()))
         {
-            value = true;
+            value = RepeatMode.off;
         }
-        else if(event.getArgs().equalsIgnoreCase("false") || event.getArgs().equalsIgnoreCase("off"))
+        else if(event.getArgs().equalsIgnoreCase(RepeatMode.single.toString()))
         {
-            value = false;
+            value = RepeatMode.single;
+        }
+        else if(event.getArgs().equalsIgnoreCase(RepeatMode.all.toString()))
+        {
+            value = RepeatMode.all;
         }
         else
         {
-            event.replyError("Valid options are `on` or `off` (or leave empty to toggle)");
+            event.replyError("Valid options are `off`, `single`, or `all`.");
             return;
         }
         settings.setRepeatMode(value);
-        event.replySuccess("Repeat mode is now `"+(value ? "ON" : "OFF")+"`");
+        event.replySuccess("Repeat mode is now `"+value.toString()+"`.");
     }
 
     @Override
