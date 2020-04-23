@@ -64,7 +64,7 @@ public class BotConfig
         try 
         {
             // get the path to the config, default config.txt
-            path = Paths.get(System.getProperty("config.file", System.getProperty("config", "config.txt")));
+            path = OtherUtil.getPath(System.getProperty("config.file", System.getProperty("config", "config.txt")));
             if(path.toFile().exists())
             {
                 if(System.getProperty("config.file") == null)
