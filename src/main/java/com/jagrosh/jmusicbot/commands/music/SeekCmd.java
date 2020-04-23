@@ -33,8 +33,7 @@ public class SeekCmd extends MusicCommand
     {
         super(bot);
         this.name = "seek";
-        this.help = "seeks the current song" +
-                "\nExamples: `1:02:23` `+1:10` `-90`";
+        this.help = "seeks the current song";
         this.arguments = "[+ | -] <HH:MM:SS | MM:SS | SS>";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
@@ -63,7 +62,7 @@ public class SeekCmd extends MusicCommand
         TimeUtil.SeekTime seekTime = TimeUtil.parseTime(args);
         if (seekTime == null)
         {
-            event.replyError("Invalid seek! Expected format: " + arguments);
+            event.replyError("Invalid seek! Expected format: " + arguments + "\nExamples: `1:02:23` `+1:10` `-90`");
             return;
         }
 

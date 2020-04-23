@@ -55,7 +55,7 @@ public class TimeUtil
         for(int index = 0; index < timestampSplitArray.length; index++)
         {
             String unit = timestampSplitArray[index];
-            if (unit.startsWith("+")) return null;
+            if (unit.startsWith("+") || unit.startsWith("-")) return null;
             unit = unit.replace(",", ".");
             try
             {
