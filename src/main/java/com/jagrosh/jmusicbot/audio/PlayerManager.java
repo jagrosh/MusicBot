@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,7 +86,8 @@ public class PlayerManager extends DefaultAudioPlayerManager
         private static final String SEARCH_PREFIX = "reclocal:";
 
         @Override
-        public AudioItem loadItem(DefaultAudioPlayerManager manager, AudioReference reference) {
+        public AudioItem loadItem(DefaultAudioPlayerManager manager, AudioReference reference)
+        {
             try {
                 List<AudioTrack> tracks = searchPathsCorrespondingQuery(reference.getIdentifier())
                         .stream()
@@ -105,12 +107,20 @@ public class PlayerManager extends DefaultAudioPlayerManager
             return null;
         }
 
-        private List<Path> searchPathsCorrespondingQuery(String query) throws IOException {
+        private List<Path> searchPathsCorrespondingQuery(String query) throws IOException
+        {
             if (!query.startsWith(SEARCH_PREFIX)) return Collections.emptyList();
 
-            String word = query.substring(SEARCH_PREFIX.length()).trim();
+            List<String> words = Arrays.stream(query.substring(SEARCH_PREFIX.length()).trim().split(" "))
+                    .filter(word -> !word.isEmpty())
+                    .map(String::toUpperCase)
+                    .collect(Collectors.toList());
+
             return Files.walk(Paths.get("."))
-                    .filter(path -> path.getFileName().toString().contains(word))
+                    .filter(path -> {
+                        String fileName = path.getFileName().toString().toUpperCase();
+                        return words.stream().allMatch(fileName::contains);
+                    })
                     .collect(Collectors.toList());
         }
     }
