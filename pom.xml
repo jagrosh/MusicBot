@@ -28,7 +28,7 @@
         <dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>1.3.46</version>
+            <version>1.3.49</version>
         </dependency>
         <dependency>
             <groupId>com.sedmelluq</groupId>
