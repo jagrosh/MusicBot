@@ -38,8 +38,6 @@ public class BotConfig
     private final Prompt prompt;
 
     private static final String CONTEXT = "Config";
-    private static final String START_TOKEN = "/// START OF JMUSICBOT CONFIG ///";
-    private static final String END_TOKEN = "/// END OF JMUSICBOT CONFIG ///";
     private static final ResourceBundle MESSAGES = ResourceBundle.getBundle("messages", Locale.ENGLISH);
 
     private Path path;
@@ -152,28 +150,7 @@ public class BotConfig
 
             if (write)
             {
-                String original = OtherUtil.loadResource(this, "/reference.conf");
-                byte[] bytes;
-                if (original == null)
-                {
-                    bytes = ("token = " + token + "\r\nowner = " + owner).getBytes();
-                }
-                else
-                {
-                    bytes = original.substring(original.indexOf(START_TOKEN) + START_TOKEN.length(), original.indexOf(END_TOKEN))
-                            .replace("BOT_TOKEN_HERE", token)
-                            .replace("0 // OWNER ID", Long.toString(owner))
-                            .trim().getBytes();
-                }
-                try
-                {
-                    Files.write(path, bytes);
-                }
-                catch (IOException ex)
-                {
-                    prompt.alert(Prompt.Level.WARNING, CONTEXT,
-                            String.format(MESSAGES.getString("config_dump_failure"), ex, path.toAbsolutePath()));
-                }
+                dumpToFile();
             }
 
             valid = true;
@@ -181,6 +158,31 @@ public class BotConfig
         catch (ConfigException ex)
         {
             prompt.alert(Prompt.Level.ERROR, CONTEXT, ex + ": " + ex.getMessage() + "\n\nConfig Location: " + path.toAbsolutePath().toString());
+        }
+    }
+
+    public void dumpToFile()
+    {
+        String original = OtherUtil.loadResource(this, "/reference.conf");
+        byte[] bytes;
+
+        if (original == null)
+        {
+            bytes = String.format("token = %s%nowner= %s", token, owner).getBytes();
+        }
+        else
+        {
+            bytes = original.replace("BOT_TOKEN_HERE", token).replace("0 // OWNER ID", Long.toString(owner)).getBytes();
+        }
+
+        try
+        {
+            Files.write(path, bytes);
+        }
+        catch (IOException ex)
+        {
+            prompt.alert(Prompt.Level.WARNING, CONTEXT,
+                    String.format(MESSAGES.getString("config_dump_failure"), ex, path.toAbsolutePath()));
         }
     }
 
