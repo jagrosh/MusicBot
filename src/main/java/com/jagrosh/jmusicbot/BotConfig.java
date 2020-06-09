@@ -82,7 +82,7 @@ public class BotConfig
             ConfigFactory.invalidateCaches();
         }
 
-        loadValues();
+        parseValues();
 
         boolean shouldDumpToFile = false;
 
@@ -130,7 +130,7 @@ public class BotConfig
         }
     }
 
-    private void loadValues()
+    private void parseValues()
     {
         try
         {
