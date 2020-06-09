@@ -27,8 +27,8 @@ import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 
 /**
- * 
- * 
+ *
+ *
  * @author John Grosh (jagrosh)
  */
 public class BotConfig
@@ -38,8 +38,8 @@ public class BotConfig
     private static final String CONTEXT = "Config";
     private static final String START_TOKEN = "/// START OF JMUSICBOT CONFIG ///";
     private static final String END_TOKEN = "/// END OF JMUSICBOT CONFIG ///";
-    
-    private Path path = null;
+
+    private Path path;
     private String token;
     private String prefix;
     private String altprefix;
@@ -64,12 +64,12 @@ public class BotConfig
 
 
     private boolean valid = false;
-    
+
     public BotConfig(Prompt prompt)
     {
         this.prompt = prompt;
     }
-    
+
     public void load()
     {
         valid = false;
@@ -83,9 +83,9 @@ public class BotConfig
                     System.setProperty("config.file", System.getProperty("config", "config.txt"));
                 ConfigFactory.invalidateCaches();
             }
-            
+
             Config config = ConfigFactory.load();
-            
+
             token = config.getString("token");
             prefix = config.getString("prefix");
             altprefix = config.getString("altprefix");
@@ -107,7 +107,7 @@ public class BotConfig
             playlistsFolder = config.getString("playlistsfolder");
             aliases = config.getConfig("aliases");
             dbots = owner == 113156185389092864L;
-            
+
             boolean write = false;
 
             if(token==null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
@@ -126,7 +126,7 @@ public class BotConfig
                     write = true;
                 }
             }
-            
+
             if(owner<=0)
             {
                 try
@@ -151,7 +151,7 @@ public class BotConfig
                     write = true;
                 }
             }
-            
+
             if(write)
             {
                 String original = OtherUtil.loadResource(this, "/reference.conf");
@@ -167,18 +167,18 @@ public class BotConfig
                         .replace("0 // OWNER ID", Long.toString(owner))
                         .trim().getBytes();
                 }
-                try 
+                try
                 {
                     Files.write(path, bytes);
                 }
-                catch(IOException ex) 
+                catch(IOException ex)
                 {
                     prompt.alert(Prompt.Level.WARNING, CONTEXT, "Failed to write new config options to config.txt: "+ex
-                        + "\nPlease make sure that the files are not on your desktop or some other restricted area.\n\nConfig Location: " 
+                        + "\nPlease make sure that the files are not on your desktop or some other restricted area.\n\nConfig Location: "
                         + path.toAbsolutePath().toString());
                 }
             }
-            
+
             valid = true;
         }
         catch (ConfigException ex)
@@ -186,122 +186,122 @@ public class BotConfig
             prompt.alert(Prompt.Level.ERROR, CONTEXT, ex + ": " + ex.getMessage() + "\n\nConfig Location: " + path.toAbsolutePath().toString());
         }
     }
-    
+
     public boolean isValid()
     {
         return valid;
     }
-    
+
     public String getConfigLocation()
     {
         return path.toFile().getAbsolutePath();
     }
-    
+
     public String getPrefix()
     {
         return prefix;
     }
-    
+
     public String getAltPrefix()
     {
         return "NONE".equalsIgnoreCase(altprefix) ? null : altprefix;
     }
-    
+
     public String getToken()
     {
         return token;
     }
-    
+
     public long getOwnerId()
     {
         return owner;
     }
-    
+
     public String getSuccess()
     {
         return successEmoji;
     }
-    
+
     public String getWarning()
     {
         return warningEmoji;
     }
-    
+
     public String getError()
     {
         return errorEmoji;
     }
-    
+
     public String getLoading()
     {
         return loadingEmoji;
     }
-    
+
     public String getSearching()
     {
         return searchingEmoji;
     }
-    
+
     public Game getGame()
     {
         return game;
     }
-    
+
     public OnlineStatus getStatus()
     {
         return status;
     }
-    
+
     public String getHelp()
     {
         return helpWord;
     }
-    
+
     public boolean getStay()
     {
         return stayInChannel;
     }
-    
+
     public boolean getSongInStatus()
     {
         return songInGame;
     }
-    
+
     public String getPlaylistsFolder()
     {
         return playlistsFolder;
     }
-    
+
     public boolean getDBots()
     {
         return dbots;
     }
-    
+
     public boolean useUpdateAlerts()
     {
         return updatealerts;
     }
-    
+
     public boolean useEval()
     {
         return useEval;
     }
-    
+
     public boolean useNPImages()
     {
         return npImages;
     }
-    
+
     public long getMaxSeconds()
     {
         return maxSeconds;
     }
-    
+
     public String getMaxTime()
     {
         return FormatUtil.formatTime(maxSeconds * 1000);
     }
-    
+
     public boolean isTooLong(AudioTrack track)
     {
         if(maxSeconds<=0)
