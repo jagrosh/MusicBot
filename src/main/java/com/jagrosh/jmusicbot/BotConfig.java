@@ -74,10 +74,8 @@ public class BotConfig
     {
         valid = false;
 
-        // read config from file
-        try 
+        try
         {
-            // get the path to the config, default config.txt
             path = OtherUtil.getPath(System.getProperty("config.file", System.getProperty("config", "config.txt")));
             if(path.toFile().exists())
             {
@@ -86,11 +84,8 @@ public class BotConfig
                 ConfigFactory.invalidateCaches();
             }
             
-            // load in the config file, plus the default values
-            //Config config = ConfigFactory.parseFile(path.toFile()).withFallback(ConfigFactory.load());
             Config config = ConfigFactory.load();
             
-            // set values
             token = config.getString("token");
             prefix = config.getString("prefix");
             altprefix = config.getString("altprefix");
@@ -113,10 +108,8 @@ public class BotConfig
             aliases = config.getConfig("aliases");
             dbots = owner == 113156185389092864L;
             
-            // we may need to write a new config file
             boolean write = false;
 
-            // validate bot token
             if(token==null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
             {
                 token = prompt.prompt("Please provide a bot token."
@@ -134,7 +127,6 @@ public class BotConfig
                 }
             }
             
-            // validate bot owner
             if(owner<=0)
             {
                 try
@@ -187,7 +179,6 @@ public class BotConfig
                 }
             }
             
-            // if we get through the whole config, it's good to go
             valid = true;
         }
         catch (ConfigException ex)
