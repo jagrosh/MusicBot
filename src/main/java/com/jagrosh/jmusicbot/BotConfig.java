@@ -24,6 +24,8 @@ import com.typesafe.config.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
@@ -38,11 +40,13 @@ public class BotConfig
     private static final String CONTEXT = "Config";
     private static final String START_TOKEN = "/// START OF JMUSICBOT CONFIG ///";
     private static final String END_TOKEN = "/// END OF JMUSICBOT CONFIG ///";
+    private static final ResourceBundle MESSAGES = ResourceBundle.getBundle("messages", Locale.ENGLISH);
 
     private Path path;
+
     private String token;
     private String prefix;
-    private String altprefix;
+    private String altPrefix;
     private String helpWord;
     private String playlistsFolder;
     private String successEmoji;
@@ -53,7 +57,7 @@ public class BotConfig
     private boolean stayInChannel;
     private boolean songInGame;
     private boolean npImages;
-    private boolean updatealerts;
+    private boolean updateAlerts;
     private boolean useEval;
     private boolean dbots;
     private long owner;
@@ -89,7 +93,7 @@ public class BotConfig
 
             token = config.getString("token");
             prefix = config.getString("prefix");
-            altprefix = config.getString("altprefix");
+            altPrefix = config.getString("altprefix");
             helpWord = config.getString("help");
             owner = config.getLong("owner");
             successEmoji = config.getString("success");
@@ -102,7 +106,7 @@ public class BotConfig
             stayInChannel = config.getBoolean("stayinchannel");
             songInGame = config.getBoolean("songinstatus");
             npImages = config.getBoolean("npimages");
-            updatealerts = config.getBoolean("updatealerts");
+            updateAlerts = config.getBoolean("updatealerts");
             useEval = config.getBoolean("eval");
             maxSeconds = config.getLong("maxtime");
             playlistsFolder = config.getString("playlistsfolder");
@@ -113,10 +117,7 @@ public class BotConfig
 
             if (token == null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
             {
-                token = prompt.prompt("Please provide a bot token."
-                        + "\nInstructions for obtaining a token can be found here:"
-                        + "\nhttps://github.com/jagrosh/MusicBot/wiki/Getting-a-Bot-Token."
-                        + "\nBot Token: ");
+                token = prompt.prompt(MESSAGES.getString("bot_token_prompt"));
                 if (token == null)
                 {
                     prompt.alert(Prompt.Level.WARNING, CONTEXT, "No token provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
@@ -132,11 +133,7 @@ public class BotConfig
             {
                 try
                 {
-                    owner = Long.parseLong(prompt.prompt("Owner ID was missing, or the provided owner ID is not valid."
-                            + "\nPlease provide the User ID of the bot's owner."
-                            + "\nInstructions for obtaining your User ID can be found here:"
-                            + "\nhttps://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID"
-                            + "\nOwner User ID: "));
+                    owner = Long.parseLong(prompt.prompt(MESSAGES.getString("owner_id_prompt")));
                 }
                 catch (NumberFormatException | NullPointerException ex)
                 {
@@ -174,9 +171,8 @@ public class BotConfig
                 }
                 catch (IOException ex)
                 {
-                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "Failed to write new config options to config.txt: " + ex
-                            + "\nPlease make sure that the files are not on your desktop or some other restricted area.\n\nConfig Location: "
-                            + path.toAbsolutePath().toString());
+                    prompt.alert(Prompt.Level.WARNING, CONTEXT,
+                            String.format(MESSAGES.getString("config_dump_failure"), ex, path.toAbsolutePath()));
                 }
             }
 
@@ -205,7 +201,7 @@ public class BotConfig
 
     public String getAltPrefix()
     {
-        return "NONE".equalsIgnoreCase(altprefix) ? null : altprefix;
+        return "NONE".equalsIgnoreCase(altPrefix) ? null : altPrefix;
     }
 
     public String getToken()
@@ -280,7 +276,7 @@ public class BotConfig
 
     public boolean useUpdateAlerts()
     {
-        return updatealerts;
+        return updateAlerts;
     }
 
     public boolean useEval()
