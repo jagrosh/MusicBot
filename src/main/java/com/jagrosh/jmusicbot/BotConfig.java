@@ -85,13 +85,15 @@ public class BotConfig
 
         boolean write = false;
 
-        if (token == null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
+        if (token.equalsIgnoreCase("BOT_TOKEN_HERE"))
         {
             token = prompt.prompt(MESSAGES.getString("bot_token_prompt"));
-            if (token == null)
+
+            if (token == null || token.isEmpty())
             {
-                prompt.alert(Prompt.Level.WARNING, CONTEXT, "No token provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
-                return;
+                prompt.alert(Prompt.Level.WARNING, CONTEXT,
+                        String.format(MESSAGES.getString("no_bot_token"), path.toAbsolutePath()));
+                System.exit(-1);
             }
             else
             {
@@ -111,8 +113,9 @@ public class BotConfig
             }
             if (owner <= 0)
             {
-                prompt.alert(Prompt.Level.ERROR, CONTEXT, "Invalid User ID! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
-                System.exit(0);
+                prompt.alert(Prompt.Level.ERROR, CONTEXT,
+                        String.format(MESSAGES.getString("invalid_owner_id"), path.toAbsolutePath()));
+                System.exit(-1);
             }
             else
             {
