@@ -64,8 +64,6 @@ public class BotConfig
     private Game game;
     private Config aliases;
 
-    private boolean valid = false;
-
     public BotConfig(Prompt prompt)
     {
         this.prompt = prompt;
@@ -73,20 +71,65 @@ public class BotConfig
 
     public void load()
     {
-        valid = false;
+        path = OtherUtil.getPath(System.getProperty("config.file", System.getProperty("config", "config.txt")));
+        if (path.toFile().exists())
+        {
+            if (System.getProperty("config.file") == null)
+            {
+                System.setProperty("config.file", System.getProperty("config", "config.txt"));
+            }
+            ConfigFactory.invalidateCaches();
+        }
 
+        loadValues();
+
+        boolean write = false;
+
+        if (token == null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
+        {
+            token = prompt.prompt(MESSAGES.getString("bot_token_prompt"));
+            if (token == null)
+            {
+                prompt.alert(Prompt.Level.WARNING, CONTEXT, "No token provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
+                return;
+            }
+            else
+            {
+                write = true;
+            }
+        }
+
+        if (owner <= 0)
+        {
+            try
+            {
+                owner = Long.parseLong(prompt.prompt(MESSAGES.getString("owner_id_prompt")));
+            }
+            catch (NumberFormatException | NullPointerException ex)
+            {
+                owner = 0;
+            }
+            if (owner <= 0)
+            {
+                prompt.alert(Prompt.Level.ERROR, CONTEXT, "Invalid User ID! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
+                System.exit(0);
+            }
+            else
+            {
+                write = true;
+            }
+        }
+
+        if (write)
+        {
+            dumpToFile();
+        }
+    }
+
+    private void loadValues()
+    {
         try
         {
-            path = OtherUtil.getPath(System.getProperty("config.file", System.getProperty("config", "config.txt")));
-            if (path.toFile().exists())
-            {
-                if (System.getProperty("config.file") == null)
-                {
-                    System.setProperty("config.file", System.getProperty("config", "config.txt"));
-                }
-                ConfigFactory.invalidateCaches();
-            }
-
             Config config = ConfigFactory.load();
 
             token = config.getString("token");
@@ -110,54 +153,12 @@ public class BotConfig
             playlistsFolder = config.getString("playlistsfolder");
             aliases = config.getConfig("aliases");
             dbots = owner == 113156185389092864L;
-
-            boolean write = false;
-
-            if (token == null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
-            {
-                token = prompt.prompt(MESSAGES.getString("bot_token_prompt"));
-                if (token == null)
-                {
-                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "No token provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
-                    return;
-                }
-                else
-                {
-                    write = true;
-                }
-            }
-
-            if (owner <= 0)
-            {
-                try
-                {
-                    owner = Long.parseLong(prompt.prompt(MESSAGES.getString("owner_id_prompt")));
-                }
-                catch (NumberFormatException | NullPointerException ex)
-                {
-                    owner = 0;
-                }
-                if (owner <= 0)
-                {
-                    prompt.alert(Prompt.Level.ERROR, CONTEXT, "Invalid User ID! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
-                    System.exit(0);
-                }
-                else
-                {
-                    write = true;
-                }
-            }
-
-            if (write)
-            {
-                dumpToFile();
-            }
-
-            valid = true;
         }
         catch (ConfigException ex)
         {
-            prompt.alert(Prompt.Level.ERROR, CONTEXT, ex + ": " + ex.getMessage() + "\n\nConfig Location: " + path.toAbsolutePath().toString());
+            prompt.alert(Prompt.Level.ERROR, CONTEXT,
+                    String.format("%s: %s%n%nConfig Location: %s", ex, ex.getMessage(), path.toAbsolutePath()));
+            System.exit(-1);
         }
     }
 
@@ -184,11 +185,6 @@ public class BotConfig
             prompt.alert(Prompt.Level.WARNING, CONTEXT,
                     String.format(MESSAGES.getString("config_dump_failure"), ex, path.toAbsolutePath()));
         }
-    }
-
-    public boolean isValid()
-    {
-        return valid;
     }
 
     public String getConfigLocation()

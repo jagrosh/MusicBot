@@ -73,8 +73,6 @@ public class JMusicBot
         // load config
         BotConfig config = new BotConfig(prompt);
         config.load();
-        if(!config.isValid())
-            return;
         
         // set up the listener
         EventWaiter waiter = new EventWaiter();
