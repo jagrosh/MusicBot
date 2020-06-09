@@ -20,15 +20,15 @@ import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.typesafe.config.*;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 
 /**
- *
- *
  * @author John Grosh (jagrosh)
  */
 public class BotConfig
@@ -62,7 +62,6 @@ public class BotConfig
     private Game game;
     private Config aliases;
 
-
     private boolean valid = false;
 
     public BotConfig(Prompt prompt)
@@ -77,10 +76,12 @@ public class BotConfig
         try
         {
             path = OtherUtil.getPath(System.getProperty("config.file", System.getProperty("config", "config.txt")));
-            if(path.toFile().exists())
+            if (path.toFile().exists())
             {
-                if(System.getProperty("config.file") == null)
+                if (System.getProperty("config.file") == null)
+                {
                     System.setProperty("config.file", System.getProperty("config", "config.txt"));
+                }
                 ConfigFactory.invalidateCaches();
             }
 
@@ -110,13 +111,13 @@ public class BotConfig
 
             boolean write = false;
 
-            if(token==null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
+            if (token == null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
             {
                 token = prompt.prompt("Please provide a bot token."
                         + "\nInstructions for obtaining a token can be found here:"
                         + "\nhttps://github.com/jagrosh/MusicBot/wiki/Getting-a-Bot-Token."
                         + "\nBot Token: ");
-                if(token==null)
+                if (token == null)
                 {
                     prompt.alert(Prompt.Level.WARNING, CONTEXT, "No token provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
                     return;
@@ -127,21 +128,21 @@ public class BotConfig
                 }
             }
 
-            if(owner<=0)
+            if (owner <= 0)
             {
                 try
                 {
                     owner = Long.parseLong(prompt.prompt("Owner ID was missing, or the provided owner ID is not valid."
-                        + "\nPlease provide the User ID of the bot's owner."
-                        + "\nInstructions for obtaining your User ID can be found here:"
-                        + "\nhttps://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID"
-                        + "\nOwner User ID: "));
+                            + "\nPlease provide the User ID of the bot's owner."
+                            + "\nInstructions for obtaining your User ID can be found here:"
+                            + "\nhttps://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID"
+                            + "\nOwner User ID: "));
                 }
-                catch(NumberFormatException | NullPointerException ex)
+                catch (NumberFormatException | NullPointerException ex)
                 {
                     owner = 0;
                 }
-                if(owner<=0)
+                if (owner <= 0)
                 {
                     prompt.alert(Prompt.Level.ERROR, CONTEXT, "Invalid User ID! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
                     System.exit(0);
@@ -152,30 +153,30 @@ public class BotConfig
                 }
             }
 
-            if(write)
+            if (write)
             {
                 String original = OtherUtil.loadResource(this, "/reference.conf");
                 byte[] bytes;
-                if(original==null)
+                if (original == null)
                 {
-                    bytes = ("token = "+token+"\r\nowner = "+owner).getBytes();
+                    bytes = ("token = " + token + "\r\nowner = " + owner).getBytes();
                 }
                 else
                 {
-                    bytes = original.substring(original.indexOf(START_TOKEN)+START_TOKEN.length(), original.indexOf(END_TOKEN))
-                        .replace("BOT_TOKEN_HERE", token)
-                        .replace("0 // OWNER ID", Long.toString(owner))
-                        .trim().getBytes();
+                    bytes = original.substring(original.indexOf(START_TOKEN) + START_TOKEN.length(), original.indexOf(END_TOKEN))
+                            .replace("BOT_TOKEN_HERE", token)
+                            .replace("0 // OWNER ID", Long.toString(owner))
+                            .trim().getBytes();
                 }
                 try
                 {
                     Files.write(path, bytes);
                 }
-                catch(IOException ex)
+                catch (IOException ex)
                 {
-                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "Failed to write new config options to config.txt: "+ex
-                        + "\nPlease make sure that the files are not on your desktop or some other restricted area.\n\nConfig Location: "
-                        + path.toAbsolutePath().toString());
+                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "Failed to write new config options to config.txt: " + ex
+                            + "\nPlease make sure that the files are not on your desktop or some other restricted area.\n\nConfig Location: "
+                            + path.toAbsolutePath().toString());
                 }
             }
 
@@ -304,9 +305,11 @@ public class BotConfig
 
     public boolean isTooLong(AudioTrack track)
     {
-        if(maxSeconds<=0)
+        if (maxSeconds <= 0)
+        {
             return false;
-        return Math.round(track.getDuration()/1000.0) > maxSeconds;
+        }
+        return Math.round(track.getDuration() / 1000.0) > maxSeconds;
     }
 
     public String[] getAliases(String command)
@@ -315,7 +318,7 @@ public class BotConfig
         {
             return aliases.getStringList(command).toArray(new String[0]);
         }
-        catch(NullPointerException | ConfigException.Missing e)
+        catch (NullPointerException | ConfigException.Missing e)
         {
             return new String[0];
         }
