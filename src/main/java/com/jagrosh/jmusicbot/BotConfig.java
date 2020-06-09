@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
+import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  * @author John Grosh (jagrosh)
@@ -36,11 +37,11 @@ import net.dv8tion.jda.core.entities.Game;
 public class BotConfig
 {
     private final Prompt prompt;
+    private final Path path;
 
     private static final String CONTEXT = "Config";
+    private static final String CONFIG_FILE_PROP = "config.file";
     private static final ResourceBundle MESSAGES = ResourceBundle.getBundle("messages", Locale.ENGLISH);
-
-    private Path path;
 
     private String token;
     private String prefix;
@@ -67,65 +68,65 @@ public class BotConfig
     public BotConfig(Prompt prompt)
     {
         this.prompt = prompt;
+        this.path = OtherUtil.getPath(System.getProperty(CONFIG_FILE_PROP, System.getProperty("config", "config.txt")));
     }
 
     public void load()
     {
-        path = OtherUtil.getPath(System.getProperty("config.file", System.getProperty("config", "config.txt")));
         if (path.toFile().exists())
         {
-            if (System.getProperty("config.file") == null)
+            if (System.getProperty(CONFIG_FILE_PROP) == null)
             {
-                System.setProperty("config.file", System.getProperty("config", "config.txt"));
+                System.setProperty(CONFIG_FILE_PROP, System.getProperty("config", "config.txt"));
             }
             ConfigFactory.invalidateCaches();
         }
 
         loadValues();
 
-        boolean write = false;
+        boolean shouldDumpToFile = false;
 
         if (token.equalsIgnoreCase("BOT_TOKEN_HERE"))
         {
             token = prompt.prompt(MESSAGES.getString("bot_token_prompt"));
 
-            if (token == null || token.isEmpty())
-            {
-                prompt.alert(Prompt.Level.WARNING, CONTEXT,
-                        String.format(MESSAGES.getString("no_bot_token"), path.toAbsolutePath()));
-                System.exit(-1);
-            }
-            else
-            {
-                write = true;
-            }
+            checkTokenValidity();
+
+            shouldDumpToFile = true;
         }
 
         if (owner <= 0)
         {
-            try
-            {
-                owner = Long.parseLong(prompt.prompt(MESSAGES.getString("owner_id_prompt")));
-            }
-            catch (NumberFormatException | NullPointerException ex)
-            {
-                owner = 0;
-            }
-            if (owner <= 0)
-            {
-                prompt.alert(Prompt.Level.ERROR, CONTEXT,
-                        String.format(MESSAGES.getString("invalid_owner_id"), path.toAbsolutePath()));
-                System.exit(-1);
-            }
-            else
-            {
-                write = true;
-            }
+            owner = NumberUtils.toLong(prompt.prompt(MESSAGES.getString("owner_id_prompt")), 0L);
+
+            checkOwnerIdValidity();
+
+            shouldDumpToFile = true;
         }
 
-        if (write)
+        if (shouldDumpToFile)
         {
             dumpToFile();
+        }
+    }
+
+    private void checkOwnerIdValidity()
+    {
+        if (owner <= 0)
+        {
+            prompt.alert(Prompt.Level.ERROR, CONTEXT,
+                    String.format(MESSAGES.getString("invalid_owner_id"), path.toAbsolutePath()));
+            System.exit(-1);
+        }
+    }
+
+    private void checkTokenValidity()
+    {
+        if (token == null || token.isEmpty())
+        {
+            prompt.alert(Prompt.Level.WARNING, CONTEXT,
+                    String.format(MESSAGES.getString("no_bot_token"), path.toAbsolutePath()));
+            System.exit(-1);
         }
     }
 
