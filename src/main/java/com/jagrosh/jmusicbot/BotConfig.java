@@ -23,7 +23,6 @@ import com.typesafe.config.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 
@@ -35,15 +34,30 @@ import net.dv8tion.jda.core.entities.Game;
 public class BotConfig
 {
     private final Prompt prompt;
-    private final static String CONTEXT = "Config";
-    private final static String START_TOKEN = "/// START OF JMUSICBOT CONFIG ///";
-    private final static String END_TOKEN = "/// END OF JMUSICBOT CONFIG ///";
+
+    private static final String CONTEXT = "Config";
+    private static final String START_TOKEN = "/// START OF JMUSICBOT CONFIG ///";
+    private static final String END_TOKEN = "/// END OF JMUSICBOT CONFIG ///";
     
     private Path path = null;
-    private String token, prefix, altprefix, helpWord, playlistsFolder,
-            successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
-    private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
-    private long owner, maxSeconds;
+    private String token;
+    private String prefix;
+    private String altprefix;
+    private String helpWord;
+    private String playlistsFolder;
+    private String successEmoji;
+    private String warningEmoji;
+    private String errorEmoji;
+    private String loadingEmoji;
+    private String searchingEmoji;
+    private boolean stayInChannel;
+    private boolean songInGame;
+    private boolean npImages;
+    private boolean updatealerts;
+    private boolean useEval;
+    private boolean dbots;
+    private long owner;
+    private long maxSeconds;
     private OnlineStatus status;
     private Game game;
     private Config aliases;
@@ -59,7 +73,7 @@ public class BotConfig
     public void load()
     {
         valid = false;
-        
+
         // read config from file
         try 
         {
