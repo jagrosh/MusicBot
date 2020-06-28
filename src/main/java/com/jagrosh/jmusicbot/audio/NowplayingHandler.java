@@ -29,6 +29,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.exceptions.PermissionException;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 /**
  *
@@ -119,12 +120,13 @@ public class NowplayingHandler
             {
                 try 
                 {
-                    if(wait)
-                        tchan.getManager().setTopic(text).complete();
-                    else
-                        tchan.getManager().setTopic(text).queue();
+                    // normally here if 'wait' was false, we'd want to queue, however,
+                    // new discord ratelimits specifically limiting changing channel topics
+                    // mean we don't want a backlog of changes piling up, so if we hit a 
+                    // ratelimit, we just won't change the topic this time
+                    tchan.getManager().setTopic(text).complete(wait);
                 } 
-                catch(PermissionException ignore) {}
+                catch(PermissionException | RateLimitedException ignore) {}
             }
         }
     }
