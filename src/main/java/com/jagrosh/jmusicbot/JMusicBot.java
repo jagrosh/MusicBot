@@ -58,15 +58,6 @@ public class JMusicBot
         Prompt prompt = new Prompt("JMusicBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.", 
                 "true".equalsIgnoreCase(System.getProperty("nogui", "false")));
         
-        // check deprecated nogui mode (new way of setting it is -Dnogui=true)
-        for(String arg: args)
-            if("-nogui".equalsIgnoreCase(arg))
-            {
-                prompt.alert(Prompt.Level.WARNING, "GUI", "The -nogui flag has been deprecated. "
-                        + "Please use the -Dnogui=true flag before the name of the jar. Example: java -jar -Dnogui=true JMusicBot.jar");
-                break;
-            }
-        
         // get and check latest version
         String version = OtherUtil.checkVersion(prompt);
         

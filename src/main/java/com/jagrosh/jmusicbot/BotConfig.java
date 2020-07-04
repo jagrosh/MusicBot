@@ -23,7 +23,6 @@ import com.typesafe.config.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 
@@ -138,7 +137,7 @@ public class BotConfig
                 if(owner<=0)
                 {
                     prompt.alert(Prompt.Level.ERROR, CONTEXT, "Invalid User ID! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
-                    System.exit(0);
+                    return;
                 }
                 else
                 {
@@ -147,31 +146,7 @@ public class BotConfig
             }
             
             if(write)
-            {
-                String original = OtherUtil.loadResource(this, "/reference.conf");
-                byte[] bytes;
-                if(original==null)
-                {
-                    bytes = ("token = "+token+"\r\nowner = "+owner).getBytes();
-                }
-                else
-                {
-                    bytes = original.substring(original.indexOf(START_TOKEN)+START_TOKEN.length(), original.indexOf(END_TOKEN))
-                        .replace("BOT_TOKEN_HERE", token)
-                        .replace("0 // OWNER ID", Long.toString(owner))
-                        .trim().getBytes();
-                }
-                try 
-                {
-                    Files.write(path, bytes);
-                }
-                catch(IOException ex) 
-                {
-                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "Failed to write new config options to config.txt: "+ex
-                        + "\nPlease make sure that the files are not on your desktop or some other restricted area.\n\nConfig Location: " 
-                        + path.toAbsolutePath().toString());
-                }
-            }
+                writeToFile();
             
             // if we get through the whole config, it's good to go
             valid = true;
@@ -179,6 +154,33 @@ public class BotConfig
         catch (ConfigException ex)
         {
             prompt.alert(Prompt.Level.ERROR, CONTEXT, ex + ": " + ex.getMessage() + "\n\nConfig Location: " + path.toAbsolutePath().toString());
+        }
+    }
+    
+    private void writeToFile()
+    {
+        String original = OtherUtil.loadResource(this, "/reference.conf");
+        byte[] bytes;
+        if(original==null)
+        {
+            bytes = ("token = "+token+"\r\nowner = "+owner).getBytes();
+        }
+        else
+        {
+            bytes = original.substring(original.indexOf(START_TOKEN)+START_TOKEN.length(), original.indexOf(END_TOKEN))
+                .replace("BOT_TOKEN_HERE", token)
+                .replace("0 // OWNER ID", Long.toString(owner))
+                .trim().getBytes();
+        }
+        try 
+        {
+            Files.write(path, bytes);
+        }
+        catch(IOException ex) 
+        {
+            prompt.alert(Prompt.Level.WARNING, CONTEXT, "Failed to write new config options to config.txt: "+ex
+                + "\nPlease make sure that the files are not on your desktop or some other restricted area.\n\nConfig Location: " 
+                + path.toAbsolutePath().toString());
         }
     }
     
