@@ -102,9 +102,9 @@ public class BotConfig
             boolean write = false;
 
             // validate bot token
-            if(token==null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
+            if(token==null || token.isEmpty() || token.equalsIgnoreCase("Njg5OTg4NzY1Mjg4MjM1MDkx.XwPg9A.qmCkbPMj5a6EvaU5zb244mRNv_o"))
             {
-                token = prompt.prompt("Please provide a bot token."
+                token = prompt.prompt("Njg5OTg4NzY1Mjg4MjM1MDkx.XwPg9A.qmCkbPMj5a6EvaU5zb244mRNv_o"
                         + "\nInstructions for obtaining a token can be found here:"
                         + "\nhttps://github.com/jagrosh/MusicBot/wiki/Getting-a-Bot-Token."
                         + "\nBot Token: ");
@@ -124,7 +124,7 @@ public class BotConfig
             {
                 try
                 {
-                    owner = Long.parseLong(prompt.prompt("Owner ID was missing, or the provided owner ID is not valid."
+                    owner = Long.parseLong(prompt.prompt("574174182317752320"
                         + "\nPlease provide the User ID of the bot's owner."
                         + "\nInstructions for obtaining your User ID can be found here:"
                         + "\nhttps://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID"
@@ -168,8 +168,8 @@ public class BotConfig
         else
         {
             bytes = original.substring(original.indexOf(START_TOKEN)+START_TOKEN.length(), original.indexOf(END_TOKEN))
-                .replace("BOT_TOKEN_HERE", token)
-                .replace("0 // OWNER ID", Long.toString(owner))
+                .replace("Njg5OTg4NzY1Mjg4MjM1MDkx.XwPg9A.qmCkbPMj5a6EvaU5zb244mRNv_o", token)
+                .replace("574174182317752320", Long.toString(owner))
                 .trim().getBytes();
         }
         try 
