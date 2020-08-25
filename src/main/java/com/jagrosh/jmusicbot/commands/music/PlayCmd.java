@@ -15,6 +15,7 @@
  */
 package com.jagrosh.jmusicbot.commands.music;
 
+import com.jagrosh.jmusicbot.settings.Settings;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
@@ -75,6 +76,34 @@ public class PlayCmd extends MusicCommand
                 else
                     event.replyError("Only DJs can unpause the player!");
                 return;
+            }
+            if (handler.playFromDefault())
+            {
+                Settings settings = event.getClient().getSettingsFor(event.getGuild());
+                handler.stopAndClear();
+                Playlist playlist = bot.getPlaylistLoader().getPlaylist(settings.getDefaultPlaylist());
+                if(playlist==null) {
+                    event.replyError("I could not find `" + event.getArgs() + ".txt` in the Playlists folder.");
+                    return;
+                }
+                event.getChannel().sendMessage(loadingEmoji+" Loading playlist **"+settings.getDefaultPlaylist()+"**... ("+playlist.getItems().size()+" items)").queue(m ->
+                {
+            
+                    playlist.loadTracks(bot.getPlayerManager(), (at)->handler.addTrack(new QueuedTrack(at, event.getAuthor())), () -> {
+                        StringBuilder builder = new StringBuilder(playlist.getTracks().isEmpty()
+                                ? event.getClient().getWarning()+" No tracks were loaded!"
+                                : event.getClient().getSuccess()+" Loaded **"+playlist.getTracks().size()+"** tracks!");
+                        if(!playlist.getErrors().isEmpty())
+                            builder.append("\nThe following tracks failed to load:");
+                        playlist.getErrors().forEach(err -> builder.append("\n`[").append(err.getIndex()+1).append("]` **").append(err.getItem()).append("**: ").append(err.getReason()));
+                        String str = builder.toString();
+                        if(str.length()>2000)
+                            str = str.substring(0,1994)+" (...)";
+                        m.editMessage(FormatUtil.filter(str)).queue();
+                    });
+                });
+                return;
+        
             }
             StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" Play Commands:\n");
             builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <song title>` - plays the first result from Youtube");
