@@ -5,3 +5,12 @@
 *.json
 *.txt
 nb*.xml
+/.idea/libraries/
+/.idea/.name
+/JMusicBot.iml
+/.idea/uiDesigner.xml
+/.idea/modules.xml
+/.idea/misc.xml
+/.idea/jarRepositories.xml
+/.idea/encodings.xml
+/.idea/compiler.xml
