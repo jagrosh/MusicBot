@@ -1,43 +1,74 @@
-<img align="right" src="https://i.imgur.com/zrE80HY.png" height="200" width="200">
+<img align="right" src="https://i.imgur.com/S3WqUcR.png" height="200" width="200">
 
 # SirenBot
 
-## Forked from [JMusicBot](https://github.com/jagrosh/MusicBot/)
+### Forked from [JMusicBot](https://github.com/jagrosh/MusicBot/)
 
-[![Downloads](https://img.shields.io/github/downloads/jagrosh/MusicBot/total.svg)](https://github.com/jagrosh/MusicBot/releases/latest)
-[![Stars](https://img.shields.io/github/stars/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/stargazers)
-[![Release](https://img.shields.io/github/release/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/releases/latest)
-[![License](https://img.shields.io/github/license/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/blob/master/LICENSE)
-[![Discord](https://discordapp.com/api/guilds/147698382092238848/widget.png)](https://discord.gg/0p9LSGoRLu6Pet0k)<br>
-[![CircleCI](https://img.shields.io/circleci/project/github/jagrosh/MusicBot/master.svg)](https://circleci.com/gh/jagrosh/MusicBot)
-[![AppVeyor](https://ci.appveyor.com/api/projects/status/gdu6nyte5psj6xfk/branch/master?svg=true)](https://ci.appveyor.com/project/jagrosh/musicbot/branch/master)
-[![CodeFactor](https://www.codefactor.io/repository/github/jagrosh/musicbot/badge)](https://www.codefactor.io/repository/github/jagrosh/musicbot)
-
-A cross-platform Discord music bot with a clean interface, and that is easy to set up and run yourself!
-
-[![Setup](http://i.imgur.com/VvXYp5j.png)](https://github.com/jagrosh/MusicBot/wiki/Setup)
+[![Website](https://img.shields.io/badge/-Website-informational)](http://bot.lolcat.no)
+[![Invite Me](https://img.shields.io/badge/Discord-Invite%20Me!-success)](https://discordapp.com/oauth2/authorize?client_id=754375096734318712&scope=bot&permissions=70642768&guild_id=0)
+[![Support](https://img.shields.io/badge/Discord-Support-critical)](https://discord.gg/Eyetd8J)
 
 ## Features
-  * Easy to run (just make sure Java is installed, and run!)
   * Fast loading of songs
-  * No external keys needed (besides a Discord Bot token)
   * Smooth playback
   * Server-specific setup for the "DJ" role that can moderate the music
   * Clean and beautiful menus
   * Channel-topic playback bar
   * Supports many sites, including Youtube, Soundcloud, and more
   * Supports many online radio/streams
-  * Supports local files
-  * Playlist support (both web/youtube, and local)
 
-## Example
-![Loading Example...](https://i.imgur.com/kVtTKvS.gif)
+## Commands
+```
+General:
 
-## Setup
-Please see the [Setup Page](https://github.com/jagrosh/MusicBot/wiki/Setup) in the wiki to run this bot yourself!
+siren about - Shows info about the bot
+siren ping - Checks the bot's latency
+siren settings - Shows the bot's settings
+
+Fun:
+
+siren cat - Shows some kitties
+siren unknowncat - Shows some unknown kitties
+siren httpcat - Shows some http kitties
+(More coming soon)
+
+Music:
+
+siren lyrics [song name] - Shows the lyrics to the currently-playing song
+siren nowplaying - Shows the song that is currently playing
+siren play <title|URL|subcommand> - Plays the provided song
+siren playlists - Shows the available playlists
+siren queue [pagenum] - Shows the current queue
+siren remove <position|ALL> - Removes a song from the queue
+siren search <query> - Searches Youtube for a provided query
+siren scsearch <query> - Searches Soundcloud for a provided query
+siren shuffle - Shuffles songs you have added
+siren skip - Votes to skip the current song
+
+DJ Only:
+
+siren forceremove <user> - Removes all entries by a user from the queue
+siren forceskip - Skips the current song
+siren movetrack <from> <to> - Move a track in the current queue to a different position
+siren pause - Pauses the current song
+siren playnext <title|URL> - Plays a single song next
+siren repeat [on|off] - Re-adds music to the queue when finished
+siren skipto <position> - Skips to the specified song
+siren stop - Stops the current song and clears the queue
+siren volume [0-150] - Sets or shows volume
+
+Moderation:
+
+server purge <number of messages> - Deletes messages in bulk
+(Many more coming soon)
+
+Admin Only:
+
+siren prefix <prefix|NONE> - Sets a server-specific prefix
+siren setdj <rolename|NONE> - Sets the DJ role for certain music commands (Example: "siren setdj DJ" NOT "siren setdj @DJ")
+siren settc <channel|NONE> - Sets the text channel for music commands
+siren setvc <channel|NONE> - Sets the voice channel for playing music
+```
 
 ## Questions/Suggestions/Bug Reports
-**Please read the [Suggested/Planned Features List](https://github.com/jagrosh/MusicBot/projects/1) before suggesting a feature**. If you'd like to suggest changes to how the bot functions, recommend more customization options, or report bugs, feel free to either open an [Issue](https://github.com/jagrosh/MusicBot/issues) on this repository, or join [my Discord server](https://discord.gg/0p9LSGoRLu6Pet0k). (Note: I will not accept any feature requests that will require additional API keys, nor any non-music features). If you like this bot, be sure to add a star to the libraries that make this possible: [**JDA**](https://github.com/DV8FromTheWorld/JDA) and [**lavaplayer**](https://github.com/sedmelluq/lavaplayer)
-
-## Editing
-This bot (and the source code here) might not be easy to edit for inexperienced programmers. The main purpose of having the source public is to show the capabilities of the libraries, to allow others to understand how the bot works, and to allow those knowledgeable about java, JDA, and Discord bot development to contribute. There are many requirements and dependencies required to edit and compile it, and there will not be support provided for people looking to make changes on their own. Instead, consider making a feature request (see the above section). If you choose to make edits, please do so in accordance with the Apache 2.0 License.
+**Please read the [Known Bugs & Planned Features List](https://github.com/Keyboardsheep/SirenBot/blob/master/PlannedFeatures+KnownBugs.md) before suggesting a feature**. If you'd like to suggest changes to how the bot functions, recommend more customization options, or report bugs, feel free to either open an [Issue](https://github.com/Keyboardsheep/SirenBot/issues) on this repository, or join [my Discord server](https://discord.gg/0p9LSGoRLu6Pet0k).
