@@ -17,32 +17,35 @@ package com.jagrosh.jmusicbot;
 
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import com.jagrosh.jdautilities.examples.command.*;
+import com.jagrosh.jdautilities.examples.command.PingCommand;
 import com.jagrosh.jmusicbot.commands.admin.*;
 import com.jagrosh.jmusicbot.commands.dj.*;
-import com.jagrosh.jmusicbot.commands.general.*;
+import com.jagrosh.jmusicbot.commands.fun.CatApiCatCmd;
+import com.jagrosh.jmusicbot.commands.fun.CatCmd;
+import com.jagrosh.jmusicbot.commands.fun.HttpCatCmd;
+import com.jagrosh.jmusicbot.commands.general.SettingsCmd;
+import com.jagrosh.jmusicbot.commands.general.SirenAboutCmd;
 import com.jagrosh.jmusicbot.commands.music.*;
 import com.jagrosh.jmusicbot.commands.owner.*;
 import com.jagrosh.jmusicbot.entities.Prompt;
 import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
-import java.awt.Color;
-import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.core.*;
 import net.dv8tion.jda.core.entities.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.security.auth.login.LoginException;
+import java.awt.*;
+
 /**
- *
  * @author John Grosh (jagrosh)
  */
-public class JMusicBot 
-{
-    public final static String PLAY_EMOJI  = "\u25B6"; // ▶
+public class JMusicBot {
+    public final static String PLAY_EMOJI = "\u25B6"; // ▶
     public final static String PAUSE_EMOJI = "\u23F8"; // ⏸
-    public final static String STOP_EMOJI  = "\u23F9"; // ⏹
+    public final static String STOP_EMOJI = "\u23F9"; // ⏹
     public final static Permission[] RECOMMENDED_PERMS = new Permission[]{Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
                                 Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
                                 Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
@@ -53,32 +56,32 @@ public class JMusicBot
     {
         // startup log
         Logger log = LoggerFactory.getLogger("Startup");
-        
+
         // create prompt to handle startup
-        Prompt prompt = new Prompt("JMusicBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.", 
+        Prompt prompt = new Prompt("JMusicBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.",
                 "true".equalsIgnoreCase(System.getProperty("nogui", "false")));
-        
+
         // get and check latest version
         String version = OtherUtil.checkVersion(prompt);
-        
+
         // load config
         BotConfig config = new BotConfig(prompt);
         config.load();
-        if(!config.isValid())
+        if (!config.isValid())
             return;
-        
+
         // set up the listener
         EventWaiter waiter = new EventWaiter();
         SettingsManager settings = new SettingsManager();
         Bot bot = new Bot(waiter, config, settings);
-        
-        AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v"+version+")",
-                                new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
-                                RECOMMENDED_PERMS);
+
+        SirenAboutCmd aboutCommand = new SirenAboutCmd(Color.BLUE.brighter(),
+                "a music bot that is hosted by **Keybordsheep 82**.",
+                new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to control"},
+                RECOMMENDED_PERMS);
         aboutCommand.setIsAuthor(false);
         aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
-        
+
         // set up the command client
         CommandClientBuilder cb = new CommandClientBuilder()
                 .setPrefix(config.getPrefix())
@@ -91,7 +94,10 @@ public class JMusicBot
                 .addCommands(aboutCommand,
                         new PingCommand(),
                         new SettingsCmd(bot),
-                        
+                        new CatCmd(bot),
+                        new CatApiCatCmd(bot),
+                        new HttpCatCmd(bot),
+
                         new LyricsCmd(bot),
                         new NowplayingCmd(bot),
                         new PlayCmd(bot),
@@ -112,12 +118,14 @@ public class JMusicBot
                         new SkiptoCmd(bot),
                         new StopCmd(bot),
                         new VolumeCmd(bot),
-                        
+
                         new PrefixCmd(bot),
                         new SetdjCmd(bot),
                         new SettcCmd(bot),
                         new SetvcCmd(bot),
-                        
+                        new AnnounceEmbedCmd(bot),
+                        new PruneCmd(bot),
+
                         new AutoplaylistCmd(bot),
                         new DebugCmd(bot),
                         new PlaylistCmd(bot),
@@ -141,25 +149,22 @@ public class JMusicBot
         }
         else
             cb.setGame(config.getGame());
-        
+
         if(!prompt.isNoGUI())
         {
-            try 
-            {
+            try {
                 GUI gui = new GUI(bot);
                 bot.setGUI(gui);
                 gui.init();
-            } 
-            catch(Exception e) 
-            {
+            } catch (Exception e) {
                 log.error("Could not start GUI. If you are "
                         + "running on a server or in a location where you cannot display a "
                         + "window, please run in nogui mode using the -Dnogui=true flag.");
             }
         }
-        
+
         log.info("Loaded config from " + config.getConfigLocation());
-        
+
         // attempt to log in and start
         try
         {
@@ -167,7 +172,7 @@ public class JMusicBot
                     .setToken(config.getToken())
                     .setAudioEnabled(true)
                     .setGame(nogame ? null : Game.playing("loading..."))
-                    .setStatus(config.getStatus()==OnlineStatus.INVISIBLE || config.getStatus()==OnlineStatus.OFFLINE 
+                    .setStatus(config.getStatus() == OnlineStatus.INVISIBLE || config.getStatus() == OnlineStatus.OFFLINE
                             ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
                     .addEventListener(cb.build(), waiter, new Listener(bot))
                     .setBulkDeleteSplittingEnabled(true)

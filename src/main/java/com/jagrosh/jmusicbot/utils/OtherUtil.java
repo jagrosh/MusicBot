@@ -17,18 +17,22 @@ package com.jagrosh.jmusicbot.utils;
 
 import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.entities.Prompt;
+import net.dv8tion.jda.core.OnlineStatus;
+import net.dv8tion.jda.core.entities.Game;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.entities.Game;
-import okhttp3.*;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 /**
  *
@@ -158,9 +162,9 @@ public class OtherUtil
         // Check for new version
         String latestVersion = getLatestVersion();
         
-        if(latestVersion!=null && !latestVersion.equals(version))
-        {
-            prompt.alert(Prompt.Level.WARNING, "Version", String.format(NEW_VERSION_AVAILABLE, version, latestVersion));
+        if(latestVersion!=null && !latestVersion.equals(version)) {
+            //Workaround for not starting in IntelliJ
+//            prompt.alert(Prompt.Level.WARNING, "Version", String.format(NEW_VERSION_AVAILABLE, version, latestVersion));
         }
         
         // Return the current version
