@@ -15,7 +15,6 @@
  */
 package com.jagrosh.jmusicbot.commands.owner;
 
-import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.doc.standard.CommandInfo;
@@ -23,6 +22,7 @@ import com.jagrosh.jdautilities.doc.standard.Error;
 import com.jagrosh.jdautilities.doc.standard.RequiredPermissions;
 import com.jagrosh.jdautilities.examples.doc.Author;
 import com.jagrosh.jdautilities.menu.Paginator;
+import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.exceptions.PermissionException;
@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 )
 @RequiredPermissions({Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ADD_REACTION})
 @Author("John Grosh (jagrosh)")
-public class GuildListCmd extends Command {
+public class GuildListCmd extends OwnerCommand {
 
     private final Paginator.Builder pbuilder;
 
