@@ -77,7 +77,7 @@ public class JMusicBot {
 
         SirenAboutCmd aboutCommand = new SirenAboutCmd(Color.BLUE.brighter(),
                 "a music bot that is hosted by **Keybordsheep 82**.",
-                new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to control"},
+                new String[]{"Constantly updated", "FairQueue™ Technology", "Easy to control", "No paywalls"},
                 RECOMMENDED_PERMS);
         aboutCommand.setIsAuthor(false);
         aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
