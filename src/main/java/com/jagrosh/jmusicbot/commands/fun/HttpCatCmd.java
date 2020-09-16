@@ -17,7 +17,6 @@ package com.jagrosh.jmusicbot.commands.fun;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.commands.FunCommand;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -25,28 +24,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.nio.file.Path;
 import java.util.Random;
 
-public class HttpCatCmd extends FunCommand {
-    public static final int QUIET_MILLIS = 3000;
-    Logger log = LoggerFactory.getLogger("CatCmd");
-    Logger startupLog = LoggerFactory.getLogger("Startup");
-    private Path path;
-    private long lastExecutionMillis = 0;
+public class HttpCatCmd extends BaseCatCmd {
+    Logger log = LoggerFactory.getLogger("HttpCatCmd");
 
     public HttpCatCmd(Bot bot) {
         this.name = "httpcat";
         this.help = "shows some http kitties";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
-
     }
-
 
     @Override
     protected void execute(CommandEvent event) {
         long now = System.currentTimeMillis();
+        String channelId = event.getChannel().getId();
+        Long lastExecutionMillis = lastExecutionMillisByChannelMap.getOrDefault(channelId, 0L);
         if (now > lastExecutionMillis + QUIET_MILLIS) {
             MessageBuilder builder = new MessageBuilder();
             EmbedBuilder ebuilder = new EmbedBuilder()
@@ -54,7 +48,7 @@ public class HttpCatCmd extends FunCommand {
                     .setImage(getKittyUrl())
                     .setDescription("**I found a http status kitty!** :cat:");
             event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
-            lastExecutionMillis = now;
+            lastExecutionMillisByChannelMap.put(channelId, now);
         } else {
             MessageBuilder builder = new MessageBuilder();
             EmbedBuilder ebuilder = new EmbedBuilder()

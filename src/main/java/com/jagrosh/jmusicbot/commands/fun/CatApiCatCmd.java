@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.commands.FunCommand;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import org.apache.http.client.HttpClient;
@@ -33,18 +32,16 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-public class CatApiCatCmd extends FunCommand {
+public class CatApiCatCmd extends BaseCatCmd {
     public static final int QUIET_MILLIS = 3000;
     Logger log = LoggerFactory.getLogger("CatCmd");
-    Logger startupLog = LoggerFactory.getLogger("Startup");
-    private Path path;
-    private long lastExecutionMillis = 0;
 
     public CatApiCatCmd(Bot bot) {
+        this.category = new Category("Fun");
+
         this.name = "unknowncat";
         this.help = "shows some unknown kitties";
         this.aliases = bot.getConfig().getAliases(this.name);
@@ -56,6 +53,8 @@ public class CatApiCatCmd extends FunCommand {
     @Override
     protected void execute(CommandEvent event) {
         long now = System.currentTimeMillis();
+        String channelId = event.getChannel().getId();
+        Long lastExecutionMillis = lastExecutionMillisByChannelMap.getOrDefault(channelId, 0L);
         if (now > lastExecutionMillis + QUIET_MILLIS) {
             MessageBuilder builder = new MessageBuilder();
             EmbedBuilder ebuilder = new EmbedBuilder()
@@ -63,7 +62,7 @@ public class CatApiCatCmd extends FunCommand {
                     .setImage(getKittyUrl())
                     .setDescription("**I found a kitty!** :cat:");
             event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
-            lastExecutionMillis = now;
+            lastExecutionMillisByChannelMap.put(channelId, now);
         } else {
             MessageBuilder builder = new MessageBuilder();
             EmbedBuilder ebuilder = new EmbedBuilder()

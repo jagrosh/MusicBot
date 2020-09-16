@@ -17,7 +17,6 @@ package com.jagrosh.jmusicbot.commands.fun;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.commands.FunCommand;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -33,15 +32,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class CatCmd extends FunCommand {
-    public static final int QUIET_MILLIS = 3000;
+public class CatCmd extends BaseCatCmd {
     Logger log = LoggerFactory.getLogger("CatCmd");
-    Logger startupLog = LoggerFactory.getLogger("Startup");
     private Path path;
-    private long lastExecutionMillis = 0;
-
 
     public CatCmd(Bot bot) {
+        this.category = new Category("Fun");
+
         this.name = "cat";
         this.help = "shows some kitties";
         this.aliases = bot.getConfig().getAliases(this.name);
@@ -84,6 +81,9 @@ public class CatCmd extends FunCommand {
     @Override
     protected void execute(CommandEvent event) {
         long now = System.currentTimeMillis();
+        String channelId = event.getChannel().getId();
+        Long lastExecutionMillis = lastExecutionMillisByChannelMap.getOrDefault(channelId, 0L);
+
         if (now > lastExecutionMillis + QUIET_MILLIS) {
             MessageBuilder builder = new MessageBuilder();
             EmbedBuilder ebuilder = new EmbedBuilder()
@@ -91,7 +91,7 @@ public class CatCmd extends FunCommand {
                     .setImage(getKittyUrl())
                     .setDescription("**I found a kitty!** :cat:");
             event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
-            lastExecutionMillis = now;
+            lastExecutionMillisByChannelMap.put(channelId, now);
         } else {
             MessageBuilder builder = new MessageBuilder();
             EmbedBuilder ebuilder = new EmbedBuilder()
