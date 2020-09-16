@@ -127,6 +127,7 @@ public class JMusicBot {
                         new PruneCmd(bot),
 
                         new AutoplaylistCmd(bot),
+                        new GuildListCmd(bot.getWaiter()),
                         new DebugCmd(bot),
                         new PlaylistCmd(bot),
                         new SetavatarCmd(bot),
