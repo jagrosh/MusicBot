@@ -2,7 +2,7 @@
 
 # SirenBot
 
-### Forked from [JMusicBot](https://github.com/jagrosh/MusicBot/)
+###### Forked from [JMusicBot](https://github.com/jagrosh/MusicBot/)
 
 [![Website](https://img.shields.io/badge/-Website-informational)](http://bot.lolcat.no)
 [![Invite Me](https://img.shields.io/badge/Discord-Invite%20Me!-success)](https://discordapp.com/oauth2/authorize?client_id=754375096734318712&scope=bot&permissions=70642768&guild_id=0)
@@ -71,4 +71,4 @@ siren setvc <channel|NONE> - Sets the voice channel for playing music
 ```
 
 ## Questions/Suggestions/Bug Reports
-**Please read the [Known Bugs & Planned Features List](https://github.com/Keyboardsheep/SirenBot/blob/master/PlannedFeatures+KnownBugs.md) before suggesting a feature**. If you'd like to suggest changes to how the bot functions, recommend more customization options, or report bugs, feel free to either open an [Issue](https://github.com/Keyboardsheep/SirenBot/issues) on this repository, or join [my Discord server](https://discord.gg/0p9LSGoRLu6Pet0k).
+**Please read the [Known Bugs & Planned Features List](https://github.com/Keyboardsheep/SirenBot/blob/master/PlannedFeatures+KnownBugs.md) before suggesting a feature**. If you'd like to suggest changes to how the bot functions, recommend more customization options, or report bugs, feel free to either open an [Issue](https://github.com/Keyboardsheep/SirenBot/issues) on this repository, or join [my Discord server](https://discord.gg/Eyetd8J).
