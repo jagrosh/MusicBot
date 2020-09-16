@@ -40,9 +40,7 @@ public class AnnounceEmbedCmd extends AdminCommand {
         MessageBuilder builder = new MessageBuilder();
         EmbedBuilder ebuilder = new EmbedBuilder()
                 .setColor(Color.red)
-                .setTitle("***Announcement:***")
-                .setDescription("")
-                .appendDescription(event.getArgs());
+                .setTitle(event.getArgs());
         event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
     }
 }

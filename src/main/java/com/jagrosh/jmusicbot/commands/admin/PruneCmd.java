@@ -21,9 +21,12 @@ import com.jagrosh.jmusicbot.commands.AdminCommand;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PruneCmd extends AdminCommand {
     public static final int QUIET_MILLIS = 5000;
@@ -57,8 +60,10 @@ public class PruneCmd extends AdminCommand {
                     EmbedBuilder success = new EmbedBuilder();
                     success.setColor(0x22ff2a);
                     success.setTitle(":smiley_cat: Successfully deleted " + event.getArgs() + " messages.");
-                    event.getChannel().sendMessage(success.build()).queue();
+                    MessageEmbed messageEmbed = success.build();
+                    event.getChannel().sendMessage(messageEmbed).queue(message -> deleteAfterDelay(message));
                     lastExecutionMillis = now;
+
                 } catch (IllegalArgumentException e) {
                     if (e.toString().startsWith("java.lang.IllegalArgumentException: Message retrieval")) {
                         // Too many messages
@@ -87,4 +92,15 @@ public class PruneCmd extends AdminCommand {
             event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
         }
     }
+
+    private void deleteAfterDelay(Message message) {
+        TimerTask task = new TimerTask() {
+            public void run() {
+                message.delete().queue();
+            }
+        };
+
+        new Timer("MessageDeleteTimer").schedule(task, 5000);
+    }
+
 }
