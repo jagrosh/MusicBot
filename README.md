@@ -65,7 +65,7 @@ server purge <number of messages> - Deletes messages in bulk
 Admin Only:
 
 siren prefix <prefix|NONE> - Sets a server-specific prefix
-siren setdj <rolename|NONE> - Sets the DJ role for certain music commands (Example: "siren setdj DJ" NOT "siren setdj @DJ")
+siren setdj <rolename|NONE> - Sets the DJ role for certain music commands
 siren settc <channel|NONE> - Sets the text channel for music commands
 siren setvc <channel|NONE> - Sets the voice channel for playing music
 ```
