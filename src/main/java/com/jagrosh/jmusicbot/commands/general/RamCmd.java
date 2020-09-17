@@ -25,9 +25,6 @@ import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-/**
- * @author John Grosh <john.a.grosh@gmail.com>
- */
 public class RamCmd extends Command {
     public RamCmd(Bot bot) {
         this.name = "ram";
