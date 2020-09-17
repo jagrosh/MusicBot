@@ -42,7 +42,7 @@ public class CatApiCatCmd extends BaseCatCmd {
     public CatApiCatCmd(Bot bot) {
         this.category = new Category("Fun");
 
-        this.name = "unknowncat";
+        this.name = "cat";
         this.help = "shows some unknown kitties";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;

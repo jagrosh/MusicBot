@@ -39,8 +39,8 @@ public class CatCmd extends BaseCatCmd {
     public CatCmd(Bot bot) {
         this.category = new Category("Fun");
 
-        this.name = "cat";
-        this.help = "shows some kitties";
+        this.name = "mycat";
+        this.help = "shows some of my kitties";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
 

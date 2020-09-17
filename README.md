@@ -27,8 +27,8 @@ siren settings - Shows the bot's settings
 
 Fun:
 
-siren cat - Shows some kitties
-siren unknowncat - Shows some unknown kitties
+siren mycat - Shows some of my kitties
+siren cat - Shows some unknown kitties
 siren httpcat - Shows some http kitties
 (More coming soon)
 
