@@ -23,6 +23,7 @@ General:
 
 siren about - Shows info about the bot
 siren ping - Checks the bot's latency
+siren ram - shows the bot's memory usage
 siren settings - Shows the bot's settings
 
 Fun:

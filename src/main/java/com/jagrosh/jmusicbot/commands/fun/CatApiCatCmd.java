@@ -57,6 +57,7 @@ public class CatApiCatCmd extends BaseCatCmd {
         Long lastExecutionMillis = lastExecutionMillisByChannelMap.getOrDefault(channelId, 0L);
         if (now > lastExecutionMillis + QUIET_MILLIS) {
             MessageBuilder builder = new MessageBuilder();
+
             EmbedBuilder ebuilder = new EmbedBuilder()
                     .setColor(event.getSelfMember().getColor())
                     .setImage(getKittyUrl())
