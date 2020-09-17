@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.keyboardsheep</groupId>
     <artifactId>SirenBot</artifactId>
-    <version>Snapshot-Cat5</version>
+    <version>Snapshot-Ram2</version>
     <packaging>jar</packaging>
 
     <repositories>

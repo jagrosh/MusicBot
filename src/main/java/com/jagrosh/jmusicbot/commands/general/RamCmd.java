@@ -50,7 +50,7 @@ public class RamCmd extends AdminCommand {
         BigDecimal trueRamPercent = usedMemBD.divide(totalMemBD, 4, RoundingMode.HALF_DOWN).multiply(memPercent);
         EmbedBuilder ebuilder = new EmbedBuilder()
                 .setColor(Color.cyan)
-                .setTitle("My memory is at **" + trueRamPercent + "%**");
+                .setTitle("My memory is at **" + trueRamPercent.setScale(2, BigDecimal.ROUND_HALF_UP) + "%**");
         event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
     }
 }
