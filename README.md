@@ -60,6 +60,7 @@ siren volume [0-150] - Sets or shows volume
 Moderation:
 
 siren kick <username> - Kicks a user from your guild
+siren ban <username> - Bans a user from your guild
 (Many more coming soon)
 
 Admin Only:
