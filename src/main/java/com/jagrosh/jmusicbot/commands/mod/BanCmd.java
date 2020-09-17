@@ -27,10 +27,10 @@ import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class KickCmd extends ModCommand {
-    public KickCmd(Bot bot) {
-        this.name = "kick";
-        this.help = "kicks a user from your guild";
+public class BanCmd extends ModCommand {
+    public BanCmd(Bot bot) {
+        this.name = "ban";
+        this.help = "bans a user from your guild";
         this.arguments = "<username>";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
@@ -42,7 +42,7 @@ public class KickCmd extends ModCommand {
             EmbedBuilder ebuilder = new EmbedBuilder()
                     .setColor(Color.red)
                     .setTitle(":scream_cat: Please mention a user!")
-                    .setDescription("**Usage:** siren kick <username");
+                    .setDescription("**Usage:** siren ban <username>");
             event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
 
 
@@ -50,31 +50,31 @@ public class KickCmd extends ModCommand {
             MessageBuilder builder = new MessageBuilder();
             EmbedBuilder ebuilder = new EmbedBuilder()
                     .setColor(Color.green)
-                    .setDescription(":cat: **Successfully kicked " + event.getArgs() + "!**");
+                    .setDescription(":cat: **Successfully banned " + event.getArgs() + "!**");
             event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
 
             String userId = event.getArgs().replaceAll("\\D+", "");
             User user = event.getJDA().getUserById(userId);
-            MessageEmbed kickMessage = new EmbedBuilder()
+            MessageEmbed banMessage = new EmbedBuilder()
                     .setColor(Color.red)
-                    .setDescription("You were kicked by " + event.getMember().getEffectiveName() + "!")
-                    .setTitle(":scream_cat: You have been kicked from " + event.getGuild().getName() + "!").build();
+                    .setDescription("You were banned by " + event.getMember().getEffectiveName() + "!")
+                    .setTitle(":scream_cat: You have been banned permanently from " + event.getGuild().getName() + "!").build();
             user.openPrivateChannel()
-                    .flatMap(channel -> channel.sendMessage(kickMessage))
+                    .flatMap(channel -> channel.sendMessage(banMessage))
                     .queue();
 
-            kickAfterDelay(event, user);
+            banAfterDelay(event, user);
         }
     }
 
-    private void kickAfterDelay(CommandEvent event, User user) {
+    private void banAfterDelay(CommandEvent event, User user) {
         TimerTask task = new TimerTask() {
             public void run() {
-                event.getGuild().kick(user.getId()).queue();
+                event.getGuild().ban(user.getId(), 0).queue();
             }
         };
 
-        new Timer("KickTimer").schedule(task, 5000);
+        new Timer("BanTimer").schedule(task, 5000);
     }
 }
 

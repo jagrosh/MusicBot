@@ -20,17 +20,14 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.ModCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class KickCmd extends ModCommand {
-    public KickCmd(Bot bot) {
-        this.name = "kick";
-        this.help = "kicks a user from your guild";
+public class UnbanCmd extends ModCommand {
+    public UnbanCmd(Bot bot) {
+        this.name = "unban";
+        this.help = "unbans a user from your guild";
         this.arguments = "<username>";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
@@ -42,7 +39,7 @@ public class KickCmd extends ModCommand {
             EmbedBuilder ebuilder = new EmbedBuilder()
                     .setColor(Color.red)
                     .setTitle(":scream_cat: Please mention a user!")
-                    .setDescription("**Usage:** siren kick <username");
+                    .setDescription("**Usage:** siren unban <username>");
             event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
 
 
@@ -50,31 +47,14 @@ public class KickCmd extends ModCommand {
             MessageBuilder builder = new MessageBuilder();
             EmbedBuilder ebuilder = new EmbedBuilder()
                     .setColor(Color.green)
-                    .setDescription(":cat: **Successfully kicked " + event.getArgs() + "!**");
+                    .setDescription(":cat: **Successfully unbanned " + event.getArgs() + "!**");
             event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
 
             String userId = event.getArgs().replaceAll("\\D+", "");
             User user = event.getJDA().getUserById(userId);
-            MessageEmbed kickMessage = new EmbedBuilder()
-                    .setColor(Color.red)
-                    .setDescription("You were kicked by " + event.getMember().getEffectiveName() + "!")
-                    .setTitle(":scream_cat: You have been kicked from " + event.getGuild().getName() + "!").build();
-            user.openPrivateChannel()
-                    .flatMap(channel -> channel.sendMessage(kickMessage))
-                    .queue();
 
-            kickAfterDelay(event, user);
+            event.getGuild().unban(user.getId());
         }
-    }
-
-    private void kickAfterDelay(CommandEvent event, User user) {
-        TimerTask task = new TimerTask() {
-            public void run() {
-                event.getGuild().kick(user.getId()).queue();
-            }
-        };
-
-        new Timer("KickTimer").schedule(task, 5000);
     }
 }
 

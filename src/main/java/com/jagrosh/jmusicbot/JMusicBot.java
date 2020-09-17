@@ -25,6 +25,7 @@ import com.jagrosh.jmusicbot.commands.fun.CatCmd;
 import com.jagrosh.jmusicbot.commands.fun.HttpCatCmd;
 import com.jagrosh.jmusicbot.commands.general.SettingsCmd;
 import com.jagrosh.jmusicbot.commands.general.SirenAboutCmd;
+import com.jagrosh.jmusicbot.commands.mod.BanCmd;
 import com.jagrosh.jmusicbot.commands.mod.KickCmd;
 import com.jagrosh.jmusicbot.commands.music.*;
 import com.jagrosh.jmusicbot.commands.owner.*;
@@ -99,6 +100,7 @@ public class JMusicBot {
                         new CatApiCatCmd(bot),
                         new HttpCatCmd(bot),
                         new KickCmd(bot),
+                        new BanCmd(bot),
 
                         new LyricsCmd(bot),
                         new NowplayingCmd(bot),
