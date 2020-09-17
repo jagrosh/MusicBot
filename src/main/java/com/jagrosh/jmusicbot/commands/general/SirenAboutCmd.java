@@ -79,21 +79,21 @@ public class SirenAboutCmd extends Command {
         boolean inv = !oauthLink.isEmpty();
         String invline = "\nPlease [`invite`](https://discord.com/api/oauth2/authorize?client_id=754375096734318712&permissions=8&scope=bot) me to your server!";
         StringBuilder descr = new StringBuilder().append("Hello! I am **").append(event.getSelfUser().getName()).append("**, a bot that is hosted and owned by **Keyboardsheep 82**.")
-                .append("\nType **`siren help`** to see my commands!" + "\nPlease [`visit`](http://bot.lolcat.no) my website!").append(join || inv ? invline : "").append("\n\nSome of my features include: ```css");
+                .append("\nType **`siren help`** to see my commands!" + "\nPlease [`visit`](http://bot.lolcat.no) my website!").append(invline).append("\n\nSome of my features include: ```css");
         for (String feature : features)
             descr.append("\n").append(event.getClient().getSuccess().startsWith("<") ? REPLACEMENT_ICON : event.getClient().getSuccess()).append(" ").append(feature);
         descr.append(" ```");
         builder.setDescription(descr);
-        if (event.getJDA().getShardInfo() == null) {
-            builder.addField("Stats", event.getJDA().getGuilds().size() + " servers\n1 shard", true);
-            builder.addField("Users", event.getJDA().getUsers().size() + " unique\n" + event.getJDA().getGuilds().stream().mapToInt(g -> g.getMembers().size()).sum() + " total", true);
-            builder.addField("Channels", event.getJDA().getTextChannels().size() + " Text\n" + event.getJDA().getVoiceChannels().size() + " Voice", true);
-        } else {
-            builder.addField("Stats", (event.getClient()).getTotalGuilds() + " Servers\nShard " + (event.getJDA().getShardInfo().getShardId() + 1)
-                    + "/" + event.getJDA().getShardInfo().getShardTotal(), true);
-            builder.addField("This shard", event.getJDA().getUsers().size() + " Users\n" + event.getJDA().getGuilds().size() + " Servers", true);
-            builder.addField("", event.getJDA().getTextChannels().size() + " Text Channels\n" + event.getJDA().getVoiceChannels().size() + " Voice Channels", true);
-        }
+//        if (event.getJDA().getShardInfo() == null) {
+        builder.addField("Stats", event.getJDA().getGuilds().size() + " servers\n1 shard", true);
+        builder.addField("Users", event.getJDA().getUsers().size() + " unique\n" + event.getJDA().getGuilds().stream().mapToInt(g -> g.getMembers().size()).sum() + " total", true);
+        builder.addField("Channels", event.getJDA().getTextChannels().size() + " Text\n" + event.getJDA().getVoiceChannels().size() + " Voice", true);
+//        } else {
+//            builder.addField("Stats", (event.getClient()).getTotalGuilds() + " Servers\nShard " + (event.getJDA().getShardInfo().getShardId() + 1)
+//                    + "/" + event.getJDA().getShardInfo().getShardTotal(), true);
+//            builder.addField("This shard", event.getJDA().getUsers().size() + " Users\n" + event.getJDA().getGuilds().size() + " Servers", true);
+//            builder.addField("", event.getJDA().getTextChannels().size() + " Text Channels\n" + event.getJDA().getVoiceChannels().size() + " Voice Channels", true);
+//        }
         builder.setFooter("Last restart", null);
         builder.setTimestamp(event.getClient().getStartTime());
         event.reply(builder.build());
