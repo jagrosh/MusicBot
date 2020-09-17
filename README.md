@@ -59,7 +59,7 @@ siren volume [0-150] - Sets or shows volume
 
 Moderation:
 
-server purge <number of messages> - Deletes messages in bulk
+siren kick <username> - Kicks a user from your guild
 (Many more coming soon)
 
 Admin Only:
@@ -68,6 +68,7 @@ siren prefix <prefix|NONE> - Sets a server-specific prefix
 siren setdj <rolename|NONE> - Sets the DJ role for certain music commands
 siren settc <channel|NONE> - Sets the text channel for music commands
 siren setvc <channel|NONE> - Sets the voice channel for playing music
+siren purge <number of messages> - Deletes messages in bulk
 ```
 
 ## Questions/Suggestions/Bug Reports

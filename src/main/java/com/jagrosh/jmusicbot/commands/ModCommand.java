@@ -22,7 +22,6 @@ import com.jagrosh.jdautilities.command.Command;
  */
 public abstract class ModCommand extends Command {
     public ModCommand() {
-        this.category = new Category("Owner");
-        this.ownerCommand = true;
+        this.category = new Category("Mod");
     }
 }

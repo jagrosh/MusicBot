@@ -34,7 +34,7 @@ public class KickCmd extends ModCommand {
     public KickCmd(Bot bot) {
         this.name = "kick";
         this.help = "kicks a user from your guild";
-        this.arguments = "<username> [reason]";
+        this.arguments = "<username>";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
 
@@ -45,7 +45,7 @@ public class KickCmd extends ModCommand {
             EmbedBuilder ebuilder = new EmbedBuilder()
                     .setColor(Color.red)
                     .setTitle(":scream_cat: Please mention a user!")
-                    .setDescription("**Usage:** siren kick <username> (Reasons will be added soon)");
+                    .setDescription("**Usage:** siren kick <username");
             event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
 
 
