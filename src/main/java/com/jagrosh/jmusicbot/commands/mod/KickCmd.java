@@ -18,10 +18,14 @@ package com.jagrosh.jmusicbot.commands.mod;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.ModCommand;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author John Grosh <john.a.grosh@gmail.com>
@@ -41,19 +45,39 @@ public class KickCmd extends ModCommand {
             EmbedBuilder ebuilder = new EmbedBuilder()
                     .setColor(Color.red)
                     .setTitle(":scream_cat: Please mention a user!")
-                    .setDescription("**Usage:** siren kick <username> [reason]");
+                    .setDescription("**Usage:** siren kick <username> (Reasons will be added soon)");
             event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
+
+
         } else {
-            try {
-                MessageBuilder builder = new MessageBuilder();
-                EmbedBuilder ebuilder = new EmbedBuilder()
-                        .setColor(Color.green)
-                        //.setTitle(":cat: Successfully kicked **" + event.getMember().getNickname() + "**!")
-                        .setDescription(":cat: **Successfully kicked " + event.getArgs() + "!**");
-                event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
-            } catch (IllegalArgumentException e) {
-            }
+            MessageBuilder builder = new MessageBuilder();
+            EmbedBuilder ebuilder = new EmbedBuilder()
+                    .setColor(Color.green)
+                    .setDescription(":cat: **Successfully kicked " + event.getArgs() + "!**");
+            event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
+
+            String userId = event.getArgs().replaceAll("\\D+", "");
+            User user = event.getJDA().getUserById(userId);
+            MessageEmbed kickMessage = new EmbedBuilder()
+                    .setColor(Color.red)
+                    .setDescription("You were kicked by " + event.getMember().getEffectiveName() + "!")
+                    .setTitle(":scream_cat: You have been kicked from " + event.getGuild().getName() + "!").build();
+            user.openPrivateChannel()
+                    .flatMap(channel -> channel.sendMessage(kickMessage))
+                    .queue();
+
+            kickAfterDelay(event, user);
         }
+    }
+
+    private void kickAfterDelay(CommandEvent event, User user) {
+        TimerTask task = new TimerTask() {
+            public void run() {
+                event.getGuild().kick(user.getId()).queue();
+            }
+        };
+
+        new Timer("KickTimer").schedule(task, 5000);
     }
 }
 

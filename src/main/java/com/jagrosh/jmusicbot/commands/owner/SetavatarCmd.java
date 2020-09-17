@@ -15,13 +15,14 @@
  */
 package com.jagrosh.jmusicbot.commands.owner;
 
-import java.io.IOException;
-import java.io.InputStream;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
-import net.dv8tion.jda.core.entities.Icon;
+import net.dv8tion.jda.api.entities.Icon;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  *

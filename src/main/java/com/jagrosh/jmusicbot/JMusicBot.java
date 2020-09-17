@@ -32,8 +32,8 @@ import com.jagrosh.jmusicbot.entities.Prompt;
 import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
-import net.dv8tion.jda.core.*;
-import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.api.*;
+import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,17 +142,15 @@ public class JMusicBot {
         if(config.useEval())
             cb.addCommand(new EvalCmd(bot));
         boolean nogame = false;
-        if(config.getStatus()!=OnlineStatus.UNKNOWN)
+        if (config.getStatus() != OnlineStatus.UNKNOWN)
             cb.setStatus(config.getStatus());
-        if(config.getGame()==null)
+        if (config.getActivity() == null)
             cb.useDefaultGame();
-        else if(config.getGame().getName().equalsIgnoreCase("none"))
-        {
-            cb.setGame(null);
+        else if (config.getActivity().getName().equalsIgnoreCase("none")) {
+            cb.setActivity(null);
             nogame = true;
-        }
-        else
-            cb.setGame(config.getGame());
+        } else
+            cb.setActivity(config.getActivity());
 
         if(!prompt.isNoGUI())
         {
@@ -174,11 +172,11 @@ public class JMusicBot {
         {
             JDA jda = new JDABuilder(AccountType.BOT)
                     .setToken(config.getToken())
-                    .setAudioEnabled(true)
-                    .setGame(nogame ? null : Game.playing("loading..."))
+//                    .setAudioEnabled(true)
+                    .setActivity(nogame ? null : Activity.playing("loading..."))
                     .setStatus(config.getStatus() == OnlineStatus.INVISIBLE || config.getStatus() == OnlineStatus.OFFLINE
                             ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
-                    .addEventListener(cb.build(), waiter, new Listener(bot))
+                    .addEventListeners(cb.build(), waiter, new Listener(bot))
                     .setBulkDeleteSplittingEnabled(true)
                     .build();
             bot.setJDA(jda);

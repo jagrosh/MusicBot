@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.keyboardsheep</groupId>
     <artifactId>SirenBot</artifactId>
-    <version>Snapshot-About3</version>
+    <version>Snapshot-Cat4</version>
     <packaging>jar</packaging>
 
     <repositories>
@@ -23,8 +23,8 @@
     <dependencies>
         <dependency>
             <groupId>net.dv8tion</groupId> 
-            <artifactId>JDA</artifactId> 
-            <version>3.8.3_464</version>
+            <artifactId>JDA</artifactId>
+            <version>4.2.0_204</version>
         </dependency>
         <dependency>
             <groupId>com.sedmelluq</groupId>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.jagrosh</groupId>
             <artifactId>jda-utilities</artifactId>
-            <version>2.1.5</version>
+            <version>3.0.4</version>
             <type>pom</type>
         </dependency>
         <dependency>

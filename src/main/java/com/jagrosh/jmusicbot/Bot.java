@@ -15,8 +15,6 @@
  */
 package com.jagrosh.jmusicbot;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.NowplayingHandler;
@@ -24,10 +22,13 @@ import com.jagrosh.jmusicbot.audio.PlayerManager;
 import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
+
 import java.util.Objects;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Guild;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  *
@@ -107,11 +108,10 @@ public class Bot
             threadpool.submit(() -> guild.getAudioManager().closeAudioConnection());
     }
     
-    public void resetGame()
-    {
-        Game game = config.getGame()==null || config.getGame().getName().equalsIgnoreCase("none") ? null : config.getGame();
-        if(!Objects.equals(jda.getPresence().getGame(), game))
-            jda.getPresence().setGame(game);
+    public void resetGame() {
+        Activity activity = config.getActivity() == null || config.getActivity().getName().equalsIgnoreCase("none") ? null : config.getActivity();
+        if (!Objects.equals(jda.getPresence().getActivity(), activity))
+            jda.getPresence().setActivity(activity);
     }
 
     public void shutdown()

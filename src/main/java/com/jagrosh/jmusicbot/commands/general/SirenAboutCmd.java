@@ -19,11 +19,8 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.doc.standard.CommandInfo;
 import com.jagrosh.jdautilities.examples.doc.Author;
-import net.dv8tion.jda.bot.entities.ApplicationInfo;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.Permission;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 
 import java.awt.*;
 
@@ -65,16 +62,16 @@ public class SirenAboutCmd extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if (oauthLink == null) {
-            try {
-                ApplicationInfo info = event.getJDA().asBot().getApplicationInfo().complete();
-                oauthLink = info.isBotPublic() ? info.getInviteUrl(0L, perms) : "";
-            } catch (Exception e) {
-                Logger log = LoggerFactory.getLogger("OAuth2");
-                log.error("Could not generate invite link ", e);
-                oauthLink = "";
-            }
-        }
+//        if (oauthLink == null) {
+//            try {
+//                ApplicationInfo info = event.getJDA().getApplicationInfo().complete();
+//                oauthLink = info.isBotPublic() ? info.getInviteUrl(0L, perms) : "";
+//            } catch (Exception e) {
+//                Logger log = LoggerFactory.getLogger("OAuth2");
+//                log.error("Could not generate invite link ", e);
+        oauthLink = "";
+//            }
+//        }
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(event.getGuild() == null ? color : event.getGuild().getSelfMember().getColor());
         builder.setAuthor("All about " + event.getSelfUser().getName() + "!", null, event.getSelfUser().getAvatarUrl());

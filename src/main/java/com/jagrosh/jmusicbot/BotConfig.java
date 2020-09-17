@@ -19,12 +19,16 @@ import com.jagrosh.jmusicbot.entities.Prompt;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.typesafe.config.*;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigException;
+import com.typesafe.config.ConfigFactory;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.entities.Game;
+
 
 /**
  * 
@@ -44,7 +48,7 @@ public class BotConfig
     private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
     private long owner, maxSeconds;
     private OnlineStatus status;
-    private Game game;
+    private Activity activity;
     private Config aliases;
 
 
@@ -86,7 +90,7 @@ public class BotConfig
             errorEmoji = config.getString("error");
             loadingEmoji = config.getString("loading");
             searchingEmoji = config.getString("searching");
-            game = OtherUtil.parseGame(config.getString("game"));
+            activity = OtherUtil.parseGame(config.getString("game"));
             status = OtherUtil.parseStatus(config.getString("status"));
             stayInChannel = config.getBoolean("stayinchannel");
             songInGame = config.getBoolean("songinstatus");
@@ -238,10 +242,9 @@ public class BotConfig
     {
         return searchingEmoji;
     }
-    
-    public Game getGame()
-    {
-        return game;
+
+    public Activity getActivity() {
+        return activity;
     }
     
     public OnlineStatus getStatus()
