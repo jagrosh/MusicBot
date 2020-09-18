@@ -18,9 +18,6 @@ package com.jagrosh.jmusicbot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import net.dv8tion.jda.api.Permission;
 
-/**
- * @author John Grosh (john.a.grosh@gmail.com)
- */
 public abstract class ModCommand extends Command {
     public ModCommand() {
         this.category = new Category("Mod", event ->
