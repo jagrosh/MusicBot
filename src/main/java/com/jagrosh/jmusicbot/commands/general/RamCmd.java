@@ -21,7 +21,6 @@ import com.jagrosh.jmusicbot.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 
-import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -46,7 +45,7 @@ public class RamCmd extends Command {
         MessageBuilder builder = new MessageBuilder();
         BigDecimal trueRamPercent = usedMemBD.divide(totalMemBD, 4, RoundingMode.HALF_DOWN).multiply(memPercent);
         EmbedBuilder ebuilder = new EmbedBuilder()
-                .setColor(Color.cyan)
+                .setColor(1015169)
                 .setTitle("My memory is at **" + trueRamPercent.setScale(2, BigDecimal.ROUND_HALF_UP) + "%**");
         event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
     }

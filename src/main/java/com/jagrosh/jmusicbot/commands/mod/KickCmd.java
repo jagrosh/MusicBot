@@ -42,7 +42,7 @@ public class KickCmd extends ModCommand {
             EmbedBuilder ebuilder = new EmbedBuilder()
                     .setColor(Color.red)
                     .setTitle(":scream_cat: Please mention a user!")
-                    .setDescription("**Usage:** siren kick <username");
+                    .setDescription("**Usage:** siren kick <username>");
             event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
 
 
