@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 
 public class CatApiCatCmd extends BaseCatCmd {
-    public static final int QUIET_MILLIS = 3000;
     Logger log = LoggerFactory.getLogger("CatCmd");
 
     public CatApiCatCmd(Bot bot) {

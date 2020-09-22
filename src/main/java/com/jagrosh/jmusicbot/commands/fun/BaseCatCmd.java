@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class BaseCatCmd extends FunCommand {
-    public static final int QUIET_MILLIS = 3000;
+    public static final int QUIET_MILLIS = 5000;
 
     protected Map<String, Long> lastExecutionMillisByChannelMap = new LinkedHashMap<>();
 

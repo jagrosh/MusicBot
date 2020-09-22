@@ -97,12 +97,7 @@ public class JMusicBot {
                 .addCommands(aboutCommand,
                         new PingCommand(),
                         new SettingsCmd(bot),
-                        new CatCmd(bot),
-                        new CatApiCatCmd(bot),
-                        new HttpCatCmd(bot),
                         new RamCmd(bot),
-                        new KickCmd(bot),
-                        new BanCmd(bot),
 
                         new LyricsCmd(bot),
                         new NowplayingCmd(bot),
@@ -124,6 +119,13 @@ public class JMusicBot {
                         new SkiptoCmd(bot),
                         new StopCmd(bot),
                         new VolumeCmd(bot),
+
+                        new CatCmd(bot),
+                        new CatApiCatCmd(bot),
+                        new HttpCatCmd(bot),
+
+                        new KickCmd(bot),
+                        new BanCmd(bot),
 
                         new PrefixCmd(bot),
                         new SetdjCmd(bot),

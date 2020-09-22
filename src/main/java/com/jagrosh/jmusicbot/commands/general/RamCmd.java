@@ -28,7 +28,7 @@ public class RamCmd extends Command {
     public RamCmd(Bot bot) {
         this.name = "ram";
         this.help = "displays Siren's memory usage";
-        this.arguments = "<message>";
+        this.arguments = "";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
     }
