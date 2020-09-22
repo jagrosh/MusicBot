@@ -24,4 +24,4 @@ How this feature would be used:
 Add any other context or screenshots about the feature request here.
 
 **Have you confirmed that this idea is not already described here?**
-https://github.com/jagrosh/MusicBot/projects/1
+https://github.com/Keyboardsheep/SirenBot/blob/master/PlannedFeatures+KnownBugs.md
