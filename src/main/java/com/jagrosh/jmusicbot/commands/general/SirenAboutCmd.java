@@ -77,7 +77,7 @@ public class SirenAboutCmd extends Command {
         builder.setAuthor("All about " + event.getSelfUser().getName() + "!", null, event.getSelfUser().getAvatarUrl());
         boolean join = !(event.getClient().getServerInvite() == null || event.getClient().getServerInvite().isEmpty());
         boolean inv = !oauthLink.isEmpty();
-        String invline = "\nPlease [`invite`](https://discord.com/api/oauth2/authorize?client_id=754375096734318712&permissions=8&scope=bot) me to your server!";
+        String invline = "\nPlease [`invite`](https://discord.com/api/oauth2/authorize?client_id=754375096734318712&permissions=1916267615&scope=bot) me to your server!";
         StringBuilder descr = new StringBuilder().append("Hello! I am **").append(event.getSelfUser().getName()).append("**, a bot that is hosted and owned by **Keyboardsheep 82**.")
                 .append("\nType **`siren help`** to see my commands!" + "\nPlease [`visit`](http://bot.lolcat.no) my website!").append(invline).append("\n\nSome of my features include: ```css");
         for (String feature : features)
