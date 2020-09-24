@@ -4,8 +4,9 @@
 
 ## Known Bugs
 
-* When trying to play a song, it will sometimes display an error (Error loading track) 
+* ~~When trying to play a song, it will sometimes display an error (Error loading track)~~
 
 ## Planned Features
 
-* General moderation commands (Kick, ban, mute, etc.)
+* General moderation commands (~~Kick~~, ban, mute, etc.)
+
