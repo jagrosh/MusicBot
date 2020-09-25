@@ -17,6 +17,12 @@
             <name>bintray</name>
             <url>https://dl.bintray.com/sedmelluq/com.sedmelluq</url>
         </repository>
+        <!-- Devos Lavaplayers fork is hosted on jitpack -->
+        <repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+        <!-- Jitpack End -->
     </repositories>
     
     <dependencies>
@@ -25,11 +31,20 @@
             <artifactId>JDA</artifactId> 
             <version>3.8.3_464</version>
         </dependency>
+<!-- commenting out offical lavaplayer for convenience until it gets updated, while its replaced with an unoffical fork (also used by lavalink)
         <dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer</artifactId>
             <version>1.3.50</version>
         </dependency>
+-->
+        <!-- Devos fork -->
+        <dependency>
+            <groupId>com.github.Devoxin</groupId>
+            <artifactId>lavaplayer</artifactId>
+            <version>1.3.52</version>
+        </dependency>
+        <!-- Devos fork end -->
         <dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer-natives-extra</artifactId>
