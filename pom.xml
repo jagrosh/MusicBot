@@ -19,9 +19,9 @@
         </repository>
         <!-- Devos Lavaplayers fork is hosted on jitpack -->
         <repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
+	    <id>jitpack.io</id>
+	    <url>https://jitpack.io</url>
+	</repository>
         <!-- Jitpack End -->
     </repositories>
     
