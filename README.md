@@ -15,7 +15,6 @@
   * Clean and beautiful menus
   * Channel-topic playback bar
   * Supports many sites, including Youtube, Soundcloud, and more
-  * Supports many online radio/streams
 
 ## Commands
 ```
