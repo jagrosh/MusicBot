@@ -38,7 +38,7 @@ public class KickCmd extends ModCommand {
     public KickCmd(Bot bot) {
         this.name = "kick";
         this.help = "kicks a user from your guild";
-        this.arguments = "<username>";
+        this.arguments = "<username> [reason]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.botPermissions = new Permission[]{Permission.KICK_MEMBERS};
     }
@@ -53,7 +53,7 @@ public class KickCmd extends ModCommand {
         }
 
         if (rawUserId.isEmpty()) {
-            sendAndQueueEmbed(event, Color.red, ":scream_cat: Please mention a user!", "**Usage:** siren kick <username>");
+            sendAndQueueEmbed(event, Color.red, ":scream_cat: Please mention a user!", "**Usage:** siren kick <username> [reason]");
         } else {
             String userId = rawUserId.replaceAll("\\D+", "");
             User user;
@@ -65,7 +65,7 @@ public class KickCmd extends ModCommand {
                 log.info("Unknown User (" + rawUserId + ")", e);
             }
             if (user == null) {
-                sendAndQueueEmbed(event, Color.red, null, ":scream_cat: **Failed to kick!**\n\n**Reason:**\nUnknown User");
+                sendAndQueueEmbed(event, Color.red, ":scream_cat: **Failed to kick!**", "**Reason:**\nUnknown User");
                 log.info("Unknown User (" + rawUserId + ")");
                 return;
             }
@@ -73,6 +73,11 @@ public class KickCmd extends ModCommand {
             if (!event.getMember().canInteract(event.getGuild().getMember(user))) {
                 sendAndQueueEmbed(event, Color.red, ":scream_cat: **Failed to kick!**", "**Reason:**\nYou cannot kick " + rawUserId + "!");
                 log.info(event.getMember().getEffectiveName() + " cannot kick " + rawUserId);
+                return;
+            }
+            if (!event.getSelfMember().canInteract(event.getGuild().getMember(user))) {
+                sendAndQueueEmbed(event, Color.red, ":scream_cat: **Failed to kick!**", "**Reason:**\nI cannot kick " + rawUserId + "!");
+                log.info("I cannot kick " + rawUserId);
                 return;
             }
             ;
@@ -117,7 +122,7 @@ public class KickCmd extends ModCommand {
             }
         };
 
-        new Timer("KickTimer").schedule(task, 250);
+        new Timer("KickTimer").schedule(task, 500);
     }
 }
 

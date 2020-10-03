@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.keyboardsheep</groupId>
     <artifactId>SirenBot</artifactId>
-    <version>Snapshot-KickFix2</version>
+    <version>Snapshot-LiveFix1</version>
     <packaging>jar</packaging>
 
     <repositories>
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>1.3.50-BW</version>
+            <version>1.3.50-BW-1</version>
         </dependency>
         <!--        <dependency>-->
         <!--            <groupId>com.sedmelluq</groupId>-->

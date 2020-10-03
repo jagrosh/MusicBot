@@ -20,12 +20,11 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Message;
 
 import java.awt.*;
+import java.util.List;
 
-/**
- * @author John Grosh <john.a.grosh@gmail.com>
- */
 public class AnnounceEmbedCmd extends AdminCommand {
     public AnnounceEmbedCmd(Bot bot) {
         this.name = "announce";
@@ -41,6 +40,8 @@ public class AnnounceEmbedCmd extends AdminCommand {
         EmbedBuilder ebuilder = new EmbedBuilder()
                 .setColor(Color.red)
                 .setTitle(event.getArgs());
+        List<Message> messages = event.getChannel().getHistory().retrievePast(Integer.parseInt("1")).complete();
+        event.getChannel().purgeMessages(messages);
         event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
     }
 }

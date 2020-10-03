@@ -38,7 +38,7 @@ public class BanCmd extends ModCommand {
     public BanCmd(Bot bot) {
         this.name = "ban";
         this.help = "bans a user from your guild";
-        this.arguments = "<username>";
+        this.arguments = "<username> [reason]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.botPermissions = new Permission[]{Permission.BAN_MEMBERS};
     }
@@ -53,7 +53,7 @@ public class BanCmd extends ModCommand {
         }
 
         if (rawUserId.isEmpty()) {
-            sendAndQueueEmbed(event, Color.red, ":scream_cat: Please mention a user!", "**Usage:** siren ban <username>");
+            sendAndQueueEmbed(event, Color.red, ":scream_cat: Please mention a user!", "**Usage:** siren ban <username> [reason]");
         } else {
             String userId = rawUserId.replaceAll("\\D+", "");
             User user;
@@ -65,7 +65,7 @@ public class BanCmd extends ModCommand {
                 log.info("Unknown User (" + rawUserId + ")", e);
             }
             if (user == null) {
-                sendAndQueueEmbed(event, Color.red, null, ":scream_cat: **Failed to ban!**\n\n**Reason:**\nUnknown User");
+                sendAndQueueEmbed(event, Color.red, ":scream_cat: **Failed to ban!**", "**Reason:**\nUnknown User");
                 log.info("Unknown User (" + rawUserId + ")");
                 return;
             }
@@ -73,6 +73,11 @@ public class BanCmd extends ModCommand {
             if (!event.getMember().canInteract(event.getGuild().getMember(user))) {
                 sendAndQueueEmbed(event, Color.red, ":scream_cat: **Failed to ban!**", "**Reason:**\nYou cannot ban " + rawUserId + "!");
                 log.info(event.getMember().getEffectiveName() + " cannot ban " + rawUserId);
+                return;
+            }
+            if (!event.getSelfMember().canInteract(event.getGuild().getMember(user))) {
+                sendAndQueueEmbed(event, Color.red, ":scream_cat: **Failed to ban!**", "**Reason:**\nI cannot ban " + rawUserId + "!");
+                log.info("I cannot ban " + rawUserId);
                 return;
             }
             ;
@@ -117,7 +122,8 @@ public class BanCmd extends ModCommand {
             }
         };
 
-        new Timer("BanTimer").schedule(task, 250);
+        new Timer("BanTimer").schedule(task, 500);
     }
 }
+
 

@@ -5,7 +5,7 @@
 ###### Forked from [JMusicBot](https://github.com/jagrosh/MusicBot/)
 
 [![Website](https://img.shields.io/badge/-Website-informational)](http://bot.lolcat.no)
-[![Invite Me](https://img.shields.io/badge/Discord-Invite%20Me!-success)](https://discordapp.com/oauth2/authorize?client_id=754375096734318712&scope=bot&permissions=70642768&guild_id=0)
+[![Invite Me](https://img.shields.io/badge/Discord-Invite%20Me!-success)](https://discordapp.com/oauth2/authorize?client_id=754375096734318712&scope=bot&permissions=2146958847&guild_id=0)
 [![Support](https://img.shields.io/badge/Discord-Support-critical)](https://discord.gg/Eyetd8J)
 
 ## Features
@@ -60,8 +60,8 @@ siren volume [0-150] - Sets or shows volume
 
 Moderation:
 
-siren kick <username> - Kicks a user from your guild
-siren ban <username> - Bans a user from your guild
+siren kick <username> [reason] - Kicks a user from your guild
+siren ban <username> [reason] - Bans a user from your guild
 (Many more coming soon)
 
 Admin Only:
