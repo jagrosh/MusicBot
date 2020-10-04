@@ -22,6 +22,7 @@ import com.jagrosh.jmusicbot.commands.admin.*;
 import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.fun.CatApiCatCmd;
 import com.jagrosh.jmusicbot.commands.fun.CatCmd;
+import com.jagrosh.jmusicbot.commands.fun.DogApiDogCmd;
 import com.jagrosh.jmusicbot.commands.fun.HttpCatCmd;
 import com.jagrosh.jmusicbot.commands.general.RamCmd;
 import com.jagrosh.jmusicbot.commands.general.SettingsCmd;
@@ -123,6 +124,7 @@ public class JMusicBot {
                         new CatCmd(bot),
                         new CatApiCatCmd(bot),
                         new HttpCatCmd(bot),
+                        new DogApiDogCmd(bot),
 
                         new KickCmd(bot),
                         new BanCmd(bot),

@@ -15,26 +15,39 @@
  */
 package com.jagrosh.jmusicbot.commands.fun;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.util.Random;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
-public class HttpCatCmd extends BaseCatCmd {
-    Logger log = LoggerFactory.getLogger("HttpCatCmd");
+public class DogApiDogCmd extends BaseCatCmd {
+    Logger log = LoggerFactory.getLogger("DogCmd");
 
-    public HttpCatCmd(Bot bot) {
-        this.name = "httpcat";
-        this.help = "shows some http kitties";
+    public DogApiDogCmd(Bot bot) {
+        this.category = new Category("Fun");
+
+        this.name = "dog";
+        this.help = "shows some unknown doggos";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
+
     }
+
 
     @Override
     protected void execute(CommandEvent event) {
@@ -43,10 +56,11 @@ public class HttpCatCmd extends BaseCatCmd {
         Long lastExecutionMillis = lastExecutionMillisByChannelMap.getOrDefault(channelId, 0L);
         if (now > lastExecutionMillis + QUIET_MILLIS) {
             MessageBuilder builder = new MessageBuilder();
+
             EmbedBuilder ebuilder = new EmbedBuilder()
                     .setColor(event.getSelfMember().getColor())
                     .setImage(getKittyUrl())
-                    .setDescription("**I found a http status kitty!** :cat:");
+                    .setDescription(":pouting_cat: **I found a doggo, next time look for a cat!**");
             event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
             lastExecutionMillisByChannelMap.put(channelId, now);
         } else {
@@ -57,14 +71,39 @@ public class HttpCatCmd extends BaseCatCmd {
                     .setDescription("Please wait ** " + (((QUIET_MILLIS - (now - lastExecutionMillis)) / 1000) + 1) + " ** more seconds.");
             event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
         }
-
     }
 
     @NotNull
     private String getKittyUrl() {
-        //// TODO: 10/4/2020 add the option of selecting a http cat (Example: siren httpcat 404)
-        Integer[] statuses = new Integer[]{100, 101, 200, 201, 202, 204, 206, 206, 300, 301, 302, 304, 305, 307, 401, 402, 403, 404, 405, 406, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 421, 422, 423, 424, 425, 426, 429, 431, 444, 451, 500, 501, 502, 503, 504, 506, 507, 508, 509, 510, 511, 599};
-        return "https://http.cat/" + statuses[new Random().nextInt(statuses.length)];
+        HttpClient httpclient = new DefaultHttpClient();
+        try {
+            HttpGet httpget = new HttpGet("https://api.thedogapi.com/v1/images/search/");
+
+            System.out.println("executing request " + httpget.getURI());
+
+            // Create a response handler
+            ResponseHandler<String> responseHandler = new BasicResponseHandler();
+            // Body contains your json stirng
+            String responseBody = null;
+            try {
+                responseBody = httpclient.execute(httpget, responseHandler);
+            } catch (IOException e) {
+                log.warn("Unable to fetch dog.", e);
+                return "https://http.cat/500";
+            }
+            try {
+                return (String) ((Map) new ObjectMapper().readValue(responseBody, List.class).get(0)).get("url");
+            } catch (JsonProcessingException e) {
+                log.warn("Unable to read dog response.", e);
+                return "https://http.cat/400";
+            }
+
+        } finally {
+            // When HttpClient instance is no longer needed,
+            // shut down the connection manager to ensure
+            // immediate deallocation of all system resources
+            httpclient.getConnectionManager().shutdown();
+        }
     }
 
 }

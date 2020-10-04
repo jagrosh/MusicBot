@@ -7,6 +7,7 @@
 [![Website](https://img.shields.io/badge/-Website-informational)](http://bot.lolcat.no)
 [![Invite Me](https://img.shields.io/badge/Discord-Invite%20Me!-success)](https://discordapp.com/oauth2/authorize?client_id=754375096734318712&scope=bot&permissions=2146958847&guild_id=0)
 [![Support](https://img.shields.io/badge/Discord-Support-critical)](https://discord.gg/Eyetd8J)
+![GitHub last commit](https://img.shields.io/github/last-commit/Keyboardsheep/SirenBot?label=Last%20Commit)
 
 ## Features
   * Fast loading of songs
