@@ -31,7 +31,7 @@ public class RollCmd extends FunCommand {
 
     protected Map<String, Long> lastExecutionMillisByChannelMap = new LinkedHashMap<>();
 
-    public RollCmd(Bot bot) {
+    public RollCmd(Bot bot) { //test
         this.name = "roll";
         this.help = "rolls a dice for you";
         this.aliases = bot.getConfig().getAliases(this.name);
