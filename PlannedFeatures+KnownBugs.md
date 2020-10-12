@@ -10,4 +10,6 @@
 
 * General moderation commands (~~Kick~~, ~~ban~~, mute, etc.)
 * Text to speech command (Can be disabled in guild settings)
-
+* Poll command (With reactions)
+* Reaction rolls
+* Customizable join & leave messages

@@ -15,7 +15,7 @@
  */
 package com.jagrosh.jmusicbot.utils;
 
-import com.jagrosh.jmusicbot.JMusicBot;
+import com.jagrosh.jmusicbot.SirenBot;
 import com.jagrosh.jmusicbot.entities.Prompt;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -62,7 +62,7 @@ public class OtherUtil
             String filename = path.substring(WINDOWS_INVALID_PATH.length());
             try
             {
-                path = new File(JMusicBot.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath() + File.separator + filename;
+                path = new File(SirenBot.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath() + File.separator + filename;
             }
             catch(URISyntaxException ex) {}
         }
@@ -170,10 +170,9 @@ public class OtherUtil
         return version;
     }
     
-    public static String getCurrentVersion()
-    {
-        if(JMusicBot.class.getPackage()!=null && JMusicBot.class.getPackage().getImplementationVersion()!=null)
-            return JMusicBot.class.getPackage().getImplementationVersion();
+    public static String getCurrentVersion() {
+        if (SirenBot.class.getPackage() != null && SirenBot.class.getPackage().getImplementationVersion() != null)
+            return SirenBot.class.getPackage().getImplementationVersion();
         else
             return "UNKNOWN";
     }

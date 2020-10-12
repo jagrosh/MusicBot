@@ -20,15 +20,13 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.PingCommand;
 import com.jagrosh.jmusicbot.commands.admin.*;
 import com.jagrosh.jmusicbot.commands.dj.*;
-import com.jagrosh.jmusicbot.commands.fun.CatApiCatCmd;
-import com.jagrosh.jmusicbot.commands.fun.CatCmd;
-import com.jagrosh.jmusicbot.commands.fun.DogApiDogCmd;
-import com.jagrosh.jmusicbot.commands.fun.HttpCatCmd;
+import com.jagrosh.jmusicbot.commands.fun.*;
 import com.jagrosh.jmusicbot.commands.general.RamCmd;
 import com.jagrosh.jmusicbot.commands.general.SettingsCmd;
 import com.jagrosh.jmusicbot.commands.general.SirenAboutCmd;
 import com.jagrosh.jmusicbot.commands.mod.BanCmd;
 import com.jagrosh.jmusicbot.commands.mod.KickCmd;
+import com.jagrosh.jmusicbot.commands.mod.WarnCmd;
 import com.jagrosh.jmusicbot.commands.music.*;
 import com.jagrosh.jmusicbot.commands.owner.*;
 import com.jagrosh.jmusicbot.entities.Prompt;
@@ -46,23 +44,23 @@ import java.awt.*;
 /**
  * @author John Grosh (jagrosh)
  */
-public class JMusicBot {
+public class SirenBot {
     public final static String PLAY_EMOJI = "\u25B6"; // ▶
     public final static String PAUSE_EMOJI = "\u23F8"; // ⏸
     public final static String STOP_EMOJI = "\u23F9"; // ⏹
     public final static Permission[] RECOMMENDED_PERMS = new Permission[]{Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
-                                Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
-                                Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
+            Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
+            Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         // startup log
         Logger log = LoggerFactory.getLogger("Startup");
 
         // create prompt to handle startup
-        Prompt prompt = new Prompt("JMusicBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.",
+        Prompt prompt = new Prompt("SirenBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.",
                 "true".equalsIgnoreCase(System.getProperty("nogui", "false")));
 
         // get and check latest version
@@ -125,9 +123,11 @@ public class JMusicBot {
                         new CatApiCatCmd(bot),
                         new HttpCatCmd(bot),
                         new DogApiDogCmd(bot),
+                        new RollCmd(bot),
 
                         new KickCmd(bot),
                         new BanCmd(bot),
+                        new WarnCmd(bot),
 
                         new PrefixCmd(bot),
                         new SetdjCmd(bot),
@@ -147,7 +147,7 @@ public class JMusicBot {
                         new SetstatusCmd(bot),
                         new ShutdownCmd(bot)
                 );
-        if(config.useEval())
+        if (config.useEval())
             cb.addCommand(new EvalCmd(bot));
         boolean nogame = false;
         if (config.getStatus() != OnlineStatus.UNKNOWN)
@@ -160,8 +160,7 @@ public class JMusicBot {
         } else
             cb.setActivity(config.getActivity());
 
-        if(!prompt.isNoGUI())
-        {
+        if (!prompt.isNoGUI()) {
             try {
                 GUI gui = new GUI(bot);
                 bot.setGUI(gui);
@@ -176,8 +175,7 @@ public class JMusicBot {
         log.info("Loaded config from " + config.getConfigLocation());
 
         // attempt to log in and start
-        try
-        {
+        try {
             JDA jda = new JDABuilder(AccountType.BOT)
                     .setToken(config.getToken())
 //                    .setAudioEnabled(true)
@@ -188,17 +186,13 @@ public class JMusicBot {
                     .setBulkDeleteSplittingEnabled(true)
                     .build();
             bot.setJDA(jda);
-        }
-        catch (LoginException ex)
-        {
-            prompt.alert(Prompt.Level.ERROR, "JMusicBot", ex + "\nPlease make sure you are "
+        } catch (LoginException ex) {
+            prompt.alert(Prompt.Level.ERROR, "SirenBot", ex + "\nPlease make sure you are "
                     + "editing the correct config.txt file, and that you have used the "
                     + "correct token (not the 'secret'!)\nConfig Location: " + config.getConfigLocation());
             System.exit(1);
-        }
-        catch(IllegalArgumentException ex)
-        {
-            prompt.alert(Prompt.Level.ERROR, "JMusicBot", "Some aspect of the configuration is "
+        } catch (IllegalArgumentException ex) {
+            prompt.alert(Prompt.Level.ERROR, "SirenBot", "Some aspect of the configuration is "
                     + "invalid: " + ex + "\nConfig Location: " + config.getConfigLocation());
             System.exit(1);
         }

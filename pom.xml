@@ -106,7 +106,7 @@
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>com.jagrosh.jmusicbot.JMusicBot</Main-Class>
+                                        <Main-Class>com.jagrosh.jmusicbot.SirenBot</Main-Class>
                                         <Specification-Title>${project.artifactId}</Specification-Title>
                                         <Specification-Version>${project.version}</Specification-Version>
                                         <Implementation-Title>${project.artifactId}</Implementation-Title>
