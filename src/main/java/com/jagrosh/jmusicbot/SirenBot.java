@@ -85,6 +85,7 @@ public class SirenBot {
         aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
 
         // set up the command client
+        RollCmd rollCmd = new RollCmd(bot);
         CommandClientBuilder cb = new CommandClientBuilder()
                 .setPrefix(config.getPrefix())
                 .setAlternativePrefix(config.getAltPrefix())
@@ -123,7 +124,7 @@ public class SirenBot {
                         new CatApiCatCmd(bot),
                         new HttpCatCmd(bot),
                         new DogApiDogCmd(bot),
-                        new RollCmd(bot),
+                        rollCmd,
 
                         new KickCmd(bot),
                         new BanCmd(bot),
@@ -182,7 +183,7 @@ public class SirenBot {
                     .setActivity(nogame ? null : Activity.playing("loading..."))
                     .setStatus(config.getStatus() == OnlineStatus.INVISIBLE || config.getStatus() == OnlineStatus.OFFLINE
                             ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
-                    .addEventListeners(cb.build(), waiter, new Listener(bot))
+                    .addEventListeners(cb.build(), waiter, new Listener(bot, rollCmd))
                     .setBulkDeleteSplittingEnabled(true)
                     .build();
             bot.setJDA(jda);
