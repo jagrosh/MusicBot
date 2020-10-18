@@ -162,7 +162,7 @@ public class RollCmd extends FunCommand {
             MessageBuilder builder = new MessageBuilder();
             EmbedBuilder ebuilder = new EmbedBuilder()
                     .setColor(Color.GREEN)
-                    .setDescription("" + member.getAsMention() + " rolled a D" + sideCount + "! **OUTPUT:**");
+                    .setDescription(member.getAsMention() + " rolled a D" + sideCount + "! **OUTPUT:**");
             channel.sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
             channel.sendMessage(rollOutputMessage).queue(message -> handleQueuedDiceMessage(member.getUser(), false, message));
         } else {

@@ -10,12 +10,11 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/Keyboardsheep/SirenBot?label=Last%20Commit)
 
 ## Features
-  * Fast loading of songs
-  * Smooth playback
-  * Server-specific setup for the "DJ" role that can moderate the music
-  * Clean and beautiful menus
+  * Quick & smooth loading of songs
+  * "DJ" role that can moderate the music (A "Mod" role will be coming soon)
+  * Clean and messages & GUIs
   * Channel-topic playback bar
-  * Supports many sites, including Youtube, Soundcloud, and more
+  * Fun & useful commands
 
 ## Commands
 ```
@@ -23,14 +22,16 @@ General:
 
 siren about - Shows info about the bot
 siren ping - Checks the bot's latency
-siren ram - shows the bot's memory usage
+siren ram - Checks the bot's memory usage
 siren settings - Shows the bot's settings
 
 Fun:
 
 siren mycat - Shows some of my kitties
-siren cat - Shows some unknown kitties
+siren cat - Shows some random kitties
+siren dog - Shows some random doggos
 siren httpcat - Shows some http kitties
+siren roll ([optional amount of sides on the die] [optional "-s" to roll the die privately in DMs]) - Rolls a die which is perfect for games like DnD
 (More coming soon)
 
 Music:
@@ -62,7 +63,7 @@ Moderation:
 
 siren kick <username> [reason] - Kicks a user from your guild
 siren ban <username> [reason] - Bans a user from your guild
-(Many more coming soon)
+(More coming soon)
 
 Admin Only:
 
@@ -70,7 +71,7 @@ siren prefix <prefix|NONE> - Sets a server-specific prefix
 siren setdj <rolename|NONE> - Sets the DJ role for certain music commands
 siren settc <channel|NONE> - Sets the text channel for music commands
 siren setvc <channel|NONE> - Sets the voice channel for playing music
-siren purge <number of messages> - Deletes messages in bulk
+siren purge <number of messages> - Deletes messages in bulk (Max of 100)
 ```
 
 ## Questions/Suggestions/Bug Reports

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.keyboardsheep</groupId>
     <artifactId>SirenBot</artifactId>
-    <version>Snapshot-FullRoll1</version>
+    <version>Snapshot-SearchFix1</version>
     <packaging>jar</packaging>
 
     <repositories>
@@ -18,6 +18,12 @@
             <name>bintray</name>
             <url>https://dl.bintray.com/sedmelluq/com.sedmelluq</url>
         </repository>
+        <repository>
+            <id>github</id>
+            <name>jitpack</name>
+            <url>https://jitpack.io</url>
+            <!--        // build projects directly from github-->
+        </repository>
     </repositories>
 
     <dependencies>
@@ -27,9 +33,9 @@
             <version>4.2.0_204</version>
         </dependency>
         <dependency>
-            <groupId>com.sedmelluq</groupId>
+            <groupId>com.github.devoxin</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>1.3.50-BW-1</version>
+            <version>1.3.58</version>
         </dependency>
         <!--        <dependency>-->
         <!--            <groupId>com.sedmelluq</groupId>-->
