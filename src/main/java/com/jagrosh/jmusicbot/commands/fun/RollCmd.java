@@ -212,8 +212,13 @@ public class RollCmd extends FunCommand {
                         event.getReaction().removeReaction(event.getUser()).queue();
                         break;
                     case UNICODE_CANCEL: // TODO: 10/14/2020
-                        event.getChannel().deleteMessageById(event.getMessageId()).queue();
-                        event.getReaction().removeReaction(event.getUser()).queue();
+                        event.getChannel().getHistoryBefore(event.getMessageId(), 1).queue(messageHistory -> {
+                            for (Message message : messageHistory.getRetrievedHistory()) {
+                                event.getChannel().deleteMessageById(message.getId()).queue();
+                            }
+                            event.getChannel().deleteMessageById(event.getMessageId()).queue();
+                            event.getReaction().removeReaction(event.getUser()).queue();
+                        });
                         break;
                 }
         }
