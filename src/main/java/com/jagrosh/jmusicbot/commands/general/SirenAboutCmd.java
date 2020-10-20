@@ -79,7 +79,7 @@ public class SirenAboutCmd extends Command {
         boolean inv = !oauthLink.isEmpty();
         String invline = "\nPlease [`invite`](https://discord.com/api/oauth2/authorize?client_id=754375096734318712&permissions=2146958847&scope=bot) me to your server!";
         StringBuilder descr = new StringBuilder().append("Hello! I am **").append(event.getSelfUser().getName()).append("**, a bot that is hosted and owned by **Keyboardsheep 82**.")
-                .append("\nType **`siren help`** to see my commands!" + "\nPlease [`visit`](http://bot.lolcat.no) my website!").append(invline).append("\n\nSome of my features include: ```css");
+                .append("\nType **`siren help`** to see my commands!" + "\nPlease [`visit`](https://siren.fun) my website!").append(invline).append("\n\nSome of my features include: ```css");
         for (String feature : features)
             descr.append("\n").append(event.getClient().getSuccess().startsWith("<") ? REPLACEMENT_ICON : event.getClient().getSuccess()).append(" ").append(feature);
         descr.append(" ```");

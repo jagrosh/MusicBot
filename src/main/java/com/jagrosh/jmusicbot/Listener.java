@@ -29,9 +29,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author John Grosh (john.a.grosh@gmail.com)
- */
 public class Listener extends ListenerAdapter {
     private final Bot bot;
     private RollCmd rollCmd;
@@ -46,7 +43,7 @@ public class Listener extends ListenerAdapter {
     {
         if(event.getJDA().getGuilds().isEmpty())
         {
-            Logger log = LoggerFactory.getLogger("MusicBot");
+            Logger log = LoggerFactory.getLogger("SirenBot");
             log.warn("This bot is not on any guilds! Use the following link to add the bot to your guilds!");
             log.warn(event.getJDA().getInviteUrl(SirenBot.RECOMMENDED_PERMS));
         }

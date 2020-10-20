@@ -217,7 +217,6 @@ public class RollCmd extends FunCommand {
                                 event.getChannel().deleteMessageById(message.getId()).queue();
                             }
                             event.getChannel().deleteMessageById(event.getMessageId()).queue();
-                            event.getReaction().removeReaction(event.getUser()).queue();
                         });
                         break;
                 }
