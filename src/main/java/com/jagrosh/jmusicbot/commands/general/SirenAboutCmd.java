@@ -24,9 +24,7 @@ import net.dv8tion.jda.api.Permission;
 
 import java.awt.*;
 
-/**
- * @author John Grosh (jagrosh)
- */
+
 @CommandInfo(
         name = "About",
         description = "Gets information about the bot."

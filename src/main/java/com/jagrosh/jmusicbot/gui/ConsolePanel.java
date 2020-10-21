@@ -15,12 +15,9 @@
  */
 package com.jagrosh.jmusicbot.gui;
 
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.io.PrintStream;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 /**
  *

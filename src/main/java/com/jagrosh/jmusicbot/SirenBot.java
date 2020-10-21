@@ -15,12 +15,14 @@
  */
 package com.jagrosh.jmusicbot;
 
+import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.PingCommand;
 import com.jagrosh.jmusicbot.commands.admin.*;
 import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.fun.*;
+import com.jagrosh.jmusicbot.commands.general.HelpCmd;
 import com.jagrosh.jmusicbot.commands.general.RamCmd;
 import com.jagrosh.jmusicbot.commands.general.SettingsCmd;
 import com.jagrosh.jmusicbot.commands.general.SirenAboutCmd;
@@ -41,9 +43,7 @@ import org.slf4j.LoggerFactory;
 import javax.security.auth.login.LoginException;
 import java.awt.*;
 
-/**
- * @author John Grosh (jagrosh)
- */
+
 public class SirenBot {
     public final static String PLAY_EMOJI = "\u25B6"; // ▶
     public final static String PAUSE_EMOJI = "\u23F8"; // ⏸
@@ -86,18 +86,20 @@ public class SirenBot {
 
         // set up the command client
         RollCmd rollCmd = new RollCmd(bot);
+        HelpCmd helpCmd = new HelpCmd(bot);
         CommandClientBuilder cb = new CommandClientBuilder()
                 .setPrefix(config.getPrefix())
                 .setAlternativePrefix(config.getAltPrefix())
                 .setOwnerId(Long.toString(config.getOwnerId()))
                 .setEmojis(config.getSuccess(), config.getWarning(), config.getError())
-                .setHelpWord(config.getHelp())
+                .setHelpWord("oldhelp")
                 .setLinkedCacheSize(200)
                 .setGuildSettingsManager(settings)
                 .addCommands(aboutCommand,
                         new PingCommand(),
                         new SettingsCmd(bot),
                         new RamCmd(bot),
+                        helpCmd,
 
                         new LyricsCmd(bot),
                         new NowplayingCmd(bot),
@@ -177,13 +179,15 @@ public class SirenBot {
 
         // attempt to log in and start
         try {
+            CommandClient commandClient = cb.build();
+            helpCmd.setCommandClient(commandClient);
             JDA jda = new JDABuilder(AccountType.BOT)
                     .setToken(config.getToken())
 //                    .setAudioEnabled(true)
                     .setActivity(nogame ? null : Activity.playing("loading..."))
                     .setStatus(config.getStatus() == OnlineStatus.INVISIBLE || config.getStatus() == OnlineStatus.OFFLINE
                             ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
-                    .addEventListeners(cb.build(), waiter, new Listener(bot, rollCmd))
+                    .addEventListeners(commandClient, waiter, new Listener(bot, rollCmd))
                     .setBulkDeleteSplittingEnabled(true)
                     .build();
             bot.setJDA(jda);

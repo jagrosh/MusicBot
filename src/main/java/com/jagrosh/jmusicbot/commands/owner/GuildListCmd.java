@@ -30,9 +30,7 @@ import net.dv8tion.jda.api.exceptions.PermissionException;
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author John Grosh (jagrosh)
- */
+
 @CommandInfo(
         name = "Guildlist",
         description = "Gets a paginated list of the guilds the bot is on.",
