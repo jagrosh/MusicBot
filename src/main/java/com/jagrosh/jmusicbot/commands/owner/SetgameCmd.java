@@ -18,7 +18,7 @@ package com.jagrosh.jmusicbot.commands.owner;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
-import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.api.entities.Activity;
 
 /**
  *
@@ -46,7 +46,7 @@ public class SetgameCmd extends OwnerCommand
         String title = event.getArgs().toLowerCase().startsWith("playing") ? event.getArgs().substring(7).trim() : event.getArgs();
         try
         {
-            event.getJDA().getPresence().setGame(title.isEmpty() ? null : Game.playing(title));
+            event.getJDA().getPresence().setActivity(title.isEmpty() ? null : Activity.playing(title));
             event.reply(event.getClient().getSuccess()+" **"+event.getSelfUser().getName()
                     +"** is "+(title.isEmpty() ? "no longer playing anything." : "now playing `"+title+"`"));
         }
@@ -78,7 +78,7 @@ public class SetgameCmd extends OwnerCommand
             }
             try
             {
-                event.getJDA().getPresence().setGame(Game.streaming(parts[1], "https://twitch.tv/"+parts[0]));
+                event.getJDA().getPresence().setActivity(Activity.streaming(parts[1], "https://twitch.tv/"+parts[0]));
                 event.replySuccess("**"+event.getSelfUser().getName()
                         +"** is now streaming `"+parts[1]+"`");
             }
@@ -111,7 +111,7 @@ public class SetgameCmd extends OwnerCommand
             String title = event.getArgs().toLowerCase().startsWith("to") ? event.getArgs().substring(2).trim() : event.getArgs();
             try
             {
-                event.getJDA().getPresence().setGame(Game.listening(title));
+                event.getJDA().getPresence().setActivity(Activity.listening(title));
                 event.replySuccess("**"+event.getSelfUser().getName()+"** is now listening to `"+title+"`");
             } catch(Exception e) {
                 event.reply(event.getClient().getError()+" The game could not be set!");
@@ -141,7 +141,7 @@ public class SetgameCmd extends OwnerCommand
             String title = event.getArgs();
             try
             {
-                event.getJDA().getPresence().setGame(Game.watching(title));
+                event.getJDA().getPresence().setActivity(Activity.watching(title));
                 event.replySuccess("**"+event.getSelfUser().getName()+"** is now watching `"+title+"`");
             } catch(Exception e) {
                 event.reply(event.getClient().getError()+" The game could not be set!");
