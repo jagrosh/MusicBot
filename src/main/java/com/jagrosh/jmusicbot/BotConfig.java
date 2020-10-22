@@ -23,8 +23,8 @@ import com.typesafe.config.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
 
 /**
  * 
@@ -44,7 +44,7 @@ public class BotConfig
     private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
     private long owner, maxSeconds;
     private OnlineStatus status;
-    private Game game;
+    private Activity game;
     private Config aliases;
 
 
@@ -239,7 +239,7 @@ public class BotConfig
         return searchingEmoji;
     }
     
-    public Game getGame()
+    public Activity getGame()
     {
         return game;
     }
