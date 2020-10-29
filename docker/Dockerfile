@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk
 
 LABEL version="0.3.1"
 
