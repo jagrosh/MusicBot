@@ -1,7 +1,7 @@
 ### Docker
 ___
 **Overview**
-Docker is a very useful to for creating repeatable images that can be used by other individuals.
+Docker is a very useful to for creating repeatable images that can be used by other individuals. While Docker makes things easier and more reproduceable compose is preferd for visibly making things simple to manage and easier to debug.  
 
 ##### Supported Flags
 
@@ -18,7 +18,7 @@ Do not change unless you know what you are doing.
 * `--net='bridge'`
 
 **Image Name:**
-* `'PENDING_USERNAME_CHANGE/jmusicbot'`
+* `'PENDING_USERNAME_CHANGE/jmusicbot:version'`
 
 **Example**
 
@@ -26,7 +26,7 @@ Do not change unless you know what you are doing.
     --name='<name_of_choice>' \
     --net='bridge' \
     -v '/home/<USERNAME_HOST>/musicbot_data':'/jmb/config':'rw' \
-    'PENDING_USERNAME_CHANGE/jmusicbot'
+    'PENDING_USERNAME_CHANGE/jmusicbot:version'
 
 #### Other Commands
 Other useful useful docker commands.
@@ -35,7 +35,7 @@ Other useful useful docker commands.
 `sudo docker logs <name_of_choice>`
 
 **Start/Stop docker**
-`sudo docker start/stop <name_of_choice>`
+`sudo docker start / stop <name_of_choice>`
 
 **remove installed docker**
 `sudo docker rm <name_of_choice>`
@@ -43,3 +43,6 @@ Other useful useful docker commands.
 **Rmove unused images/networks**
 **Use with caution!!!**
 `sudo docker system prune`
+
+**List Containers**
+`sudo docker ps`
