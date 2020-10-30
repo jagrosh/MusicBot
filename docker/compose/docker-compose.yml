@@ -1,7 +1,7 @@
 version: "3"
 services:
     musicbot:
-        Image: PENDING_USERNAME_CHANGE/jmusicbot:0.3.1
+        Image: PENDING_USERNAME_CHANGE/jmusicbot:latest
         restart: always
         volumes:
             - "./Data/:/jmb/config:rw"
