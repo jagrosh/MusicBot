@@ -4,4 +4,4 @@ services:
         Image: PENDING_USERNAME_CHANGE/jmusicbot:latest
         restart: always
         volumes:
-            - "./Data/:/jmb/config:rw"
+            - "./Data/:/config:rw"

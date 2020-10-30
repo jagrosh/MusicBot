@@ -2,17 +2,16 @@ FROM openjdk:8
 
 LABEL version="Latest"
 
-ENV VERSION="Latest"
+# Empty version will build for latest
+ARG VERSION=""
 
-RUN mkdir /jmb
+COPY get.sh /
 
-COPY get.sh /jmb
+RUN VERSION="${VERSION}" ./get.sh \
+&& rm /get.sh
 
-RUN VERSION="${VERSION}" ./jmb/get.sh \
-&& rm /jmb/get.sh
+VOLUME /config
 
-VOLUME /jmb/config
+WORKDIR /config
 
-WORKDIR /jmb/config
-
-CMD [ "java", "-jar", "-Dnogui=true", "/jmb/JMusicBot.jar" ]
+CMD [ "java", "-jar", "-Dnogui=true", "/JMusicBot.jar" ]
