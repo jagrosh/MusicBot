@@ -1,15 +1,18 @@
-FROM openjdk
+FROM openjdk:8
 
-LABEL version="0.3.1"
+LABEL version="Latest"
 
-ENV JMB_VERSION=0.3.1
+ENV VERSION="Latest"
 
 RUN mkdir /jmb
 
-ADD https://github.com/jagrosh/MusicBot/releases/download/$JMB_VERSION/JMusicBot-$JMB_VERSION.jar /jmb/JMusicBot.jar
+COPY get.sh /jmb
+
+RUN VERSION="${VERSION}" ./jmb/get.sh \
+&& rm /jmb/get.sh
 
 VOLUME /jmb/config
 
 WORKDIR /jmb/config
 
-CMD java -jar -Dnogui=true ../JMusicBot.jar
+CMD [ "java", "-jar", "-Dnogui=true", "/jmb/JMusicBot.jar" ]
