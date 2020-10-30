@@ -5,10 +5,10 @@ LABEL version="Latest"
 # Empty version will build for latest
 ARG VERSION=""
 
-COPY get.sh /
+COPY docker_build.sh /
 
-RUN VERSION="${VERSION}" ./get.sh \
-&& rm /get.sh
+RUN VERSION="${VERSION}" ./docker_build.sh \
+&& rm /docker_build.sh
 
 VOLUME /config
 
