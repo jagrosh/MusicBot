@@ -42,10 +42,10 @@ dockpush(){
 }
 
 innit(){
-    sed -i "s/^ARG VERSION=.*/ARG VERSION=\"${VERSION}\"/g" Dockerfile
+    [ -z ${LATEST} ] || sed -i "s/^ARG VERSION=.*/ARG VERSION=\"${VERSION}\"/g" Dockerfile
     dockbuild
     dockpush
-    sed -i "s/^ARG VERSION=.*/ARG VERSION=\"\"/g" Dockerfile
+    [ -z ${LATEST} ] || sed -i "s/^ARG VERSION=.*/ARG VERSION=\"\"/g" Dockerfile
     exit 0
 }
 
