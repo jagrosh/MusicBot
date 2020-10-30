@@ -38,7 +38,7 @@ dockbuild(){
 
 dockpush(){
     [ -z ${LATEST} ] && docker push "${USERNAME}/${REPONAME}:${VERSION}"
-    [ -z ${LATEST} ] || docker push "${USERNAME}/${REPONAME}:${VERSION}" ; docker push "${USERNAME}/${REPONAME}:latest"
+    [ -z ${LATEST} ] || { docker push "${USERNAME}/${REPONAME}:${VERSION}" ; docker push "${USERNAME}/${REPONAME}:latest" ;}
 }
 
 innit(){
