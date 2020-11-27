@@ -30,7 +30,7 @@ public class SkipCmd extends MusicCommand
     public SkipCmd(Bot bot)
     {
         super(bot);
-        this.name = "skip";
+        this.name = "s";
         this.help = "votes to skip the current song";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
