@@ -16,12 +16,18 @@
 package com.jagrosh.jmusicbot.commands.owner;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.audio.AudioHandler;
+import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
+import net.dv8tion.jda.api.entities.Message;
 
 /**
  *
@@ -35,12 +41,13 @@ public class PlaylistCmd extends OwnerCommand
         this.bot = bot;
         this.guildOnly = false;
         this.name = "playlist";
-        this.arguments = "<append|delete|make|setdefault>";
+        this.arguments = "<append|appendq|delete|make|setdefault>";
         this.help = "playlist management";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.children = new OwnerCommand[]{
             new ListCmd(),
             new AppendlistCmd(),
+            new AppendlistqCmd(),
             new DeletelistCmd(),
             new MakelistCmd(),
             new DefaultlistCmd(bot)
@@ -161,6 +168,75 @@ public class PlaylistCmd extends OwnerCommand
                 {
                     bot.getPlaylistLoader().writePlaylist(pname, builder.toString());
                     event.reply(event.getClient().getSuccess()+" Successfully added "+urls.length+" items to playlist `"+pname+"`!");
+                }
+                catch(IOException e)
+                {
+                    event.reply(event.getClient().getError()+" I was unable to append to the playlist: "+e.getLocalizedMessage());
+                }
+            }
+        }
+    }
+
+    public class AppendlistqCmd extends OwnerCommand 
+    {
+        public AppendlistqCmd()
+        {
+            this.name = "appendq";
+            this.aliases = new String[]{"addq"};
+            this.help = "appends songs in queue to an existing playlist";
+            this.arguments = "<name>";
+            this.guildOnly = false;
+        }
+
+        @Override
+        protected void execute(CommandEvent event) 
+        {
+            String[] parts = event.getArgs().split("\\s+", 2);
+            if(parts.length<1)
+            {
+                event.reply(event.getClient().getError()+" Please include a playlist name to add!");
+                return;
+            }
+            String pname = parts[0];
+            Playlist playlist = bot.getPlaylistLoader().getPlaylist(pname);
+            if(playlist==null)
+                event.reply(event.getClient().getError()+" Playlist `"+pname+"` doesn't exist!");
+            else
+            {
+                AudioHandler ah = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
+                List<QueuedTrack> list = ah.getQueue().getList();
+                if(list.isEmpty())
+                {
+                    Message nowp = ah.getNowPlaying(event.getJDA());
+                    if(nowp==null)
+                    {
+                        event.reply(event.getClient().getWarning() + " There is no music in the queue!");
+                        return;
+                    }
+                }
+                List<AudioTrack> al = new ArrayList<>();
+                al.add(ah.getPlayer().getPlayingTrack());
+                for(QueuedTrack q: list)
+                {
+                    al.add(q.getTrack());
+                }
+                StringBuilder builder = new StringBuilder();
+                playlist.getItems().forEach(item -> builder.append("\r\n").append(item));
+                for(AudioTrack url: al)
+                {
+                    if(url==null)
+                    {
+                        continue;
+                    }
+                    String u = url.getInfo().uri;
+                    if(u.startsWith("<") && u.endsWith(">"))
+                        u = u.substring(1, u.length()-1);
+                    builder.append("\r\n").append(u);
+                }
+                try
+                {
+                    bot.getPlaylistLoader().writePlaylist(pname, builder.toString());
+                    event.reply(event.getClient().getSuccess()+" Successfully added "+al.size()+" items to playlist `"+pname+"`!");
                 }
                 catch(IOException e)
                 {
