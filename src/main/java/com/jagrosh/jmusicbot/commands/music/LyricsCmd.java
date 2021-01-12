@@ -39,13 +39,13 @@ public class LyricsCmd extends MusicCommand
         this.help = "shows the lyrics to the currently-playing song";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
-        this.bePlaying = true;
+        this.guildOnly = false;
+        this.bePlaying = false;
     }
 
     @Override
     public void doCommand(CommandEvent event)
     {
-        event.getChannel().sendTyping().queue();
         String title;
         if(event.getArgs().isEmpty())
             title = ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).getPlayer().getPlayingTrack().getInfo().title;
@@ -67,18 +67,18 @@ public class LyricsCmd extends MusicCommand
             {
                 event.replyWarning("Lyrics for `" + title + "` found but likely not correct: " + lyrics.getURL());
             }
-            else if(lyrics.getContent().length()>2000)
+            else if(lyrics.getContent().length()>2048)
             {
                 String content = lyrics.getContent().trim();
-                while(content.length() > 2000)
+                while(content.length() > 2048)
                 {
-                    int index = content.lastIndexOf("\n\n", 2000);
+                    int index = content.lastIndexOf("\n\n", 2048);
                     if(index == -1)
-                        index = content.lastIndexOf("\n", 2000);
+                        index = content.lastIndexOf("\n", 2048);
                     if(index == -1)
-                        index = content.lastIndexOf(" ", 2000);
+                        index = content.lastIndexOf(" ", 2048);
                     if(index == -1)
-                        index = 2000;
+                        index = 2048;
                     event.reply(eb.setDescription(content.substring(0, index).trim()).build());
                     content = content.substring(index).trim();
                     eb.setAuthor(null).setTitle(null, null);

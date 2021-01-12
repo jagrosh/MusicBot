@@ -37,6 +37,7 @@ public class RemoveCmd extends MusicCommand
         this.help = "removes a song from the queue";
         this.arguments = "<position|ALL>";
         this.aliases = bot.getConfig().getAliases(this.name);
+        this.guildOnly = true;
         this.beListening = true;
         this.bePlaying = true;
     }
