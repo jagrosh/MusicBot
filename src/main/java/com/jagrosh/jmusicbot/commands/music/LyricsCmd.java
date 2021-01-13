@@ -46,47 +46,75 @@ public class LyricsCmd extends MusicCommand
     @Override
     public void doCommand(CommandEvent event)
     {
+        event.getChannel().sendTyping().queue();
         String title;
         if(event.getArgs().isEmpty())
-            title = ((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).getPlayer().getPlayingTrack().getInfo().title;
+        {
+            if(event.getChannelType().isGuild())
+                try {
+                    title = ((AudioHandler) event.getGuild().getAudioManager().getSendingHandler()).getPlayer().getPlayingTrack().getInfo().title;
+                } catch (NullPointerException e) {
+                    event.replyError("Please enter the song name!");
+                    return;
+                }
+            else {
+                event.replyError("Please enter the song name!");
+                return;
+            }
+        }
         else
             title = event.getArgs();
-        client.getLyrics(title).thenAccept(lyrics -> 
+        client.getLyrics(title).thenAccept(lyrics ->
         {
             if(lyrics == null)
             {
                 event.replyError("Lyrics for `" + title + "` could not be found!" + (event.getArgs().isEmpty() ? " Try entering the song name manually (`lyrics [song name]`)" : ""));
                 return;
             }
-
-            EmbedBuilder eb = new EmbedBuilder()
-                    .setAuthor(lyrics.getAuthor())
-                    .setColor(event.getSelfMember().getColor())
-                    .setTitle(lyrics.getTitle(), lyrics.getURL());
-            if(lyrics.getContent().length()>15000)
-            {
+            String content = lyrics.getContent().trim();
+            if (content.length() > 15000) {
                 event.replyWarning("Lyrics for `" + title + "` found but likely not correct: " + lyrics.getURL());
+                return;
             }
-            else if(lyrics.getContent().length()>2048)
-            {
-                String content = lyrics.getContent().trim();
-                while(content.length() > 2048)
-                {
-                    int index = content.lastIndexOf("\n\n", 2048);
-                    if(index == -1)
-                        index = content.lastIndexOf("\n", 2048);
-                    if(index == -1)
-                        index = content.lastIndexOf(" ", 2048);
-                    if(index == -1)
-                        index = 2048;
-                    event.reply(eb.setDescription(content.substring(0, index).trim()).build());
-                    content = content.substring(index).trim();
-                    eb.setAuthor(null).setTitle(null, null);
-                }
-                event.reply(eb.setDescription(content).build());
+            if(event.getChannelType().isGuild()) {
+                EmbedBuilder eb = new EmbedBuilder()
+                        .setAuthor(lyrics.getAuthor())
+                        .setColor(event.getSelfMember().getColor())
+                        .setTitle(lyrics.getTitle(), lyrics.getURL());
+                if (content.length() > 2048) {
+                    while (content.length() > 2048) {
+                        int index = content.lastIndexOf("\n\n", 2048);
+                        if (index == -1)
+                            index = content.lastIndexOf("\n", 2048);
+                        if (index == -1)
+                            index = content.lastIndexOf(" ", 2048);
+                        if (index == -1)
+                            index = 2048;
+                        event.reply(eb.setDescription(content.substring(0, index).trim()).build());
+                        content = content.substring(index).trim();
+                        eb.setAuthor(null).setTitle(null, null);
+                    }
+                    event.reply(eb.setFooter("Powered by " + lyrics.getSource()).setDescription(content.trim()).build());
+                } else
+                    event.reply(eb.setFooter("Powered by " + lyrics.getSource()).setDescription(content).build());
             }
-            else
-                event.reply(eb.setDescription(lyrics.getContent()).build());
+            else {
+                if (content.length() > 2000) {
+                    while (content.length() > 2000) {
+                        int index = content.lastIndexOf("\n\n", 2000);
+                        if (index == -1)
+                            index = content.lastIndexOf("\n", 2000);
+                        if (index == -1)
+                            index = content.lastIndexOf(" ", 2000);
+                        if (index == -1)
+                            index = 2000;
+                        event.reply(content.substring(0, index).trim());
+                        content = content.substring(index).trim();
+                    }
+                    event.reply(content.trim());
+                } else
+                    event.reply(content);
+            }
         });
     }
 }
