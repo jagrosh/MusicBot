@@ -22,5 +22,6 @@ How this feature would be used:
 **Additional context**
 Add any other context or screenshots about the feature request here.
 
-**Have you confirmed that this idea is not already described here?**
-https://github.com/jagrosh/MusicBot/projects/1
+**Please check the following links to confirm that your feature has not already been requested:**
+https://github.com/jagrosh/MusicBot/labels/enhancement
+https://github.com/jagrosh/MusicBot/wiki/Things-That-Won%27t-Be-Added
