@@ -18,15 +18,18 @@ package com.jagrosh.jmusicbot.commands.dj;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.DJCommand;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.managers.AudioManager;
+
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  *
  * @author UnrealValentin
  */
-public class JoinCmd extends DJCommand 
+public class JoinCmd extends DJCommand
 {
 
     public JoinCmd(Bot bot)
@@ -36,17 +39,49 @@ public class JoinCmd extends DJCommand
         this.help = "makes the bot join a voice channel";
         this.arguments = "[channel]";
         this.aliases = bot.getConfig().getAliases(this.name);
-        this.bePlaying = true;
+        this.bePlaying = false;
+        this.beListening = false;
     }
 
     @Override
-    public void doCommand(CommandEvent event) 
+    public void doCommand(CommandEvent event)
     {
 
         AudioManager manager = event.getGuild().getAudioManager();
-        VoiceChannel vc = event.getMember().getVoiceState().getChannel();
+        VoiceChannel vc;
 
-        manager.openAudioConnection(vc);
+        if(event.getArgs().isEmpty()) {
+
+            vc = Objects.requireNonNull(event.getMember().getVoiceState()).getChannel();
+
+        } else {
+
+            // I made the code simple cause I don't think someone will have multiple channels with the same name...
+            // I just hope we don't need a menu like in search here!
+
+            Optional<VoiceChannel> maybe = event.getGuild().getVoiceChannels().stream()
+                    .filter(voiceChannel -> voiceChannel.getName().equalsIgnoreCase(event.getArgs())).findFirst();
+
+            if(maybe.isPresent()) {
+                vc = maybe.get();
+            } else {
+                event.reply(":x: Channel not found! Check your spelling!");
+                return;
+            }
+
+        }
+
+        if (vc == null) {
+            event.reply(":x: You need to be in a channel to use this or provide a Voice Channel for the bot to join!");
+        }
+
+        try {
+            manager.openAudioConnection(vc);
+        } catch (PermissionException permissionException) {
+            event.reply(event.getClient().getError()+" I am unable to connect to **"+vc.getName()+"**! I don't have the permissions!");
+            return;
+        }
+
         event.reply("Joined " + vc.getName());
 
     }

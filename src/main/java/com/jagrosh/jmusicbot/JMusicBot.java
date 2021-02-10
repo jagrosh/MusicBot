@@ -113,6 +113,7 @@ public class JMusicBot
 
                         new ForceRemoveCmd(bot),
                         new ForceskipCmd(bot),
+                        new JoinCmd(bot),
                         new MoveTrackCmd(bot),
                         new PauseCmd(bot),
                         new PlaynextCmd(bot),
@@ -120,7 +121,6 @@ public class JMusicBot
                         new SkiptoCmd(bot),
                         new StopCmd(bot),
                         new VolumeCmd(bot),
-                        new JoinCmd(bot),
                         
                         new PrefixCmd(bot),
                         new SetdjCmd(bot),
