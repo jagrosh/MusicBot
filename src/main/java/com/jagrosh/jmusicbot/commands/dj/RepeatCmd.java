@@ -68,7 +68,7 @@ public class RepeatCmd extends DJCommand
             return;
         }
         settings.setRepeatMode(value);
-        event.replySuccess("Repeat mode is now `"+value+"`");
+        event.replySuccess("Repeat mode is now `"+value.getUserFriendlyName()+"`");
     }
 
     @Override
