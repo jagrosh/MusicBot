@@ -33,7 +33,8 @@ public class JoinCmd extends DJCommand
     {
         super(bot);
         this.name = "join";
-        this.help = "moves the bot to your channel";
+        this.help = "makes the bot join a voice channel";
+        this.arguments = "[channel]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.bePlaying = true;
     }
