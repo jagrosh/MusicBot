@@ -45,22 +45,22 @@ public class RepeatCmd extends DJCommand
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
         if(event.getArgs().isEmpty())
         {
-            if(settings.getRepeatMode() == RepeatMode.Off)
-                value = RepeatMode.On;
+            if(settings.getRepeatMode() == RepeatMode.OFF)
+                value = RepeatMode.ON;
             else
-                value = RepeatMode.Off;
+                value = RepeatMode.OFF;
         }
         else if(event.getArgs().equalsIgnoreCase("true") || event.getArgs().equalsIgnoreCase("on"))
         {
-            value = RepeatMode.On;
+            value = RepeatMode.ON;
         }
         else if(event.getArgs().equalsIgnoreCase("false") || event.getArgs().equalsIgnoreCase("off"))
         {
-            value = RepeatMode.Off;
+            value = RepeatMode.OFF;
         }
         else if(event.getArgs().equalsIgnoreCase("one") || event.getArgs().equalsIgnoreCase("single"))
         {
-            value = RepeatMode.One;
+            value = RepeatMode.ONE;
         }
         else
         {

@@ -116,6 +116,6 @@ public class QueueCmd extends MusicCommand
         }
         return FormatUtil.filter(sb.append(success).append(" Current Queue | ").append(songslength)
                 .append(" entries | `").append(FormatUtil.formatTime(total)).append("` ")
-                .append(repeatmode!=RepeatMode.Off ? "| "+(repeatmode==RepeatMode.On ? REPEAT : REPEAT_ONE) : "").toString());
+                .append(repeatmode.getEmoji() != null ? "| "+repeatmode.getEmoji() : "").toString());
     }
 }

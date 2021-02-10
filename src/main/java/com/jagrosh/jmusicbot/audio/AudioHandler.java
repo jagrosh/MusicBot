@@ -157,12 +157,13 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
     {
         RepeatMode repeatMode = manager.getBot().getSettingsManager().getSettings(guildId).getRepeatMode();
         // if the track ended normally, and we're in repeat mode, re-add it to the queue
-        if(endReason==AudioTrackEndReason.FINISHED && repeatMode != RepeatMode.Off)
+        if(endReason==AudioTrackEndReason.FINISHED && repeatMode != RepeatMode.OFF)
         {
-            if(repeatMode == RepeatMode.On)
-                queue.add(new QueuedTrack(track.makeClone(), track.getUserData(Long.class)==null ? 0L : track.getUserData(Long.class)));
+            QueuedTrack clone = new QueuedTrack(track.makeClone(), track.getUserData(Long.class)==null ? 0L : track.getUserData(Long.class));
+            if(repeatMode == RepeatMode.ON)
+                queue.add(clone);
             else
-                queue.addAt(0, new QueuedTrack(track.makeClone(), track.getUserData(Long.class)==null ? 0L : track.getUserData(Long.class)));
+                queue.addAt(0, clone);
         }
         
         if(queue.isEmpty())
