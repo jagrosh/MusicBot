@@ -39,7 +39,8 @@ public class JoinCmd extends DJCommand
     }
 
     @Override
-    public void doCommand(CommandEvent event) {
+    public void doCommand(CommandEvent event) 
+    {
 
         AudioManager manager = event.getGuild().getAudioManager();
         VoiceChannel vc = event.getMember().getVoiceState().getChannel();
