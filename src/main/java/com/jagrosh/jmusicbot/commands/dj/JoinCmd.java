@@ -22,7 +22,12 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-public class JoinCmd extends DJCommand {
+/**
+ *
+ * @author UnrealValentin
+ */
+public class JoinCmd extends DJCommand 
+{
 
     public JoinCmd(Bot bot)
     {
