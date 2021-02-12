@@ -1,0 +1,10 @@
+{
+  "name": "JMusicBot",
+  "description": "Music bot for Discord",
+  "repository": "https://github.com/jagrosh/MusicBot",
+  "keywords": [
+    "java",
+    "discord",
+    "music bot"
+  ]
+}

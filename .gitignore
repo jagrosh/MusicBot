@@ -2,6 +2,6 @@
 /target/
 /Playlists/
 /test/
-*.json
-*.txt
+/.idea/
+*.iml
 nb*.xml

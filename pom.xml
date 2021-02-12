@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.jagrosh</groupId>
     <artifactId>JMusicBot</artifactId>
-    <version>Snapshot</version>
+    <version>0.3.3</version>
     <packaging>jar</packaging>
-    
+
     <repositories>
         <repository>
             <id>central</id>
@@ -18,11 +20,11 @@
             <url>https://dl.bintray.com/sedmelluq/com.sedmelluq</url>
         </repository>
     </repositories>
-    
+
     <dependencies>
         <dependency>
-            <groupId>net.dv8tion</groupId> 
-            <artifactId>JDA</artifactId> 
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
             <version>4.2.0_227</version>
         </dependency>
         <dependency>
@@ -69,7 +71,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
       <plugins>
         <plugin>
@@ -111,10 +113,13 @@
         </plugin>
       </plugins>
     </build>
-    
+
     <properties>
+        <java.version>1.8</java.version>
+        <resource.delimiter>@</resource.delimiter>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 </project>
