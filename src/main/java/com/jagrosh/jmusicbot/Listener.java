@@ -17,6 +17,10 @@ package com.jagrosh.jmusicbot;
 
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import java.util.concurrent.TimeUnit;
+
+import com.jagrosh.jmusicbot.utils.SplitPixlMiscUtil;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
@@ -24,6 +28,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.Logger;
@@ -51,7 +56,7 @@ public class Listener extends ListenerAdapter
             log.warn("This bot is not on any guilds! Use the following link to add the bot to your guilds!");
             log.warn(event.getJDA().getInviteUrl(JMusicBot.RECOMMENDED_PERMS));
         }
-        credit(event.getJDA());
+//        credit(event.getJDA());
         event.getJDA().getGuilds().forEach((guild) -> 
         {
             try
@@ -77,7 +82,7 @@ public class Listener extends ListenerAdapter
                     if(latestVersion!=null && !currentVersion.equalsIgnoreCase(latestVersion))
                     {
                         String msg = String.format(OtherUtil.NEW_VERSION_AVAILABLE, currentVersion, latestVersion);
-                        owner.openPrivateChannel().queue(pc -> pc.sendMessage(msg).queue());
+//                        owner.openPrivateChannel().queue(pc -> pc.sendMessage(msg).queue());
                     }
                 }
             }, 0, 24, TimeUnit.HOURS);
@@ -96,11 +101,11 @@ public class Listener extends ListenerAdapter
         bot.shutdown();
     }
 
-    @Override
-    public void onGuildJoin(GuildJoinEvent event) 
-    {
-        credit(event.getJDA());
-    }
+//    @Override
+//    public void onGuildJoin(GuildJoinEvent event)
+//    {
+//        credit(event.getJDA());
+//    }
     
     // make sure people aren't adding clones to dbots
     private void credit(JDA jda)
@@ -113,5 +118,10 @@ public class Listener extends ListenerAdapter
         jda.getTextChannelById(119222314964353025L)
                 .sendMessage("This account is running JMusicBot. Please do not list bot clones on this server, <@"+bot.getConfig().getOwnerId()+">.").complete();
         dbots.leave().queue();
+    }
+
+    @Override
+    public void onMessageReceived(MessageReceivedEvent event) {
+        SplitPixlMiscUtil.theVoidChannel(event);
     }
 }

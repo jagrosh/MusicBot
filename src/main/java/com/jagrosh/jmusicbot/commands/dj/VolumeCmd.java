@@ -34,7 +34,7 @@ public class VolumeCmd extends DJCommand
         this.name = "volume";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.help = "sets or shows volume";
-        this.arguments = "[0-150]";
+        this.arguments = "[volume]";
     }
 
     @Override
@@ -55,10 +55,13 @@ public class VolumeCmd extends DJCommand
             }catch(NumberFormatException e){
                 nvolume = -1;
             }
-            if(nvolume<0 || nvolume>150)
-                event.reply(event.getClient().getError()+" Volume must be a valid integer between 0 and 150!");
+            if(nvolume<0)
+                event.reply(event.getClient().getError()+" Volume must be a valid integer greater than 0!");
+            else if (nvolume > 150 && !settings.getForbiddenAudio())
+                event.replyError("Can't set the volume that high because forbidden audio is not enabled!");
             else
             {
+                nvolume = Math.abs(nvolume);
                 handler.getPlayer().setVolume(nvolume);
                 settings.setVolume(nvolume);
                 event.reply(FormatUtil.volumeIcon(nvolume)+" Volume changed from `"+volume+"` to `"+nvolume+"`");

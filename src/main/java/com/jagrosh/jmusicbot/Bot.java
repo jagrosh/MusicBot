@@ -19,6 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
+import com.jagrosh.jmusicbot.audio.FilterManager;
 import com.jagrosh.jmusicbot.audio.NowplayingHandler;
 import com.jagrosh.jmusicbot.audio.PlayerManager;
 import com.jagrosh.jmusicbot.gui.GUI;
@@ -28,6 +29,8 @@ import java.util.Objects;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+
+import javax.swing.*;
 
 /**
  *
@@ -42,6 +45,7 @@ public class Bot
     private final PlayerManager players;
     private final PlaylistLoader playlists;
     private final NowplayingHandler nowplaying;
+    private final FilterManager filterManager;
     
     private boolean shuttingDown = false;
     private JDA jda;
@@ -58,6 +62,7 @@ public class Bot
         this.players.init();
         this.nowplaying = new NowplayingHandler(this);
         this.nowplaying.init();
+        this.filterManager = new FilterManager(this);
     }
     
     public BotConfig getConfig()
@@ -148,5 +153,9 @@ public class Bot
     public void setGUI(GUI gui)
     {
         this.gui = gui;
+    }
+
+    public FilterManager getFilterManager() {
+        return filterManager;
     }
 }
