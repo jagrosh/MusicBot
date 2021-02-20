@@ -99,7 +99,7 @@ public class SettingsManager implements GuildSettingsManager
                 o.put("repeat", true);
             if(s.getPrefix() != null)
                 o.put("prefix", s.getPrefix());
-            if(s.getRepeatMode())
+            if(s.getForbiddenAudio())
                 o.put("forbidden_audio", true);
             obj.put(Long.toString(key), o);
         });

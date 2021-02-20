@@ -41,6 +41,7 @@ public class FilterCmd extends FilterCommand {
                 new FilterBitCrush(bot),
                 new FilterPitch(bot),
                 new FilterKaraoke(bot),
+                new FilterClip(bot),
                 new FilterUndo(bot),
                 new FilterRemove(bot),
                 new FilterReset(bot)
@@ -227,6 +228,28 @@ public class FilterCmd extends FilterCommand {
 //                return;
 //            }
             AudioFilterConfig conf = new KaraokeConfig();
+            bot.getFilterManager().addFilter(event.getGuild().getIdLong(), conf);
+            event.replySuccess("Added to filter stack: **" + conf.getDescription() + "**");
+        }
+    }
+
+    private class FilterClip extends FilterCommand {
+        FilterClip(Bot bot) {
+            super(bot);
+            this.name = "clip";
+            this.aliases = new String[]{};
+        }
+
+        @Override
+        public void doCommand(CommandEvent event) {
+//            float vol = 1.5f;
+//            if (!event.getArgs().isEmpty())
+//                vol = Float.parseFloat(event.getArgs());
+//            if (vol <= 0) {
+//                event.replyError("Argument must be >= 0.");
+//                return;
+//            }
+            AudioFilterConfig conf = new ClipPcmAudiofilter.Config();
             bot.getFilterManager().addFilter(event.getGuild().getIdLong(), conf);
             event.replySuccess("Added to filter stack: **" + conf.getDescription() + "**");
         }
