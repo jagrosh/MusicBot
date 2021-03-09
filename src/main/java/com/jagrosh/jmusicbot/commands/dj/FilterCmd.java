@@ -30,7 +30,7 @@ public class FilterCmd extends FilterCommand {
     public FilterCmd(Bot bot) {
         super(bot);
         this.name = "filter";
-        this.help = "penis";
+        this.help = "add some audio filters";
         this.aliases = new String[]{"f"};
         this.bePlaying = false;
         this.children = new Command[]{

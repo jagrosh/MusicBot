@@ -147,8 +147,10 @@ public class JMusicBot
                         new ShutdownCmd(bot),
 
                         new SuggestCmd(),
-                        new BeepCmd(),
-                        new ZapCmd()
+                        new PickRandomCmd(),
+                        new YggIconCmd(bot),
+                        new GuildLookupCmd(bot),
+                        new CorruptCmd()
 
                 );
         if(config.useEval())
