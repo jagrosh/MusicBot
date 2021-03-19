@@ -110,6 +110,7 @@ public class JMusicBot
                         new SCSearchCmd(bot),
                         new ShuffleCmd(bot),
                         new SkipCmd(bot),
+                        new TiliiCmd(bot),
 
                         new ForceRemoveCmd(bot),
                         new ForceskipCmd(bot),
