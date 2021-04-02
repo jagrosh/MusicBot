@@ -34,6 +34,7 @@ public class SkipCmd extends MusicCommand
         this.help = "votes to skip the current song";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
+        this.guildOnly = true;
         this.bePlaying = true;
     }
 

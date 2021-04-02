@@ -49,6 +49,7 @@ public class SearchCmd extends MusicCommand
         this.aliases = bot.getConfig().getAliases(this.name);
         this.arguments = "<query>";
         this.help = "searches Youtube for a provided query";
+        this.guildOnly = true;
         this.beListening = true;
         this.bePlaying = false;
         this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
