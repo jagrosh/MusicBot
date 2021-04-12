@@ -18,7 +18,8 @@ package com.jagrosh.jmusicbot.audio;
 import com.jagrosh.jmusicbot.utils.TimeUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.jagrosh.jmusicbot.queue.Queueable;
-import net.dv8tion.jda.core.entities.User;
+import com.jagrosh.jmusicbot.utils.FormatUtil;
+import net.dv8tion.jda.api.entities.User;
 
 /**
  *

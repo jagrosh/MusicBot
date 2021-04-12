@@ -17,15 +17,17 @@ package com.jagrosh.jmusicbot;
 
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import java.util.concurrent.TimeUnit;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.VoiceChannel;
-import net.dv8tion.jda.core.events.ReadyEvent;
-import net.dv8tion.jda.core.events.ShutdownEvent;
-import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
-import net.dv8tion.jda.core.events.message.guild.GuildMessageDeleteEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.ShutdownEvent;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,11 +47,11 @@ public class Listener extends ListenerAdapter
     @Override
     public void onReady(ReadyEvent event) 
     {
-        if(event.getJDA().getGuilds().isEmpty())
+        if(event.getJDA().getGuildCache().isEmpty())
         {
             Logger log = LoggerFactory.getLogger("MusicBot");
             log.warn("This bot is not on any guilds! Use the following link to add the bot to your guilds!");
-            log.warn(event.getJDA().asBot().getInviteUrl(JMusicBot.RECOMMENDED_PERMS));
+            log.warn(event.getJDA().getInviteUrl(JMusicBot.RECOMMENDED_PERMS));
         }
         credit(event.getJDA());
         event.getJDA().getGuilds().forEach((guild) -> 
@@ -89,7 +91,13 @@ public class Listener extends ListenerAdapter
     {
         bot.getNowplayingHandler().onMessageDelete(event.getGuild(), event.getMessageIdLong());
     }
-    
+
+    @Override
+    public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event)
+    {
+        bot.getAloneInVoiceHandler().onVoiceUpdate(event);
+    }
+
     @Override
     public void onShutdown(ShutdownEvent event) 
     {
