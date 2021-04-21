@@ -1,7 +1,8 @@
 version: "3"
 services:
     musicbot:
-        Image: PENDING_USERNAME_CHANGE/jmusicbot:latest
+        Image: jagrosh/jmusicbot
         restart: always
         volumes:
             - "./Data/:/config:rw"
+            - "./Data/:/bot:rw"
