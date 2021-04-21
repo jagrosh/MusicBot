@@ -3,6 +3,9 @@ ___
 **Overview**
 Docker is a very useful to for creating repeatable images that can be used by other individuals. While Docker makes things easier and more reproduceable compose is preferd for visibly making things simple to manage and easier to debug.  
 
+##### UPDATES
+###### April 20, 2021:
+A few things have changed please be sure to read over the recent changes if you are running latest. Older images are not longer valid for use and will be removed on next update. make sure to add A /bot mount so updates can be seamless
 ##### Supported Flags
 
 As this bot has a simple setup all that is needed is to mount a Directory. Place in the configuration file and Playlists folder and it will work just like the normal usual bot.  
