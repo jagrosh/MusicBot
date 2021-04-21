@@ -8,7 +8,10 @@ Docker is a very useful to for creating repeatable images that can be used by ot
 As this bot has a simple setup all that is needed is to mount a Directory. Place in the configuration file and Playlists folder and it will work just like the normal usual bot.  
 
 **Directory to mount:**
+Holds your config:
 * `-v '/path/to/host/':'/config':'rw'` 
+Holds jgrosh music bot jar:
+* `-v '/path/to/host/':'/bot':'rw'`
 
 **Name of docker image:**
 * `--name='musicbot'`
@@ -18,15 +21,16 @@ Do not change unless you know what you are doing.
 * `--net='bridge'`
 
 **Image Name:**
-* `'PENDING_USERNAME_CHANGE/jmusicbot:version'`
+* `'jagrosh/jmusicbot'`
 
 **Example**
 
     sudo docker run -d \
     --name='<name_of_choice>' \
     --net='bridge' \
-    -v '/home/<USERNAME_HOST>/musicbot_data':'/config':'rw' \
-    'PENDING_USERNAME_CHANGE/jmusicbot:version'
+    -v '/home/<USERNAME_HOST>/musicbot_data/config':'/config':'rw' \
+    -v '/home/<USERNAME_HOST>/musicbot_data/bot':'/bot':'rw' \
+    'jagrosh/jmusicbot'
 
 #### Other Commands
 Other useful useful docker commands.
