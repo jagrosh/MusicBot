@@ -9,6 +9,6 @@ VERSION=$(curl -s https://api.github.com/repos/jagrosh/MusicBot/releases/latest 
 
 # checks to see if running version is latest
 
-[ -f "/bot/${VERSION}-JMusicBot.jar" ] && curl -L -o "/bot/${VERSION}-JMusicBot.jar" "https://github.com/jagrosh/MusicBot/releases/download/${VERSION}/JMusicBot-${VERSION}.jar"
+[ -f "/bot/${VERSION}-JMusicBot.jar" ] || curl -L -o "/bot/${VERSION}-JMusicBot.jar" "https://github.com/jagrosh/MusicBot/releases/download/${VERSION}/JMusicBot-${VERSION}.jar"
 
 java -jar -Dnogui=true "/bot/${VERSION}-JMusicBot.jar"
