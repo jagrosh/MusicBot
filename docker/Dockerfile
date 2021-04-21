@@ -1,17 +1,13 @@
 FROM openjdk:10
 
-LABEL version="Latest"
+COPY entrypoint.sh /
 
-# Empty version will build for latest
-ARG VERSION=""
+RUN chmod +x /entrypoint.sh
 
-COPY docker_build.sh /
-
-RUN VERSION="${VERSION}" ./docker_build.sh \
-&& rm /docker_build.sh
+VOLUME /bot
 
 VOLUME /config
 
 WORKDIR /config
 
-CMD [ "java", "-jar", "-Dnogui=true", "/JMusicBot.jar" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
