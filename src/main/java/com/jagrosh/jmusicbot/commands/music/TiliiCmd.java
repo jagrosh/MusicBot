@@ -84,7 +84,7 @@ public class TiliiCmd extends MusicCommand
             event.reply(event.getClient().getWarning()+" Eventually, you might be able to look up song codes on the TILII wiki...");
             return;
         }
-        String args = "https://gta.tilii.tv/media/sound/"+event.getArgs()+".ogg";
+        String args = "https://gta.tilii.tv/media/sound/"+event.getArgs().toLowerCase()+".ogg";
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(args).openConnection();
             connection.setRequestMethod("GET");
@@ -100,7 +100,7 @@ public class TiliiCmd extends MusicCommand
             event.reply(event.getClient().getError() + " Couldn't connect to TILII");
         }
 
-        event.reply(loadingEmoji+" Loading... `["+event.getArgs()+".ogg]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m,event,false)));
+        event.reply(loadingEmoji+" Loading... `["+event.getArgs().toLowerCase()+".ogg]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m,event,false)));
     }
 
     private class ResultHandler implements AudioLoadResultHandler
