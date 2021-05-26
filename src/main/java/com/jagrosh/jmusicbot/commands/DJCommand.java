@@ -35,6 +35,8 @@ public abstract class DJCommand extends MusicCommand
     
     public static boolean checkDJPermission(CommandEvent event)
     {
+        if(event.getAuthor().isBot())
+            return true;
         if(event.getAuthor().getId().equals(event.getClient().getOwnerId()))
             return true;
         if(event.getGuild()==null)
