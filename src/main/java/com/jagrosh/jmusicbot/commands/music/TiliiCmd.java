@@ -31,10 +31,15 @@ import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
@@ -84,14 +89,39 @@ public class TiliiCmd extends MusicCommand
             event.reply(event.getClient().getWarning()+" Eventually, you might be able to look up song codes on the TILII wiki...");
             return;
         }
-        String args = "https://gta.tilii.tv/media/sound/"+event.getArgs().toLowerCase()+".ogg";
+        String args = "https://media.tilii.tv/media/sound/"+event.getArgs().toLowerCase()+".ogg";
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(args).openConnection();
             connection.setRequestMethod("GET");
+            connection.setRequestProperty("User-Agent", "Java/MotherMouse");
             connection.connect();
             int code = connection.getResponseCode();
-            if(code != 200) {
+            if(code == 404) {
                 event.reply(event.getClient().getError() + " Invalid song code");
+                return;
+            } else if (code == 403) {
+                event.reply(event.getClient().getError() + "I got blacklisted again <:1robLOL:631970926472200234>\n#BlameCitra");
+                return;
+            } else if (code != 200) {
+                StringBuilder builder = new StringBuilder();
+                builder.append(code).append(" ").append(connection.getResponseMessage()).append('\n');
+                for(Map.Entry<String, List<String>> etnry : connection.getHeaderFields().entrySet()){
+                    if(etnry.getKey() == null) continue;
+                    builder.append(etnry.getKey()).append(": ");
+                    Iterator<String> headerValueIterator = etnry.getValue().iterator();
+                    if(headerValueIterator.hasNext()) {
+                        builder.append(headerValueIterator.next());
+                        while (headerValueIterator.hasNext()) builder.append(", ").append(headerValueIterator.next());
+                    }
+                    builder.append('\n');
+                }
+                builder.append('\n');
+                BufferedReader in = new BufferedReader(new InputStreamReader(code < HttpURLConnection.HTTP_BAD_REQUEST ? connection.getInputStream() : connection.getErrorStream()));
+                String currentLine;
+                while ((currentLine = in.readLine()) != null) builder.append(currentLine);
+                in.close();
+
+                event.reply(event.getClient().getError() + "Unknown error:```yaml\n"+builder.toString()+"```<@138345057072840704>");
                 return;
             }
         } catch (MalformedURLException e) {
