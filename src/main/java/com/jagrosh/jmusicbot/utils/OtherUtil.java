@@ -153,7 +153,7 @@ public class OtherUtil
     public static String checkVersion(Prompt prompt)
     {
         // Get current version number
-        String version = 0.3.5;
+        String version = "0.3.5";
         
         // Check for new version
         String latestVersion = getLatestVersion();
