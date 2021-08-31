@@ -1,3 +1,4 @@
+[![CircleCI](https://circleci.com/gh/rockrevenchy/MusicBot/tree/master.svg?style=svg)](https://circleci.com/gh/rockrevenchy/MusicBot/tree/master)
 <img align="right" src="https://i.imgur.com/zrE80HY.png" height="200" width="200">
 
 # JMusicBot - Mutiny Edit
