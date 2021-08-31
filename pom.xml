@@ -17,11 +17,6 @@
             <name>bintray</name>
             <url>https://jcenter.bintray.com</url>
         </repository>
-       <repository>
-            <id>bintray-sedmelluq-com.sedmelluq</id>
-            <name>bintray</name>
-            <url>https://dl.bintray.com/sedmelluq/com.sedmelluq</url>
-        </repository>
     </repositories>
     
     <dependencies>
