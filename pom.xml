@@ -13,6 +13,11 @@
             <url>https://m2.dv8tion.net/releases</url>
         </repository>
         <repository>
+            <id>rockrev</id>
+            <name>rockrevenchy-ddns</name>
+            <url>https://rockrevenchy.ddns.net/index.php/apps/sharingpath/rockrevenchy/Documents/LavaPlayer-Natives-Extra/</url>
+        </repository>
+        <repository>
             <id>central</id>
             <name>bintray</name>
             <url>https://jcenter.bintray.com</url>
