@@ -3,9 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.jagrosh</groupId>
     <artifactId>JMusicBot</artifactId>
-    <version>Snapshot</version>lavaplayer-natives-extra
+    <version>Snapshot</version>
     <packaging>jar</packaging>
-    lavaplayer-natives-extra
     <repositories>
         <repository>
             <id>dv8tion</id>
