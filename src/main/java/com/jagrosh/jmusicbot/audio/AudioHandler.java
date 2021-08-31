@@ -162,6 +162,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         
         if(queue.isEmpty())
         {
+         Thread.sleep(60000);
             if(!playFromDefault())
             {
                 manager.getBot().getNowplayingHandler().onTrackUpdate(guildId, null, this);
