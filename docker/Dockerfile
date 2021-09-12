@@ -1,8 +1,7 @@
 FROM alpine:3
 
-RUN apk update \
- && apk add sudo \
- && apk add openjdk11-jre \
+RUN apk --no-cache add sudo \
+ && apk --no-cache add openjdk11-jre \
  && addgroup -g 1000 --system musicbot \
  && adduser -u 1000 --system --no-create-home musicbot --ingroup musicbot \
  && mkdir /bot \
