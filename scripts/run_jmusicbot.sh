@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/jar
 
 # This will have this script check for a new version of JMusicBot every
 # startup (and download it if the latest version isn't currently downloaded)
