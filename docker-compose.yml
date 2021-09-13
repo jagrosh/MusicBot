@@ -1,0 +1,10 @@
+version: "3"
+services:
+    musicbot:
+        build: .
+        image: lolepopie/musicbot
+        restart: unless-stopped
+        container_name: musicbot
+        volumes:
+            - ./config.txt:/config.txt
+
