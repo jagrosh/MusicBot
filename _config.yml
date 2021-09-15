@@ -3,8 +3,11 @@ description: "🎶 A Discord music bot that’s easy to set up and run yourself!
 remote_theme: pmarsceill/just-the-docs
 color_scheme: "dark"
 search_enabled: true
+search_tokenizer_separator: /[\s/]+/
 url: "https://jmusicbot.com"
 baseurl: ""
 aux_links:
-    "Latest Release":
+    "<img src="https://img.shields.io/github/release/jagrosh/MusicBot.svg"/>":
       - "https://github.com/jagrosh/MusicBot/releases/latest"
+plugins:
+  - jekyll-seo-tag
