@@ -3,7 +3,7 @@ layout: default
 title: Adding Your Bot To Your Server
 nav_order: 5
 description: "Instructions for how to add your Discord bot to your Discord server"
-permalink: /getting-a-bot-token
+permalink: /adding-your-bot
 ---
 
 **If you don't have a bot application created, please reference [[Getting a Bot Token]] for how to set one up!**

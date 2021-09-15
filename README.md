@@ -2,7 +2,7 @@
 layout: default
 title: Home
 nav_order: 1
-description: "Home"
+description: "🎶 A Discord music bot that’s easy to set up and run yourself!"
 permalink: /
 ---
 

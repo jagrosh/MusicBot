@@ -27,7 +27,7 @@ token = MJHJkljflksdjfCoolTokenDudeILikeItkasdk
 owner = 113156185389092864
 prefix = "!"
 ```
-> ⚠ **Note:** You can also copy & paste a template from the [[Example Config]]
+> ⚠ **Note:** You can also copy & paste a template from the [Example Config](/config)
 
 <br>
 
@@ -43,4 +43,4 @@ prefix = "!"
 
 ## 5️⃣ Add your bot to your server
 * When the bot starts, if it hasn't been added to any servers yet, it will provide you with a link in the console.
-* Alternatively, follow these instructions (with images): [[Adding Your Bot To Your Server]]
+* Alternatively, follow these instructions (with images): [Adding Your Bot To Your Server](/adding-your-bot)
