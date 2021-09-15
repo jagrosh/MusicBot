@@ -1,3 +1,11 @@
+---
+layout: default
+title: Advanced Config Options
+nav_order: 11
+description: "Configuration settings for advanced JMusicBot users"
+permalink: /advanced-config
+---
+
 ## Specify a different config file
 Setting a different file to use as the config file is possible via the `-Dconfig=/path/to/config.file` command-line option. For example:
 ```bash

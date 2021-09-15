@@ -1,3 +1,11 @@
+---
+layout: default
+title: Finding Your User ID
+nav_order: 4
+description: "Instructions for finding your Discord user ID"
+permalink: /finding-your-user-id
+---
+
 This page describes how to find your unique User ID. Any of these methods work, and you only need to do one of them.
 
 ## Method 1

@@ -1,3 +1,11 @@
+---
+layout: default
+title: Things that Won't be Added
+nav_order: 14
+description: "Things that will not be added to JMusicBot"
+permalink: /things-that-wont-be-added
+---
+
 ### Non-Music Commands/Features
 JMusicBot is a music bot, so features that have no relation to music (such as moderation or image-generation features) will not be added. If you need a bot that does things other than music, consider searching on the [Discord Bots website](https://discord.bots.gg).
 

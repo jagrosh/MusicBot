@@ -1,3 +1,11 @@
+---
+layout: default
+title: Hosting
+nav_order: 10
+description: "Recommended hosts for JMusicBot"
+permalink: /hosting
+---
+
 _I want to run this bot 24/7! How can I do this?_
 
 Well, there are many options available; I've described several of the most-common options below, including their pros (+) and cons (-).
@@ -74,6 +82,13 @@ Well, there are many options available; I've described several of the most-commo
 ### Glitch
 ```diff
 - No file write access (server settings can't be changed)
+- Usage limits
+- Poor performance
+```
+
+### Replit
+```diff
+- No permanent file write access (server settings can't be saved)
 - Usage limits
 - Poor performance
 ```

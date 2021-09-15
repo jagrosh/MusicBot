@@ -1,3 +1,11 @@
+---
+layout: default
+title: Getting a Bot Token
+nav_order: 5
+description: "Instructions for how to create and obtain a Discord bot token"
+permalink: /getting-a-bot-token
+---
+
 This page will describe, in detail, how to obtain a token for your music bot.
 
 1. Navigate to your [Applications Page](https://discordapp.com/login?redirect_to=/developers/applications) (you might need to log in first)

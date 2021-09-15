@@ -1,3 +1,11 @@
+---
+layout: default
+title: Troubleshooting
+nav_order: 9
+description: "Common troubleshooting tasks for JMusicBot"
+permalink: /troubleshooting
+---
+
 ## ⚠ Music doesn't play if I set the volume to something other than 100!
 If music stops playing when you change the volume, this means that an internal library could not be loaded. This means you are either using an unsupported java version or the wrong jar file.
 * **Check your Java version** - You might be running an unsupported version. Try re-installing the latest 64-bit version of java.

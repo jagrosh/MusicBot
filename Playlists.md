@@ -1,3 +1,11 @@
+---
+layout: default
+title: Playlists
+nav_order: 6
+description: "Playlists on JMusicBot"
+permalink: /playlists
+---
+
 ## 📃 Youtube Playlists
 To play a youtube playlist, all you need is the `play` command and a playlist link or playlist ID.
 

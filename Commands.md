@@ -1,3 +1,11 @@
+---
+layout: default
+title: Commands
+nav_order: 7
+description: "Full command reference for JMusicBot"
+permalink: /commands
+---
+
 This page contains the full list of commands. These commands (and descriptions) can also be seen via the `help` command.
 
 Arguments surrounded by `<>` are required, and arguments surrounded by `[]` are optional. Do not include `<>` nor `[]` when running commands!

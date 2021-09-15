@@ -1,3 +1,11 @@
+---
+layout: default
+title: Example Config
+nav_order: 8
+description: "Example config file for JMusicBot"
+permalink: /config
+---
+
 ```
 /////////////////////////////////////////////////////////
 // Config for the JMusicBot                            //

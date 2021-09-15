@@ -7,7 +7,7 @@ permalink: /setup
 ---
 
 ## 1️⃣ Install Java
-* Instructions on how to install Java on your system: [[Installing Java]]
+* Instructions on how to install Java on your system: [Installing Java](/installing-java)
 
 <br>
 
@@ -21,7 +21,7 @@ permalink: /setup
 <br>
 
 ## 3️⃣ Edit the config file
-* Fill in the config file (if you downloaded it). If you didn't download it, you will be prompted when you run for the first time. An example `config.txt` is provided below (See [[Getting a Bot Token]] and [[Finding Your User ID]] if you need help with the config).  
+* Fill in the config file (if you downloaded it). If you didn't download it, you will be prompted when you run for the first time. An example `config.txt` is provided below (See [Getting a Bot Token](/getting-a-bot-token) and [Finding Your User ID](/finding-your-user-id) if you need help with the config).  
 ```
 token = MJHJkljflksdjfCoolTokenDudeILikeItkasdk
 owner = 113156185389092864
