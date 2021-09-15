@@ -24,7 +24,7 @@ import com.jagrosh.jmusicbot.commands.FilterCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 
 /**
- * @author John Grosh <john.a.grosh@gmail.com>
+ * @author SplitPixl
  */
 public class FilterCmd extends FilterCommand {
     public FilterCmd(Bot bot) {
@@ -55,7 +55,7 @@ public class FilterCmd extends FilterCommand {
             sb.append("`").append(event.getClient().getPrefix()).append(this.getName()).append(" ").append(cmd.getName());
             if (cmd.getArguments() != null)
                 sb.append(" ").append(cmd.getArguments());
-            sb.append("` ").append(cmd.getHelp()).append("\n");
+            sb.append("` ")/*.append(cmd.getHelp())*/.append("\n");
         }
         event.reply(sb.toString());
     }

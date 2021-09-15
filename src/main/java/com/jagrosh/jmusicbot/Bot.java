@@ -28,12 +28,9 @@ import com.jagrosh.jmusicbot.playlist.PlaylistLoader;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
 import java.util.Objects;
 
-import com.jagrosh.jmusicbot.utils.YggdrasilIconManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
-
-import javax.swing.*;
 
 /**
  *
@@ -50,8 +47,7 @@ public class Bot
     private final NowplayingHandler nowplaying;
     private final FilterManager filterManager;
     private final AloneInVoiceHandler aloneInVoiceHandler;
-    private final YggdrasilIconManager yggdrasilIconManager;
-    
+
     private boolean shuttingDown = false;
     private JDA jda;
     private GUI gui;
@@ -70,7 +66,6 @@ public class Bot
         this.filterManager = new FilterManager(this);
         this.aloneInVoiceHandler = new AloneInVoiceHandler(this);
         this.aloneInVoiceHandler.init();
-        this.yggdrasilIconManager = new YggdrasilIconManager(this);
     }
     
     public BotConfig getConfig()
@@ -170,9 +165,5 @@ public class Bot
 
     public FilterManager getFilterManager() {
         return filterManager;
-    }
-
-    public YggdrasilIconManager getYggdrasilIconManager() {
-        return yggdrasilIconManager;
     }
 }

@@ -148,7 +148,6 @@ public class JMusicBot
 
                         new SuggestCmd(),
                         new PickRandomCmd(),
-                        new YggIconCmd(bot),
                         new GuildLookupCmd(bot),
                         new CorruptCmd()
 
