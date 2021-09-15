@@ -1,0 +1,10 @@
+title: JMusicBot
+description: 🎶 A Discord music bot that’s easy to set up and run yourself!
+remote_theme: pmarsceill/just-the-docs
+color_scheme: "dark"
+search_enabled: true
+url: "https://jmusicbot.com"
+baseurl: ""
+aux_links:
+    "Latest Release":
+      - "https://github.com/jagrosh/MusicBot/releases/latest"
