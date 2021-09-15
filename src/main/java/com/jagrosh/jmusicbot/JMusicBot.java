@@ -60,8 +60,7 @@ public class JMusicBot
         Logger log = LoggerFactory.getLogger("Startup");
 
         // create prompt to handle startup
-        Prompt prompt = new Prompt("JMusicBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.",
-                "true".equalsIgnoreCase(System.getProperty("nogui", "true")));
+        Prompt prompt = new Prompt("JMusicBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.");
 
         // get and check latest version
         String version = OtherUtil.checkVersion(prompt);
@@ -69,9 +68,6 @@ public class JMusicBot
         // check for valid java version
         if(!System.getProperty("java.vm.name").contains("64"))
             prompt.alert(Prompt.Level.WARNING, "Java Version", "It appears that you may not be using a supported Java version. Please use 64-bit java.");
-
-        log.info(System.getProperty("java.vm.name"));
-        log.info(System.getProperty("os.arch"));
 
         // load config
         BotConfig config = new BotConfig(prompt);
@@ -85,9 +81,9 @@ public class JMusicBot
         Bot bot = new Bot(waiter, config, settings);
 
         AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself](https://github.com/jagrosh/MusicBot). I have been modified by **SplitPixl#9184** to be more funny.",
-                                new String[]{"audio", "sound", "volume", "funny"},
-                                RECOMMENDED_PERMS);
+                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v"+version+")",
+                new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
+                RECOMMENDED_PERMS);
         aboutCommand.setIsAuthor(false);
         aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
 
@@ -128,10 +124,7 @@ public class JMusicBot
                         new DisconnectAllCmd(bot),
                         new ForbiddenAudioCmd(bot),
                         new VolumeCmd(bot),
-                        new FilterCmd(bot));
-//        cb.addCommands(filterCmd.getChildren());
-
-        cb.addCommands(
+                        new FilterCmd(bot),
                         new PrefixCmd(bot),
                         new SetdjCmd(bot),
                         new SettcCmd(bot),
@@ -144,13 +137,7 @@ public class JMusicBot
                         new SetgameCmd(bot),
                         new SetnameCmd(bot),
                         new SetstatusCmd(bot),
-                        new ShutdownCmd(bot),
-
-                        new SuggestCmd(),
-                        new PickRandomCmd(),
-                        new GuildLookupCmd(bot),
-                        new CorruptCmd()
-
+                        new ShutdownCmd(bot)
                 );
         if(config.useEval())
             cb.addCommand(new EvalCmd(bot));
