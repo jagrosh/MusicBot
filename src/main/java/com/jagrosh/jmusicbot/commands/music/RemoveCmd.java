@@ -80,7 +80,7 @@ public class RemoveCmd extends MusicCommand
             handler.getQueue().remove(pos-1);
             event.replySuccess("Removed **"+qt.getTrack().getInfo().title+"** from the queue");
         }
-        else if(isDJ)
+        else
         {
             handler.getQueue().remove(pos-1);
             User u;
@@ -92,9 +92,9 @@ public class RemoveCmd extends MusicCommand
             event.replySuccess("Removed **"+qt.getTrack().getInfo().title
                     +"** from the queue (requested by "+(u==null ? "someone" : "**"+u.getName()+"**")+")");
         }
-        else
+        /*else
         {
             event.replyError("You cannot remove **"+qt.getTrack().getInfo().title+"** because you didn't add it!");
-        }
+        }*/
     }
 }
