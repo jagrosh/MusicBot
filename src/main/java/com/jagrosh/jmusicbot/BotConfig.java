@@ -67,7 +67,7 @@ public class BotConfig
             if(path.toFile().exists())
             {
                 if(System.getProperty("config.file") == null)
-                    System.setProperty("config.file", System.getProperty("config", "config.txt"));
+                    System.setProperty("config.file", System.getProperty("config", path.toAbsolutePath().toString()));
                 ConfigFactory.invalidateCaches();
             }
             
