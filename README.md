@@ -13,7 +13,7 @@
 
 A cross-platform Discord music bot with a clean interface, and that is easy to set up and run yourself!
 
-[![Setup](http://i.imgur.com/VvXYp5j.png)](https://github.com/jagrosh/MusicBot/wiki/Setup)
+[![Setup](http://i.imgur.com/VvXYp5j.png)](https://jmusicbot.com/setup)
 
 ## Features
   * Easy to run (just make sure Java is installed, and run!)
@@ -51,7 +51,7 @@ JMusicBot supports all sources and formats supported by [lavaplayer](https://git
 ![Loading Example...](https://i.imgur.com/kVtTKvS.gif)
 
 ## Setup
-Please see the [Setup Page](https://github.com/jagrosh/MusicBot/wiki/Setup) in the wiki to run this bot yourself!
+Please see the [Setup Page](https://jmusicbot.com/setup) to run this bot yourself!
 
 ## Questions/Suggestions/Bug Reports
 **Please read the [Issues List](https://github.com/jagrosh/MusicBot/issues) before suggesting a feature**. If you have a question, need troubleshooting help, or want to brainstorm a new feature, please start a [Discussion](https://github.com/jagrosh/MusicBot/discussions). If you'd like to suggest a feature or report a reproducible bug, please open an [Issue](https://github.com/jagrosh/MusicBot/issues) on this repository. If you like this bot, be sure to add a star to the libraries that make this possible: [**JDA**](https://github.com/DV8FromTheWorld/JDA) and [**lavaplayer**](https://github.com/sedmelluq/lavaplayer)!
