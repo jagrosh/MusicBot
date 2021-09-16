@@ -10,18 +10,18 @@ permalink: /
 
 <img align="right" src="https://jmusicbot.com/images/logo.png" style="border:2px solid;border-radius:50px;" height="200" width="200">
 
+[🔢 Setup](/setup){: .btn }  
+[⏰ 24/7 Hosting](/hosting){: .btn }  
+[📃 Playlists](/playlists){: .btn }  
+[📜 Full Command Reference](/commands){: .btn }  
+[⚠ Troubleshooting](/troubleshooting){: .btn }  
+[📥 Support Server](https://discord.gg/0p9LSGoRLu6Pet0k){: .btn }  
+  
 [![Downloads](https://img.shields.io/github/downloads/jagrosh/MusicBot/total.svg)](https://github.com/jagrosh/MusicBot/releases/latest)
 [![Stars](https://img.shields.io/github/stars/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/stargazers)
 [![Release](https://img.shields.io/github/release/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/releases/latest)
 [![License](https://img.shields.io/github/license/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/blob/master/LICENSE)
 [![Discord](https://discordapp.com/api/guilds/147698382092238848/widget.png)](https://discord.gg/0p9LSGoRLu6Pet0k)
-
-### [🔢 Setup](/setup){: .btn }
-### [⏰ 24/7 Hosting](/hosting){: .btn }
-### [📃 Playlists](/playlists){: .btn }
-### [📜 Full Command Reference](/commands){: .btn }
-### [⚠ Troubleshooting](/troubleshooting){: .btn }
-### [📥 Support Server](https://discord.gg/0p9LSGoRLu6Pet0k){: .btn }
 
 [![Setup](http://i.imgur.com/VvXYp5j.png)](/setup)
 
