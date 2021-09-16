@@ -7,7 +7,9 @@ A cross-platform Discord music bot with a clean interface, and that is easy to s
 
 ## Custom Tweaks
   * Anyone can skip a song, there is no vote
+  * Anyone can remove a song, even if they arent DJ or the owner of the song
   * The bot doesnt leave once its queue is finished (it'll wait until no one is left (unless you edit the configs) or until someone disconnects it)
+  * Configs are customized with plenty of other aliases
 
 ## Setup
 Please see the [Setup Page](https://github.com/jagrosh/MusicBot/wiki/Setup) in the wiki of the original project to run this bot yourself!
