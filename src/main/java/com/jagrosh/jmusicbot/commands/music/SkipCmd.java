@@ -55,7 +55,7 @@ public class SkipCmd extends MusicCommand
                 msg = event.getClient().getWarning()+" You already requested to skip this song!";
             else
             {
-                msg = event.getClient().getSuccess()+" You requested to skip the song `[";
+                msg = event.getClient().getSuccess()+" You requested to skip the song!";
                 handler.getVotes().add(event.getAuthor().getId());
             }
             int skippers = (int)event.getSelfMember().getVoiceState().getChannel().getMembers().stream()
