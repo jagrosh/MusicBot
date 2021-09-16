@@ -16,6 +16,8 @@
 package com.jagrosh.jmusicbot.audio;
 
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.audio.filter.SplitPixlFilterFactory;
+import com.sedmelluq.discord.lavaplayer.filter.PcmFilterFactory;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
@@ -42,6 +44,7 @@ public class PlayerManager extends DefaultAudioPlayerManager
         AudioSourceManagers.registerRemoteSources(this);
         AudioSourceManagers.registerLocalSource(this);
         source(YoutubeAudioSourceManager.class).setPlaylistPageCount(10);
+        this.getConfiguration().setFilterHotSwapEnabled(true);
     }
     
     public Bot getBot()
@@ -60,6 +63,8 @@ public class PlayerManager extends DefaultAudioPlayerManager
         if(guild.getAudioManager().getSendingHandler()==null)
         {
             AudioPlayer player = createPlayer();
+            SplitPixlFilterFactory filters = bot.getFilterManager().get(guild.getIdLong());
+            player.setFilterFactory(filters);
             player.setVolume(bot.getSettingsManager().getSettings(guild).getVolume());
             handler = new AudioHandler(this, guild, player);
             player.addListener(handler);
@@ -68,5 +73,10 @@ public class PlayerManager extends DefaultAudioPlayerManager
         else
             handler = (AudioHandler) guild.getAudioManager().getSendingHandler();
         return handler;
+    }
+
+    @Override
+    protected AudioPlayer constructPlayer() {
+        return new SplitPixlAudioPlayer(this);
     }
 }

@@ -34,6 +34,8 @@ public abstract class MusicCommand extends Command
     protected final Bot bot;
     protected boolean bePlaying;
     protected boolean beListening;
+    protected boolean forbiddenAudio;
+    protected boolean requiresAnyRole;
     
     public MusicCommand(Bot bot)
     {
@@ -47,6 +49,10 @@ public abstract class MusicCommand extends Command
     {
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
         TextChannel tchannel = settings.getTextChannel(event.getGuild());
+        if(requiresAnyRole && event.getMember().getRoles().size() == 0) {
+            event.replyWarning("You need to have a role to use that command!");
+            return;
+        }
         if(tchannel!=null && !event.getTextChannel().equals(tchannel))
         {
             try 
@@ -93,6 +99,10 @@ public abstract class MusicCommand extends Command
                     return;
                 }
             }
+        }
+        if (forbiddenAudio && !settings.getForbiddenAudio()) {
+            event.reply(event.getClient().getError()+" Forbidden audio is not enabled!");
+            return;
         }
         
         doCommand(event);

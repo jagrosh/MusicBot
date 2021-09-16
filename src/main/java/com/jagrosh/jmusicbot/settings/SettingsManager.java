@@ -48,7 +48,9 @@ public class SettingsManager implements GuildSettingsManager
                         o.has("volume")          ? o.getInt("volume")             : 100,
                         o.has("default_playlist")? o.getString("default_playlist"): null,
                         o.has("repeat")          ? o.getBoolean("repeat")         : false,
-                        o.has("prefix")          ? o.getString("prefix")          : null));
+                        o.has("prefix")          ? o.getString("prefix")          : null,
+                        o.has("forbidden_audio") ? o.getBoolean("forbidden_audio"): false
+                        ));
             });
         } catch(IOException | JSONException e) {
             LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
@@ -74,7 +76,7 @@ public class SettingsManager implements GuildSettingsManager
     
     private Settings createDefaultSettings()
     {
-        return new Settings(this, 0, 0, 0, 100, null, false, null);
+        return new Settings(this, 0, 0, 0, 100, null, false, null, false);
     }
     
     protected void writeSettings()
@@ -97,6 +99,8 @@ public class SettingsManager implements GuildSettingsManager
                 o.put("repeat", true);
             if(s.getPrefix() != null)
                 o.put("prefix", s.getPrefix());
+            if(s.getForbiddenAudio())
+                o.put("forbidden_audio", true);
             obj.put(Long.toString(key), o);
         });
         try {

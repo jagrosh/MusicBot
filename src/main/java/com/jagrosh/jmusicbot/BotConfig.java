@@ -46,7 +46,11 @@ public class BotConfig
     private long owner, maxSeconds, aloneTimeUntilStop;
     private OnlineStatus status;
     private Activity game;
-    private Config aliases, transforms;
+    private Config aliases;
+
+    private Config config;
+
+    public Config getConfig() { return config; }
 
     private boolean valid = false;
     
@@ -73,7 +77,7 @@ public class BotConfig
             
             // load in the config file, plus the default values
             //Config config = ConfigFactory.parseFile(path.toFile()).withFallback(ConfigFactory.load());
-            Config config = ConfigFactory.load();
+            config = ConfigFactory.load();
             
             // set values
             token = config.getString("token");

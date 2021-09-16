@@ -57,6 +57,8 @@ public class FormatUtil {
             return "\uD83D\uDD08"; // 🔈
         if(volume < 70)
             return "\uD83D\uDD09"; // 🔉
+        if(volume >= 150)
+            return "\uD83D\uDCA5"; // 💥
         return "\uD83D\uDD0A";     // 🔊
     }
     

@@ -37,8 +37,9 @@ public class Settings implements GuildSettingsProvider
     private String defaultPlaylist;
     private boolean repeatMode;
     private String prefix;
+    private boolean forbiddenAudio;
     
-    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, boolean repeatMode, String prefix)
+    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, boolean repeatMode, String prefix, boolean forbiddenAudio)
     {
         this.manager = manager;
         try
@@ -69,9 +70,10 @@ public class Settings implements GuildSettingsProvider
         this.defaultPlaylist = defaultPlaylist;
         this.repeatMode = repeatMode;
         this.prefix = prefix;
+        this.forbiddenAudio = forbiddenAudio;
     }
     
-    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, boolean repeatMode, String prefix)
+    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, boolean repeatMode, String prefix, boolean forbiddenAudio)
     {
         this.manager = manager;
         this.textId = textId;
@@ -81,6 +83,7 @@ public class Settings implements GuildSettingsProvider
         this.defaultPlaylist = defaultPlaylist;
         this.repeatMode = repeatMode;
         this.prefix = prefix;
+        this.forbiddenAudio = forbiddenAudio;
     }
     
     // Getters
@@ -124,6 +127,8 @@ public class Settings implements GuildSettingsProvider
     {
         return prefix == null ? Collections.EMPTY_SET : Collections.singleton(prefix);
     }
+
+    public boolean getForbiddenAudio() { return forbiddenAudio; }
     
     // Setters
     public void setTextChannel(TextChannel tc)
@@ -165,6 +170,12 @@ public class Settings implements GuildSettingsProvider
     public void setPrefix(String prefix)
     {
         this.prefix = prefix;
+        this.manager.writeSettings();
+    }
+
+    public void setForbiddenAudio(boolean enabled)
+    {
+        this.forbiddenAudio = enabled;
         this.manager.writeSettings();
     }
 }
