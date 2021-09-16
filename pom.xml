@@ -47,7 +47,7 @@
         </dependency>
         <dependency>
             <groupId>com.jagrosh</groupId>
-            <artifactId>JLyrics</artifactId>
+            <artifactId>jlyrics</artifactId>
             <version>0.5</version>
         </dependency>
         <dependency>
