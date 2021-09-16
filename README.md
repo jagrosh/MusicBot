@@ -10,14 +10,14 @@ permalink: /
 
 <img align="right" src="https://jmusicbot.com/images/logo.png" style="border:2px solid;border-radius:50px;" height="200" width="200">
 
-## 🔢 [Setup](/setup) ![Release](https://img.shields.io/github/release/jagrosh/MusicBot.svg)
+## 🔢 [Setup](/setup){: .btn } ![Release](https://img.shields.io/github/release/jagrosh/MusicBot.svg)
 
-## ⏰ [24/7 Hosting](/hosting)
+## ⏰ [24/7 Hosting](/hosting){: .btn }
 
-## 📃 [Playlists](/playlists)
+## 📃 [Playlists](/playlists){: .btn }
 
-## 📜 [Full Command Reference](/commands)
+## 📜 [Full Command Reference](/commands){: .btn }
 
-## ⚠ [Troubleshooting](/troubleshooting)
+## ⚠ [Troubleshooting](/troubleshooting){: .btn }
 
-## 📥 [Support Server](https://discord.gg/0p9LSGoRLu6Pet0k)
+## 📥 [Support Server](https://discord.gg/0p9LSGoRLu6Pet0k){: .btn }
