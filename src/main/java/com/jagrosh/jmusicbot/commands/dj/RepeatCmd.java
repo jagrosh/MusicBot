@@ -32,7 +32,7 @@ public class RepeatCmd extends DJCommand
         super(bot);
         this.name = "repeat";
         this.help = "re-adds music to the queue when finished";
-        this.arguments = "[on|off|one]";
+        this.arguments = "[off|all|single]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
     }
@@ -41,30 +41,31 @@ public class RepeatCmd extends DJCommand
     @Override
     protected void execute(CommandEvent event) 
     {
+        String args = event.getArgs();
         RepeatMode value;
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
-        if(event.getArgs().isEmpty())
+        if(args.isEmpty())
         {
             if(settings.getRepeatMode() == RepeatMode.OFF)
-                value = RepeatMode.ON;
+                value = RepeatMode.ALL;
             else
                 value = RepeatMode.OFF;
         }
-        else if(event.getArgs().equalsIgnoreCase("true") || event.getArgs().equalsIgnoreCase("on"))
-        {
-            value = RepeatMode.ON;
-        }
-        else if(event.getArgs().equalsIgnoreCase("false") || event.getArgs().equalsIgnoreCase("off"))
+        else if(args.equalsIgnoreCase("false") || args.equalsIgnoreCase("off"))
         {
             value = RepeatMode.OFF;
         }
-        else if(event.getArgs().equalsIgnoreCase("one") || event.getArgs().equalsIgnoreCase("single"))
+        else if(args.equalsIgnoreCase("true") || args.equalsIgnoreCase("on") || args.equalsIgnoreCase("all"))
         {
-            value = RepeatMode.ONE;
+            value = RepeatMode.ALL;
+        }
+        else if(args.equalsIgnoreCase("one") || args.equalsIgnoreCase("single"))
+        {
+            value = RepeatMode.SINGLE;
         }
         else
         {
-            event.replyError("Valid options are `on`, `off` or `one` (or leave empty to toggle)");
+            event.replyError("Valid options are `off`, `all` or `single` (or leave empty to toggle between `off` and `all`)");
             return;
         }
         settings.setRepeatMode(value);

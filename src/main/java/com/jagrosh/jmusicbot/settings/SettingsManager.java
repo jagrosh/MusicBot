@@ -19,7 +19,6 @@ import com.jagrosh.jdautilities.command.GuildSettingsManager;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import net.dv8tion.jda.api.entities.Guild;
 import org.json.JSONException;
@@ -45,7 +44,7 @@ public class SettingsManager implements GuildSettingsManager
 
                 // Legacy version support: On versions 0.3.3 and older, the repeat mode was represented as a boolean.
                 if (o.has("repeat") && o.getBoolean("repeat"))
-                    o.put("repeat_mode", RepeatMode.ON);
+                    o.put("repeat_mode", RepeatMode.ALL);
 
 
                 settings.put(Long.parseLong(id), new Settings(this,
