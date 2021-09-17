@@ -38,9 +38,6 @@ import net.dv8tion.jda.api.exceptions.PermissionException;
  */
 public class QueueCmd extends MusicCommand 
 {
-    private final static String REPEAT = "\uD83D\uDD01"; // 🔁
-    private final static String REPEAT_ONE = "\uD83D\uDD02"; // 🔂
-    
     private final Paginator.Builder builder;
     
     public QueueCmd(Bot bot)
