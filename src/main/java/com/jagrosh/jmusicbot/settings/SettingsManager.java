@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SettingsManager implements GuildSettingsManager
 {
+    private final static double SKIP_RATIO = .55;
     private final HashMap<Long,Settings> settings;
 
     public SettingsManager()
@@ -54,7 +55,8 @@ public class SettingsManager implements GuildSettingsManager
                         o.has("volume")          ? o.getInt("volume")                        : 100,
                         o.has("default_playlist")? o.getString("default_playlist")           : null,
                         o.has("repeat_mode")     ? o.getEnum(RepeatMode.class, "repeat_mode"): RepeatMode.OFF,
-                        o.has("prefix")          ? o.getString("prefix")                     : null));
+                        o.has("prefix")          ? o.getString("prefix")                     : null,
+                        o.has("skip_ratio")      ? o.getDouble("skip_ratio")      : SKIP_RATIO));
             });
         } catch(IOException | JSONException e) {
             LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
@@ -80,7 +82,7 @@ public class SettingsManager implements GuildSettingsManager
     
     private Settings createDefaultSettings()
     {
-        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null);
+        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO);
     }
     
     protected void writeSettings()
@@ -103,6 +105,8 @@ public class SettingsManager implements GuildSettingsManager
                 o.put("repeat_mode", s.getRepeatMode());
             if(s.getPrefix() != null)
                 o.put("prefix", s.getPrefix());
+            if(s.getSkipRatio() != SKIP_RATIO)
+                o.put("skip_ratio", s.getSkipRatio());
             obj.put(Long.toString(key), o);
         });
         try {
