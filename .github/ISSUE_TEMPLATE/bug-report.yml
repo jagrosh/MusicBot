@@ -17,7 +17,10 @@ body:
     attributes:
       label: Steps to Reproduce
       description: Provide steps you can take to reliably reproduce this bug
-      placeholder: 1.\n2.\n3.
+      placeholder: |
+        1.
+        2.
+        3.
     validations:
       required: true
   - type: textarea
@@ -51,5 +54,5 @@ body:
           required: true
         - label: I have searched for similar issues [on the issues page](https://github.com/jagrosh/MusicBot/issues?q=is%3Aissue)
           required: true
-        - label: I am running the latest version of the bot: ![Release](https://img.shields.io/github/release/jagrosh/MusicBot.svg)
+        - label: "I am running the latest version of the bot: ![Release](https://img.shields.io/github/release/jagrosh/MusicBot.svg)"
           required: true
