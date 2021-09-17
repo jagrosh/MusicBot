@@ -18,8 +18,8 @@
             <url>https://jcenter.bintray.com</url>
         </repository>
         <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/jagrosh/*</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
     
@@ -34,6 +34,7 @@
             <artifactId>lavaplayer</artifactId>
             <version>1.3.78</version>
         </dependency>
+        <!-- this is needed, but isn't actually hosted anywhere anymore... uh -->
         <!--dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer-natives-extra</artifactId>
@@ -45,11 +46,17 @@
             <version>3.0.5</version>
             <type>pom</type>
         </dependency>
-        <dependency>
+        <!-- jitpack for now, we need to version this correctly later -->
+	<dependency>
+	    <groupId>com.github.jagrosh</groupId>
+	    <artifactId>JLyrics</artifactId>
+	    <version>-SNAPSHOT</version>
+	</dependency>
+        <!--dependency>
             <groupId>com.jagrosh</groupId>
             <artifactId>JLyrics</artifactId>
-            <version>0.5</version>
-        </dependency>
+            <version>0.6</version>
+        </dependency-->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
