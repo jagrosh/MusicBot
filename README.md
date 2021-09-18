@@ -1,4 +1,4 @@
-<img align="right" src="https://i.imgur.com/zrE80HY.png" height="200" width="200">
+<img align="right" src="/docs/assets/images/logo.png" height="200" width="200">
 
 # JMusicBot
 
@@ -13,7 +13,7 @@
 
 A cross-platform Discord music bot with a clean interface, and that is easy to set up and run yourself!
 
-[![Setup](http://i.imgur.com/VvXYp5j.png)](https://jmusicbot.com/setup)
+[![Setup](/docs/assets/images/setup-banner.png)](https://jmusicbot.com/setup)
 
 ## Features
   * Easy to run (just make sure Java is installed, and run!)
@@ -48,7 +48,7 @@ JMusicBot supports all sources and formats supported by [lavaplayer](https://git
   * Stream playlists (M3U and PLS)
 
 ## Example
-![Loading Example...](https://i.imgur.com/kVtTKvS.gif)
+![Loading Example...](/docs/assets/images/example.gif)
 
 ## Setup
 Please see the [Setup Page](https://jmusicbot.com/setup) to run this bot yourself!
