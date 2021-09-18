@@ -14,4 +14,5 @@ jobs:
         with:
           python-version: 3.x
       - run: pip install 'mkdocs-material>=7,<8'
+      - uses: fregante/setup-git-user@v1 # committer info
       - run: mkdocs gh-deploy --force
