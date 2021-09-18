@@ -7,11 +7,11 @@ description: "🎶 A Discord music bot that’s easy to set up and run yourself!
 
 <img align="right" src="assets/images/logo.png" style="border:2px solid;border-radius:50px;" height="200" width="200">
 
-[🔢 Setup](/Setup){ .md-button }
-[⏰ 24/7 Hosting](/Hosting){ .md-button } 
-[📃 Playlists](/Playlists){ .md-button } 
-[📜 Full Command Reference](/Commands){ .md-button } 
-[⚠ Troubleshooting](/Troubleshooting){ .md-button } 
+[🔢 Setup](setup.md){ .md-button }
+[⏰ 24/7 Hosting](hosting.md){ .md-button } 
+[📃 Playlists](playlists.md){ .md-button } 
+[📜 Full Command Reference](commands.md){ .md-button } 
+[⚠ Troubleshooting](troubleshooting.md){ .md-button } 
 [📥 Support Server](https://discord.gg/0p9LSGoRLu6Pet0k){ .md-button }
   
 [![Downloads](https://img.shields.io/github/downloads/jagrosh/MusicBot/total.svg)](https://github.com/jagrosh/MusicBot/releases/latest)
@@ -20,7 +20,7 @@ description: "🎶 A Discord music bot that’s easy to set up and run yourself!
 [![License](https://img.shields.io/github/license/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/blob/master/LICENSE)
 [![Discord](https://discordapp.com/api/guilds/147698382092238848/widget.png)](https://discord.gg/0p9LSGoRLu6Pet0k)
 
-[![Setup](/assets/images/setup-banner.png)](/Setup)
+[![Setup](/assets/images/setup-banner.png)](setup.md)
 
 ## Features
   * Easy to run (just make sure Java is installed, and run!)
@@ -58,4 +58,4 @@ JMusicBot supports all sources and formats supported by [lavaplayer](https://git
 ![Loading Example...](/assets/images/example.gif)
 
 ## Setup
-Please see the [Setup Page](/Setup) in the wiki to run this bot yourself!
+Please see the [Setup Page](setup.md) in the wiki to run this bot yourself!
