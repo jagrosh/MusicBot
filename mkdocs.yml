@@ -1,0 +1,66 @@
+site_name: JMusicBot Wiki
+site_description: "🎶 A Discord music bot that’s easy to set up and run yourself!"
+copyright: Copyright &copy; 2021 jagrosh
+theme:
+  icon: 
+    logo: material/music-note
+  favicon: assets/images/favicon.ico
+  features:
+    - navigation.instant
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+  custom_dir: docs/overrides
+  font:
+    text: 'Fira Sans'
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/jagrosh/MusicBot
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/0p9LSGoRLu6Pet0k
+  # analytics:
+  #   provider: google
+  #   property: G-XXXXXXXXXX
+repo_name: 'jagrosh/MusicBot'
+repo_url: https://github.com/jagrosh/MusicBot
+edit_uri: edit/master/docs/
+site_url: https://jmusicbot.com
+markdown_extensions:
+  - meta
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - attr_list
+  - toc:
+      permalink: "#"
+nav:
+  - index.md
+  - Setup:
+    - Setup Guide: setup.md
+    - installing-java.md
+    - getting-a-bot-token.md
+    - finding-your-user-id.md
+    - adding-your-bot.md
+    - config.md
+    - advanced-config.md
+    - hosting.md
+  - Reference:
+    - commands.md
+    - playlists.md
+    - advanced-playlists.md
+    - things-that-wont-be-added.md
+    - advanced-eval.md
+    - troubleshooting.md

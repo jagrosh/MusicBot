@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+<!-- Custom front matter -->
+{% block extrahead %}
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8512411925677795" crossorigin="anonymous"></script>
+  
+  {# Title #}
+  {% set title = config.site_name %}
+  {% if page and page.title and not page.is_homepage %}
+    {% set title = config.site_name ~ " - " ~ page.title | striptags %}
+  {% endif %}
+  
+  {# Description #}
+  {% set description = config.site_description %}
+  {% if page and page.meta.description and not page.is_homepage %}
+    {% set description = page.meta.description | striptags %}
+  {% endif %}
+
+  {# Image #}
+  {% set image = config.site_url ~ 'assets/images/logo.png' %}
+
+  <!-- Open graph meta tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{{ title }}" />
+  <meta property="og:description" content="{{ description }}" />
+  <meta property="og:url" content="{{ page.canonical_url }}" />
+  <meta property="og:image" content="{{ image }}" />
+  <meta property="og:image:type" content="image/png" />
+
+  <!-- Twitter meta tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@jagrosh" />
+  <meta name="twitter:creator" content="@jagrosh" />
+  <meta name="twitter:title" content="{{ title }}" />
+  <meta name="twitter:description" content="{{ description }}" />
+  <meta name="twitter:image" content="{{ image }}" />
+{% endblock %}
