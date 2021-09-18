@@ -10,8 +10,7 @@ permalink: /troubleshooting
 {:toc}
 
 ## Known issues
-### ⚠ SoundCloud URLs result in a "Error loading track." message!
-This is a known issue when attempting to load music from SoundCloud. It is tracked [here](https://github.com/jagrosh/MusicBot/issues/833) and will soon be fixed.
+There may be temporary bugs or issues with MusicBot. Such as tracks not loading from specific sources, like YouTube or SoundCloud. See the [Issues](https://github.com/jagrosh/MusicBot/issues) page and check if your issue is known.
 
 ## Problems starting the bot
 ### ⚠ The .jar file is opening in WinRAR or is acting like a zipped file!
