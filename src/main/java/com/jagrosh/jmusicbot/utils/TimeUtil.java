@@ -30,10 +30,6 @@ public class TimeUtil
         return (hours>0 ? hours+":" : "") + (minutes<10 ? "0"+minutes : minutes) + ":" + (seconds<10 ? "0"+seconds : seconds);
     }
 
-    /**
-     * @param args timestamp formatted as: [+ | -] &lt;HH:MM:SS | MM:SS | SS&gt;
-     * @return Time in milliseconds, negative if seeking backwards relatively
-     */
     public static SeekTime parseTime(String args)
     {
         if (args.length() == 0) return null;
@@ -48,14 +44,29 @@ public class TimeUtil
             timestamp = timestamp.substring(1);
         }
 
+        long milliseconds = parseColonTime(timestamp);
+        if(milliseconds == -1) milliseconds = parseUnitTime(timestamp);
+        if(milliseconds == -1) return null;
+
+        milliseconds *= isSeekingBackwards ? -1 : 1;
+
+        return new SeekTime(milliseconds, relative);
+    }
+
+    /**
+     * @param timestamp timestamp formatted as: [+ | -] &lt;HH:MM:SS | MM:SS | SS&gt;
+     * @return Time in milliseconds
+     */
+    public static long parseColonTime(String timestamp)
+    {
         String[] timestampSplitArray = timestamp.split(":+");
         if(timestampSplitArray.length > 3 )
-            return null;
+            return -1;
         double[] timeUnitArray = new double[3]; // hours, minutes, seconds
         for(int index = 0; index < timestampSplitArray.length; index++)
         {
             String unit = timestampSplitArray[index];
-            if (unit.startsWith("+") || unit.startsWith("-")) return null;
+            if (unit.startsWith("+") || unit.startsWith("-")) return -1;
             unit = unit.replace(",", ".");
             try
             {
@@ -63,15 +74,46 @@ public class TimeUtil
             }
             catch (NumberFormatException e)
             {
-                return null;
+                return -1;
             }
         }
-        long milliseconds = Math.round(timeUnitArray[0] * 3600000 + timeUnitArray[1] * 60000 + timeUnitArray[2] * 1000);
-        milliseconds *= isSeekingBackwards ? -1 : 1;
-
-        return new SeekTime(milliseconds, relative);
+        return Math.round(timeUnitArray[0] * 3600000 + timeUnitArray[1] * 60000 + timeUnitArray[2] * 1000);
     }
 
+    public static long parseUnitTime(String timestr)
+    {
+        timestr = timestr.replaceAll("(?i)(\\s|,|and)","")
+                .replaceAll("(?is)(-?\\d+|[a-z]+)", "$1 ")
+                .trim();
+        String[] vals = timestr.split("\\s+");
+        int time = 0;
+        try
+        {
+            for(int j=0; j<vals.length; j+=2)
+            {
+                int num = Integer.parseInt(vals[j]);
+
+                if(vals.length > j+1)
+                {
+                    if(vals[j+1].toLowerCase().startsWith("m"))
+                        num*=1000*60;
+                    else if(vals[j+1].toLowerCase().startsWith("h"))
+                        num*=1000*60*60;
+                    else if(vals[j+1].toLowerCase().startsWith("d"))
+                        num*=1000*60*60*24;
+                    else
+                        num*=1000;
+                }
+
+                time+=num;
+            }
+        }
+        catch(Exception ex)
+        {
+            return -1;
+        }
+        return time;
+    }
 
     public static class SeekTime
     {

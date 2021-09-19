@@ -28,16 +28,23 @@ import net.dv8tion.jda.api.entities.User;
 public class QueuedTrack implements Queueable
 {
     private final AudioTrack track;
-    
+    private final long startTimestamp;
+
     public QueuedTrack(AudioTrack track, User owner)
     {
-        this(track, owner.getIdLong());
+        this(track, owner.getIdLong(), 0);
     }
-    
+
     public QueuedTrack(AudioTrack track, long owner)
+    {
+        this(track, owner, 0);
+    }
+
+    public QueuedTrack(AudioTrack track, long owner, long startTimestamp)
     {
         this.track = track;
         this.track.setUserData(owner);
+        this.startTimestamp = startTimestamp;
     }
     
     @Override
@@ -49,6 +56,11 @@ public class QueuedTrack implements Queueable
     public AudioTrack getTrack()
     {
         return track;
+    }
+
+    public long getStartTimestamp()
+    {
+        return startTimestamp;
     }
 
     @Override
