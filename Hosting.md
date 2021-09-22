@@ -45,7 +45,7 @@ Well, there are many options available; I've described several of the most-commo
 ```diff
 + $300 free credit (requires Credit Card)
 + Free Tier Hosting
-- Billed if you sign up for paid account
+- Limited resorces on free tier (4 core 24gb ram arm server and 2x 1gb 1 core amd servers)
 ```
 
 <br>
