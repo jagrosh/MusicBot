@@ -46,6 +46,7 @@ Well, there are many options available; I've described several of the most-commo
 + $300 free credit (requires Credit Card)
 + Free Tier Hosting
 - Limited resorces on free tier (4 core 24gb ram arm server and 2x 1gb 1 core amd servers)
+- Users have reported issues hosting for extended periods of time (see: https://github.com/jagrosh/MusicBot/discussions/823)
 ```
 
 <br>
