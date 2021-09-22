@@ -41,6 +41,13 @@ Well, there are many options available; I've described several of the most-commo
 - Billed for usage above certain limits
 ```
 
+### [Oracle Cloud](https://www.oracle.com/cloud/free/)
+```diff
++ $300 free credit (requires Credit Card)
++ Free Tier Hosting
+- Billed if you sign up for paid account
+```
+
 <br>
 
 ## 🏠 Home Hosting
