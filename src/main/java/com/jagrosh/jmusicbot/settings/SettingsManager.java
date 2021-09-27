@@ -43,7 +43,7 @@ public class SettingsManager implements GuildSettingsManager
                 JSONObject o = loadedSettings.getJSONObject(id);
 
                 // Legacy version support: On versions 0.3.3 and older, the repeat mode was represented as a boolean.
-                if (o.has("repeat") && o.getBoolean("repeat"))
+                if (!o.has("repeat_mode") && o.has("repeat") && o.getBoolean("repeat"))
                     o.put("repeat_mode", RepeatMode.ALL);
 
 

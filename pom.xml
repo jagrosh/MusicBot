@@ -29,11 +29,17 @@
             <artifactId>JDA</artifactId> 
             <version>4.3.0_324</version>
         </dependency>
-        <dependency>
+        <!-- using a fork of this to fix some issues faster -->
+        <!-- dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer</artifactId>
             <version>1.3.78</version>
-        </dependency>
+        </dependency -->
+        <dependency>
+	    <groupId>com.github.jagrosh</groupId>
+	    <artifactId>lavaplayer</artifactId>
+	    <version>jmusicbot-SNAPSHOT</version>
+	</dependency>
         <!-- this is needed, but isn't actually hosted anywhere anymore... uh -->
         <!--dependency>
             <groupId>com.sedmelluq</groupId>
