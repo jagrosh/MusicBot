@@ -181,8 +181,8 @@ public class PlaylistCmd extends OwnerCommand
     {
         public AppendlistqCmd()
         {
-            this.name = "appendq";
-            this.aliases = new String[]{"addq"};
+            this.name = "appendqueue";
+            this.aliases = new String[]{"addqueue"};
             this.help = "appends songs in queue to an existing playlist";
             this.arguments = "<name>";
             this.guildOnly = false;
@@ -191,13 +191,7 @@ public class PlaylistCmd extends OwnerCommand
         @Override
         protected void execute(CommandEvent event) 
         {
-            String[] parts = event.getArgs().split("\\s+", 2);
-            if(parts.length<1)
-            {
-                event.reply(event.getClient().getError()+" Please include a playlist name to add!");
-                return;
-            }
-            String pname = parts[0];
+            String pname = event.getArgs().replaceAll("\\s+", "_");
             Playlist playlist = bot.getPlaylistLoader().getPlaylist(pname);
             if(playlist==null)
                 event.reply(event.getClient().getError()+" Playlist `"+pname+"` doesn't exist!");
@@ -229,8 +223,6 @@ public class PlaylistCmd extends OwnerCommand
                         continue;
                     }
                     String u = url.getInfo().uri;
-                    if(u.startsWith("<") && u.endsWith(">"))
-                        u = u.substring(1, u.length()-1);
                     builder.append("\r\n").append(u);
                 }
                 try
