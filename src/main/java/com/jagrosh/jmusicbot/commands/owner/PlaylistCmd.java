@@ -194,7 +194,7 @@ public class PlaylistCmd extends OwnerCommand
             String pname = event.getArgs().replaceAll("\\s+", "_");
             Playlist playlist = bot.getPlaylistLoader().getPlaylist(pname);
             if(playlist==null)
-                event.replyError(event.getClient().getError()+" Playlist `"+pname+"` doesn't exist!");
+                event.replyError("Playlist `"+pname+"` doesn't exist!");
             else
             {
                 AudioHandler ah = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
@@ -204,7 +204,7 @@ public class PlaylistCmd extends OwnerCommand
                     Message nowp = ah.getNowPlaying(event.getJDA());
                     if(nowp==null)
                     {
-                        event.replyWarning(event.getClient().getWarning() + " There is no music in the queue!");
+                        event.replyWarning("There is no music in the queue!");
                         return;
                     }
                 }
@@ -228,11 +228,11 @@ public class PlaylistCmd extends OwnerCommand
                 try
                 {
                     bot.getPlaylistLoader().writePlaylist(pname, builder.toString());
-                    event.replySuccess(event.getClient().getSuccess()+" Successfully added "+al.size()+" items to playlist `"+pname+"`!");
+                    event.replySuccess("Successfully added "+al.size()+" items to playlist `"+pname+"`!");
                 }
                 catch(IOException e)
                 {
-                    event.replyError(event.getClient().getError()+" I was unable to append to the playlist: "+e.getLocalizedMessage());
+                    event.replyError("I was unable to append to the playlist: "+e.getLocalizedMessage());
                 }
             }
         }
