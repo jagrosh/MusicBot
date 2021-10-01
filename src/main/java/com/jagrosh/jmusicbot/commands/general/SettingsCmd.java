@@ -57,7 +57,7 @@ public class SettingsCmd extends Command
         EmbedBuilder ebuilder = new EmbedBuilder()
                 .setColor(event.getSelfMember().getColor())
                 .setDescription("Text Channel: " + (tchan == null ? "Any" : "**#" + tchan.getName() + "**")
-                        + "\nVoice Channel: " + (vchan == null ? "Any" : "**" + vchan.getName() + "**")
+                        + "\nVoice Channel: " + (vchan == null ? "Any" : vchan.getAsMention())
                         + "\nDJ Role: " + (role == null ? "None" : "**" + role.getName() + "**")
                         + "\nCustom Prefix: " + (s.getPrefix() == null ? "None" : "`" + s.getPrefix() + "`")
                         + "\nRepeat Mode: " + (s.getRepeatMode() == RepeatMode.OFF
