@@ -6,7 +6,6 @@ description: "Common troubleshooting tasks for JMusicBot"
 ## Known issues
 There may be bugs or temporary issues with MusicBot, such as tracks not loading from specific sources, like YouTube or SoundCloud. See the [Issues](https://github.com/jagrosh/MusicBot/issues) page and check if your issue is known.
 
-
 ## Problems starting the bot
 !!! warning "The .jar file is opening in WinRAR or is acting like a zipped file!"
 * **Check your Java version** - You might not have Java installed
