@@ -7,7 +7,7 @@ This page describes how to generate playlist (txt) files from folders. These exa
 
 ## Windows (Desktop)
 1. Open Powershell in the folder with your songs (you can Shift-Right-Click and select Open Powershell Window Here from within an Explorer window)
-2. Run **`Get-ChildItem . -Filter *.mp3 -Recurse | % { $_.FullName } > songs.txt`**
+2. Run **`Get-ChildItem . -Filter *.mp3 -Recurse | % { $_.FullName } | out-file -encoding ASCII songs.txt`**
 3. Move songs.txt to your Playlists folder and rename it to whatever you want the playlist to be called.
 4. Edit songs.txt if you want to add additional songs or any other comments
 
