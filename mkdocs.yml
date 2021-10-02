@@ -36,7 +36,7 @@ extra:
   #   property: G-XXXXXXXXXX
 repo_name: 'jagrosh/MusicBot'
 repo_url: https://github.com/jagrosh/MusicBot
-edit_uri: edit/master/docs/
+edit_uri: edit/gh-pages/docs/
 site_url: https://jmusicbot.com
 markdown_extensions:
   - meta
