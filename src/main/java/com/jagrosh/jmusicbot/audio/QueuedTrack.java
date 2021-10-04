@@ -18,7 +18,6 @@ package com.jagrosh.jmusicbot.audio;
 import com.jagrosh.jmusicbot.utils.TimeUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.jagrosh.jmusicbot.queue.Queueable;
-import com.jagrosh.jmusicbot.utils.FormatUtil;
 import net.dv8tion.jda.api.entities.User;
 
 /**
@@ -28,26 +27,15 @@ import net.dv8tion.jda.api.entities.User;
 public class QueuedTrack implements Queueable
 {
     private final AudioTrack track;
-    private final long startTimestamp;
-
+    
     public QueuedTrack(AudioTrack track, User owner)
     {
-        this(track, owner.getIdLong(), 0);
         this(track, new RequestMetadata(owner));
     }
-
-    public QueuedTrack(AudioTrack track, long owner)
-
+    
     public QueuedTrack(AudioTrack track, RequestMetadata rm)
     {
-        this(track, owner, 0);
-    }
-
-    public QueuedTrack(AudioTrack track, long owner, long startTimestamp)
-    {
         this.track = track;
-        this.track.setUserData(owner);
-        this.startTimestamp = startTimestamp;
         this.track.setUserData(rm);
     }
     
@@ -60,11 +48,6 @@ public class QueuedTrack implements Queueable
     public AudioTrack getTrack()
     {
         return track;
-    }
-
-    public long getStartTimestamp()
-    {
-        return startTimestamp;
     }
 
     @Override
