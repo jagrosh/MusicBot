@@ -52,17 +52,17 @@ public class OtherUtil
      */
     public static Path getPath(String path)
     {
+        Path result = Paths.get(path);
         // special logic to prevent trying to access system32
-        if(path.toLowerCase().startsWith(WINDOWS_INVALID_PATH))
+        if(result.toAbsolutePath().toString().toLowerCase().startsWith(WINDOWS_INVALID_PATH))
         {
-            String filename = path.substring(WINDOWS_INVALID_PATH.length());
             try
             {
-                path = new File(JMusicBot.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath() + File.separator + filename;
+                result = Paths.get(new File(JMusicBot.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath() + File.separator + path);
             }
             catch(URISyntaxException ex) {}
         }
-        return Paths.get(path);
+        return result;
     }
     
     /**

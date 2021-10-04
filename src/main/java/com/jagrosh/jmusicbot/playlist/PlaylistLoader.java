@@ -46,7 +46,7 @@ public class PlaylistLoader
     {
         if(folderExists())
         {
-            File folder = new File(config.getPlaylistsFolder());
+            File folder = new File(OtherUtil.getPath(config.getPlaylistsFolder()).toString());
             return Arrays.asList(folder.listFiles((pathname) -> pathname.getName().endsWith(".txt")))
                     .stream().map(f -> f.getName().substring(0,f.getName().length()-4)).collect(Collectors.toList());
         }
