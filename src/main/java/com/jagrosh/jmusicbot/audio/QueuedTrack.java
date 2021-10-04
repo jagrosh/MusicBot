@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 John Grosh <john.a.grosh@gmail.com>.
+ * Copyright 2021 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,12 @@ public class QueuedTrack implements Queueable
     public QueuedTrack(AudioTrack track, User owner)
     {
         this(track, owner.getIdLong(), 0);
+        this(track, new RequestMetadata(owner));
     }
 
     public QueuedTrack(AudioTrack track, long owner)
+
+    public QueuedTrack(AudioTrack track, RequestMetadata rm)
     {
         this(track, owner, 0);
     }
@@ -45,12 +48,13 @@ public class QueuedTrack implements Queueable
         this.track = track;
         this.track.setUserData(owner);
         this.startTimestamp = startTimestamp;
+        this.track.setUserData(rm);
     }
     
     @Override
     public long getIdentifier() 
     {
-        return track.getUserData(Long.class);
+        return track.getUserData(RequestMetadata.class).getOwner();
     }
     
     public AudioTrack getTrack()
@@ -66,6 +70,6 @@ public class QueuedTrack implements Queueable
     @Override
     public String toString() 
     {
-        return "`[" + TimeUtil.formatTime(track.getDuration()) + "]` **" + track.getInfo().title + "** - <@" + track.getUserData(Long.class) + ">";
+        return "`[" + TimeUtil.formatTime(track.getDuration()) + "]` **" + track.getInfo().title + "** - <@" + track.getUserData(RequestMetadata.class).getOwner() + ">";
     }
 }
