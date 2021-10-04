@@ -184,7 +184,6 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         {
             QueuedTrack qt = queue.pull();
             player.playTrack(qt.getTrack());
-            player.getPlayingTrack().setPosition(qt.getStartTimestamp());
         }
     }
 

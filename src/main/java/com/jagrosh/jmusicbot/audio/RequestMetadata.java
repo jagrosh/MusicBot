@@ -40,11 +40,18 @@ public class RequestMetadata
     public class RequestInfo
     {
         public final String query, url;
-        
+        public final long startTimestamp;
+
         private RequestInfo(String query, String url)
+        {
+            this(query, url, 0);
+        }
+
+        private RequestInfo(String query, String url, long startTimestamp)
         {
             this.query = query;
             this.url = url;
+            this.startTimestamp = startTimestamp;
         }
     }
     
