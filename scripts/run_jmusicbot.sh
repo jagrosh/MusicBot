@@ -20,7 +20,7 @@ is_truthy() {
   case "${!varname,,}" in
     yes|true|1) return 0;;
     no|false|0) return 1;;
-    *) printf 'Variable %s has invalid truthy value of %s. Aborting.\n' "${varname}" "${!varname}"; exit 1;;
+    *) printf 'Variable %s is invalid. Expected true/false, got "%s". Aborting.\n' "${varname}" "${!varname}" >&2; exit 1;;
   esac
 }
 
@@ -38,7 +38,7 @@ download() {
 }
 
 run() {
-  java -Dnogui=true -jar "$(ls -t JMusicBot* | head -1)" "${@}"
+  java -Dnogui=true "${@}" -jar "$(ls -t JMusicBot* | head -1)"
 }
 
 #######################
@@ -49,7 +49,7 @@ while [ "${#}" -gt 0 ]; do
   arg="${1}"
   shift
   if [ "${arg:0:2}" != "--" ]; then
-    printf "Not a valid argument: %s. If you want to pass arguments to jvm, use '--' argument before them\n" "${arg}"
+    printf "Not a valid argument: %s. If you want to pass arguments to jvm, use '--' argument before them\n" "${arg}" >&2
     exit 1
   fi
   if [ "${arg}" == '--' ]; then break; fi # Rest are jvm flags
@@ -64,7 +64,7 @@ while [ "${#}" -gt 0 ]; do
   fi
   case "${arg,,}" in
   download|loop) declare "${arg^^}"="${truthiness}";;
-    *) printf "Invalid argument: '--%s'\n" "${arg}"; exit 1;;
+    *) printf "Invalid argument: '--%s'\n" "${arg}" >&2; exit 1;;
   esac
 done
 
