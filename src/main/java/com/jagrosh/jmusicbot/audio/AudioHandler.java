@@ -235,7 +235,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
             double progress = (double)audioPlayer.getPlayingTrack().getPosition()/track.getDuration();
             eb.setDescription((audioPlayer.isPaused() ? JMusicBot.PAUSE_EMOJI : JMusicBot.PLAY_EMOJI)
                     + " "+FormatUtil.progressBar(progress)
-                    + " `[" + FormatUtil.formatTime(track.getPosition()) + "/" + FormatUtil.formatTime(track.getDuration()) + "]` "
+                    + " `[" + FormatUtil.formatTime(track.getPosition()) + "/" + FormatUtil.formatTime(track.getDuration()) + "] (" + String.format("%.0f", progress*100) + "%)`"
                     + FormatUtil.volumeIcon(audioPlayer.getVolume()));
             
             return mb.setEmbed(eb.build()).build();

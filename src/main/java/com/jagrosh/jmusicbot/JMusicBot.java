@@ -21,6 +21,10 @@ import com.jagrosh.jdautilities.examples.command.*;
 import com.jagrosh.jmusicbot.commands.admin.*;
 import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.general.*;
+import com.jagrosh.jmusicbot.commands.jankbot.JankedexCmd;
+import com.jagrosh.jmusicbot.commands.jankbot.LogoButtonListener;
+import com.jagrosh.jmusicbot.commands.jankbot.LogoCmd;
+import com.jagrosh.jmusicbot.commands.jankbot.JankedexButtonListener;
 import com.jagrosh.jmusicbot.commands.music.*;
 import com.jagrosh.jmusicbot.commands.owner.*;
 import com.jagrosh.jmusicbot.entities.Prompt;
@@ -109,6 +113,7 @@ public class JMusicBot
                         new SCSearchCmd(bot),
                         new ShuffleCmd(bot),
                         new SkipCmd(bot),
+                        new SeekCmd(bot),
 
                         new ForceRemoveCmd(bot),
                         new ForceskipCmd(bot),
@@ -133,7 +138,11 @@ public class JMusicBot
                         new SetgameCmd(bot),
                         new SetnameCmd(bot),
                         new SetstatusCmd(bot),
-                        new ShutdownCmd(bot)
+                        new ShutdownCmd(bot),
+
+                        new SetDJCmd(bot),
+                        new JankedexCmd(bot),
+                        new LogoCmd(bot)
                 );
         if(config.useEval())
             cb.addCommand(new EvalCmd(bot));
@@ -150,21 +159,21 @@ public class JMusicBot
         else
             cb.setActivity(config.getGame());
         
-        if(!prompt.isNoGUI())
-        {
-            try 
-            {
-                GUI gui = new GUI(bot);
-                bot.setGUI(gui);
-                gui.init();
-            } 
-            catch(Exception e) 
-            {
-                log.error("Could not start GUI. If you are "
-                        + "running on a server or in a location where you cannot display a "
-                        + "window, please run in nogui mode using the -Dnogui=true flag.");
-            }
-        }
+        // if(!prompt.isNoGUI())
+        // {
+        //     try 
+        //     {
+        //         GUI gui = new GUI(bot);
+        //         bot.setGUI(gui);
+        //         gui.init();
+        //     } 
+        //     catch(Exception e) 
+        //     {
+        //         log.error("Could not start GUI. If you are "
+        //                 + "running on a server or in a location where you cannot display a "
+        //                 + "window, please run in nogui mode using the -Dnogui=true flag.");
+        //     }
+        // }
         
         log.info("Loaded config from " + config.getConfigLocation());
         
@@ -177,7 +186,7 @@ public class JMusicBot
                     .setActivity(nogame ? null : Activity.playing("loading..."))
                     .setStatus(config.getStatus()==OnlineStatus.INVISIBLE || config.getStatus()==OnlineStatus.OFFLINE 
                             ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
-                    .addEventListeners(cb.build(), waiter, new Listener(bot))
+                    .addEventListeners(cb.build(), waiter, new Listener(bot), new JankedexButtonListener(), new LogoButtonListener())
                     .setBulkDeleteSplittingEnabled(true)
                     .build();
             bot.setJDA(jda);

@@ -2,6 +2,9 @@
 /target/
 /Playlists/
 /test/
+/Jankedex/
+/muselogos/
+.vscode/
 *.json
 *.txt
 nb*.xml

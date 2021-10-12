@@ -53,7 +53,7 @@ public class PlayCmd extends MusicCommand
         this.name = "play";
         this.arguments = "<title|URL|subcommand>";
         this.help = "plays the provided song";
-        this.aliases = bot.getConfig().getAliases(this.name);
+        this.aliases = new String[]{"p"};
         this.beListening = true;
         this.bePlaying = false;
         this.children = new Command[]{new PlaylistCmd(bot)};
@@ -62,6 +62,10 @@ public class PlayCmd extends MusicCommand
     @Override
     public void doCommand(CommandEvent event) 
     {
+        if(event.getArgs().toLowerCase().contains("coldplay")){
+            event.reply("<:jankman_angry:754754504171323515> NO COLDPLAY.");
+            return;
+        }
         if(event.getArgs().isEmpty() && event.getMessage().getAttachments().isEmpty())
         {
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
@@ -111,9 +115,13 @@ public class PlayCmd extends MusicCommand
                         +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(bot.getConfig().getMaxSeconds()*1000)+"`")).queue();
                 return;
             }
+            if(track.getInfo().title.toLowerCase().contains("coldplay") || track.getInfo().author.toLowerCase().contains("coldplay")) {
+                m.editMessage("<:jankman_angry:754754504171323515> NO COLDPLAY.").queue();
+                return;
+            }
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
             int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor()))+1;
-            String addMsg = FormatUtil.filter(event.getClient().getSuccess()+" Added **"+track.getInfo().title
+            String addMsg = FormatUtil.filter(event.getClient().getSuccess()+"<:jankdacity:837717101866516501> Added **"+track.getInfo().title
                     +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0?"to begin playing":" to the queue at position "+pos));
             if(playlist==null || !event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ADD_REACTION))
                 m.editMessage(addMsg).queue();
