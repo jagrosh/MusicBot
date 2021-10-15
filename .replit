@@ -1,0 +1,2 @@
+language = "java10"
+run = "mvn compile; mvn exec:java -Dexec.mainClass=com.jagrosh.jmusicbot.JMusicBot -Dnogui=true"
