@@ -23,6 +23,7 @@ import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.general.*;
 import com.jagrosh.jmusicbot.commands.music.*;
 import com.jagrosh.jmusicbot.commands.owner.*;
+import com.jagrosh.jmusicbot.queue.QueueButtonListener;
 import com.jagrosh.jmusicbot.entities.Prompt;
 import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
@@ -177,7 +178,7 @@ public class JMusicBot
                     .setActivity(nogame ? null : Activity.playing("loading..."))
                     .setStatus(config.getStatus()==OnlineStatus.INVISIBLE || config.getStatus()==OnlineStatus.OFFLINE 
                             ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
-                    .addEventListeners(cb.build(), waiter, new Listener(bot))
+                    .addEventListeners(cb.build(), waiter, new Listener(bot), new QueueButtonListener(settings, cb.build()))
                     .setBulkDeleteSplittingEnabled(true)
                     .build();
             bot.setJDA(jda);
