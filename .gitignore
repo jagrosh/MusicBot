@@ -5,3 +5,7 @@
 *.json
 *.txt
 nb*.xml
+.classpath
+.project
+.settings/
+.circleci
