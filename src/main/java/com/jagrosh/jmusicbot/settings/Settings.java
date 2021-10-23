@@ -38,8 +38,9 @@ public class Settings implements GuildSettingsProvider
     private RepeatMode repeatMode;
     private String prefix;
     private double skipRatio;
+    private boolean useFairQueue;
 
-    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio)
+    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, boolean useFairQueue)
     {
         this.manager = manager;
         try
@@ -71,9 +72,10 @@ public class Settings implements GuildSettingsProvider
         this.repeatMode = repeatMode;
         this.prefix = prefix;
         this.skipRatio = skipRatio;
+        this.useFairQueue = useFairQueue;
     }
     
-    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio)
+    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, boolean useFairQueue)
     {
         this.manager = manager;
         this.textId = textId;
@@ -84,6 +86,7 @@ public class Settings implements GuildSettingsProvider
         this.repeatMode = repeatMode;
         this.prefix = prefix;
         this.skipRatio = skipRatio;
+        this.useFairQueue = useFairQueue;
     }
     
     // Getters
@@ -125,6 +128,11 @@ public class Settings implements GuildSettingsProvider
     public double getSkipRatio()
     {
         return skipRatio;
+    }
+    
+    public boolean getUseFairQueue()
+    {
+        return useFairQueue;
     }
 
     @Override
@@ -179,6 +187,12 @@ public class Settings implements GuildSettingsProvider
     public void setSkipRatio(double skipRatio)
     {
         this.skipRatio = skipRatio;
+        this.manager.writeSettings();
+    }
+
+    public void setUseFairQueue(boolean useFairQueue)
+    {
+        this.useFairQueue = useFairQueue;
         this.manager.writeSettings();
     }
 }

@@ -55,6 +55,11 @@ public class FairQueue<T extends Queueable> {
             list.add(index, item);
     }
     
+    public void append(T item)
+    {
+        list.add(item);
+    }
+    
     public int size()
     {
         return list.size();

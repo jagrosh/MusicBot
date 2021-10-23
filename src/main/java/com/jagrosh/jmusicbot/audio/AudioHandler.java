@@ -85,7 +85,17 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
             return -1;
         }
         else
-            return queue.add(qtrack);
+        {
+            Settings settings = manager.getBot().getSettingsManager().getSettings(guildId);
+            
+            if (settings.getUseFairQueue())
+                return queue.add(qtrack);
+            else
+            {
+                queue.append(qtrack);
+                return queue.size()-1;
+            }
+        }
     }
     
     public FairQueue<QueuedTrack> getQueue()

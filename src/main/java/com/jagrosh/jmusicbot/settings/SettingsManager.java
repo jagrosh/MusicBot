@@ -55,7 +55,8 @@ public class SettingsManager implements GuildSettingsManager
                         o.has("default_playlist")? o.getString("default_playlist")           : null,
                         o.has("repeat_mode")     ? o.getEnum(RepeatMode.class, "repeat_mode"): RepeatMode.OFF,
                         o.has("prefix")          ? o.getString("prefix")                     : null,
-                        o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO));
+                        o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO,
+                        o.has("use_fair_queue")  ? o.getBoolean("use_fair_queue")            : true));
             });
         } catch(IOException | JSONException e) {
             LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
@@ -81,7 +82,7 @@ public class SettingsManager implements GuildSettingsManager
     
     private Settings createDefaultSettings()
     {
-        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO);
+        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO, true);
     }
     
     protected void writeSettings()
@@ -106,6 +107,8 @@ public class SettingsManager implements GuildSettingsManager
                 o.put("prefix", s.getPrefix());
             if(s.getSkipRatio() != SKIP_RATIO)
                 o.put("skip_ratio", s.getSkipRatio());
+            if(!s.getUseFairQueue())
+                o.put("use_fair_queue", false);
             obj.put(Long.toString(key), o);
         });
         try {
