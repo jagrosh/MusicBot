@@ -19,6 +19,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import com.fasterxml.jackson.databind.node.BooleanNode;
+import com.jagrosh.jdautilities.command.CommandBuilder;
+import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jmusicbot.audio.AloneInVoiceHandler;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
@@ -50,6 +52,7 @@ public class Bot {
     private boolean shuttingDown = false;
     private JDA jda;
     private GUI gui;
+    private CommandClient cc;
 
     public Bot(EventWaiter waiter, BotConfig config, SettingsManager settings) {
         this.waiter = waiter;
@@ -151,6 +154,14 @@ public class Bot {
 
     public boolean getDJMode() {
         return this.dj_mode;
+    }
+
+    public void setCommandClient(CommandClient cc) {
+        this.cc = cc;
+    }
+
+    public CommandClient getCommandClient() {
+        return this.cc;
     }
 
 }

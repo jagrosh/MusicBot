@@ -112,7 +112,7 @@ public abstract class MusicCommand extends Command {
         List<Role> user_roles = event.getMember().getRoles();
 
         for (Role r : user_roles) {
-            if (r.getName() == "Tantamod")
+            if (r.getIdLong() == 736622853797052519L)
                 return true;
         }
 

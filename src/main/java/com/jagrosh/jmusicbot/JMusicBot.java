@@ -22,9 +22,16 @@ import com.jagrosh.jmusicbot.commands.admin.*;
 import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.general.*;
 import com.jagrosh.jmusicbot.commands.jankbot.JankedexCmd;
+import com.jagrosh.jmusicbot.commands.jankbot.JankmanCmd;
 import com.jagrosh.jmusicbot.commands.jankbot.LogoButtonListener;
 import com.jagrosh.jmusicbot.commands.jankbot.LogoCmd;
+import com.jagrosh.jmusicbot.commands.jankbot.OtherCommandListener;
+import com.jagrosh.jmusicbot.commands.jankbot.QuitSibeliusListener;
+import com.jagrosh.jmusicbot.commands.jankbot.DurstCmd;
+import com.jagrosh.jmusicbot.commands.jankbot.FistChordEventListener;
+import com.jagrosh.jmusicbot.commands.jankbot.FistchordCmd;
 import com.jagrosh.jmusicbot.commands.jankbot.JankedexButtonListener;
+import com.jagrosh.jmusicbot.commands.jankbot.DurstButtonListener;
 import com.jagrosh.jmusicbot.commands.music.*;
 import com.jagrosh.jmusicbot.commands.owner.*;
 import com.jagrosh.jmusicbot.entities.Prompt;
@@ -33,9 +40,12 @@ import com.jagrosh.jmusicbot.settings.SettingsManager;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.List;
+
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
@@ -47,9 +57,9 @@ import org.slf4j.LoggerFactory;
  */
 public class JMusicBot 
 {
-    public final static String PLAY_EMOJI  = "\u25B6"; // ▶
-    public final static String PAUSE_EMOJI = "\u23F8"; // ⏸
-    public final static String STOP_EMOJI  = "\u23F9"; // ⏹
+    public final static String PLAY_EMOJI  = "<:play_the_jank:897769624077205525>"; // ▶
+    public final static String PAUSE_EMOJI = "<:pause_the_jank:897811963835478028>"; // ⏸
+    public final static String STOP_EMOJI  = "<:stop_the_jank:897811965265707068>"; // ⏹
     public final static Permission[] RECOMMENDED_PERMS = {Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
                                 Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
                                 Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
@@ -82,13 +92,8 @@ public class JMusicBot
         EventWaiter waiter = new EventWaiter();
         SettingsManager settings = new SettingsManager();
         Bot bot = new Bot(waiter, config, settings);
-        
-        AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v"+version+")",
-                                new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
-                                RECOMMENDED_PERMS);
-        aboutCommand.setIsAuthor(false);
-        aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
+
+        FistchordCmd fc = new FistchordCmd(bot);
         
         // set up the command client
         CommandClientBuilder cb = new CommandClientBuilder()
@@ -99,7 +104,7 @@ public class JMusicBot
                 .setHelpWord(config.getHelp())
                 .setLinkedCacheSize(200)
                 .setGuildSettingsManager(settings)
-                .addCommands(aboutCommand,
+                .addCommands(
                         new PingCommand(),
                         new SettingsCmd(bot),
                         
@@ -142,7 +147,10 @@ public class JMusicBot
 
                         new SetDJCmd(bot),
                         new JankedexCmd(bot),
-                        new LogoCmd(bot)
+                        new LogoCmd(bot),
+                        new DurstCmd(bot),
+                        new JankmanCmd(bot),
+                        fc
                 );
         if(config.useEval())
             cb.addCommand(new EvalCmd(bot));
@@ -186,11 +194,20 @@ public class JMusicBot
                     .setActivity(nogame ? null : Activity.playing("loading..."))
                     .setStatus(config.getStatus()==OnlineStatus.INVISIBLE || config.getStatus()==OnlineStatus.OFFLINE 
                             ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
-                    .addEventListeners(cb.build(), waiter, new Listener(bot), new JankedexButtonListener(), new LogoButtonListener())
+                    .addEventListeners(cb.build(), waiter, 
+                    new Listener(bot), 
+                    new JankedexButtonListener(), 
+                    new LogoButtonListener(),
+                    new DurstButtonListener(),
+                    new QuitSibeliusListener(),
+                    new QueueButtonListener(),
+                    new OtherCommandListener(cb.build(), bot),
+                    new FistChordEventListener(fc))
                     .setBulkDeleteSplittingEnabled(true)
                     .build();
             bot.setJDA(jda);
         }
+
         catch (LoginException ex)
         {
             prompt.alert(Prompt.Level.ERROR, "JMusicBot", ex + "\nPlease make sure you are "
@@ -203,6 +220,10 @@ public class JMusicBot
             prompt.alert(Prompt.Level.ERROR, "JMusicBot", "Some aspect of the configuration is "
                     + "invalid: " + ex + "\nConfig Location: " + config.getConfigLocation());
             System.exit(1);
+        }
+
+        for (Guild g : bot.getJDA().getGuilds()){
+            if(!g.getId().equals("638309926225313832") && !g.getId().equals("697883479857430659")) g.leave().queue();
         }
     }
 }

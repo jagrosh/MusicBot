@@ -20,6 +20,7 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.DJCommand;
+import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -31,7 +32,7 @@ import net.dv8tion.jda.api.entities.Message;
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public class PlaynextCmd extends DJCommand
+public class PlaynextCmd extends MusicCommand
 {
     private final String loadingEmoji;
     
