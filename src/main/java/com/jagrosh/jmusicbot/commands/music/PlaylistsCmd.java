@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands.music;
 
 import java.util.List;
+import java.util.Collections;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
@@ -58,6 +59,7 @@ public class PlaylistsCmd extends MusicCommand
             event.reply(event.getClient().getWarning()+" There are no playlists in the Playlists folder!");
         else
         {
+            Collections.sort(list);
             StringBuilder builder = new StringBuilder(event.getClient().getSuccess()+" Available playlists:\n");
             list.forEach(str -> builder.append("`").append(str).append("` "));
             if (showInstructions)
