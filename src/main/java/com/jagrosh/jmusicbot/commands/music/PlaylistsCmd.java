@@ -34,11 +34,15 @@ public class PlaylistsCmd extends MusicCommand
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
         this.beListening = false;
-        this.beListening = false;
     }
     
     @Override
     public void doCommand(CommandEvent event) 
+    {
+        this.replyList(event, true);
+    }
+
+    public void replyList(CommandEvent event, boolean showInstructions)
     {
         if(!bot.getPlaylistLoader().folderExists())
             bot.getPlaylistLoader().createFolder();
@@ -56,7 +60,8 @@ public class PlaylistsCmd extends MusicCommand
         {
             StringBuilder builder = new StringBuilder(event.getClient().getSuccess()+" Available playlists:\n");
             list.forEach(str -> builder.append("`").append(str).append("` "));
-            builder.append("\nType `").append(event.getClient().getTextualPrefix()).append("play playlist <name>` to play a playlist");
+            if (showInstructions)
+                builder.append("\nType `").append(event.getClient().getTextualPrefix()).append("play playlist <name>` to play a playlist");
             event.reply(builder.toString());
         }
     }
