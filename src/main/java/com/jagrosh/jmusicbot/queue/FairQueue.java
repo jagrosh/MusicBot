@@ -84,6 +84,11 @@ public class FairQueue<T extends Queueable> {
     {
         return list.remove(index);
     }
+
+    public void removeRange(int fromIndex, int toIndex)
+    {
+        list.subList(fromIndex-1, toIndex).clear();
+    }
     
     public int removeAll(long identifier)
     {
