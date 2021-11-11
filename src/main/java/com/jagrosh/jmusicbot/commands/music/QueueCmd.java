@@ -91,7 +91,7 @@ public class QueueCmd extends MusicCommand
         for(int i=0; i<list.size(); i++)
         {
             total += list.get(i).getTrack().getDuration();
-            songs[i] = "`["+FormatUtil.formatTime(list.get(i).getTrack().getDuration())+"]` [**"+list.get(i).getTrack().getInfo().title+"**]("+list.get(i).getTrack().getInfo().uri+")";
+            songs[i] = list.get(i).toString();
         }
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
         long fintotal = total;
