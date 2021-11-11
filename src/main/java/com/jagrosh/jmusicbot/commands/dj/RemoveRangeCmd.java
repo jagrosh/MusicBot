@@ -15,6 +15,9 @@ import net.dv8tion.jda.api.entities.User;
  */
 public class RemoveRangeCmd extends DJCommand 
 {
+    /** 
+    * RemoveRangeCmd Class constructor.
+    */
     public RemoveRangeCmd(Bot bot)
     {
         super(bot);
@@ -26,6 +29,12 @@ public class RemoveRangeCmd extends DJCommand
         this.bePlaying = true;
     }
 
+    
+    /** 
+     * Perform the command of removing a range of songs from the queue.
+     * 
+     * @param event the event that is being handled
+     */
     @Override
     public void doCommand(CommandEvent event) 
     {
@@ -83,6 +92,15 @@ public class RemoveRangeCmd extends DJCommand
         event.replySuccess(reply);
     }
 
+    
+    /** 
+     * Checks to see if a position is valid for a given queue.
+     * Queue positions start at 1.
+     * 
+     * @param queue the queue to be checked
+     * @param position the position to be checked
+     * @return boolean true if the position is valid, else false
+     */
     private static boolean isUnavailablePosition(FairQueue<QueuedTrack> queue, int position)
     {
         return (position < 1 || position > queue.size());

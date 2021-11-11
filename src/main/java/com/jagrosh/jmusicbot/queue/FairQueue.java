@@ -85,6 +85,14 @@ public class FairQueue<T extends Queueable> {
         return list.remove(index);
     }
 
+    
+    /** 
+     * Remove a range of songs from the queue.
+     * Positions start at 1.
+     * 
+     * @param fromIndex position of first song to be removed
+     * @param toIndex position of last song to be removed
+     */
     public void removeRange(int fromIndex, int toIndex)
     {
         list.subList(fromIndex-1, toIndex).clear();
