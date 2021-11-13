@@ -29,6 +29,7 @@ import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
+import com.jagrosh.jmusicbot.queue.FairQueue;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
@@ -111,7 +112,12 @@ public class PlayCmd extends MusicCommand
                         +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(bot.getConfig().getMaxSeconds()*1000)+"`")).queue();
                 return;
             }
-            AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
+
+            AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+            if (!checkDJLock(event, handler)) {
+                return;
+            }
+
             int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor()))+1;
             String addMsg = FormatUtil.filter(event.getClient().getSuccess()+" Added **"+track.getInfo().title
                     +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0?"to begin playing":" to the queue at position "+pos));
@@ -144,6 +150,9 @@ public class PlayCmd extends MusicCommand
                 if(!bot.getConfig().isTooLong(track) && !track.equals(exclude))
                 {
                     AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
+                    if (!checkDJLock(event, handler)) {
+                        return;
+                    }
                     handler.addTrack(new QueuedTrack(track, event.getAuthor()));
                     count[0]++;
                 }
@@ -206,8 +215,28 @@ public class PlayCmd extends MusicCommand
             else
                 m.editMessage(event.getClient().getError()+" Error loading track.").queue();
         }
+
+        /**
+         * Helper method to check if the AudioHandler's Queue is locked.
+         * If the queue is locked, it will then check that the user has
+         * DJ permissions.  @see com.jagrosh.jmusicbot.commands.dj.LockQueue
+         *
+         * @param event
+         * @param handler
+         * @return boolean indicator of whether or not the event is authorized.
+         */
+        private boolean checkDJLock(CommandEvent event, AudioHandler handler) {
+            FairQueue<QueuedTrack> queue = handler.getQueue();
+            if (queue.isLocked()) {
+                if (!DJCommand.checkDJPermission(event)) {
+                    event.replyError("The queue is currently locked. Only DJs can add tracks.");
+                    return false;
+                }
+            }
+            return true;
+        }
     }
-    
+
     public class PlaylistCmd extends MusicCommand
     {
         public PlaylistCmd(Bot bot)
