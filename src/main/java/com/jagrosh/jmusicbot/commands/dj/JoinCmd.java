@@ -66,7 +66,7 @@ public class JoinCmd extends DJCommand
             } 
             else if (list.size()>1)
             {
-                 event.replyWarning("Multiple Voice Channels found matching \""+event.getArgs()+"\"" + FormatUtil.listOfVChannels(list, event.getArgs()));
+                 event.replyWarning(FormatUtil.listOfVChannels(list, event.getArgs()));
             }
             else 
             { 
