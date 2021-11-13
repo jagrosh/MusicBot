@@ -62,8 +62,9 @@ public class PlaylistsCmd extends MusicCommand
             Collections.sort(list);
             StringBuilder builder = new StringBuilder(event.getClient().getSuccess()+" Available playlists:\n");
             list.forEach(str -> builder.append("`").append(str).append("` "));
-            if (showInstructions)
+            if (showInstructions) {
                 builder.append("\nType `").append(event.getClient().getTextualPrefix()).append("play playlist <name>` to play a playlist");
+            }
             event.reply(builder.toString());
         }
     }
