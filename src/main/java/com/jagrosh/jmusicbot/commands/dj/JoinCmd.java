@@ -16,14 +16,16 @@
 package com.jagrosh.jmusicbot.commands.dj;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.DJCommand;
+import com.jagrosh.jmusicbot.utils.FormatUtil;
+import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.List;
 
 /**
  *
@@ -46,43 +48,49 @@ public class JoinCmd extends DJCommand
     @Override
     public void doCommand(CommandEvent event)
     {
-
         AudioManager manager = event.getGuild().getAudioManager();
         VoiceChannel vc;
 
-        if(event.getArgs().isEmpty()) {
-
-            vc = Objects.requireNonNull(event.getMember().getVoiceState()).getChannel();
-
-        } else {
-
-            // I made the code simple cause I don't think someone will have multiple channels with the same name...
-            // I just hope we don't need a menu like in search here!
-
-            Optional<VoiceChannel> maybe = event.getGuild().getVoiceChannels().stream()
-                    .filter(voiceChannel -> voiceChannel.getName().equalsIgnoreCase(event.getArgs())).findFirst();
-
-            if(maybe.isPresent()) {
-                vc = maybe.get();
-            } else {
-                event.reply(":x: Channel not found! Check your spelling!");
+        if(event.getArgs().isEmpty())
+        {
+            GuildVoiceState state = event.getMember().getVoiceState();
+            if(state == null)
+                vc = null;
+            else
+                vc = state.getChannel();
+        }
+        else
+        {
+            List<VoiceChannel> list = FinderUtil.findVoiceChannels(event.getArgs(), event.getGuild());
+            if(list.isEmpty())
+            {
+                event.replyWarning("No Voice Channels found matching \""+event.getArgs()+"\"");
                 return;
             }
-
+            if(list.size()>1)
+            {
+                event.replyWarning(FormatUtil.listOfVChannels(list, event.getArgs()));
+                return;
+            }
+            vc = list.get(0);
         }
 
-        if (vc == null) {
-            event.reply(":x: You need to be in a channel to use this or provide a Voice Channel for the bot to join!");
-        }
-
-        try {
-            manager.openAudioConnection(vc);
-        } catch (PermissionException permissionException) {
-            event.reply(event.getClient().getError()+" I am unable to connect to **"+vc.getName()+"**! I don't have the permissions!");
+        if(vc == null)
+        {
+            event.replyError("You need to be in a channel to use this or provide a Voice Channel for the bot to join!");
             return;
         }
 
-        event.reply("Joined " + vc.getName());
+        try
+        {
+            manager.openAudioConnection(vc);
+        }
+        catch (PermissionException permissionException)
+        {
+            event.replyError("I am unable to connect to **"+vc.getName()+"**!");
+            return;
+        }
 
+        event.replySuccess("Joined "+vc.getName());
     }
 }
