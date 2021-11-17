@@ -23,6 +23,7 @@ import com.typesafe.config.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 
@@ -45,8 +46,7 @@ public class BotConfig
     private long owner, maxSeconds, aloneTimeUntilStop;
     private OnlineStatus status;
     private Activity game;
-    private Config aliases;
-
+    private Config aliases, transforms;
 
     private boolean valid = false;
     
@@ -67,7 +67,7 @@ public class BotConfig
             if(path.toFile().exists())
             {
                 if(System.getProperty("config.file") == null)
-                    System.setProperty("config.file", System.getProperty("config", "config.txt"));
+                    System.setProperty("config.file", System.getProperty("config", path.toAbsolutePath().toString()));
                 ConfigFactory.invalidateCaches();
             }
             
@@ -97,6 +97,7 @@ public class BotConfig
             aloneTimeUntilStop = config.getLong("alonetimeuntilstop");
             playlistsFolder = config.getString("playlistsfolder");
             aliases = config.getConfig("aliases");
+            transforms = config.getConfig("transforms");
             dbots = owner == 113156185389092864L;
             
             // we may need to write a new config file
@@ -322,5 +323,10 @@ public class BotConfig
         {
             return new String[0];
         }
+    }
+    
+    public Config getTransforms()
+    {
+        return transforms;
     }
 }

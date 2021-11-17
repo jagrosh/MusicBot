@@ -30,6 +30,7 @@ public class Prompt
     private final String noguiMessage;
     
     private boolean nogui;
+    private boolean noprompt;
     private Scanner scanner;
     
     public Prompt(String title)
@@ -39,14 +40,15 @@ public class Prompt
     
     public Prompt(String title, String noguiMessage)
     {
-        this(title, noguiMessage, "true".equalsIgnoreCase(System.getProperty("nogui")));
+        this(title, noguiMessage, "true".equalsIgnoreCase(System.getProperty("nogui")), "true".equalsIgnoreCase(System.getProperty("noprompt")));
     }
     
-    public Prompt(String title, String noguiMessage, boolean nogui)
+    public Prompt(String title, String noguiMessage, boolean nogui, boolean noprompt)
     {
         this.title = title;
         this.noguiMessage = noguiMessage == null ? "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag." : noguiMessage;
         this.nogui = nogui;
+        this.noprompt = noprompt;
     }
     
     public boolean isNoGUI()
@@ -108,6 +110,8 @@ public class Prompt
     
     public String prompt(String content)
     {
+        if(noprompt)
+            return null;
         if(nogui)
         {
             if(scanner==null)

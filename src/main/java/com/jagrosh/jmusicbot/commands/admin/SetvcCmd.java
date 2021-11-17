@@ -62,7 +62,7 @@ public class SetvcCmd extends AdminCommand
             else
             {
                 s.setVoiceChannel(list.get(0));
-                event.reply(event.getClient().getSuccess()+" Music can now only be played in **"+list.get(0).getName()+"**");
+                event.reply(event.getClient().getSuccess()+" Music can now only be played in "+list.get(0).getAsMention());
             }
         }
     }
