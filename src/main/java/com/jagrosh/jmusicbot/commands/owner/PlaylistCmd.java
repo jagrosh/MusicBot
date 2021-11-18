@@ -72,7 +72,16 @@ public class PlaylistCmd extends OwnerCommand
         protected void execute(CommandEvent event) 
         {
             String pname = event.getArgs().replaceAll("\\s+", "_");
-            if(bot.getPlaylistLoader().getPlaylist(pname)==null)
+            if(pname == null || pname.isEmpty()) 
+            {
+                event.reply(event.getClient().getError() + " Please provide a name for playlist!");
+                
+                StringBuilder builder = new StringBuilder(event.getClient().getWarning() + " Playlist Make Command:\n");
+                builder.append("\n`").append(event.getClient().getPrefix()).append(name)
+                        .append(" <name>` - creates a new, empty playlist with given name");
+                event.reply(builder.toString());
+            } 
+            else if(bot.getPlaylistLoader().getPlaylist(pname) == null)
             {
                 try
                 {
