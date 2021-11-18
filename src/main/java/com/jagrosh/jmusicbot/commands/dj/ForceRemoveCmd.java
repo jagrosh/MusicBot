@@ -74,7 +74,7 @@ public class ForceRemoveCmd extends DJCommand
         else if(found.size()>1)
         {
             OrderedMenu.Builder builder = new OrderedMenu.Builder();
-            for(int i=0; i<found.size() && i<4; i++)
+            for(int i=0; i<4 && i<found.size(); i++)
             {
                 Member member = found.get(i);
                 builder.addChoice("**"+member.getUser().getName()+"**#"+member.getUser().getDiscriminator());

@@ -28,8 +28,8 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 
 /**
- * 
- * 
+ *
+ *
  * @author John Grosh (jagrosh)
  */
 public class BotConfig
@@ -38,29 +38,29 @@ public class BotConfig
     private final static String CONTEXT = "Config";
     private final static String START_TOKEN = "/// START OF JMUSICBOT CONFIG ///";
     private final static String END_TOKEN = "/// END OF JMUSICBOT CONFIG ///";
-    
+
     private Path path = null;
     private String token, prefix, altprefix, helpWord, playlistsFolder,
             successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
     private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
-    private long owner, maxSeconds, aloneTimeUntilStop;
+    private long owner, maxSeconds, aloneTimeUntilStop, maxSearchResults;
     private OnlineStatus status;
     private Activity game;
     private Config aliases, transforms;
 
     private boolean valid = false;
-    
+
     public BotConfig(Prompt prompt)
     {
         this.prompt = prompt;
     }
-    
+
     public void load()
     {
         valid = false;
-        
+
         // read config from file
-        try 
+        try
         {
             // get the path to the config, default config.txt
             path = OtherUtil.getPath(System.getProperty("config.file", System.getProperty("config", "config.txt")));
@@ -70,11 +70,11 @@ public class BotConfig
                     System.setProperty("config.file", System.getProperty("config", path.toAbsolutePath().toString()));
                 ConfigFactory.invalidateCaches();
             }
-            
+
             // load in the config file, plus the default values
             //Config config = ConfigFactory.parseFile(path.toFile()).withFallback(ConfigFactory.load());
             Config config = ConfigFactory.load();
-            
+
             // set values
             token = config.getString("token");
             prefix = config.getString("prefix");
@@ -95,11 +95,12 @@ public class BotConfig
             useEval = config.getBoolean("eval");
             maxSeconds = config.getLong("maxtime");
             aloneTimeUntilStop = config.getLong("alonetimeuntilstop");
+            maxSearchResults = config.getLong("maxsearchresults");
             playlistsFolder = config.getString("playlistsfolder");
             aliases = config.getConfig("aliases");
             transforms = config.getConfig("transforms");
             dbots = owner == 113156185389092864L;
-            
+
             // we may need to write a new config file
             boolean write = false;
 
@@ -120,7 +121,7 @@ public class BotConfig
                     write = true;
                 }
             }
-            
+
             // validate bot owner
             if(owner<=0)
             {
@@ -146,10 +147,10 @@ public class BotConfig
                     write = true;
                 }
             }
-            
+
             if(write)
                 writeToFile();
-            
+
             // if we get through the whole config, it's good to go
             valid = true;
         }
@@ -158,7 +159,7 @@ public class BotConfig
             prompt.alert(Prompt.Level.ERROR, CONTEXT, ex + ": " + ex.getMessage() + "\n\nConfig Location: " + path.toAbsolutePath().toString());
         }
     }
-    
+
     private void writeToFile()
     {
         String original = OtherUtil.loadResource(this, "/reference.conf");
@@ -174,128 +175,128 @@ public class BotConfig
                 .replace("0 // OWNER ID", Long.toString(owner))
                 .trim().getBytes();
         }
-        try 
+        try
         {
             Files.write(path, bytes);
         }
-        catch(IOException ex) 
+        catch(IOException ex)
         {
             prompt.alert(Prompt.Level.WARNING, CONTEXT, "Failed to write new config options to config.txt: "+ex
-                + "\nPlease make sure that the files are not on your desktop or some other restricted area.\n\nConfig Location: " 
+                + "\nPlease make sure that the files are not on your desktop or some other restricted area.\n\nConfig Location: "
                 + path.toAbsolutePath().toString());
         }
     }
-    
+
     public boolean isValid()
     {
         return valid;
     }
-    
+
     public String getConfigLocation()
     {
         return path.toFile().getAbsolutePath();
     }
-    
+
     public String getPrefix()
     {
         return prefix;
     }
-    
+
     public String getAltPrefix()
     {
         return "NONE".equalsIgnoreCase(altprefix) ? null : altprefix;
     }
-    
+
     public String getToken()
     {
         return token;
     }
-    
+
     public long getOwnerId()
     {
         return owner;
     }
-    
+
     public String getSuccess()
     {
         return successEmoji;
     }
-    
+
     public String getWarning()
     {
         return warningEmoji;
     }
-    
+
     public String getError()
     {
         return errorEmoji;
     }
-    
+
     public String getLoading()
     {
         return loadingEmoji;
     }
-    
+
     public String getSearching()
     {
         return searchingEmoji;
     }
-    
+
     public Activity getGame()
     {
         return game;
     }
-    
+
     public OnlineStatus getStatus()
     {
         return status;
     }
-    
+
     public String getHelp()
     {
         return helpWord;
     }
-    
+
     public boolean getStay()
     {
         return stayInChannel;
     }
-    
+
     public boolean getSongInStatus()
     {
         return songInGame;
     }
-    
+
     public String getPlaylistsFolder()
     {
         return playlistsFolder;
     }
-    
+
     public boolean getDBots()
     {
         return dbots;
     }
-    
+
     public boolean useUpdateAlerts()
     {
         return updatealerts;
     }
-    
+
     public boolean useEval()
     {
         return useEval;
     }
-    
+
     public boolean useNPImages()
     {
         return npImages;
     }
-    
+
     public long getMaxSeconds()
     {
         return maxSeconds;
     }
-    
+
     public String getMaxTime()
     {
         return FormatUtil.formatTime(maxSeconds * 1000);
@@ -305,7 +306,12 @@ public class BotConfig
     {
         return aloneTimeUntilStop;
     }
-    
+
+    public long getMaxSearchResults()
+    {
+        return maxSearchResults;
+    }
+
     public boolean isTooLong(AudioTrack track)
     {
         if(maxSeconds<=0)
@@ -324,7 +330,7 @@ public class BotConfig
             return new String[0];
         }
     }
-    
+
     public Config getTransforms()
     {
         return transforms;
