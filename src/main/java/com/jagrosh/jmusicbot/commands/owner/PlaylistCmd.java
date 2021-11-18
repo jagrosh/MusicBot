@@ -74,7 +74,7 @@ public class PlaylistCmd extends OwnerCommand
             String pname = event.getArgs().replaceAll("\\s+", "_");
             if(pname == null || pname.isEmpty()) 
             {
-                event.reply(event.getClient().getError() + " Please provide a name for playlist!");
+                event.replyError("Please provide a name for the playlist!");
                 
                 StringBuilder builder = new StringBuilder(event.getClient().getWarning() + " Playlist Make Command:\n");
                 builder.append("\n`").append(event.getClient().getPrefix()).append(name)
