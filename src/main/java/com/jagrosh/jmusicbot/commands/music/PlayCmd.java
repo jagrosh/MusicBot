@@ -84,14 +84,12 @@ public class PlayCmd extends MusicCommand
             event.reply(builder.toString());
             return;
         }
-        String args;
         if (!event.getArgs().isEmpty()){
-            args = event.getArgs().replaceAll("^<|>$", "");
+            String args = event.getArgs().replaceAll("^<|>$", "");
             event.reply(loadingEmoji + " Loading... `[" + args + "]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m, event, false)));
         } else{
             for (Message.Attachment attachment: event.getMessage().getAttachments()) {
-                args = attachment.getUrl();
-                event.reply(loadingEmoji + " Loading... `[" + args + "]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m, event, false)));
+                event.reply(loadingEmoji + " Loading... `[" + attachment.getUrl() + "]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), attachment.getUrl(), new ResultHandler(m, event, false)));
             }
         }
     }
