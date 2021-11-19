@@ -44,14 +44,14 @@ public class PlaylistsCmd extends MusicCommand
             bot.getPlaylistLoader().createFolder();
         if(!bot.getPlaylistLoader().folderExists())
         {
-            event.reply(event.getClient().getWarning()+" Playlists folder does not exist and could not be created!");
+            event.replyWarning("Playlists folder does not exist and could not be created!");
             return;
         }
         List<String> list = bot.getPlaylistLoader().getPlaylistNames();
         if(list==null)
-            event.reply(event.getClient().getError()+" Failed to load available playlists!");
+            event.replyError("Failed to load available playlists!");
         else if(list.isEmpty())
-            event.reply(event.getClient().getWarning()+" There are no playlists in the Playlists folder!");
+            event.replyWarning("There are no playlists in the Playlists folder!");
         else
         {
             StringBuilder builder = new StringBuilder(event.getClient().getSuccess()+" Available playlists:\n");

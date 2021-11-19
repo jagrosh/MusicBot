@@ -47,12 +47,12 @@ public class SetgameCmd extends OwnerCommand
         try
         {
             event.getJDA().getPresence().setActivity(title.isEmpty() ? null : Activity.playing(title));
-            event.reply(event.getClient().getSuccess()+" **"+event.getSelfUser().getName()
+            event.replySuccess("**"+event.getSelfUser().getName()
                     +"** is "+(title.isEmpty() ? "no longer playing anything." : "now playing `"+title+"`"));
         }
         catch(Exception e)
         {
-            event.reply(event.getClient().getError()+" The game could not be set!");
+            event.replyError("The game could not be set!");
         }
     }
     
@@ -84,7 +84,7 @@ public class SetgameCmd extends OwnerCommand
             }
             catch(Exception e)
             {
-                event.reply(event.getClient().getError()+" The game could not be set!");
+                event.replyError("The game could not be set!");
             }
         }
     }
@@ -114,7 +114,7 @@ public class SetgameCmd extends OwnerCommand
                 event.getJDA().getPresence().setActivity(Activity.listening(title));
                 event.replySuccess("**"+event.getSelfUser().getName()+"** is now listening to `"+title+"`");
             } catch(Exception e) {
-                event.reply(event.getClient().getError()+" The game could not be set!");
+                event.replyError("The game could not be set!");
             }
         }
     }
@@ -144,7 +144,7 @@ public class SetgameCmd extends OwnerCommand
                 event.getJDA().getPresence().setActivity(Activity.watching(title));
                 event.replySuccess("**"+event.getSelfUser().getName()+"** is now watching `"+title+"`");
             } catch(Exception e) {
-                event.reply(event.getClient().getError()+" The game could not be set!");
+                event.replyError("The game could not be set!");
             }
         }
     }

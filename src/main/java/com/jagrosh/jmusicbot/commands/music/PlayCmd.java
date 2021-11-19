@@ -230,7 +230,7 @@ public class PlayCmd extends MusicCommand
         {
             if(event.getArgs().isEmpty())
             {
-                event.reply(event.getClient().getError()+" Please include a playlist name.");
+                event.replyError("Please include a playlist name.");
                 return;
             }
             Playlist playlist = bot.getPlaylistLoader().getPlaylist(event.getArgs());

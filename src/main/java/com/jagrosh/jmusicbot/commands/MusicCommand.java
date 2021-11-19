@@ -59,7 +59,7 @@ public abstract class MusicCommand extends Command
         bot.getPlayerManager().setUpHandler(event.getGuild()); // no point constantly checking for this later
         if(bePlaying && !((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).isMusicPlaying(event.getJDA()))
         {
-            event.reply(event.getClient().getError()+" There must be music playing to use that!");
+            event.replyError("There must be music playing to use that!");
             return;
         }
         if(beListening)
@@ -89,7 +89,7 @@ public abstract class MusicCommand extends Command
                 }
                 catch(PermissionException ex) 
                 {
-                    event.reply(event.getClient().getError()+" I am unable to connect to "+userState.getChannel().getAsMention()+"!");
+                    event.replyError("I am unable to connect to "+userState.getChannel().getAsMention()+"!");
                     return;
                 }
             }

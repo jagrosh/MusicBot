@@ -45,7 +45,7 @@ public class SkipCmd extends MusicCommand
         RequestMetadata rm = handler.getRequestMetadata();
         if(event.getAuthor().getIdLong() == rm.getOwner())
         {
-            event.reply(event.getClient().getSuccess()+" Skipped **"+handler.getPlayer().getPlayingTrack().getInfo().title+"**");
+            event.replySuccess("Skipped **"+handler.getPlayer().getPlayingTrack().getInfo().title+"**");
             handler.getPlayer().stopTrack();
         }
         else
