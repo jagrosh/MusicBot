@@ -31,6 +31,9 @@ import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.PermissionException;
@@ -86,7 +89,18 @@ public class PlayCmd extends MusicCommand
         }
         if (!event.getArgs().isEmpty()){
             String args = event.getArgs().replaceAll("^<|>$", "");
-            event.reply(loadingEmoji + " Loading... `[" + args + "]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m, event, false)));
+            Pattern pattern = Pattern.compile("\\s*(```)?(.*)(```)?");
+            Matcher matcher = pattern.matcher(args);
+            if (matcher.group(1) != null && matcher.group(3) != null)
+            {
+                for (String line : matcher.group(2).split("\\R")) {
+                    event.reply(loadingEmoji + " Loading... `[" + args + "]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), line, new ResultHandler(m, event, false)));
+                }
+            }
+            else
+            {
+                event.reply(loadingEmoji + " Loading... `[" + args + "]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m, event, false)));
+            }
         } else{
             for (Message.Attachment attachment: event.getMessage().getAttachments()) {
                 event.reply(loadingEmoji + " Loading... `[" + attachment.getUrl() + "]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), attachment.getUrl(), new ResultHandler(m, event, false)));
