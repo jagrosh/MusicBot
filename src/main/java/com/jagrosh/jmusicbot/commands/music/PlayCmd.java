@@ -96,8 +96,7 @@ public class PlayCmd extends MusicCommand
                 for (String line : matcher.group(2).split("\\R")) {
                     if (!line.isEmpty())
                     {
-                        String early_bound = new String(line);
-                        event.reply(loadingEmoji + " Loading... `[" + line + "]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), early_bound, new ResultHandler(m, event, false)));
+                        event.reply(loadingEmoji + " Loading... `[" + line + "]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), line, new ResultHandler(m, event, false, true)));
                     }
                 }
             }
@@ -117,13 +116,21 @@ public class PlayCmd extends MusicCommand
         private final Message m;
         private final CommandEvent event;
         private final boolean ytsearch;
-        
-        private ResultHandler(Message m, CommandEvent event, boolean ytsearch)
+        private final boolean multi;
+
+        private ResultHandler(Message m, CommandEvent event, boolean ytsearch, boolean multi)
         {
             this.m = m;
             this.event = event;
             this.ytsearch = ytsearch;
+            this.multi = multi;
         }
+
+        private ResultHandler(Message m, CommandEvent event, boolean ytsearch)
+        {
+            this(m, event, ytsearch, false);
+        }
+
         
         private void loadSingle(AudioTrack track, AudioPlaylist playlist)
         {
