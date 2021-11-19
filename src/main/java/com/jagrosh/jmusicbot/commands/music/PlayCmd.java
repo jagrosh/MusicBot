@@ -91,6 +91,7 @@ public class PlayCmd extends MusicCommand
             String args = event.getArgs().replaceAll("^<|>$", "");
             Pattern pattern = Pattern.compile("\\s*(```)?(.*)(```)?");
             Matcher matcher = pattern.matcher(args);
+            matcher.matches();
             if (matcher.group(1) != null && matcher.group(3) != null)
             {
                 for (String line : matcher.group(2).split("\\R")) {
