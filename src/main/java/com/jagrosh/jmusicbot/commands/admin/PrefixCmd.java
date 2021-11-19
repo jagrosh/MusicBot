@@ -42,11 +42,11 @@ public class PrefixCmd extends AdminCommand
         {
             if (s.getPrefix() == null)
             {
-                event.replySuccess("Custom prefix is currently set to `" + s.getPrefix() + "` on *" + event.getGuild().getName() + "*");
+                event.replySuccess("Custom prefix is currently unset");
             }
             else
             {
-                event.replySuccess("Custom prefix is currently unset");
+                event.replySuccess("Custom prefix is currently set to `" + s.getPrefix() + "` on *" + event.getGuild().getName() + "*");
             }
         }
         else if(event.getArgs().equalsIgnoreCase("none"))

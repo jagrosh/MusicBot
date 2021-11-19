@@ -50,7 +50,7 @@ public class SettcCmd extends AdminCommand
             }
             else
             {
-                event.replySuccess("Music commands can currently only be used in <#"+s.getTextChannel(event.getGuild())+">");
+                event.replySuccess("Music commands can currently only be used in "+s.getTextChannel(event.getGuild()).getAsMention());
             }
         }
         else if(event.getArgs().equalsIgnoreCase("none"))
@@ -68,7 +68,7 @@ public class SettcCmd extends AdminCommand
             else
             {
                 s.setTextChannel(list.get(0));
-                event.replySuccess("Music commands can now only be used in <#"+list.get(0).getId()+">");
+                event.replySuccess("Music commands can now only be used in "+list.get(0).getAsMention());
             }
         }
     }
