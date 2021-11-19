@@ -58,7 +58,7 @@ public class SetdjCmd extends AdminCommand
             if(list.isEmpty())
                 event.replyWarning("No Roles found matching \""+event.getArgs()+"\"");
             else if (list.size()>1)
-                event.reply(event.getClient().getWarning()+FormatUtil.listOfRoles(list, event.getArgs()));
+                event.replyWarning(FormatUtil.listOfRoles(list, event.getArgs()));
             else
             {
                 s.setDJRole(list.get(0));

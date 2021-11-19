@@ -58,7 +58,7 @@ public class SetvcCmd extends AdminCommand
             if(list.isEmpty())
                 event.replyWarning("No Voice Channels found matching \""+event.getArgs()+"\"");
             else if (list.size()>1)
-                event.reply(event.getClient().getWarning()+FormatUtil.listOfVChannels(list, event.getArgs()));
+                event.replyWarning(FormatUtil.listOfVChannels(list, event.getArgs()));
             else
             {
                 s.setVoiceChannel(list.get(0));
