@@ -89,14 +89,15 @@ public class PlayCmd extends MusicCommand
         }
         if (!event.getArgs().isEmpty()){
             String args = event.getArgs().replaceAll("^<|>$", "");
-            Pattern pattern = Pattern.compile("\\s*(```)(.*)(```).*", Pattern.DOTALL);
+            Pattern pattern = Pattern.compile(".*(```)(.*)(```).*", Pattern.DOTALL);
             Matcher matcher = pattern.matcher(args);
             if (matcher.matches())
             {
                 for (String line : matcher.group(2).split("\\R")) {
                     if (!line.isEmpty())
                     {
-                        event.reply(loadingEmoji + " Loading... `[" + line + "]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), line, new ResultHandler(m, event, false)));
+                        String early_bound = new String(line);
+                        event.reply(loadingEmoji + " Loading... `[" + line + "]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), early_bound, new ResultHandler(m, event, false)));
                     }
                 }
             }
