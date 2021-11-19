@@ -41,13 +41,20 @@ public class SetvcCmd extends AdminCommand
     @Override
     protected void execute(CommandEvent event) 
     {
+        Settings s = event.getClient().getSettingsFor(event.getGuild());
         if(event.getArgs().isEmpty())
         {
-            event.replyError("Please include a voice channel or NONE");
-            return;
+            if (s.getVoiceChannel(event.getGuild()) == null)
+            {
+                event.replySuccess("Music can currently be played in any channel");
+            }
+            else
+            {
+                event.replySuccess("Music can currently only be played in "+s.getVoiceChannel(event.getGuild()).getAsMention());
+
+            }
         }
-        Settings s = event.getClient().getSettingsFor(event.getGuild());
-        if(event.getArgs().equalsIgnoreCase("none"))
+        else if(event.getArgs().equalsIgnoreCase("none"))
         {
             s.setVoiceChannel(null);
             event.replySuccess("Music can now be played in any channel");

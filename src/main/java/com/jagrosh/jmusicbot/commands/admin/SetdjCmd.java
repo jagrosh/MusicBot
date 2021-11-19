@@ -41,13 +41,19 @@ public class SetdjCmd extends AdminCommand
     @Override
     protected void execute(CommandEvent event) 
     {
+        Settings s = event.getClient().getSettingsFor(event.getGuild());
         if(event.getArgs().isEmpty())
         {
-            event.replyError("Please include a role name or NONE");
-            return;
+            if (s.getRole(event.getGuild()) == null)
+            {
+                event.replySuccess("DJ role is currently cleared; Only Admins can use the DJ commands.");
+            }
+            else
+            {
+                event.replySuccess("DJ commands can currently be used by users with the **"+s.getRole(event.getGuild())+"** role.");
+            }
         }
-        Settings s = event.getClient().getSettingsFor(event.getGuild());
-        if(event.getArgs().equalsIgnoreCase("none"))
+        else if(event.getArgs().equalsIgnoreCase("none"))
         {
             s.setDJRole(null);
             event.replySuccess("DJ role cleared; Only Admins can use the DJ commands.");

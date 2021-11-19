@@ -41,13 +41,19 @@ public class SettcCmd extends AdminCommand
     @Override
     protected void execute(CommandEvent event) 
     {
+        Settings s = event.getClient().getSettingsFor(event.getGuild());
         if(event.getArgs().isEmpty())
         {
-            event.replyError("Please include a text channel or NONE");
-            return;
+            if (s.getTextChannel(event.getGuild()) == null)
+            {
+                event.replySuccess("Music commands can currently be used in any channel");
+            }
+            else
+            {
+                event.replySuccess("Music commands can currently only be used in <#"+s.getTextChannel(event.getGuild())+">");
+            }
         }
-        Settings s = event.getClient().getSettingsFor(event.getGuild());
-        if(event.getArgs().equalsIgnoreCase("none"))
+        else if(event.getArgs().equalsIgnoreCase("none"))
         {
             s.setTextChannel(null);
             event.replySuccess("Music commands can now be used in any channel");

@@ -37,6 +37,11 @@ public class SkipratioCmd extends AdminCommand
     @Override
     protected void execute(CommandEvent event) 
     {
+        Settings s = event.getClient().getSettingsFor(event.getGuild());
+        if (event.getArgs().isEmpty())
+        {
+            event.replySuccess("Skip percentage is currently set to `" + Math.round(s.getSkipRatio() * 100) + "%` of listeners on *" + event.getGuild().getName() + "*");
+        }
         try
         {
             int val = Integer.parseInt(event.getArgs().endsWith("%") ? event.getArgs().substring(0,event.getArgs().length()-1) : event.getArgs());
@@ -45,7 +50,6 @@ public class SkipratioCmd extends AdminCommand
                 event.replyError("The provided value must be between 0 and 100!");
                 return;
             }
-            Settings s = event.getClient().getSettingsFor(event.getGuild());
             s.setSkipRatio(val / 100.0);
             event.replySuccess("Skip percentage has been set to `" + val + "%` of listeners on *" + event.getGuild().getName() + "*");
         }

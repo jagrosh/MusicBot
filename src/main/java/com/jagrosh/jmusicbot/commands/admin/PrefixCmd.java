@@ -37,14 +37,19 @@ public class PrefixCmd extends AdminCommand
     @Override
     protected void execute(CommandEvent event) 
     {
+        Settings s = event.getClient().getSettingsFor(event.getGuild());
         if(event.getArgs().isEmpty())
         {
-            event.replyError("Please include a prefix or NONE");
-            return;
+            if (s.getPrefix() == null)
+            {
+                event.replySuccess("Custom prefix is currently set to `" + s.getPrefix() + "` on *" + event.getGuild().getName() + "*");
+            }
+            else
+            {
+                event.replySuccess("Custom prefix is currently unset");
+            }
         }
-        
-        Settings s = event.getClient().getSettingsFor(event.getGuild());
-        if(event.getArgs().equalsIgnoreCase("none"))
+        else if(event.getArgs().equalsIgnoreCase("none"))
         {
             s.setPrefix(null);
             event.replySuccess("Prefix cleared.");
