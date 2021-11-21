@@ -227,11 +227,9 @@ public class PlayCmd extends MusicCommand
          */
         private boolean checkDJLock(CommandEvent event, AudioHandler handler) {
             FairQueue<QueuedTrack> queue = handler.getQueue();
-            if (queue.isLocked()) {
-                if (!DJCommand.checkDJPermission(event)) {
-                    event.replyError("The queue is currently locked. Only DJs can add tracks.");
-                    return false;
-                }
+            if (queue.isLocked() && !DJCommand.checkDJPermission(event)) {
+                event.replyError("The queue is currently locked. Only DJs can add tracks.");
+                return false;
             }
             return true;
         }
