@@ -21,6 +21,8 @@ import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.RequestMetadata;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import net.dv8tion.jda.api.entities.User;
+import com.jagrosh.jmusicbot.queue.FairQueue;
+import com.jagrosh.jmusicbot.audio.QueuedTrack;
 
 /**
  *
@@ -69,6 +71,7 @@ public class SkipCmd extends MusicCommand
                 msg += "\n" + event.getClient().getSuccess() + " Skipped **" + handler.getPlayer().getPlayingTrack().getInfo().title
                     + "** " + (rm.getOwner() == 0L ? "(autoplay)" : "(requested by **" + rm.user.username + "**)");
                 handler.getPlayer().stopTrack();
+                handler.getQueue().setPreviousTrack(new QueuedTrack(handler.getPlayer().getPlayingTrack().makeClone(), handler.getPlayer().getPlayingTrack().getUserData(RequestMetadata.class)));
             }
             event.reply(msg);
         }

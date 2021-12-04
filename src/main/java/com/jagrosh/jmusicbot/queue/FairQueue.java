@@ -28,6 +28,7 @@ import java.util.Set;
 public class FairQueue<T extends Queueable> {
     private final List<T> list = new ArrayList<>();
     private final Set<Long> set = new HashSet<>();
+    private T previousTrack;
     
     public int add(T item)
     {
@@ -140,5 +141,23 @@ public class FairQueue<T extends Queueable> {
         T item = list.remove(from);
         list.add(to, item);
         return item;
+    }
+
+    /** 
+     * Getter for the previously-played track
+     * 
+     * @return the previously-played track
+     */
+    public T getPreviousTrack() {
+        return this.previousTrack;
+    }
+ 
+    /** 
+     * Setter for the previously-played track
+     * 
+     * @param previousTrack the previously-played track
+     */
+    public void setPreviousTrack(T previousTrack) {
+        this.previousTrack = previousTrack;
     }
 }

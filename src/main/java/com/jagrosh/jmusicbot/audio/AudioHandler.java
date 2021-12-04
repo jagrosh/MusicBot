@@ -151,6 +151,23 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         });
         return true;
     }
+
+    /** 
+     * Play or put in the back of queue the previously-played track
+     * 
+     * @return the previously-played track
+     */
+    public AudioTrack backTrack()
+    {
+        if(audioPlayer.getPlayingTrack()==null)
+        {
+            audioPlayer.playTrack(queue.getPreviousTrack().getTrack());
+        }
+        else {
+            queue.add(queue.getPreviousTrack());
+        }
+        return queue.getPreviousTrack().getTrack();
+    }
     
     // Audio Events
     @Override
@@ -184,6 +201,10 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
             QueuedTrack qt = queue.pull();
             player.playTrack(qt.getTrack());
         }
+
+        // add ended track to queue's previousTrack field (used for back command)
+        QueuedTrack previousTrack = new QueuedTrack(track.makeClone(), track.getUserData(RequestMetadata.class));
+        queue.setPreviousTrack(previousTrack);
     }
 
     @Override
