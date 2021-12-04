@@ -114,7 +114,8 @@ public class PlayCmd extends MusicCommand
             }
 
             AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
-            if (!checkDJLock(event, handler)) {
+            if (!checkDJLock(event, handler))
+            {
                 return;
             }
 
@@ -150,7 +151,8 @@ public class PlayCmd extends MusicCommand
                 if(!bot.getConfig().isTooLong(track) && !track.equals(exclude))
                 {
                     AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-                    if (!checkDJLock(event, handler)) {
+                    if (!checkDJLock(event, handler))
+                    {
                         return;
                     }
                     handler.addTrack(new QueuedTrack(track, event.getAuthor()));
@@ -225,9 +227,11 @@ public class PlayCmd extends MusicCommand
          * @param handler
          * @return boolean indicator of whether or not the event is authorized.
          */
-        private boolean checkDJLock(CommandEvent event, AudioHandler handler) {
+        private boolean checkDJLock(CommandEvent event, AudioHandler handler)
+        {
             FairQueue<QueuedTrack> queue = handler.getQueue();
-            if (queue.isLocked() && !DJCommand.checkDJPermission(event)) {
+            if (queue.isLocked() && !DJCommand.checkDJPermission(event))
+            {
                 event.replyError("The queue is currently locked. Only DJs can add tracks.");
                 return false;
             }

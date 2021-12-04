@@ -28,25 +28,28 @@ import com.jagrosh.jmusicbot.queue.FairQueue;
  * 
  * @author Jared Morris (https://github.com/morrisj95)
  */
-public class LockQueueCmd extends DJCommand {
-  public LockQueueCmd(Bot bot) {
-    super(bot);
-    this.name = "lockqueue";
-    this.help = "locks or unlocks the queue";
-    this.aliases = bot.getConfig().getAliases(this.name);
-    this.beListening = false;
-    this.bePlaying = false;
-  }
+public class LockQueueCmd extends DJCommand
+{
+    public LockQueueCmd(Bot bot)
+    {
+        super(bot);
+        this.name = "lockqueue";
+        this.help = "locks or unlocks the queue";
+        this.aliases = bot.getConfig().getAliases(this.name);
+        this.beListening = false;
+        this.bePlaying = false;
+    }
 
-  @Override
-  public void doCommand(CommandEvent event) {
-    final AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
-    final FairQueue<QueuedTrack> queue = handler.getQueue();
-
-    queue.toggleLock();
-
-    final String lockStatusString = queue.isLocked() ? "locked" : "unlocked";
-    event.reply(event.getClient().getSuccess() + " The queue is now " + lockStatusString
-        + ". Run the `lockqueue` command again to toggle the queue lock.");
-  }
+    @Override
+    public void doCommand(CommandEvent event)
+    {
+        final AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+        final FairQueue<QueuedTrack> queue = handler.getQueue();
+  
+        queue.toggleLock();
+  
+        final String lockStatusString = queue.isLocked() ? "locked" : "unlocked";
+        event.reply(event.getClient().getSuccess() + " The queue is now " + lockStatusString
+            + ". Run the `lockqueue` command again to toggle the queue lock.");
+    }
 }
