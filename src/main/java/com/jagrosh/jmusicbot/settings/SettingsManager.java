@@ -58,8 +58,6 @@ public class SettingsManager implements GuildSettingsManager
                         o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO));
             });
         } catch(IOException | JSONException e) {
-            if (System.getProperty("serversettings.suppressFirstLoadWarning", "false").equalsIgnoreCase("true"))
-                return;
             LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
         }
     }
