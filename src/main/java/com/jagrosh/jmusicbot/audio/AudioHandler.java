@@ -170,6 +170,13 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
     }
     
     // Audio Events
+    /**
+     * Perform tasks on track end
+     * 
+     * @param player the audio player
+     * @param track the track ending
+     * @param endReason the reason the track is ending
+     */
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) 
     {

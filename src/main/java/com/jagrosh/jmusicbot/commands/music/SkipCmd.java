@@ -39,7 +39,12 @@ public class SkipCmd extends MusicCommand
         this.beListening = true;
         this.bePlaying = true;
     }
-
+    
+    /**
+     * Perform the skip command
+     * 
+     * @param event Command event
+     */
     @Override
     public void doCommand(CommandEvent event) 
     {
