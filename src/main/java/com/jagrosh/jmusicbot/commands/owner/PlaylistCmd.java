@@ -195,7 +195,7 @@ public class PlaylistCmd extends OwnerCommand
         @Override
         protected void execute(CommandEvent event) 
         {
-            new PlaylistsCmd(bot).replyList(event, false);
+            PlaylistsCmd.replyList(event, bot.getPlaylistLoader(), false);
         }
     }
 }

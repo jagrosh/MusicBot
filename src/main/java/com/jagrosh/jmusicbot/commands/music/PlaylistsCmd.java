@@ -40,19 +40,22 @@ public class PlaylistsCmd extends MusicCommand
     @Override
     public void doCommand(CommandEvent event) 
     {
-        this.replyList(event, true);
+        this.replyList(event, bot.getPlaylistLoader(), true);
     }
 
-    public void replyList(CommandEvent event, boolean showInstructions)
+    public static void replyList(CommandEvent event, PlaylistLoader loader, boolean showInstructions)
     {
-        if(!bot.getPlaylistLoader().folderExists())
-            bot.getPlaylistLoader().createFolder();
-        if(!bot.getPlaylistLoader().folderExists())
+        if (!loader.folderExists())
         {
-            event.reply(event.getClient().getWarning()+" Playlists folder does not exist and could not be created!");
+            loader.createFolder();
+        }
+        if (!loader.folderExists())
+        {
+            event.reply(event.getclient().getWarning() + " Plyalists folder does not exist and could not be created!");
             return;
         }
-        List<String> list = bot.getPlaylistLoader().getPlaylistNames();
+
+        List<String> list = loader.getPlaylistNames();
         if(list==null)
             event.reply(event.getClient().getError()+" Failed to load available playlists!");
         else if(list.isEmpty())
@@ -62,7 +65,7 @@ public class PlaylistsCmd extends MusicCommand
             Collections.sort(list);
             StringBuilder builder = new StringBuilder(event.getClient().getSuccess()+" Available playlists:\n");
             list.forEach(str -> builder.append("`").append(str).append("` "));
-            if (showInstructions) 
+            if (showInstructions)
             {
                 builder.append("\nType `").append(event.getClient().getTextualPrefix()).append("play playlist <name>` to play a playlist");
             }
