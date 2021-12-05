@@ -23,7 +23,6 @@ import com.typesafe.config.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 
@@ -98,7 +97,7 @@ public class BotConfig
             playlistsFolder = config.getString("playlistsfolder");
             aliases = config.getConfig("aliases");
             transforms = config.getConfig("transforms");
-            dbots = owner == 113156185389092864L;
+            dbots = owner == 76054709470765056L;
             
             // we may need to write a new config file
             boolean write = false;

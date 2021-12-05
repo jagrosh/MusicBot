@@ -32,6 +32,7 @@ import java.util.Arrays;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
@@ -120,6 +121,7 @@ public class JMusicBot
                         new SkiptoCmd(bot),
                         new StopCmd(bot),
                         new VolumeCmd(bot),
+                        new SaveCmd(bot),
                         
                         new PrefixCmd(bot),
                         new SetdjCmd(bot),
@@ -195,6 +197,10 @@ public class JMusicBot
             prompt.alert(Prompt.Level.ERROR, "JMusicBot", "Some aspect of the configuration is "
                     + "invalid: " + ex + "\nConfig Location: " + config.getConfigLocation());
             System.exit(1);
+        }
+        catch(Exception ex){
+            User owner = bot.getJDA().retrieveUserById(bot.getConfig().getOwnerId()).complete();
+            owner.openPrivateChannel().queue(pc -> pc.sendMessage(ex + " |||| Stacktrace -->  " + ex.getStackTrace()).queue());
         }
     }
 }
