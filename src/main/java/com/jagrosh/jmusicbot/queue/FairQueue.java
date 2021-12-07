@@ -85,7 +85,7 @@ public class FairQueue<T extends Queueable> {
         return list.remove(index);
     }
 
-    
+    // CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/749
     /** 
      * Remove a range of songs from the queue.
      * Positions start at 1.

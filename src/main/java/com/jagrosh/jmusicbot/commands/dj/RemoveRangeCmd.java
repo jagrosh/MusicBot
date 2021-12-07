@@ -7,6 +7,7 @@ import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.queue.FairQueue;
 
+// CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/749
 /**
  * Command that provides users the ability to remove a range of songs in
  * the queue.
