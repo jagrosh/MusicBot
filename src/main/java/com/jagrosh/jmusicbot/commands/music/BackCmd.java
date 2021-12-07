@@ -26,6 +26,7 @@ import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import net.dv8tion.jda.api.entities.Message;
 
+// CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/751
 /**
  *
  * @author John Grosh <john.a.grosh@gmail.com>

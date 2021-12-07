@@ -152,6 +152,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         return true;
     }
 
+    // CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/751
     /** 
      * Play or put in the back of queue the previously-played track
      * 
@@ -169,6 +170,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         return queue.getPreviousTrack().getTrack();
     }
     
+    // CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/751
     // Audio Events
     /**
      * Perform tasks on track end

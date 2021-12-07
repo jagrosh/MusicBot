@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/751
 /**
  *
  * @author John Grosh (jagrosh)
@@ -143,6 +144,7 @@ public class FairQueue<T extends Queueable> {
         return item;
     }
 
+    // CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/751
     /** 
      * Getter for the previously-played track
      * 
@@ -152,6 +154,7 @@ public class FairQueue<T extends Queueable> {
         return this.previousTrack;
     }
  
+    // CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/751
     /** 
      * Setter for the previously-played track
      * 

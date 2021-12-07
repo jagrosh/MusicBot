@@ -40,6 +40,7 @@ public class SkipCmd extends MusicCommand
         this.bePlaying = true;
     }
     
+    // CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/751
     /**
      * Perform the skip command
      * 
