@@ -30,6 +30,8 @@ import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
@@ -73,11 +75,8 @@ public class PlayCmd extends MusicCommand {
         if (event.getArgs().isEmpty() && event.getMessage().getAttachments().isEmpty()) {
             AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
             if (handler.getPlayer().getPlayingTrack() != null && handler.getPlayer().isPaused()) {
-                if (DJCommand.checkDJPermission(event)) {
                     handler.getPlayer().setPaused(false);
                     event.replySuccess("Resumed **" + handler.getPlayer().getPlayingTrack().getInfo().title + "**.");
-                } else
-                    event.replyError("Only DJs can unpause the player!");
                 return;
             }
             StringBuilder builder = new StringBuilder(event.getClient().getWarning() + " Play Commands:\n");
@@ -139,13 +138,13 @@ public class PlayCmd extends MusicCommand {
                         } ,(msgev) -> {
                             if (msgev.getComponentId().startsWith("QUEUE_PLAYLIST")) {
                                 if(msgev.getComponentId().split(":")[1].equals("ACCEPT")){
-                                    msg.editMessage(addMsg+"\n"+succ+" Loaded **"+loadPlaylist(playlist, track)+"** additional tracks!").override(true).queue();
+                                    msg.editMessage(addMsg+"\n"+succ+" Loaded **"+loadPlaylist(playlist, track)+"** additional tracks!").setActionRows().queue();
                                 } else {
-                                    msg.editMessage("The playlist has NOT been loaded.").override(true).queue();
+                                    msg.editMessage("The playlist has NOT been loaded.").setActionRows().queue();
                                 }
                             }
                         }, 30, TimeUnit.SECONDS, () -> {
-                            msg.editMessage("No response detected within 30 seconds. Did not load playlist.").override(true).queue();
+                            msg.editMessage("No response detected within 30 seconds. Did not load playlist.").setActionRows().queue();
                         });
                     });
 

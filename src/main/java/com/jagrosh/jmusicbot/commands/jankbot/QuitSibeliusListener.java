@@ -1,5 +1,6 @@
 package com.jagrosh.jmusicbot.commands.jankbot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,7 +23,7 @@ public class QuitSibeliusListener extends ListenerAdapter {
     public void onButtonClick(ButtonClickEvent event) {
         if (event.getComponentId().contains("QUIT_SIBELIUS")) {
             event.getMessage().editMessage(" ").addFile(new File("/home/callum/MusicBot/images/sib_crashed.png"))
-            .override(true).queue();
+            .setActionRows().queue();
             event.deferEdit().queue();
         }
     }

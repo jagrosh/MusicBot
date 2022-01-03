@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.components.Button;
 
 /**
  *
@@ -146,6 +147,6 @@ public class FairQueue<T extends Queueable> {
 
     public void removeControlsFromLastMessage() {
         if (this.this_last_message != null)
-            this.this_last_message.editMessage(this.this_last_message.getEmbeds().get(0)).override(true).queue();
+            this.this_last_message.editMessage(this.this_last_message.getEmbeds().get(0)).setActionRows().queue();
     }
 }

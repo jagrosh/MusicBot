@@ -2,6 +2,7 @@ package com.jagrosh.jmusicbot.commands.jankbot;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -27,6 +28,7 @@ public class JankedexCmd extends Command {
 
     public void execute(CommandEvent event) {
         List<String> files = new ArrayList<String>();
+        Collections.sort(files);
         for (final File fileEntry : new File("/home/callum/MusicBot/Jankedex").listFiles()) {
             if (!fileEntry.isDirectory()) {
                 files.add(fileEntry.getName());
@@ -52,9 +54,9 @@ public class JankedexCmd extends Command {
         }
         msg_to_send += "JANKEDEX ENTRY " + file_to_ret.split("\\.")[0] + ":";
         List<Component> comps = new ArrayList<Component>();
-        if (pos - 1 != 0)
+        if (pos - 1 >= 0)
             comps.add(Button.secondary("JDX_PREV:" + files.get(pos - 1).split("\\.")[0], "⬅️"));
-        if (pos + 1 != files.size() - 1)
+        if (pos + 1 < files.size() - 1)
             comps.add(Button.secondary("JDX_NEXT:" + files.get(pos + 1).split("\\.")[0], "➡️"));
         event.getEvent().getMessage().reply(msg_to_send).addFile(new File("/home/callum/MusicBot/Jankedex/" + file_to_ret)).setActionRow(comps).queue();
     }
