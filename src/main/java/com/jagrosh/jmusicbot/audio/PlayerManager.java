@@ -16,11 +16,11 @@
 package com.jagrosh.jmusicbot.audio;
 
 import com.jagrosh.jmusicbot.Bot;
+import com.sedmelluq.discord.lavaplayer.container.MediaContainerRegistry;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import com.typesafe.config.Config;
 import net.dv8tion.jda.api.entities.Guild;
 
 /**
@@ -39,8 +39,9 @@ public class PlayerManager extends DefaultAudioPlayerManager
     public void init()
     {
         TransformativeAudioSourceManager.createTransforms(bot.getConfig().getTransforms()).forEach(t -> registerSourceManager(t));
-        AudioSourceManagers.registerRemoteSources(this);
-        AudioSourceManagers.registerLocalSource(this);
+        AudioSourceManagers.registerRemoteSources(this, new MediaContainerRegistry(MediaContainers.asList()));
+        AudioSourceManagers.registerLocalSource(this, new MediaContainerRegistry(MediaContainers.asList()));
+
         source(YoutubeAudioSourceManager.class).setPlaylistPageCount(10);
     }
     

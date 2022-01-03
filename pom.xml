@@ -30,16 +30,23 @@
             <version>4.3.0_324</version>
         </dependency>
         <!-- using a fork of this to fix some issues faster -->
-        <!-- dependency>
-            <groupId>com.sedmelluq</groupId>
-            <artifactId>lavaplayer</artifactId>
-            <version>1.3.78</version>
-        </dependency -->
+<!--        <dependency>-->
+<!--            <groupId>com.sedmelluq</groupId>-->
+<!--            <artifactId>lavaplayer</artifactId>-->
+<!--            <version>1.3.78</version>-->
+<!--        </dependency>-->
+        <!--  use fork of format-xm until it gets merged into lavaplayer -->
         <dependency>
-	    <groupId>com.github.jagrosh</groupId>
-	    <artifactId>lavaplayer</artifactId>
-	    <version>jmusicbot-SNAPSHOT</version>
-	</dependency>
+            <groupId>com.github.forkiesassds.lavaplayer</groupId>
+            <artifactId>lavaplayer-ext-format-xm</artifactId>
+            <version>master-SNAPSHOT</version>
+            <classifier>uber</classifier>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jagrosh</groupId>
+            <artifactId>lavaplayer</artifactId>
+            <version>jmusicbot-SNAPSHOT</version>
+	    </dependency>
         <!-- this is needed, but isn't actually hosted anywhere anymore... uh -->
         <!--dependency>
             <groupId>com.sedmelluq</groupId>
