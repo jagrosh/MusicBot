@@ -19,7 +19,7 @@ description: "Example config file for JMusicBot"
 // If you don't know how to get a bot token, please see the guide here:
 // https://github.com/jagrosh/MusicBot/wiki/Getting-a-Bot-Token
 
-token = BOT_TOKEN_HERE
+token = OTA0NzE5MjM2ODM0OTE4NDIw.YX_ncg.RSJBs8tfYdORlR4ABvYh3JrMGk4
 
 
 // This sets the owner of the bot
@@ -34,7 +34,7 @@ owner = 0
 // If you use !!, the play command will be !!play
 // If you do not set this, the prefix will be a mention of the bot (@Botname play)
 
-prefix = "@mention"
+prefix = "n"
 
 
 // If you set this, it modifies the default game of the bot
@@ -54,7 +54,7 @@ status = ONLINE
 
 
 // If you set this to true, the bot will list the title of the song it is currently playing in its
-// "Playing" status. Note that this will ONLY work if the bot is playing music on ONE guild;
+// "Watching" status. Note that this will ONLY work if the bot is playing music on ONE guild;
 // if the bot is playing on multiple guilds, this will not work.
 
 songinstatus=false
