@@ -24,6 +24,7 @@ import com.jagrosh.jmusicbot.audio.NowplayingHandler;
 import com.jagrosh.jmusicbot.audio.PlayerManager;
 import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader;
+import com.jagrosh.jmusicbot.playlist.SpotifyAPI;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
 import java.util.Objects;
 import net.dv8tion.jda.api.JDA;
@@ -44,6 +45,7 @@ public class Bot
     private final PlaylistLoader playlists;
     private final NowplayingHandler nowplaying;
     private final AloneInVoiceHandler aloneInVoiceHandler;
+    private final SpotifyAPI spotifyApi;
     
     private boolean shuttingDown = false;
     private JDA jda;
@@ -62,6 +64,14 @@ public class Bot
         this.nowplaying.init();
         this.aloneInVoiceHandler = new AloneInVoiceHandler(this);
         this.aloneInVoiceHandler.init();
+        this.spotifyApi = new SpotifyAPI(config);
+        try {
+            this.spotifyApi.init();
+        } catch (Exception e) {
+            System.err.println("Exiting application due to error: ");
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
     
     public BotConfig getConfig()
@@ -102,6 +112,11 @@ public class Bot
     public AloneInVoiceHandler getAloneInVoiceHandler()
     {
         return aloneInVoiceHandler;
+    }
+
+    public SpotifyAPI getSpotifyAPI()
+    {
+        return spotifyApi;
     }
     
     public JDA getJDA()

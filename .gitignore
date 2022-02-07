@@ -2,6 +2,7 @@
 /target/
 /Playlists/
 /test/
+/maven/
 *.json
 *.txt
 nb*.xml

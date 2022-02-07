@@ -2,6 +2,35 @@
 
 # JMusicBot
 
+# cmorley191 Fork
+
+## Extra Features
+- Play command works on spotify playlist links (Playlist Settings -> Share -> Copy link to playlist)
+  - Does NOT work on single spotify song links (just play the title+artist, you lazy gamer)
+
+## Setup
+- Get the latest release at https://github.com/cmorley191/MusicBot/releases
+  - Or compile from source, see section below
+- Setup a Spotify "application" at https://developer.spotify.com/dashboard
+  - This is incredibly straightforward. Name it whatever you want (hopefully something useful to you).
+  - Your spotify account will be linked as the "owner" of this application, but your private spotify account data won't be accessible by it AFAIK.
+  - Edit the config.txt created by JMusicBot to add the app's Client ID and Secret, or (if you haven't run the bot yet) let the startup prompts of the bot program guide you.
+
+That's it. Do the other standard setup described on the main JMusicBot repo.
+
+## Compiling from source
+The main JMusicBot repo makes this sound way harder than it actually is, and doesn't provide instructions. Here they are:
+- Clone this repo.
+- Install the JDK (Java SE Development Kit), which allows you to compile java programs: https://www.oracle.com/java/technologies/downloads/
+  - Setup a JAVA_HOME environment variable with the path to where this is installed (e.g. C:\Program Files\Java\jdk1.8.0_201)
+- Download maven - it's a zip: https://maven.apache.org/download.cgi
+  - Copy the extracted contents to a folder called "maven" in the top level of this repository. (so maven's "bin" folder should be at "MusicBot\maven\bin")
+- Run "buildandrun.bat" in a command window, which essentially just runs "mvn compile && mvn package && java -jar MusicBot.jar".
+
+Again, not sure why this was made to sound so difficult in the main repo.
+
+# JMusicBot Readme:
+
 [![Downloads](https://img.shields.io/github/downloads/jagrosh/MusicBot/total.svg)](https://github.com/jagrosh/MusicBot/releases/latest)
 [![Stars](https://img.shields.io/github/stars/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/stargazers)
 [![Release](https://img.shields.io/github/release/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/releases/latest)

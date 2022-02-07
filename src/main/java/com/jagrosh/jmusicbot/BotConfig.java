@@ -41,7 +41,8 @@ public class BotConfig
     
     private Path path = null;
     private String token, prefix, altprefix, helpWord, playlistsFolder,
-            successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
+            successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji,
+            spotifyClientId, spotifyClientSecret;
     private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
     private long owner, maxSeconds, aloneTimeUntilStop;
     private OnlineStatus status;
@@ -86,6 +87,8 @@ public class BotConfig
             errorEmoji = config.getString("error");
             loadingEmoji = config.getString("loading");
             searchingEmoji = config.getString("searching");
+            spotifyClientId = config.getString("spotClient");
+            spotifyClientSecret = config.getString("spotSecret");
             game = OtherUtil.parseGame(config.getString("game"));
             status = OtherUtil.parseStatus(config.getString("status"));
             stayInChannel = config.getBoolean("stayinchannel");
@@ -139,6 +142,47 @@ public class BotConfig
                 if(owner<=0)
                 {
                     prompt.alert(Prompt.Level.ERROR, CONTEXT, "Invalid User ID! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
+                    return;
+                }
+                else
+                {
+                    write = true;
+                }
+            }
+
+            // validate spotify stuff
+            if(spotifyClientId==null || spotifyClientId.isEmpty() || spotifyClientId.equalsIgnoreCase("CLIENT_ID_HERE"))
+            {
+                spotifyClientId = prompt.prompt("Please provide a Spotify App Client ID."
+                        + "\nYou can create a spotify application, which provides access to the spotify API, at"
+                        + "\nhttps://developer.spotify.com/dashboard"
+                        + "\n(the spotify application will be associated to your account as the app owner, but it"
+                        + "\nwon't have access to your private spotify data)"
+                        + "\nThe bot needs the Client ID and Client Secret of the application you create."
+                        + "\nSpotify App Client ID: ");
+                if(spotifyClientId==null)
+                {
+                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "No Spotify Client ID provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
+                    return;
+                }
+                else
+                {
+                    write = true;
+                }
+            }
+
+            if(spotifyClientSecret==null || spotifyClientSecret.isEmpty() || spotifyClientSecret.equalsIgnoreCase("CLIENT_SECRET_HERE"))
+            {
+                spotifyClientSecret = prompt.prompt("Please provide a Spotify App Client Secret."
+                + "\nYou can create a spotify application, which provides access to the spotify API, at"
+                + "\nhttps://developer.spotify.com/dashboard"
+                + "\n(the spotify application will be associated to your account as the app owner, but it"
+                + "\nwon't have access to your private spotify data)"
+                + "\nThe bot needs the Client ID and Client Secret of the application you create."
+                + "\nSpotify App Client Secret: ");
+                if(spotifyClientSecret==null)
+                {
+                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "No Spotify Client Secret provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
                     return;
                 }
                 else
@@ -239,6 +283,16 @@ public class BotConfig
     public String getSearching()
     {
         return searchingEmoji;
+    }
+
+    public String getSpotClient()
+    {
+        return spotifyClientId;
+    }
+
+    public String getSpotSecret()
+    {
+        return spotifyClientSecret;
     }
     
     public Activity getGame()
