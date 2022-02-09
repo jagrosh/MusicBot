@@ -20,7 +20,6 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.RequestMetadata;
 import com.jagrosh.jmusicbot.commands.DJCommand;
-import net.dv8tion.jda.api.entities.User;
 
 /**
  *
@@ -42,7 +41,7 @@ public class ForceskipCmd extends DJCommand
     {
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
         RequestMetadata rm = handler.getRequestMetadata();
-        event.reply(event.getClient().getSuccess()+" Skipped **"+handler.getPlayer().getPlayingTrack().getInfo().title
+        event.reply(bot.getSuccess(event)+" Skipped **"+handler.getPlayer().getPlayingTrack().getInfo().title
                 +"** "+(rm.getOwner() == 0L ? "(autoplay)" : "(requested by **" + rm.user.username + "**)"));
         handler.getPlayer().stopTrack();
     }

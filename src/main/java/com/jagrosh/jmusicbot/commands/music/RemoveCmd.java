@@ -47,16 +47,16 @@ public class RemoveCmd extends MusicCommand
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
         if(handler.getQueue().isEmpty())
         {
-            event.replyError("There is nothing in the queue!");
+            event.reply(bot.getError(event)+"There is nothing in the queue!");
             return;
         }
         if(event.getArgs().equalsIgnoreCase("all"))
         {
             int count = handler.getQueue().removeAll(event.getAuthor().getIdLong());
             if(count==0)
-                event.replyWarning("You don't have any songs in the queue!");
+                event.reply(bot.getWarning(event)+"You don't have any songs in the queue!");
             else
-                event.replySuccess("Successfully removed your "+count+" entries.");
+                event.reply(bot.getSuccess(event)+"Successfully removed your "+count+" entries.");
             return;
         }
         int pos;
@@ -67,7 +67,7 @@ public class RemoveCmd extends MusicCommand
         }
         if(pos<1 || pos>handler.getQueue().size())
         {
-            event.replyError("Position must be a valid integer between 1 and "+handler.getQueue().size()+"!");
+            event.reply(bot.getError(event)+"Position must be a valid integer between 1 and "+handler.getQueue().size()+"!");
             return;
         }
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
@@ -78,7 +78,7 @@ public class RemoveCmd extends MusicCommand
         if(qt.getIdentifier()==event.getAuthor().getIdLong())
         {
             handler.getQueue().remove(pos-1);
-            event.replySuccess("Removed **"+qt.getTrack().getInfo().title+"** from the queue");
+            event.reply(bot.getSuccess(event)+"Removed **"+qt.getTrack().getInfo().title+"** from the queue");
         }
         else if(isDJ)
         {
@@ -89,12 +89,12 @@ public class RemoveCmd extends MusicCommand
             } catch(Exception e) {
                 u = null;
             }
-            event.replySuccess("Removed **"+qt.getTrack().getInfo().title
+            event.reply(bot.getSuccess(event)+"Removed **"+qt.getTrack().getInfo().title
                     +"** from the queue (requested by "+(u==null ? "someone" : "**"+u.getName()+"**")+")");
         }
         else
         {
-            event.replyError("You cannot remove **"+qt.getTrack().getInfo().title+"** because you didn't add it!");
+            event.reply(bot.getError(event)+"You cannot remove **"+qt.getTrack().getInfo().title+"** because you didn't add it!");
         }
     }
 }

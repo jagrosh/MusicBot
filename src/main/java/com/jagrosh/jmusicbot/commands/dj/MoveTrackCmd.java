@@ -33,7 +33,7 @@ public class MoveTrackCmd extends DJCommand
         String[] parts = event.getArgs().split("\\s+", 2);
         if(parts.length < 2)
         {
-            event.replyError("Please include two valid indexes.");
+            event.reply(bot.getError(event)+"Please include two valid indexes.");
             return;
         }
 
@@ -45,13 +45,13 @@ public class MoveTrackCmd extends DJCommand
         }
         catch (NumberFormatException e)
         {
-            event.replyError("Please provide two valid indexes.");
+            event.reply(bot.getError(event)+"Please provide two valid indexes.");
             return;
         }
 
         if (from == to)
         {
-            event.replyError("Can't move a track to the same position.");
+            event.reply(bot.getError(event)+"Can't move a track to the same position.");
             return;
         }
 
@@ -61,13 +61,13 @@ public class MoveTrackCmd extends DJCommand
         if (isUnavailablePosition(queue, from))
         {
             String reply = String.format("`%d` is not a valid position in the queue!", from);
-            event.replyError(reply);
+            event.reply(bot.getError(event)+reply);
             return;
         }
         if (isUnavailablePosition(queue, to))
         {
             String reply = String.format("`%d` is not a valid position in the queue!", to);
-            event.replyError(reply);
+            event.reply(bot.getError(event)+reply);
             return;
         }
 
@@ -75,7 +75,7 @@ public class MoveTrackCmd extends DJCommand
         QueuedTrack track = queue.moveItem(from - 1, to - 1);
         String trackTitle = track.getTrack().getInfo().title;
         String reply = String.format("Moved **%s** from position `%d` to `%d`.", trackTitle, from, to);
-        event.replySuccess(reply);
+        event.reply(bot.getSuccess(event)+reply);
     }
 
     private static boolean isUnavailablePosition(FairQueue<QueuedTrack> queue, int position)

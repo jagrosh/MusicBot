@@ -6,6 +6,7 @@
 
 ## Extra Features
 - Play command works on spotify track, album or playlist links (Right click -> Share -> Copy link to playlist)
+- Server-specific emojis used by the bot, configured by the setemoji command
 
 ## Setup
 - Get the latest release at https://github.com/cmorley191/MusicBot/releases

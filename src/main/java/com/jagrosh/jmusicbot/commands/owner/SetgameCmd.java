@@ -26,8 +26,11 @@ import net.dv8tion.jda.api.entities.Activity;
  */
 public class SetgameCmd extends OwnerCommand
 {
+    private final Bot bot;
+
     public SetgameCmd(Bot bot)
     {
+        this.bot = bot;
         this.name = "setgame";
         this.help = "sets the game the bot is playing";
         this.arguments = "[action] [game]";
@@ -47,12 +50,12 @@ public class SetgameCmd extends OwnerCommand
         try
         {
             event.getJDA().getPresence().setActivity(title.isEmpty() ? null : Activity.playing(title));
-            event.reply(event.getClient().getSuccess()+" **"+event.getSelfUser().getName()
+            event.reply(bot.getSuccess(event)+" **"+event.getSelfUser().getName()
                     +"** is "+(title.isEmpty() ? "no longer playing anything." : "now playing `"+title+"`"));
         }
         catch(Exception e)
         {
-            event.reply(event.getClient().getError()+" The game could not be set!");
+            event.reply(bot.getError(event)+" The game could not be set!");
         }
     }
     
@@ -73,18 +76,18 @@ public class SetgameCmd extends OwnerCommand
             String[] parts = event.getArgs().split("\\s+", 2);
             if(parts.length<2)
             {
-                event.replyError("Please include a twitch username and the name of the game to 'stream'");
+                event.reply(bot.getError(event)+"Please include a twitch username and the name of the game to 'stream'");
                 return;
             }
             try
             {
                 event.getJDA().getPresence().setActivity(Activity.streaming(parts[1], "https://twitch.tv/"+parts[0]));
-                event.replySuccess("**"+event.getSelfUser().getName()
+                event.reply(bot.getSuccess(event)+"**"+event.getSelfUser().getName()
                         +"** is now streaming `"+parts[1]+"`");
             }
             catch(Exception e)
             {
-                event.reply(event.getClient().getError()+" The game could not be set!");
+                event.reply(bot.getError(event)+" The game could not be set!");
             }
         }
     }
@@ -105,16 +108,16 @@ public class SetgameCmd extends OwnerCommand
         {
             if(event.getArgs().isEmpty())
             {
-                event.replyError("Please include a title to listen to!");
+                event.reply(bot.getError(event)+"Please include a title to listen to!");
                 return;
             }
             String title = event.getArgs().toLowerCase().startsWith("to") ? event.getArgs().substring(2).trim() : event.getArgs();
             try
             {
                 event.getJDA().getPresence().setActivity(Activity.listening(title));
-                event.replySuccess("**"+event.getSelfUser().getName()+"** is now listening to `"+title+"`");
+                event.reply(bot.getSuccess(event)+"**"+event.getSelfUser().getName()+"** is now listening to `"+title+"`");
             } catch(Exception e) {
-                event.reply(event.getClient().getError()+" The game could not be set!");
+                event.reply(bot.getError(event)+" The game could not be set!");
             }
         }
     }
@@ -135,16 +138,16 @@ public class SetgameCmd extends OwnerCommand
         {
             if(event.getArgs().isEmpty())
             {
-                event.replyError("Please include a title to watch!");
+                event.reply(bot.getError(event)+"Please include a title to watch!");
                 return;
             }
             String title = event.getArgs();
             try
             {
                 event.getJDA().getPresence().setActivity(Activity.watching(title));
-                event.replySuccess("**"+event.getSelfUser().getName()+"** is now watching `"+title+"`");
+                event.reply(bot.getSuccess(event)+"**"+event.getSelfUser().getName()+"** is now watching `"+title+"`");
             } catch(Exception e) {
-                event.reply(event.getClient().getError()+" The game could not be set!");
+                event.reply(bot.getError(event)+" The game could not be set!");
             }
         }
     }

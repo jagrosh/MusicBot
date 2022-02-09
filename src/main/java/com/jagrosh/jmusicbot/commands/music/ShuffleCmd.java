@@ -44,13 +44,13 @@ public class ShuffleCmd extends MusicCommand
         switch (s) 
         {
             case 0:
-                event.replyError("You don't have any music in the queue to shuffle!");
+                event.reply(bot.getError(event)+"You don't have any music in the queue to shuffle!");
                 break;
             case 1:
-                event.replyWarning("You only have one song in the queue!");
+                event.reply(bot.getWarning(event)+"You only have one song in the queue!");
                 break;
             default:
-                event.replySuccess("You successfully shuffled your "+s+" entries.");
+                event.reply(bot.getSuccess(event)+"You successfully shuffled your "+s+" entries.");
                 break;
         }
     }

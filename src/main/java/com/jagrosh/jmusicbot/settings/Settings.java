@@ -38,8 +38,9 @@ public class Settings implements GuildSettingsProvider
     private RepeatMode repeatMode;
     private String prefix;
     private double skipRatio;
+    private String successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
 
-    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio)
+    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, String successEmoji, String warningEmoji, String errorEmoji, String loadingEmoji, String searchingEmoji)
     {
         this.manager = manager;
         try
@@ -71,9 +72,14 @@ public class Settings implements GuildSettingsProvider
         this.repeatMode = repeatMode;
         this.prefix = prefix;
         this.skipRatio = skipRatio;
+        this.successEmoji = successEmoji;
+        this.warningEmoji = warningEmoji;
+        this.errorEmoji = errorEmoji;
+        this.loadingEmoji = loadingEmoji;
+        this.searchingEmoji = searchingEmoji;
     }
     
-    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio)
+    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, String successEmoji, String warningEmoji, String errorEmoji, String loadingEmoji, String searchingEmoji)
     {
         this.manager = manager;
         this.textId = textId;
@@ -84,6 +90,11 @@ public class Settings implements GuildSettingsProvider
         this.repeatMode = repeatMode;
         this.prefix = prefix;
         this.skipRatio = skipRatio;
+        this.successEmoji = successEmoji;
+        this.warningEmoji = warningEmoji;
+        this.errorEmoji = errorEmoji;
+        this.loadingEmoji = loadingEmoji;
+        this.searchingEmoji = searchingEmoji;
     }
     
     // Getters
@@ -125,6 +136,31 @@ public class Settings implements GuildSettingsProvider
     public double getSkipRatio()
     {
         return skipRatio;
+    }
+
+    public String getSuccess() 
+    {
+        return successEmoji;
+    }
+
+    public String getWarning() 
+    {
+        return warningEmoji;
+    }
+
+    public String getError() 
+    {
+        return errorEmoji;
+    }
+
+    public String getLoading() 
+    {
+        return loadingEmoji;
+    }
+
+    public String getSearching() 
+    {
+        return searchingEmoji;
     }
 
     @Override
@@ -179,6 +215,36 @@ public class Settings implements GuildSettingsProvider
     public void setSkipRatio(double skipRatio)
     {
         this.skipRatio = skipRatio;
+        this.manager.writeSettings();
+    }
+
+    public void setSuccess(String success)
+    {
+        this.successEmoji = success;
+        this.manager.writeSettings();
+    }
+
+    public void setWarning(String warning)
+    {
+        this.warningEmoji = warning;
+        this.manager.writeSettings();
+    }
+
+    public void setError(String error)
+    {
+        this.errorEmoji = error;
+        this.manager.writeSettings();
+    }
+
+    public void setLoading(String loading)
+    {
+        this.loadingEmoji = loading;
+        this.manager.writeSettings();
+    }
+
+    public void setSearching(String searching)
+    {
+        this.searchingEmoji = searching;
         this.manager.writeSettings();
     }
 }

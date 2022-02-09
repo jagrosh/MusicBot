@@ -29,8 +29,11 @@ import net.dv8tion.jda.api.entities.Icon;
  */
 public class SetavatarCmd extends OwnerCommand 
 {
+    private final Bot bot;
+
     public SetavatarCmd(Bot bot)
     {
+        this.bot = bot;
         this.name = "setavatar";
         this.help = "sets the avatar of the bot";
         this.arguments = "<url>";
@@ -52,16 +55,16 @@ public class SetavatarCmd extends OwnerCommand
         InputStream s = OtherUtil.imageFromUrl(url);
         if(s==null)
         {
-            event.reply(event.getClient().getError()+" Invalid or missing URL");
+            event.reply(bot.getError(event)+" Invalid or missing URL");
         }
         else
         {
             try {
             event.getSelfUser().getManager().setAvatar(Icon.from(s)).queue(
-                    v -> event.reply(event.getClient().getSuccess()+" Successfully changed avatar."), 
-                    t -> event.reply(event.getClient().getError()+" Failed to set avatar."));
+                    v -> event.reply(bot.getSuccess(event)+" Successfully changed avatar."), 
+                    t -> event.reply(bot.getError(event)+" Failed to set avatar."));
             } catch(IOException e) {
-                event.reply(event.getClient().getError()+" Could not load from provided URL.");
+                event.reply(bot.getError(event)+" Could not load from provided URL.");
             }
         }
     }

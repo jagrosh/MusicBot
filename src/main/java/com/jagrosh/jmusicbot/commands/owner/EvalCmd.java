@@ -49,11 +49,11 @@ public class EvalCmd extends OwnerCommand
         se.put("channel", event.getChannel());
         try
         {
-            event.reply(event.getClient().getSuccess()+" Evaluated Successfully:\n```\n"+se.eval(event.getArgs())+" ```");
+            event.reply(bot.getSuccess(event)+" Evaluated Successfully:\n```\n"+se.eval(event.getArgs())+" ```");
         } 
         catch(Exception e)
         {
-            event.reply(event.getClient().getError()+" An exception was thrown:\n```\n"+e+" ```");
+            event.reply(bot.getError(event)+" An exception was thrown:\n```\n"+e+" ```");
         }
     }
     

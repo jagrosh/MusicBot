@@ -52,7 +52,7 @@ public class LyricsCmd extends MusicCommand
                 title = sendingHandler.getPlayer().getPlayingTrack().getInfo().title;
             else
             {
-                event.replyError("There must be music playing to use that!");
+                event.reply(bot.getError(event)+"There must be music playing to use that!");
                 return;
             }
         }
@@ -63,7 +63,7 @@ public class LyricsCmd extends MusicCommand
         {
             if(lyrics == null)
             {
-                event.replyError("Lyrics for `" + title + "` could not be found!" + (event.getArgs().isEmpty() ? " Try entering the song name manually (`lyrics [song name]`)" : ""));
+                event.reply(bot.getError(event)+"Lyrics for `" + title + "` could not be found!" + (event.getArgs().isEmpty() ? " Try entering the song name manually (`lyrics [song name]`)" : ""));
                 return;
             }
 
@@ -73,7 +73,7 @@ public class LyricsCmd extends MusicCommand
                     .setTitle(lyrics.getTitle(), lyrics.getURL());
             if(lyrics.getContent().length()>15000)
             {
-                event.replyWarning("Lyrics for `" + title + "` found but likely not correct: " + lyrics.getURL());
+                event.reply(bot.getWarning(event)+"Lyrics for `" + title + "` found but likely not correct: " + lyrics.getURL());
             }
             else if(lyrics.getContent().length()>2000)
             {

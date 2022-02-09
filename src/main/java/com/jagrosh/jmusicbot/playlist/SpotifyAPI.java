@@ -5,24 +5,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import com.jagrosh.jmusicbot.BotConfig;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.LoggerFactory;
 
 public class SpotifyAPI {
   private final BotConfig config;
@@ -163,7 +156,6 @@ public class SpotifyAPI {
         .orElseGet(null);
 
     } catch (Exception e) {
-      LoggerFactory.getLogger("MusicBot").error("Errored parsing spotify url: " + maybeSpotifyUrl, e);
       return null;
     }
   }

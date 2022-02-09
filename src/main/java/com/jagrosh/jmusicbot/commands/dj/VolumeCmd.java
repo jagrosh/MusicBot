@@ -56,7 +56,7 @@ public class VolumeCmd extends DJCommand
                 nvolume = -1;
             }
             if(nvolume<0 || nvolume>150)
-                event.reply(event.getClient().getError()+" Volume must be a valid integer between 0 and 150!");
+                event.reply(bot.getError(event)+" Volume must be a valid integer between 0 and 150!");
             else
             {
                 handler.getPlayer().setVolume(nvolume);

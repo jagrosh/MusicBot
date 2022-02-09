@@ -51,14 +51,14 @@ public class ForceRemoveCmd extends DJCommand
     {
         if (event.getArgs().isEmpty())
         {
-            event.replyError("You need to mention a user!");
+            event.reply(bot.getError(event)+"You need to mention a user!");
             return;
         }
 
         AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
         if (handler.getQueue().isEmpty())
         {
-            event.replyError("There is nothing in the queue!");
+            event.reply(bot.getError(event)+"There is nothing in the queue!");
             return;
         }
 
@@ -68,7 +68,7 @@ public class ForceRemoveCmd extends DJCommand
 
         if(found.isEmpty())
         {
-            event.replyError("Unable to find the user!");
+            event.reply(bot.getError(event)+"Unable to find the user!");
             return;
         }
         else if(found.size()>1)
@@ -109,11 +109,11 @@ public class ForceRemoveCmd extends DJCommand
         int count = ((AudioHandler) event.getGuild().getAudioManager().getSendingHandler()).getQueue().removeAll(target.getIdLong());
         if (count == 0)
         {
-            event.replyWarning("**"+target.getName()+"** doesn't have any songs in the queue!");
+            event.reply(bot.getWarning(event)+"**"+target.getName()+"** doesn't have any songs in the queue!");
         }
         else
         {
-            event.replySuccess("Successfully removed `"+count+"` entries from **"+target.getName()+"**#"+target.getDiscriminator()+".");
+            event.reply(bot.getSuccess(event)+"Successfully removed `"+count+"` entries from **"+target.getName()+"**#"+target.getDiscriminator()+".");
         }
     }
 }

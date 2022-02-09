@@ -77,7 +77,7 @@ public class QueueCmd extends MusicCommand
             Message nowp = ah.getNowPlaying(event.getJDA());
             Message nonowp = ah.getNoMusicPlaying(event.getJDA());
             Message built = new MessageBuilder()
-                    .setContent(event.getClient().getWarning() + " There is no music in the queue!")
+                    .setContent(bot.getWarning(event) + " There is no music in the queue!")
                     .setEmbed((nowp==null ? nonowp : nowp).getEmbeds().get(0)).build();
             event.reply(built, m -> 
             {
@@ -95,7 +95,7 @@ public class QueueCmd extends MusicCommand
         }
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
         long fintotal = total;
-        builder.setText((i1,i2) -> getQueueTitle(ah, event.getClient().getSuccess(), songs.length, fintotal, settings.getRepeatMode()))
+        builder.setText((i1,i2) -> getQueueTitle(ah, bot.getSuccess(event), songs.length, fintotal, settings.getRepeatMode()))
                 .setItems(songs)
                 .setUsers(event.getAuthor())
                 .setColor(event.getSelfMember().getColor())

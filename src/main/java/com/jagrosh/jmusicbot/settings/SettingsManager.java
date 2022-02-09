@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public class SettingsManager implements GuildSettingsManager
+public class SettingsManager implements GuildSettingsManager<Settings>
 {
     private final static double SKIP_RATIO = .55;
     private final HashMap<Long,Settings> settings;
@@ -38,7 +38,7 @@ public class SettingsManager implements GuildSettingsManager
     {
         this.settings = new HashMap<>();
         try {
-            JSONObject loadedSettings = new JSONObject(new String(Files.readAllBytes(OtherUtil.getPath("serversettings.json"))));
+            JSONObject loadedSettings = new JSONObject(new String(Files.readAllBytes(OtherUtil.getPath("serversettings.json")), "utf-16"));
             loadedSettings.keySet().forEach((id) -> {
                 JSONObject o = loadedSettings.getJSONObject(id);
 
@@ -55,7 +55,12 @@ public class SettingsManager implements GuildSettingsManager
                         o.has("default_playlist")? o.getString("default_playlist")           : null,
                         o.has("repeat_mode")     ? o.getEnum(RepeatMode.class, "repeat_mode"): RepeatMode.OFF,
                         o.has("prefix")          ? o.getString("prefix")                     : null,
-                        o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO));
+                        o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO,
+                        o.has("success")         ? o.getString("success")                    : null,
+                        o.has("warning")         ? o.getString("warning")                    : null,
+                        o.has("error")           ? o.getString("error")                      : null,
+                        o.has("loading")         ? o.getString("loading")                    : null,
+                        o.has("searching")       ? o.getString("searching")                  : null));
             });
         } catch(IOException | JSONException e) {
             LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
@@ -71,6 +76,7 @@ public class SettingsManager implements GuildSettingsManager
     @Override
     public Settings getSettings(Guild guild)
     {
+        if (guild == null) return createDefaultSettings();
         return getSettings(guild.getIdLong());
     }
     
@@ -81,7 +87,7 @@ public class SettingsManager implements GuildSettingsManager
     
     private Settings createDefaultSettings()
     {
-        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO);
+        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO, null, null, null, null, null);
     }
     
     protected void writeSettings()
@@ -106,10 +112,20 @@ public class SettingsManager implements GuildSettingsManager
                 o.put("prefix", s.getPrefix());
             if(s.getSkipRatio() != SKIP_RATIO)
                 o.put("skip_ratio", s.getSkipRatio());
+            if (s.getSuccess() != null)
+                o.put("success", s.getSuccess());
+            if (s.getWarning() != null)
+                o.put("warning", s.getWarning());
+            if (s.getError() != null)
+                o.put("error", s.getError());   
+            if (s.getLoading() != null)
+                o.put("loading", s.getLoading());   
+            if (s.getSearching() != null)
+                o.put("searching", s.getSearching());                                                              
             obj.put(Long.toString(key), o);
         });
         try {
-            Files.write(OtherUtil.getPath("serversettings.json"), obj.toString(4).getBytes());
+            Files.write(OtherUtil.getPath("serversettings.json"), obj.toString(4).getBytes("utf-16"));
         } catch(IOException ex){
             LoggerFactory.getLogger("Settings").warn("Failed to write to file: "+ex);
         }

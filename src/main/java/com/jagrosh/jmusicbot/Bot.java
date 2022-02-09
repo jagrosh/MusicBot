@@ -17,6 +17,8 @@ package com.jagrosh.jmusicbot;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+
+import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jmusicbot.audio.AloneInVoiceHandler;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
@@ -25,6 +27,7 @@ import com.jagrosh.jmusicbot.audio.PlayerManager;
 import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader;
 import com.jagrosh.jmusicbot.playlist.SpotifyAPI;
+import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
 import java.util.Objects;
 import net.dv8tion.jda.api.JDA;
@@ -172,5 +175,46 @@ public class Bot
     public void setGUI(GUI gui)
     {
         this.gui = gui;
+    }
+
+    private Settings getSettings(CommandEvent event) {
+        try { return getSettingsManager().getSettings(event.getGuild()); }
+        catch (IllegalStateException ignore) {}
+        return getSettingsManager().getSettings(null);
+    }
+
+    public String getSuccess(CommandEvent event) 
+    {
+        String guildSetting = getSettings(event).getSuccess();
+        if (guildSetting != null) return guildSetting;
+        return getConfig().getSuccess(); 
+    }
+
+    public String getWarning(CommandEvent event) 
+    {
+        String guildSetting = getSettings(event).getWarning();
+        if (guildSetting != null) return guildSetting;
+        return getConfig().getWarning(); 
+    }
+
+    public String getError(CommandEvent event) 
+    {
+        String guildSetting = getSettings(event).getError();
+        if (guildSetting != null) return guildSetting;
+        return getConfig().getError(); 
+    }
+
+    public String getLoading(CommandEvent event) 
+    {
+        String guildSetting = getSettings(event).getLoading();
+        if (guildSetting != null) return guildSetting;
+        return getConfig().getLoading(); 
+    }
+
+    public String getSearching(CommandEvent event) 
+    {
+        String guildSetting = getSettings(event).getSearching();
+        if (guildSetting != null) return guildSetting;
+        return getConfig().getSearching(); 
     }
 }
