@@ -5,8 +5,7 @@
 # cmorley191 Fork
 
 ## Extra Features
-- Play command works on spotify playlist links (Playlist Settings -> Share -> Copy link to playlist)
-  - Does NOT work on single spotify song links (just play the title+artist, you lazy gamer)
+- Play command works on spotify track, album or playlist links (Right click -> Share -> Copy link to playlist)
 
 ## Setup
 - Get the latest release at https://github.com/cmorley191/MusicBot/releases

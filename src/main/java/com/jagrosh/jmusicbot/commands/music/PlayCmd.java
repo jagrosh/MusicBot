@@ -32,7 +32,9 @@ import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
-import com.jagrosh.jmusicbot.playlist.SpotifyAPI.SpotifyPlaylistQuery;
+import com.jagrosh.jmusicbot.playlist.SpotifyAPI.SpotifyPlaylist;
+import com.jagrosh.jmusicbot.playlist.SpotifyAPI.SpotifyTrack;
+import com.jagrosh.jmusicbot.playlist.SpotifyAPI.SpotifyUrlData;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
@@ -94,20 +96,35 @@ public class PlayCmd extends MusicCommand
             : event.getArgs().isEmpty() ? event.getMessage().getAttachments().get(0).getUrl() : event.getArgs();
 
         LoggerFactory.getLogger("MusicBot").info("Playing: " + args);
-        String spotifyPlaylistId = bot.getSpotifyAPI().tryGetPlaylistIdFromUrl(args);
-        if (spotifyPlaylistId != null) {
-            try {
-                SpotifyPlaylistQuery query = bot.getSpotifyAPI().getPlaylistTracksSearchQueries(spotifyPlaylistId);
-                if (query.trackQueries.length == 0) {
-                    event.reply(event.getClient().getError() +" Spotify playlist does not have any tracks... `["+query.name+"]`");
-                } else {
-                    event.reply(bot.getConfig().getLoading() +" Loading... `["+query.name+"]`", 
-                        m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+query.trackQueries[0], new SpotifyResultHandler(m, event, true, query)));
+        SpotifyUrlData spotifyUrl = bot.getSpotifyAPI().tryParseUrl(args);
+        if (spotifyUrl != null) {
+            if (spotifyUrl.type == SpotifyUrlData.Type.TRACK) {
+                try {
+                    SpotifyTrack track = bot.getSpotifyAPI().getTrack(spotifyUrl.id);
+                    event.reply(bot.getConfig().getLoading() +" Loading... `["+track.name+"]`", 
+                        m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(track), new SpotifyResultHandler(m, event, track)));
+                } catch (Exception e) {
+                    LoggerFactory.getLogger("MusicBot").error("Failed to load spotify track from: " + args, e);
+                    event.reply(event.getClient().getError()+" Failed to load spotify track... `["+spotifyUrl.id+"]`");
                 }
-            } catch (Exception e) {
-                LoggerFactory.getLogger("MusicBot").error("Failed to load spotify playlist from: " + args, e);
-                event.reply(event.getClient().getError()+" Failed to load spotify playlist... `["+spotifyPlaylistId+"]`");
-                return;
+            } else {
+                String noun = (spotifyUrl.type == SpotifyUrlData.Type.PLAYLIST) ? "playlist" : "album";
+                try {
+                    SpotifyPlaylist playlist = 
+                        (spotifyUrl.type == SpotifyUrlData.Type.PLAYLIST)
+                        ? bot.getSpotifyAPI().getPlaylist(spotifyUrl.id)
+                        : bot.getSpotifyAPI().getAlbum(spotifyUrl.id);
+
+                    if (playlist.tracks.length == 0) {
+                        event.reply(event.getClient().getError() +" Spotify "+noun+" does not have any tracks... `["+playlist.name+"]`");
+                    } else {
+                        event.reply(bot.getConfig().getLoading() +" Loading... `["+String.format("%s (%d track%s)", playlist.name, playlist.tracks.length, playlist.tracks.length == 1 ? "" : "s")+"]`", 
+                            m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(playlist.tracks[0]), new SpotifyResultHandler(m, event, playlist)));
+                    }
+                } catch (Exception e) {
+                    LoggerFactory.getLogger("MusicBot").error("Failed to load spotify "+noun+" from: " + args, e);
+                    event.reply(event.getClient().getError()+" Failed to load spotify "+noun+"... `["+spotifyUrl.id+"]`");
+                }
             }
         } else {
             event.reply(loadingEmoji+" Loading... `["+args+"]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m,event,false)));
@@ -232,31 +249,39 @@ public class PlayCmd extends MusicCommand
         }
     }
     
+    private static String getYoutubeQueryOfTrack(SpotifyTrack track) {
+        return String.format("%s - %s", String.join(", ", track.artists), track.name);
+    }
+
     private class SpotifyResultHandler extends ResultHandler {
         
-        private final SpotifyPlaylistQuery query;
-        private final int iQuery;
+        private final SpotifyPlaylist playlist;
+        private final int iTrack;
         private final String prevMessageText;
         private final int prevErrors;
 
-        private SpotifyResultHandler(Message m, CommandEvent event, boolean ytsearch, SpotifyPlaylistQuery query, int iQuery, String prevMessageText, int prevErrors)
+        private SpotifyResultHandler(Message m, CommandEvent event, SpotifyTrack track){
+            this(m, event, new SpotifyPlaylist(track.name, new SpotifyTrack[] { track }));
+        }
+
+        private SpotifyResultHandler(Message m, CommandEvent event, SpotifyPlaylist playlist) {
+            this(m, event, playlist, 0, "", 0);
+        }
+
+        private SpotifyResultHandler(Message m, CommandEvent event, SpotifyPlaylist playlist, int iTrack, String prevMessageText, int prevErrors)
         {
-            super(m, event, ytsearch);
-            this.query = query;
-            this.iQuery = iQuery;
+            super(m, event, true);
+            this.playlist = playlist;
+            this.iTrack = iTrack;
             this.prevMessageText = prevMessageText;
             this.prevErrors = prevErrors;
         }
 
-        private SpotifyResultHandler(Message m, CommandEvent event, boolean ytsearch, SpotifyPlaylistQuery query) {
-            this(m, event, ytsearch, query, 0, "", 0);
-        }
-
-        protected void loadSingle(AudioTrack track, AudioPlaylist playlist)
+        protected void loadSingle(AudioTrack track, AudioPlaylist UNUSED)
         {
-            if (iQuery == 0) {
+            if (iTrack == 0) {
                 if (track == null) {
-                    m.editMessage(FormatUtil.filter(event.getClient().getError()+" Couldn't find first track: "+query.trackQueries[0])).queue();
+                    m.editMessage(FormatUtil.filter(event.getClient().getError()+" Couldn't find youtube link for "+(playlist.tracks.length == 1 ? "track" : "first track")+": "+playlist.tracks[0].name)).queue();
                     return;
                 }
                 if(bot.getConfig().isTooLong(track))
@@ -269,21 +294,21 @@ public class PlayCmd extends MusicCommand
                 int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor()))+1;
                 String addMsg = FormatUtil.filter(event.getClient().getSuccess()+" Added **"+track.getInfo().title
                         +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0?"to begin playing":" to the queue at position "+pos));
-                if(query.trackQueries.length == 1 || !event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ADD_REACTION))
+                if(playlist.tracks.length == 1 || !event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ADD_REACTION))
                     m.editMessage(addMsg).queue();
                 else
                 {
                     new ButtonMenu.Builder()
-                            .setText(addMsg+"\n"+event.getClient().getWarning()+" This playlist has **"+query.trackQueries.length+"** tracks attached. Select "+LOAD+" to load playlist.")
+                            .setText(addMsg+"\n"+event.getClient().getWarning()+" [**"+playlist.name+"**] has **"+playlist.tracks.length+"** tracks attached. Select "+LOAD+" to add the rest to the queue.")
                             .setChoices(LOAD, CANCEL)
                             .setEventWaiter(bot.getWaiter())
                             .setTimeout(30, TimeUnit.SECONDS)
                             .setAction(re ->
                             {
                                 if(re.getName().equals(LOAD)) {
-                                    String newMessageText = addMsg+"\n"+event.getClient().getSuccess()+" Loading **1/"+(query.trackQueries.length - 1)+"** additional tracks...";
+                                    String newMessageText = addMsg+"\n"+event.getClient().getSuccess()+" Loading **1/"+(playlist.tracks.length - 1)+"** additional tracks...";
                                     m.editMessage(newMessageText).queue();
-                                    bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+query.trackQueries[1], new SpotifyResultHandler(m,event,true,query,1,newMessageText,prevErrors));
+                                    bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(playlist.tracks[1]), new SpotifyResultHandler(m,event,playlist,1,newMessageText,prevErrors));
                                 }
                                 else
                                     m.editMessage(addMsg).queue();
@@ -292,13 +317,14 @@ public class PlayCmd extends MusicCommand
                                 try{ m.clearReactions().queue(); }catch(PermissionException ignore) {}
                             }).build().display(m);
                 }
+
             } else {
                 // this is an additional track being loaded
                 String newMessageText = prevMessageText;
                 int newErrors = prevErrors;
                 if (track == null)
                 {
-                    newMessageText = prevMessageText+"\n"+FormatUtil.filter(event.getClient().getError()+" Couldn't find track " + (iQuery + 1) + " of " + query.trackQueries.length + ": "+query.trackQueries[iQuery]);
+                    newMessageText = prevMessageText+"\n"+FormatUtil.filter(event.getClient().getError()+" Couldn't find youtube link for track " + (iTrack + 1) + " of " + playlist.tracks.length + ": "+playlist.tracks[iTrack].name);
                     newErrors++;
                     m.editMessage(newMessageText).queue();
                 }
@@ -320,17 +346,17 @@ public class PlayCmd extends MusicCommand
                 for (int i = 0; i < messageParts.length - 2; i++) {
                     remainingParts[i] = messageParts[2 + i];
                 }
-                if (iQuery < query.trackQueries.length - 1) {
+                if (iTrack < playlist.tracks.length - 1) {
                     // update second line ("loading tracks...")
-                    newMessageText = firstLine+"\n"+(event.getClient().getSuccess()+" Loading **" + (iQuery + 1) + "/"+(query.trackQueries.length - 1)+"** additional tracks...")+(remainingParts.length == 0 ? "" : "\n"+String.join("\n", remainingParts));
+                    newMessageText = firstLine+"\n"+(event.getClient().getSuccess()+" Loading **" + (iTrack + 1) + "/"+(playlist.tracks.length - 1)+"** additional tracks...")+(remainingParts.length == 0 ? "" : "\n"+String.join("\n", remainingParts));
                     m.editMessage(newMessageText).queue();
-                    bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+query.trackQueries[iQuery + 1], new SpotifyResultHandler(m,event,true,query,iQuery + 1,newMessageText,newErrors));
+                    bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(playlist.tracks[iTrack + 1]), new SpotifyResultHandler(m,event,playlist,iTrack + 1,newMessageText,newErrors));
                 } else {
                     // all done! finalize message
                     // remove the second line ("loading tracks...") but keep everything else
                     newMessageText = String.format("%s\n%s",
                         firstLine + (remainingParts.length == 0 ? "" : "\n"+String.join("\n", remainingParts)),
-                        event.getClient().getSuccess()+" Loaded **"+(query.trackQueries.length - newErrors - 1)+"** additional tracks!"
+                        event.getClient().getSuccess()+" Loaded **"+(playlist.tracks.length - newErrors - 1)+"** additional tracks!"
                     );
                     m.editMessage(newMessageText).queue();
                 }
@@ -351,7 +377,7 @@ public class PlayCmd extends MusicCommand
             else if (playlist.getSelectedTrack()!=null)
             {
                 AudioTrack single = playlist.getSelectedTrack();
-                loadSingle(single, playlist);
+                loadSingle(single, null);
             }
             else
             {
@@ -366,13 +392,13 @@ public class PlayCmd extends MusicCommand
             if(ytsearch)
                 loadSingle(null, null);
             else
-                bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+query.trackQueries[iQuery], new SpotifyResultHandler(m,event,true,query,iQuery + 1,prevMessageText,prevErrors));
+                bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(playlist.tracks[iTrack]), new SpotifyResultHandler(m,event,playlist,iTrack + 1,prevMessageText,prevErrors));
         }
 
         @Override
         public void loadFailed(FriendlyException throwable)
         {
-            LoggerFactory.getLogger("MusicBot").error("Load failed for: " + query.trackQueries[iQuery], throwable);
+            LoggerFactory.getLogger("MusicBot").error("Load failed for: " + playlist.tracks[iTrack].name, throwable);
             loadSingle(null, null);
         }
     }

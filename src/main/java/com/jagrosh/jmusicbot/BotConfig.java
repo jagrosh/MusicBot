@@ -216,6 +216,8 @@ public class BotConfig
             bytes = original.substring(original.indexOf(START_TOKEN)+START_TOKEN.length(), original.indexOf(END_TOKEN))
                 .replace("BOT_TOKEN_HERE", token)
                 .replace("0 // OWNER ID", Long.toString(owner))
+                .replace("CLIENT_ID_HERE", spotifyClientId)
+                .replace("CLIENT_SECRET_HERE", spotifyClientSecret)
                 .trim().getBytes();
         }
         try 
