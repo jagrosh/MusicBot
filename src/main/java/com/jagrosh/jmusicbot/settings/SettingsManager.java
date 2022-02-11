@@ -15,12 +15,16 @@
  */
 package com.jagrosh.jmusicbot.settings;
 
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import com.jagrosh.jdautilities.command.GuildSettingsManager;
+import com.jagrosh.jmusicbot.settings.Settings.EmojiOption;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import net.dv8tion.jda.api.entities.Guild;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
@@ -56,15 +60,43 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                         o.has("repeat_mode")     ? o.getEnum(RepeatMode.class, "repeat_mode"): RepeatMode.OFF,
                         o.has("prefix")          ? o.getString("prefix")                     : null,
                         o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO,
-                        o.has("success")         ? o.getString("success")                    : null,
-                        o.has("warning")         ? o.getString("warning")                    : null,
-                        o.has("error")           ? o.getString("error")                      : null,
-                        o.has("loading")         ? o.getString("loading")                    : null,
-                        o.has("searching")       ? o.getString("searching")                  : null));
+                        getEmojiOptions(o, "success"),
+                        getEmojiOptions(o, "warning"),
+                        getEmojiOptions(o, "error"),
+                        getEmojiOptions(o, "loading"),
+                        getEmojiOptions(o, "searching")));
             });
         } catch(IOException | JSONException e) {
             LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
         }
+    }
+
+    private static Settings.EmojiOption[] getEmojiOptions(JSONObject o, String key) {
+        if (!o.has(key)) return null;
+        if (o.get(key) instanceof String) return new Settings.EmojiOption[] { new Settings.EmojiOption(o.getString(key), 1) };
+        JSONArray options = o.getJSONArray(key);
+        if (options.length() <= 0) return null;
+        Settings.EmojiOption[] parsedOptions = new Settings.EmojiOption[options.length()];
+        boolean hasWeights = false; // initial value won't be used.
+        for (int i = 0; i < options.length(); i++) {
+            if (options.get(i) instanceof String) {
+                if (i != 0 && hasWeights) { 
+                    LoggerFactory.getLogger("ServerSettings").error("Emoji list \""+key+"\" uses a mix of emojis and weighted emojis. Ignoring list.");
+                    return null;
+                }
+                hasWeights = false;
+                parsedOptions[i] = new Settings.EmojiOption(options.getString(i), 1);
+            } else {
+                if (i != 0 && !hasWeights) { 
+                    LoggerFactory.getLogger("ServerSettings").error("Emoji list \""+key+"\" uses a mix of emojis and weighted emojis. Ignoring list.");
+                    return null;
+                }
+                hasWeights = true;
+                JSONObject option = options.getJSONObject(i);
+                parsedOptions[i] = new Settings.EmojiOption(option.getString("emoji"), option.getDouble("weight"));
+            }
+        }
+        return parsedOptions;
     }
     
     /**
@@ -112,22 +144,47 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                 o.put("prefix", s.getPrefix());
             if(s.getSkipRatio() != SKIP_RATIO)
                 o.put("skip_ratio", s.getSkipRatio());
-            if (s.getSuccess() != null)
-                o.put("success", s.getSuccess());
-            if (s.getWarning() != null)
-                o.put("warning", s.getWarning());
-            if (s.getError() != null)
-                o.put("error", s.getError());   
-            if (s.getLoading() != null)
-                o.put("loading", s.getLoading());   
-            if (s.getSearching() != null)
-                o.put("searching", s.getSearching());                                                              
+            putEmojiOptions(o, "success", s.getSuccessEmojis());
+            putEmojiOptions(o, "warning", s.getWarningEmojis());
+            putEmojiOptions(o, "error", s.getErrorEmojis());
+            putEmojiOptions(o, "loading", s.getLoadingEmojis());
+            putEmojiOptions(o, "searching", s.getSearchingEmojis());
             obj.put(Long.toString(key), o);
         });
         try {
             Files.write(OtherUtil.getPath("serversettings.json"), obj.toString(4).getBytes("utf-16"));
         } catch(IOException ex){
             LoggerFactory.getLogger("Settings").warn("Failed to write to file: "+ex);
+        }
+    }
+
+    private static void putEmojiOptions(JSONObject o, String key, Settings.EmojiOption[] options) {
+        if (options == null || options.length == 0) return;
+        if (options.length == 1) o.put(key, options[0].emoji);
+        else {
+            boolean defaultWeights = true;
+            for (Settings.EmojiOption option : options) {
+                if (option.weight != 1) {
+                    defaultWeights = false;
+                    break;
+                }
+            }
+
+            JSONArray serializedOptions = new JSONArray();
+            if (defaultWeights) {
+                for (Settings.EmojiOption option : options) {
+                    serializedOptions.put(option.emoji);
+                }
+            } else {
+                for (Settings.EmojiOption option : options) {
+                    JSONObject serializedOption = new JSONObject();
+                    serializedOption.put("emoji", option.emoji);
+                    serializedOption.put("weight", option.weight);
+                    serializedOptions.put(serializedOption);
+                }
+            }
+
+            o.put(key, serializedOptions);
         }
     }
 }

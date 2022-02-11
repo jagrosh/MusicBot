@@ -1,65 +1,82 @@
 package com.jagrosh.jmusicbot.commands.owner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
-import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.menu.OrderedMenu;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
 public class SetemojiCmd extends OwnerCommand 
 {
-
   private final Bot bot;
+
+  private final static String[] messageTypes = new String[] { "success", "warning", "error", "loading", "searching" };
+  private final ArrayList<Function<Settings, Settings.EmojiOption[]>> messageTypeGetters;
+  private final ArrayList<BiConsumer<Settings, Settings.EmojiOption[]>> messageTypeSetters;
 
   public SetemojiCmd(Bot bot)
   {
     this.bot = bot;
     this.name = "setemoji";
     this.help = "sets an emoji that the bot uses";
-    this.arguments = "[guild: <guildname>|<guildid>|all] [(emojitype: success|warning|error|loading|searching) [emoji]]";
+    this.arguments = "[guild: <guildname>|<guildid>|all] [<emojitype: success|warning|error|loading|searching> [emoji] [emoji] [emoji] ...]";
     this.aliases = bot.getConfig().getAliases(this.name);
     this.guildOnly = false;
 
-    messageTypeSetters = new ArrayList<BiConsumer<Settings, String>>();
-    messageTypeSetters.add((set, val) -> set.setSuccess(val));
-    messageTypeSetters.add((set, val) -> set.setWarning(val));
-    messageTypeSetters.add((set, val) -> set.setError(val));
-    messageTypeSetters.add((set, val) -> set.setLoading(val));
-    messageTypeSetters.add((set, val) -> set.setSearching(val));
+    messageTypeGetters = new ArrayList<Function<Settings, Settings.EmojiOption[]>>();
+    messageTypeGetters.add((set) -> set.getSuccessEmojis());
+    messageTypeGetters.add((set) -> set.getWarningEmojis());
+    messageTypeGetters.add((set) -> set.getErrorEmojis());
+    messageTypeGetters.add((set) -> set.getLoadingEmojis());
+    messageTypeGetters.add((set) -> set.getSearchingEmojis());
+
+    messageTypeSetters = new ArrayList<BiConsumer<Settings, Settings.EmojiOption[]>>();
+    messageTypeSetters.add((set, val) -> set.setSuccessEmojis(val));
+    messageTypeSetters.add((set, val) -> set.setWarningEmojis(val));
+    messageTypeSetters.add((set, val) -> set.setErrorEmojis(val));
+    messageTypeSetters.add((set, val) -> set.setLoadingEmojis(val));
+    messageTypeSetters.add((set, val) -> set.setSearchingEmojis(val));
   }
-  
-  private final static String[] messageTypes = new String[] { "success", "warning", "error", "loading", "searching" };
-  private final ArrayList<BiConsumer<Settings, String>> messageTypeSetters;
 
   @Override
   protected void execute(CommandEvent event) 
   {
     String guildName = null;
-    String emoji = null;
+    String[] emojis = null;
     int iMessageType = -1;
     String args = event.getArgs().trim().toLowerCase();
-    String argsMinusEnd = args.contains(" ") ? args.substring(0, args.lastIndexOf(" ")).trim() : args;
+    String[] argsParts = args.split("\\s+");
     if(!args.isEmpty()) {
       for (int i = 0; i < messageTypes.length; i++) {
-        if (args.endsWith(messageTypes[i])) {
-          iMessageType = i;
-          args = args.substring(0, args.length() - messageTypes[i].length()).trim();
-          break;
-        } else if (argsMinusEnd.endsWith(messageTypes[i])) {
-          iMessageType = i;
-          emoji = args.substring(args.lastIndexOf(" ") + 1);
-          args = argsMinusEnd.substring(0, argsMinusEnd.length() - messageTypes[i].length()).trim();
-          break;
+        for (int j = argsParts.length - 1; j >= 0; j--) {
+          if (argsParts[j].equals(messageTypes[i])) {
+            iMessageType = i;
+            if (j < argsParts.length - 1) {
+              emojis = new String[argsParts.length - j - 1];
+              for (int k = 0; k < emojis.length; k++) {
+                emojis[k] = argsParts[j+1+k];
+              }
+            }
+            String[] remainingParts = new String[j];
+            for (int k = 0; k < j; k++) remainingParts[k] = argsParts[k];
+            args = String.join(" ", remainingParts);
+            break;
+          }
         }
       }
       if (!args.isEmpty()) {
@@ -67,10 +84,10 @@ public class SetemojiCmd extends OwnerCommand
       }
     }
 
-    selectGuildAndContinue(event, guildName, iMessageType, emoji);
+    selectGuildAndContinue(event, guildName, iMessageType, emojis);
   }
 
-  private void selectGuildAndContinue(CommandEvent event, String guildName, int iMessageType, String emoji) {
+  private void selectGuildAndContinue(CommandEvent event, String guildName, int iMessageType, String[] emojis) {
     boolean allGuilds = false;
     ArrayList<Guild> guildOptions = new ArrayList<Guild>();
     if (guildName != null) {
@@ -87,13 +104,13 @@ public class SetemojiCmd extends OwnerCommand
     final boolean fAllGuilds = allGuilds;
 
     if (fAllGuilds) {
-      selectMessageTypeAndContinue(event, null, iMessageType, emoji);
+      selectMessageTypeAndContinue(event, null, iMessageType, emojis);
     } else if (bot.getJDA().getGuilds().size() == 1) {
       Guild g = bot.getJDA().getGuilds().get(0);
       if (guildName != null && guildOptions.size() == 0) {
         event.reply(bot.getError(event)+" Only one guild is accessible ("+g.getName()+"), but its name does not match \""+guildName+"\".");
       } else {
-        selectMessageTypeAndContinue(event, g, iMessageType, emoji);
+        selectMessageTypeAndContinue(event, g, iMessageType, emojis);
       }
     } else {
       String message = null;
@@ -104,7 +121,7 @@ public class SetemojiCmd extends OwnerCommand
       }
   
       if (guildOptions.size() == 1) {
-        selectMessageTypeAndContinue(event, guildOptions.get(0), iMessageType, emoji);
+        selectMessageTypeAndContinue(event, guildOptions.get(0), iMessageType, emojis);
       } else if (!event.getChannelType().isGuild()) {
         message = message == null ? "" : message + "\n";
         event.reply(message+bot.getError(event)+" Include the guild name when using this command in a DM, because interactive menus don't work in DMs."); 
@@ -131,7 +148,7 @@ public class SetemojiCmd extends OwnerCommand
             Guild g;
             if (iGuild == guildNameChoices.length) g = null;
             else g = guildOptions.get(iGuild - 1);
-            selectMessageTypeAndContinue(event, g, iMessageType, emoji);
+            selectMessageTypeAndContinue(event, g, iMessageType, emojis);
           })
           .useCancelButton(true)
           .build().display(event.getChannel());
@@ -139,9 +156,9 @@ public class SetemojiCmd extends OwnerCommand
     }
   }
 
-  private void selectMessageTypeAndContinue(CommandEvent event, Guild guild, int iMessageType, String emoji) {
+  private void selectMessageTypeAndContinue(CommandEvent event, Guild guild, int iMessageType, String[] emojis) {
     if (iMessageType != -1) {
-      selectEmojiAndContinue(event, guild, iMessageType, emoji);
+      loadExistingEmojisAndContinue(event, guild, iMessageType, emojis);
     } else if (!event.getChannelType().isGuild()) {
       event.reply(bot.getError(event)+" Include the emojitype when using this command in a DM, because interactive menus don't work in DMs."); 
     } else {
@@ -152,56 +169,297 @@ public class SetemojiCmd extends OwnerCommand
         .setTimeout(30, TimeUnit.SECONDS)
         .setSelection((m2, selectedIMessageType) -> {
           try { m2.clearReactions().queue(); } catch (PermissionException ignore) {}
-          selectEmojiAndContinue(event, guild, selectedIMessageType - 1, emoji);
+          loadExistingEmojisAndContinue(event, guild, selectedIMessageType - 1, emojis);
         })
         .useCancelButton(true)
         .build().display(event.getChannel());
     }
   }
 
-  private void selectEmojiAndContinue(CommandEvent event, Guild guild, int iMessageType, String emoji)
-  {
-    if (emoji != null) {
-      commitSelections(event, guild, iMessageType, emoji, null);
-    } else if (!event.getChannelType().isGuild()) {
-      event.reply(bot.getError(event)+" Include the emoji when using this command in a DM, because interactive menus don't work in DMs."); 
+  private void loadExistingEmojisAndContinue(CommandEvent event, Guild guild, int iMessageType, String[] emojis) {
+    String[] existingEmojis = null;
+    if (guild == null) {
+      for (Guild g : bot.getJDA().getGuilds()) {
+        Settings.EmojiOption[] guildEmojis = messageTypeGetters.get(iMessageType).apply(bot.getSettingsManager().getSettings(g));
+        if (existingEmojis == null) {
+          if (guildEmojis != null) {
+            existingEmojis = new String[guildEmojis.length];
+            for (int i = 0; i < existingEmojis.length; i++) existingEmojis[i] = guildEmojis[i].emoji;
+          }
+        } else {
+          int newCount = 0;
+          boolean[] founds = new boolean[existingEmojis.length];
+          for (int i = 0; i < existingEmojis.length; i++) {
+            boolean found = false;
+            for (int j = 0; j < guildEmojis.length; j++) {
+              if (existingEmojis[i].equals(guildEmojis[j].emoji)) {
+                found = true;
+                break;
+              }
+            }
+            founds[i] = found;
+            if (found) newCount++;
+          }
+          if (newCount != existingEmojis.length) {
+            String[] oldEmojis = existingEmojis;
+            existingEmojis = new String[newCount];
+            int j = 0;
+            for (int i = 0; i < oldEmojis.length; i++) {
+              if (founds[i]) {
+                existingEmojis[j++] = oldEmojis[i];
+              }
+            }
+          }
+        }
+      }
     } else {
-      event.reply(bot.getLoading(event)+" React to this message with the \""+messageTypes[iMessageType]+"\" emoji you wish to use in "+(guild == null ? "all guilds" : guild.getName())+"...", m -> {
-        bot.getWaiter().waitForEvent(MessageReactionAddEvent.class, 
-          reactEvent -> reactEvent.getMessageId().equals(m.getId()) && reactEvent.getUserId().equals(event.getAuthor().getId()),
-          reactEvent -> {
-            // What happens next is after a valid event
-            // is fired and processed above.
-  
-            String reactedEmoji = (reactEvent.getReaction().getReactionEmote().isEmoji())
-              ? reactEvent.getReaction().getReactionEmote().getEmoji()
-              : reactEvent.getReaction().getReactionEmote().getEmote().getAsMention();
-  
-            commitSelections(event, guild, iMessageType, reactedEmoji, m);
-          },
-          30, TimeUnit.SECONDS, () -> {
-            m.delete().queue();
-          });
-      });
+      Settings.EmojiOption[] guildEmojis = messageTypeGetters.get(iMessageType).apply(bot.getSettingsManager().getSettings(guild));
+      if (guildEmojis == null) existingEmojis = null;
+      else {
+        existingEmojis = new String[guildEmojis.length];
+        for (int i = 0; i < existingEmojis.length; i++) existingEmojis[i] = guildEmojis[i].emoji;
+      }
+    }
+    if (existingEmojis == null) existingEmojis = new String[0];
+
+    selectEmojiAndContinue(event, guild, iMessageType, existingEmojis, emojis, null, null, null);
+  }
+
+  private static class AtomicFlag {
+    private boolean flag = false;
+    public synchronized boolean setAsFirst() { 
+      if (flag) return false; 
+      flag = true; 
+      return true;
     }
   }
 
-  private void commitSelections(CommandEvent event, Guild guild, int iMessageType, String emoji, Message m) 
+  private boolean isAvailable(String emoji) {
+    if (emoji.startsWith("<") && emoji.endsWith(">")) {
+      List<Emote> availableEmotes = bot.getJDA().getEmotes();
+      for (Emote availableEmote : availableEmotes) {
+        if (availableEmote.getAsMention().toLowerCase().equals(emoji.toLowerCase())) {
+          return true;
+        }
+      }
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  private void selectEmojiAndContinue(CommandEvent event, Guild guild, int iMessageType, String[] existingEmojis, String[] newEmojis, Message m, String mText, String removeIgnore)
   {
-    // Do it
-    if (guild == null) {
-      for (Guild g : bot.getJDA().getGuilds()) {
-        messageTypeSetters.get(iMessageType).accept(bot.getSettingsManager().getSettings(g), emoji);
+    if (newEmojis != null) {
+      updateEmojis(event, guild, iMessageType, existingEmojis, true, newEmojis, null);
+    } else if (!event.getChannelType().isGuild()) {
+      String text = bot.getError(event)+" Include the emoji when using this command in a DM, because interactive menus don't work in DMs.";
+      if (m != null) {
+        m.editMessage(text).queue();
+      } else {
+        event.reply(text); 
       }
     } else {
-      messageTypeSetters.get(iMessageType).accept(bot.getSettingsManager().getSettings(guild), emoji);
+      Consumer<Message> addReactHandlers = (m2) -> {
+        final AtomicFlag firedFlag = new AtomicFlag();
+        bot.getWaiter().waitForEvent(MessageReactionAddEvent.class, 
+          reactEvent -> { 
+            if (!reactEvent.getMessageId().equals(m2.getId()) || !reactEvent.getUserId().equals(event.getAuthor().getId())) return false;
+            String reactedEmoji = (reactEvent.getReaction().getReactionEmote().isEmoji())
+              ? reactEvent.getReaction().getReactionEmote().getEmoji()
+              : reactEvent.getReaction().getReactionEmote().getEmote().getAsMention().toLowerCase();
+            return isAvailable(reactedEmoji);
+          },          
+          reactEvent -> {
+            // What happens next is after a valid event is fired and processed above.
+            if (!firedFlag.setAsFirst()) return;
+
+            String reactedEmoji = (reactEvent.getReaction().getReactionEmote().isEmoji())
+            ? reactEvent.getReaction().getReactionEmote().getEmoji()
+            : reactEvent.getReaction().getReactionEmote().getEmote().getAsMention().toLowerCase();
+
+            updateEmojis(event, guild, iMessageType, existingEmojis, false, new String[] { reactedEmoji }, m2);
+          },
+          30, TimeUnit.SECONDS, () -> {});
+        bot.getWaiter().waitForEvent(MessageReactionRemoveEvent.class, 
+          reactEvent -> { 
+            if (!reactEvent.getMessageId().equals(m2.getId()) || !reactEvent.getUserId().equals(event.getAuthor().getId())) return false;
+            String reactedEmoji = (reactEvent.getReaction().getReactionEmote().isEmoji())
+              ? reactEvent.getReaction().getReactionEmote().getEmoji()
+              : reactEvent.getReaction().getReactionEmote().getEmote().getAsMention().toLowerCase();
+            if (removeIgnore != null && reactedEmoji.equals(removeIgnore)) return false;
+            return isAvailable(reactedEmoji);
+          },
+          reactEvent -> {
+            // What happens next is after a valid event is fired and processed above.
+            if (!firedFlag.setAsFirst()) return;
+
+            String reactedEmoji = (reactEvent.getReaction().getReactionEmote().isEmoji())
+              ? reactEvent.getReaction().getReactionEmote().getEmoji()
+              : reactEvent.getReaction().getReactionEmote().getEmote().getAsMention().toLowerCase();
+
+            updateEmojis(event, guild, iMessageType, existingEmojis, false, new String[] { reactedEmoji }, m2);
+          },
+          30, TimeUnit.SECONDS, () -> {});
+      };
+
+      String text = mText == null ? "" : mText + "\n";
+      text += bot.getLoading(event)+" React to this message to add a new emoji "+(existingEmojis != null && existingEmojis.length > 0 ? "or remove an existing emoji " : "")+"for \""+messageTypes[iMessageType]+"\" in "+(guild == null ? "all guilds" : guild.getName())+".";
+      if (existingEmojis != null && existingEmojis.length != 0) {
+        text += " (currently "+String.join(", ", existingEmojis)+")";
+      }
+
+      if (m == null) {
+        event.reply(text, m2 -> {
+          addReactHandlers.accept(m2);
+          if (existingEmojis != null && existingEmojis.length != 0) {
+            List<Emote> availableEmotes = bot.getJDA().getEmotes();
+            for (String existingEmoji : existingEmojis) {
+              if (existingEmoji.startsWith("<") && existingEmoji.endsWith(">")) {
+                for (Emote availableEmote : availableEmotes) {
+                  if (availableEmote.getAsMention().toLowerCase().equals(existingEmoji.toLowerCase())) {
+                    m2.addReaction(availableEmote).queue();
+                    break;
+                  }
+                }
+              } else {
+                m2.addReaction(existingEmoji).queue();
+              }
+            }
+          }
+        });
+      } else {
+        m.editMessage(text).queue();
+        addReactHandlers.accept(m);
+      }
+    }
+  }
+
+  /**
+   * @param add True to add all the emojis. False to toggle them.
+   */
+  private void updateEmojis(CommandEvent event, Guild guild, int iMessageType, String[] existingEmojis, boolean add, String[] emojis, Message m) 
+  {
+    // Do it
+    boolean added = false;
+    ArrayList<String> emojisChanged = new ArrayList<String>();
+
+    List<Guild> singleGuild = new ArrayList<Guild>();
+    singleGuild.add(guild);
+    
+    for (Guild g : (guild == null ? bot.getJDA().getGuilds() : singleGuild)) {
+      Settings settings = bot.getSettingsManager().getSettings(g);
+      Settings.EmojiOption[] existingGuildEmojis = messageTypeGetters.get(iMessageType).apply(settings);
+      if (existingGuildEmojis == null) existingGuildEmojis = new Settings.EmojiOption[0];
+      int targetedExistingCount = 0;
+      boolean[] emojiExists = new boolean[emojis.length];
+      boolean[] existingEmojiTargeted = new boolean[existingGuildEmojis.length];
+      if (existingGuildEmojis != null && existingGuildEmojis.length != 0) {
+        for (int i = 0; i < existingGuildEmojis.length; i++) {
+          for (int j = 0; j < emojis.length; j++) {
+            if (existingGuildEmojis[i].emoji.equals(emojis[j])) {
+              targetedExistingCount++;
+              emojiExists[j] = true;
+              existingEmojiTargeted[i] = true;
+              break;
+            }
+          }
+        }
+      }
+
+      Settings.EmojiOption[] newEmojis = new Settings.EmojiOption[existingGuildEmojis.length + emojis.length - targetedExistingCount + (add ? 0 : -targetedExistingCount)];
+      int k = 0;
+      double existingWeightSum = 0;
+      for (int i = 0; i < existingGuildEmojis.length; i++) {
+        if (add || !existingEmojiTargeted[i]) {
+          newEmojis[k++] = existingGuildEmojis[i];
+          existingWeightSum += existingGuildEmojis[i].weight;
+          if (add && existingEmojiTargeted[i]) added = true;
+        } else {
+          emojisChanged.add(existingGuildEmojis[i].emoji);
+        }
+      }
+      double addWeight = k == 0 ? 1 : existingWeightSum / k;
+      for (int j = 0; j < emojis.length; j++) {
+        if (!emojiExists[j]) { // if adding, then we should add missing emojis. if toggling, then we should add missing emojis.
+          newEmojis[k++] = new Settings.EmojiOption(emojis[j], addWeight);
+          emojisChanged.add(emojis[j]);
+          added = true;
+        }
+      }
+
+      messageTypeSetters.get(iMessageType).accept(bot.getSettingsManager().getSettings(g), newEmojis);
     }
 
-    String messageText = bot.getSuccess(event)+" Set the \""+messageTypes[iMessageType]+"\" emoji in "+(guild == null ? "all guilds" : guild.getName())+" to: "+emoji;
+    ArrayList<String> unionEmojis = new ArrayList<String>();
+    for (int i = 0; i < existingEmojis.length; i++) {
+      boolean targeted = false;
+      for (int j = 0; j < emojis.length; j++) {
+        if (existingEmojis[i].equals(emojis[j])) {
+          targeted = true;
+          break;
+        }
+      }
+      if (add || !targeted) {
+        unionEmojis.add(existingEmojis[i]);
+      }
+    }
+    for (int j = 0; j < emojis.length; j++) {
+      boolean exists = false;
+      for (int i = 0; i < existingEmojis.length; i++) {
+        if (existingEmojis[i].equals(emojis[j])) {
+          exists = true;
+          break;
+        }
+      }
+      if (!exists) {
+        unionEmojis.add(emojis[j]);
+      }
+    }
+    String[] unionEmojisArr = Arrays.copyOf(unionEmojis.toArray(), unionEmojis.size(), String[].class);
+
+    final boolean fAdded = added;
+
+    BiConsumer<Message, Consumer<String>> updateReactions = (m2, callback) -> {
+      if (emojisChanged.size() != 0) {
+        List<Emote> availableEmotes = bot.getJDA().getEmotes();
+        for (String existingEmoji : emojisChanged) {
+          if (existingEmoji.startsWith("<") && existingEmoji.endsWith(">")) {
+            for (Emote availableEmote : availableEmotes) {
+              if (availableEmote.getAsMention().toLowerCase().equals(existingEmoji.toLowerCase())) {
+                if (fAdded) {
+                  m2.addReaction(availableEmote).queue();
+                } else {
+                  m2.removeReaction(availableEmote).queue();
+                }
+                if (m != null) { // this reaction came from a user event
+                  try { m2.removeReaction(availableEmote, event.getAuthor()).queue((v) -> callback.accept(existingEmoji)); } catch (PermissionException ignore) { callback.accept(null); }
+                }
+                break;
+              }
+            }
+          } else {
+            if (fAdded) {
+              m2.addReaction(existingEmoji).queue();
+            } else {
+              m2.removeReaction(existingEmoji).queue();
+            }
+            if (m != null) { // this reaction came from a user event
+              try { m2.removeReaction(existingEmoji, event.getAuthor()).queue((v) -> callback.accept(existingEmoji)); } catch (PermissionException ignore) { callback.accept(null); }
+            }
+          }
+        }
+      }
+    };
+
+    String messageText = bot.getSuccess(event)+" "+(added ? "Added" : "Removed")+": "+String.join(", ", emojis)+".";
     if (m != null) {
-      m.editMessage(messageText).queue();
+      updateReactions.accept(m, (removeIgnore) -> selectEmojiAndContinue(event, guild, iMessageType, unionEmojisArr, null, m, messageText, removeIgnore));
     } else {
-      event.reply(messageText);
+      event.reply(messageText, m2 -> {
+        if (add) updateReactions.accept(m2, (removeIgnore) -> selectEmojiAndContinue(event, guild, iMessageType, unionEmojisArr, null, m2, messageText, removeIgnore));
+        else selectEmojiAndContinue(event, guild, iMessageType, unionEmojisArr, null, m2, messageText, null);
+      });
     }
   }
 }

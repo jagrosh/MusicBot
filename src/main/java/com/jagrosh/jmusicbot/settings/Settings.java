@@ -29,6 +29,16 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
  */
 public class Settings implements GuildSettingsProvider
 {
+    public static class EmojiOption {
+        public final String emoji;
+        public final double weight;
+
+        public EmojiOption(String emoji, double weight) {
+            this.emoji = emoji;
+            this.weight = weight;
+        }
+    }
+
     private final SettingsManager manager;
     protected long textId;
     protected long voiceId;
@@ -38,9 +48,9 @@ public class Settings implements GuildSettingsProvider
     private RepeatMode repeatMode;
     private String prefix;
     private double skipRatio;
-    private String successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
+    private EmojiOption[] successEmojis, warningEmojis, errorEmojis, loadingEmojis, searchingEmojis;
 
-    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, String successEmoji, String warningEmoji, String errorEmoji, String loadingEmoji, String searchingEmoji)
+    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, EmojiOption[] successEmojis, EmojiOption[] warningEmojis, EmojiOption[] errorEmojis, EmojiOption[] loadingEmojis, EmojiOption[] searchingEmojis)
     {
         this.manager = manager;
         try
@@ -72,14 +82,14 @@ public class Settings implements GuildSettingsProvider
         this.repeatMode = repeatMode;
         this.prefix = prefix;
         this.skipRatio = skipRatio;
-        this.successEmoji = successEmoji;
-        this.warningEmoji = warningEmoji;
-        this.errorEmoji = errorEmoji;
-        this.loadingEmoji = loadingEmoji;
-        this.searchingEmoji = searchingEmoji;
+        this.successEmojis = successEmojis;
+        this.warningEmojis = warningEmojis;
+        this.errorEmojis = errorEmojis;
+        this.loadingEmojis = loadingEmojis;
+        this.searchingEmojis = searchingEmojis;
     }
     
-    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, String successEmoji, String warningEmoji, String errorEmoji, String loadingEmoji, String searchingEmoji)
+    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, EmojiOption[] successEmojis, EmojiOption[] warningEmojis, EmojiOption[] errorEmojis, EmojiOption[] loadingEmojis, EmojiOption[] searchingEmojis)
     {
         this.manager = manager;
         this.textId = textId;
@@ -90,11 +100,11 @@ public class Settings implements GuildSettingsProvider
         this.repeatMode = repeatMode;
         this.prefix = prefix;
         this.skipRatio = skipRatio;
-        this.successEmoji = successEmoji;
-        this.warningEmoji = warningEmoji;
-        this.errorEmoji = errorEmoji;
-        this.loadingEmoji = loadingEmoji;
-        this.searchingEmoji = searchingEmoji;
+        this.successEmojis = successEmojis;
+        this.warningEmojis = warningEmojis;
+        this.errorEmojis = errorEmojis;
+        this.loadingEmojis = loadingEmojis;
+        this.searchingEmojis = searchingEmojis;
     }
     
     // Getters
@@ -138,29 +148,29 @@ public class Settings implements GuildSettingsProvider
         return skipRatio;
     }
 
-    public String getSuccess() 
+    public EmojiOption[] getSuccessEmojis() 
     {
-        return successEmoji;
+        return successEmojis;
     }
 
-    public String getWarning() 
+    public EmojiOption[] getWarningEmojis() 
     {
-        return warningEmoji;
+        return warningEmojis;
     }
 
-    public String getError() 
+    public EmojiOption[] getErrorEmojis() 
     {
-        return errorEmoji;
+        return errorEmojis;
     }
 
-    public String getLoading() 
+    public EmojiOption[] getLoadingEmojis() 
     {
-        return loadingEmoji;
+        return loadingEmojis;
     }
 
-    public String getSearching() 
+    public EmojiOption[] getSearchingEmojis() 
     {
-        return searchingEmoji;
+        return searchingEmojis;
     }
 
     @Override
@@ -218,33 +228,38 @@ public class Settings implements GuildSettingsProvider
         this.manager.writeSettings();
     }
 
-    public void setSuccess(String success)
+    public void setSuccessEmojis(EmojiOption[] success)
     {
-        this.successEmoji = success;
+        if (success.length == 0) success = null;
+        this.successEmojis = success;
         this.manager.writeSettings();
     }
 
-    public void setWarning(String warning)
+    public void setWarningEmojis(EmojiOption[] warning)
     {
-        this.warningEmoji = warning;
+        if (warning.length == 0) warning = null;
+        this.warningEmojis = warning;
         this.manager.writeSettings();
     }
 
-    public void setError(String error)
+    public void setErrorEmojis(EmojiOption[] error)
     {
-        this.errorEmoji = error;
+        if (error.length == 0) error = null;
+        this.errorEmojis = error;
         this.manager.writeSettings();
     }
 
-    public void setLoading(String loading)
+    public void setLoadingEmojis(EmojiOption[] loading)
     {
-        this.loadingEmoji = loading;
+        if (loading.length == 0) loading = null;
+        this.loadingEmojis = loading;
         this.manager.writeSettings();
     }
 
-    public void setSearching(String searching)
+    public void setSearchingEmojis(EmojiOption[] searching)
     {
-        this.searchingEmoji = searching;
+        if (searching.length == 0) searching = null;
+        this.searchingEmojis = searching;
         this.manager.writeSettings();
     }
 }

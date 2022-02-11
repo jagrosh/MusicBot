@@ -28,10 +28,13 @@ import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
+import com.jagrosh.jmusicbot.settings.Settings.EmojiOption;
 
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
+import java.util.Random;
+
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
@@ -51,6 +54,8 @@ public class Bot
     private final NowplayingHandler nowplaying;
     private final AloneInVoiceHandler aloneInVoiceHandler;
     private final SpotifyAPI spotifyApi;
+
+    private final Random rng = new Random();
     
     private boolean shuttingDown = false;
     private JDA jda;
@@ -187,38 +192,42 @@ public class Bot
         return getSettingsManager().getSettings(null);
     }
 
+    private String chooseEmoji(EmojiOption[] options, String backup) {
+        if (options == null || options.length == 0) return backup;
+        if (options.length == 1) return options[0].emoji;
+        double sum = 0;
+        for (EmojiOption option : options) sum += option.weight;
+        double rand = rng.nextDouble() * sum;
+        for (EmojiOption option : options) {
+            rand -= option.weight;
+            if (rand <= 0) return option.emoji;
+        }
+        // loop may not have reached rand=0 due to double precision issues
+        return options[options.length - 1].emoji;
+    }
+
     public String getSuccess(CommandEvent event) 
     {
-        String guildSetting = getSettings(event).getSuccess();
-        if (guildSetting != null) return guildSetting;
-        return getConfig().getSuccess(); 
+        return chooseEmoji(getSettings(event).getSuccessEmojis(), getConfig().getSuccess()); 
     }
 
     public String getWarning(CommandEvent event) 
     {
-        String guildSetting = getSettings(event).getWarning();
-        if (guildSetting != null) return guildSetting;
-        return getConfig().getWarning(); 
+        return chooseEmoji(getSettings(event).getWarningEmojis(), getConfig().getWarning()); 
     }
 
     public String getError(CommandEvent event) 
     {
-        String guildSetting = getSettings(event).getError();
-        if (guildSetting != null) return guildSetting;
-        return getConfig().getError(); 
+        return chooseEmoji(getSettings(event).getErrorEmojis(), getConfig().getError()); 
     }
 
     public String getLoading(CommandEvent event) 
     {
-        String guildSetting = getSettings(event).getLoading();
-        if (guildSetting != null) return guildSetting;
-        return getConfig().getLoading(); 
+        return chooseEmoji(getSettings(event).getLoadingEmojis(), getConfig().getLoading()); 
     }
 
     public String getSearching(CommandEvent event) 
     {
-        String guildSetting = getSettings(event).getSearching();
-        if (guildSetting != null) return guildSetting;
-        return getConfig().getSearching(); 
+        return chooseEmoji(getSettings(event).getSearchingEmojis(), getConfig().getSearching()); 
     }
 }
