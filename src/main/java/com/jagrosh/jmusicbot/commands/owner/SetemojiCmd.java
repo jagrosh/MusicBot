@@ -456,10 +456,18 @@ public class SetemojiCmd extends OwnerCommand
     if (m != null) {
       updateReactions.accept(m, (removeIgnore) -> selectEmojiAndContinue(event, guild, iMessageType, unionEmojisArr, null, m, messageText, removeIgnore));
     } else {
-      event.reply(messageText, m2 -> {
-        if (add) updateReactions.accept(m2, (removeIgnore) -> selectEmojiAndContinue(event, guild, iMessageType, unionEmojisArr, null, m2, messageText, removeIgnore));
-        else selectEmojiAndContinue(event, guild, iMessageType, unionEmojisArr, null, m2, messageText, null);
-      });
+      if (!event.getChannelType().isGuild()) {
+        String text = messageText == null ? "" : messageText;
+        if (existingEmojis != null && existingEmojis.length != 0) {
+          text += "\nNew \""+messageTypes[iMessageType]+"\" list for "+(guild == null ? "all guilds" : guild.getName())+": "+String.join(", ", unionEmojisArr)+".";
+        }
+        event.reply(text);
+      } else {
+        event.reply(messageText, m2 -> {
+          if (add) updateReactions.accept(m2, (removeIgnore) -> selectEmojiAndContinue(event, guild, iMessageType, unionEmojisArr, null, m2, messageText, removeIgnore));
+          else selectEmojiAndContinue(event, guild, iMessageType, unionEmojisArr, null, m2, messageText, null);
+        });
+      }
     }
   }
 }
