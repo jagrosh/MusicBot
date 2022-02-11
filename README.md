@@ -6,7 +6,20 @@
 
 ## Extra Features
 - Play command works on spotify track, album or playlist links (Right click -> Share -> Copy link to playlist)
-- Server-specific emojis used by the bot, configured by the setemoji command
+- Server-specific emojis used by the bot, configured by the setemoji command.
+  - Several emojis can be set per situation ("success", "error", etc.).
+    - The bot selects randomly from the list of emojis.
+    - Weights can be added to do a weighted select - to do this, edit serversettings.json and replace the emoji strings with json objects like:
+      ```{ "emoji": "<emojistring>", "weight": <weight> }```
+
+      e.g.
+      ```
+      {{"<serverid>": {"success": [
+          { "emoji": "👍", "weight": 9 },
+          { "emoji": "<:customemoji:1234567890>", "weight": 2 },
+          { "emoji": "❓", "weight": 7 }
+      ]}}}
+      ```
 
 ## Setup
 - Get the latest release at https://github.com/cmorley191/MusicBot/releases
