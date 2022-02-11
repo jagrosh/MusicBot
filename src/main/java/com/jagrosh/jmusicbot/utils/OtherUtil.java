@@ -203,4 +203,31 @@ public class OtherUtil
             return null;
         }
     }
+
+
+    private static final byte[]
+        UTF_8_BOM = new byte[] {(byte)0xEF, (byte)0xBB, (byte)0xBF},
+        UTF_16BE_BOM = new byte[] {(byte)0xFE, (byte)0xFF},
+        UTF_16LE_BOM = new byte[] {(byte)0xFF, (byte)0xFE};
+    
+    /**
+     * Decode a UTF string that has starts with a BOM sequence indicating one of the UTF charsets.
+     * @return The string contents interpreted with the BOM-indicated encoding. (BOM is not included in the resulting contents)
+     * @throws UnsupportedEncodingException
+     */
+    public static String decodeStringWithBOM(byte[] sBytes) throws UnsupportedEncodingException { 
+        for (int i = 0; i < UTF_8_BOM.length + 1; i++) {
+            if (i == UTF_8_BOM.length) return new String(sBytes, "utf-8").substring(UTF_8_BOM.length);
+            if (sBytes[i] != UTF_8_BOM[i]) break;
+        }
+        for (int i = 0; i < UTF_16BE_BOM.length + 1; i++) {
+            if (i == UTF_16BE_BOM.length) return new String(sBytes, "utf-16");
+            if (sBytes[i] != UTF_16BE_BOM[i]) break;
+        }
+        for (int i = 0; i < UTF_16LE_BOM.length + 1; i++) {
+            if (i == UTF_16LE_BOM.length) return new String(sBytes, "utf-16LE");
+            if (sBytes[i] != UTF_16LE_BOM[i]) break;
+        }
+        return new String(sBytes, "utf-8");
+    }
 }

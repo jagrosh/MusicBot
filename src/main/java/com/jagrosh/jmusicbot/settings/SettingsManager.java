@@ -38,7 +38,7 @@ public class SettingsManager implements GuildSettingsManager<Settings>
     {
         this.settings = new HashMap<>();
         try {
-            JSONObject loadedSettings = new JSONObject(new String(Files.readAllBytes(OtherUtil.getPath("serversettings.json")), "utf-16"));
+            JSONObject loadedSettings = new JSONObject(OtherUtil.decodeStringWithBOM(Files.readAllBytes(OtherUtil.getPath("serversettings.json"))));            
             loadedSettings.keySet().forEach((id) -> {
                 JSONObject o = loadedSettings.getJSONObject(id);
 
