@@ -145,12 +145,9 @@ public class SetemojiCmd extends OwnerCommand
           // What happens next is after a valid event
           // is fired and processed above.
 
-          String re;
-          if (reactEvent.getReaction().getReactionEmote().isEmoji()) {
-            re = reactEvent.getReaction().getReactionEmote().getEmoji();
-          } else {
-            re = "<:"+reactEvent.getReaction().getReactionEmote().getAsReactionCode()+">";
-          }
+          String re = (reactEvent.getReaction().getReactionEmote().isEmoji())
+            ? reactEvent.getReaction().getReactionEmote().getEmoji()
+            : reactEvent.getReaction().getReactionEmote().getEmote().getAsMention();
 
           // Preform the specified action with the ReactionEmote
           if (guild == null) {
