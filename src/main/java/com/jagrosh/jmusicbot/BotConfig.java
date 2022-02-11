@@ -20,6 +20,7 @@ import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.typesafe.config.*;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -150,7 +151,8 @@ public class BotConfig
             }
 
             // validate spotify stuff
-            if(spotifyClientId==null || spotifyClientId.isEmpty() || spotifyClientId.equalsIgnoreCase("CLIENT_ID_HERE"))
+            boolean missingClientId = spotifyClientId==null || spotifyClientId.isEmpty() || spotifyClientId.equalsIgnoreCase("CLIENT_ID_HERE");
+            if(missingClientId)
             {
                 spotifyClientId = prompt.prompt("Please provide a Spotify App Client ID."
                         + "\nYou can create a spotify application, which provides access to the spotify API, at"
@@ -158,19 +160,18 @@ public class BotConfig
                         + "\n(the spotify application will be associated to your account as the app owner, but it"
                         + "\nwon't have access to your private spotify data)"
                         + "\nThe bot needs the Client ID and Client Secret of the application you create."
+                        + "\nSet to \"none\" to disable Spotify integration."
                         + "\nSpotify App Client ID: ");
-                if(spotifyClientId==null)
+                missingClientId = spotifyClientId==null || spotifyClientId.isEmpty() || spotifyClientId.equalsIgnoreCase("CLIENT_ID_HERE") || spotifyClientId.equalsIgnoreCase("none");
+                if(missingClientId)
                 {
-                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "No Spotify Client ID provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
-                    return;
+                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "No Spotify Client ID provided! Spotify integration will be disabled.");
                 }
-                else
-                {
-                    write = true;
-                }
+                write = true;
             }
+            missingClientId = missingClientId || spotifyClientId.equals("none");
 
-            if(spotifyClientSecret==null || spotifyClientSecret.isEmpty() || spotifyClientSecret.equalsIgnoreCase("CLIENT_SECRET_HERE"))
+            if(!missingClientId && (spotifyClientSecret==null || spotifyClientSecret.isEmpty() || spotifyClientSecret.equalsIgnoreCase("CLIENT_SECRET_HERE")))
             {
                 spotifyClientSecret = prompt.prompt("Please provide a Spotify App Client Secret."
                 + "\nYou can create a spotify application, which provides access to the spotify API, at"
@@ -179,10 +180,9 @@ public class BotConfig
                 + "\nwon't have access to your private spotify data)"
                 + "\nThe bot needs the Client ID and Client Secret of the application you create."
                 + "\nSpotify App Client Secret: ");
-                if(spotifyClientSecret==null)
+                if(spotifyClientSecret==null || spotifyClientSecret.isEmpty() || spotifyClientSecret.equalsIgnoreCase("CLIENT_SECRET_HERE"))
                 {
-                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "No Spotify Client Secret provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
-                    return;
+                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "No Spotify Client Secret provided! Spotify integration will be disabled.");
                 }
                 else
                 {
@@ -294,6 +294,12 @@ public class BotConfig
     public String getSpotSecret()
     {
         return spotifyClientSecret;
+    }
+
+    public boolean hasSpotifyInfo() 
+    {
+        return spotifyClientId != null && !spotifyClientId.trim().isEmpty() && !spotifyClientId.trim().equals("CLIENT_ID_HERE") && !spotifyClientId.trim().equals("none")
+            && spotifyClientSecret != null && !spotifyClientSecret.trim().isEmpty() && !spotifyClientSecret.trim().equals("CLIENT_SECRET_HERE") && !spotifyClientSecret.trim().equals("none");
     }
     
     public Activity getGame()

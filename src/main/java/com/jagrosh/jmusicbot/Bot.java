@@ -26,9 +26,11 @@ import com.jagrosh.jmusicbot.audio.NowplayingHandler;
 import com.jagrosh.jmusicbot.audio.PlayerManager;
 import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader;
-import com.jagrosh.jmusicbot.playlist.SpotifyAPI;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
+
+import org.slf4j.LoggerFactory;
+
 import java.util.Objects;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
@@ -67,13 +69,15 @@ public class Bot
         this.nowplaying.init();
         this.aloneInVoiceHandler = new AloneInVoiceHandler(this);
         this.aloneInVoiceHandler.init();
-        this.spotifyApi = new SpotifyAPI(config);
-        try {
-            this.spotifyApi.init();
-        } catch (Exception e) {
-            System.err.println("Exiting application due to error: ");
-            e.printStackTrace();
-            System.exit(1);
+        if (!config.hasSpotifyInfo()) this.spotifyApi = null;
+        else {
+            this.spotifyApi = new SpotifyAPI(config);
+            try {
+                this.spotifyApi.authorize();
+            } catch (Exception e) {
+                LoggerFactory.getLogger("Spotify").error("Failed to authorize. Exiting application due to error: ", e);
+                System.exit(1);
+            }
         }
     }
     

@@ -27,14 +27,15 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.menu.ButtonMenu;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.SpotifyAPI;
+import com.jagrosh.jmusicbot.SpotifyAPI.SpotifyPlaylist;
+import com.jagrosh.jmusicbot.SpotifyAPI.SpotifyTrack;
+import com.jagrosh.jmusicbot.SpotifyAPI.SpotifyUrlData;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
-import com.jagrosh.jmusicbot.playlist.SpotifyAPI.SpotifyPlaylist;
-import com.jagrosh.jmusicbot.playlist.SpotifyAPI.SpotifyTrack;
-import com.jagrosh.jmusicbot.playlist.SpotifyAPI.SpotifyUrlData;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
@@ -96,34 +97,38 @@ public class PlayCmd extends MusicCommand
             : event.getArgs().isEmpty() ? event.getMessage().getAttachments().get(0).getUrl() : event.getArgs();
 
         LoggerFactory.getLogger("MusicBot").info("Playing: " + args);
-        SpotifyUrlData spotifyUrl = bot.getSpotifyAPI().tryParseUrl(args);
+        SpotifyUrlData spotifyUrl = SpotifyAPI.tryParseUrl(args);
         if (spotifyUrl != null) {
-            if (spotifyUrl.type == SpotifyUrlData.Type.TRACK) {
-                try {
-                    SpotifyTrack track = bot.getSpotifyAPI().getTrack(spotifyUrl.id);
-                    event.reply(bot.getLoading(event) +" Loading... `["+track.name+"]`", 
-                        m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(track), new SpotifyResultHandler(m, event, track)));
-                } catch (Exception e) {
-                    LoggerFactory.getLogger("MusicBot").error("Failed to load spotify track from: " + args, e);
-                    event.reply(bot.getError(event)+" Failed to load spotify track... `["+spotifyUrl.id+"]`");
-                }
+            if (bot.getSpotifyAPI() == null) {
+                event.reply(bot.getError(event)+" Spotify not enabled on this bot; contact the owner.");
             } else {
-                String noun = (spotifyUrl.type == SpotifyUrlData.Type.PLAYLIST) ? "playlist" : "album";
-                try {
-                    SpotifyPlaylist playlist = 
-                        (spotifyUrl.type == SpotifyUrlData.Type.PLAYLIST)
-                        ? bot.getSpotifyAPI().getPlaylist(spotifyUrl.id)
-                        : bot.getSpotifyAPI().getAlbum(spotifyUrl.id);
-
-                    if (playlist.tracks.length == 0) {
-                        event.reply(bot.getError(event) +" Spotify "+noun+" does not have any tracks... `["+playlist.name+"]`");
-                    } else {
-                        event.reply(bot.getLoading(event) +" Loading... `["+String.format("%s (%d track%s)", playlist.name, playlist.tracks.length, playlist.tracks.length == 1 ? "" : "s")+"]`", 
-                            m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(playlist.tracks[0]), new SpotifyResultHandler(m, event, playlist)));
+                if (spotifyUrl.type == SpotifyUrlData.Type.TRACK) {
+                    try {
+                        SpotifyTrack track = bot.getSpotifyAPI().getTrack(spotifyUrl.id);
+                        event.reply(bot.getLoading(event) +" Loading... `["+track.name+"]`", 
+                            m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(track), new SpotifyResultHandler(m, event, track)));
+                    } catch (Exception e) {
+                        LoggerFactory.getLogger("MusicBot").error("Failed to load spotify track from: " + args, e);
+                        event.reply(bot.getError(event)+" Failed to load spotify track... `["+spotifyUrl.id+"]`");
                     }
-                } catch (Exception e) {
-                    LoggerFactory.getLogger("MusicBot").error("Failed to load spotify "+noun+" from: " + args, e);
-                    event.reply(bot.getError(event)+" Failed to load spotify "+noun+"... `["+spotifyUrl.id+"]`");
+                } else {
+                    String noun = (spotifyUrl.type == SpotifyUrlData.Type.PLAYLIST) ? "playlist" : "album";
+                    try {
+                        SpotifyPlaylist playlist = 
+                            (spotifyUrl.type == SpotifyUrlData.Type.PLAYLIST)
+                            ? bot.getSpotifyAPI().getPlaylist(spotifyUrl.id)
+                            : bot.getSpotifyAPI().getAlbum(spotifyUrl.id);
+    
+                        if (playlist.tracks.length == 0) {
+                            event.reply(bot.getError(event) +" Spotify "+noun+" does not have any tracks... `["+playlist.name+"]`");
+                        } else {
+                            event.reply(bot.getLoading(event) +" Loading... `["+String.format("%s (%d track%s)", playlist.name, playlist.tracks.length, playlist.tracks.length == 1 ? "" : "s")+"]`", 
+                                m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(playlist.tracks[0]), new SpotifyResultHandler(m, event, playlist)));
+                        }
+                    } catch (Exception e) {
+                        LoggerFactory.getLogger("MusicBot").error("Failed to load spotify "+noun+" from: " + args, e);
+                        event.reply(bot.getError(event)+" Failed to load spotify "+noun+"... `["+spotifyUrl.id+"]`");
+                    }
                 }
             }
         } else {

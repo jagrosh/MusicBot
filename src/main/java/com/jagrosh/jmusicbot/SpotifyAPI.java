@@ -1,4 +1,4 @@
-package com.jagrosh.jmusicbot.playlist;
+package com.jagrosh.jmusicbot;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,18 +12,24 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jagrosh.jmusicbot.BotConfig;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
 
 public class SpotifyAPI {
   private final BotConfig config;
-  private String authorizationString;
+  private String accessToken = null;
+  private long accessTokenExpireNanoTime = 0;
+  private final static long NANOS_IN_SECOND = 1000000000;
+  private final static long ACCESS_TOKEN_EXPIRE_DURATION_NANO_TIME = NANOS_IN_SECOND * 60 * 59;
 
   public SpotifyAPI(BotConfig config)
   {
     this.config = config;
+  }
+
+  private static interface IOExceptionalSupplier<T> {
+    public T get() throws IOException; 
   }
 
   private String executeQuery(String method, String host, String endpoint, String path, 
@@ -32,9 +38,9 @@ public class SpotifyAPI {
     if (path == null) path = "";
     if (!path.equals("") && !path.startsWith("/")) path = "/" + path;
 
-    Map<String, String> defaultHeaders = new HashMap<String, String>();
-    defaultHeaders.put("Authorization", authorizationString);
-    defaultHeaders.put("Accept", "application/json");
+    Map<String, IOExceptionalSupplier<String>> defaultHeaders = new HashMap<String, IOExceptionalSupplier<String>>();
+    defaultHeaders.put("Authorization", () -> { return getAuthorization(); });
+    defaultHeaders.put("Accept", () -> { return "application/json"; });
 
     URL url = new URL(String.format("https://%s%s%s", host, endpoint, path));
     HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -43,10 +49,10 @@ public class SpotifyAPI {
       con.setConnectTimeout(5000);
       con.setReadTimeout(5000);
   
-      for (Map.Entry<String, String> header : defaultHeaders.entrySet()) {
+      for (Map.Entry<String, IOExceptionalSupplier<String>> header : defaultHeaders.entrySet()) {
         if (headers != null && headers.containsKey(header.getKey())) {
           if (headers.get(header.getKey()) != null) con.setRequestProperty(header.getKey(), headers.get(header.getKey()));;
-        } else con.setRequestProperty(header.getKey(), header.getValue());
+        } else con.setRequestProperty(header.getKey(), header.getValue().get());
       }
       if (headers != null) {
         for (Map.Entry<String, String> header : headers.entrySet()) {
@@ -90,12 +96,13 @@ public class SpotifyAPI {
     }
   }
 
-  public void init() throws IOException {
+  public void authorize() throws IOException {
     Map<String, String> apiTokenHeaders = new HashMap<String, String>();
     String encodedAuthorization = Base64.getEncoder().encodeToString(String.format("%s:%s", config.getSpotClient(), config.getSpotSecret()).getBytes());
     apiTokenHeaders.put("Authorization", String.format("Basic %s", encodedAuthorization));
     apiTokenHeaders.put("Content-Type", "application/x-www-form-urlencoded");
 
+    accessTokenExpireNanoTime = System.nanoTime() + ACCESS_TOKEN_EXPIRE_DURATION_NANO_TIME;
     String response = executeQuery(
       "POST", 
       "accounts.spotify.com", 
@@ -108,8 +115,17 @@ public class SpotifyAPI {
     if (!jo.has("access_token")) {
       throw new RuntimeException(String.format("Unexpected response from spotify /api/token endpoint: %s", response));
     }
-    String accessToken = jo.getString("access_token");
-    authorizationString = String.format("Bearer %s", accessToken);
+    accessToken = jo.getString("access_token");
+    LoggerFactory.getLogger("Spotify").info("Login Successful!");
+  }
+
+  private String getAuthorization() throws IOException {
+    if (accessToken == null || System.nanoTime() >= accessTokenExpireNanoTime) {
+      accessToken = null;
+      LoggerFactory.getLogger("Spotify").info("Access token expired. Reauthorizing...");
+      authorize();
+    }
+    return String.format("Bearer %s", accessToken);
   }
 
   public static class SpotifyUrlData
@@ -139,7 +155,7 @@ public class SpotifyAPI {
   /**
    * @return the data from the spotify url, or null if this isn't a valid spotify url
    */
-  public SpotifyUrlData tryParseUrl(String maybeSpotifyUrl) {
+  public static SpotifyUrlData tryParseUrl(String maybeSpotifyUrl) {
     try {
       URL url = new URL(maybeSpotifyUrl);
       if (!url.getHost().equals("open.spotify.com")) return null;
