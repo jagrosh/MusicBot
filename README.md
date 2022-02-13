@@ -14,10 +14,11 @@ MusicBot is not a service; you will need to download the bot application and run
 - Complete [the setup steps of the base JMusicBot](https://jmusicbot.com/setup/), but use the .jar file downloaded from this version. Then...
 - Enable Spotify support (optional)
   - Set up a Spotify "application" at https://developer.spotify.com/dashboard
-    - This is extremely straightforward; the Spotify developer page guides you through the few easy-to-do steps.
-    - Name the "app" whatever you want.
+    - This is extremely straightforward; the Spotify developer page guides you through the few, easy steps.
+    - Name the app whatever you want.
     - Note: your personal Spotify account will be the "owner" of this application, but your private Spotify account data won't be accessible by the app or this bot, AFAIK.
-  - Edit the config.txt created by JMusicBot to add the app's Client ID and Secret, or (if you haven't run the bot yet) let the startup prompts of the bot program guide you.
+  - Input your Spotify application's Client ID and Secret into the bot's prompts as you start it up
+    - These will be added to the `config.txt` file created by the bot - you can edit them there.
 
 ## Features
 
