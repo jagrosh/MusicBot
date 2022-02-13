@@ -1,17 +1,54 @@
 <img align="right" src="https://i.imgur.com/zrE80HY.png" height="200" width="200">
 
-# JMusicBot
+# JMusicBot (cmorley191 Fork)
 
-# cmorley191 Fork
+A version of [jagrosh/MusicBot](https://github.com/jagrosh/MusicBot) -- a reliable, user-friendly Discord music bot alternative to out-of-service bots like [Rythm](https://musically.com/2021/09/13/youtube-shuts-down-music-bot-rythm/) and [Groovy](https://groovy.bot/).
 
-## Extra Features
-- Play command works on spotify track, album or playlist links (Right click -> Share -> Copy link to playlist)
-- Server-specific emojis used by the bot, configured by the setemoji command.
-  - Several emojis can be set per situation ("success", "error", etc.).
+This version of JMusicBot mainly adds Spotify support. There are also some other extra features. The latest features of the original JMusicBot are supported as the bot is updated.
+
+## Setup
+MusicBot is not a service; you will need to download the bot application and run it yourself. Fortunately, it can take as little as 15 minutes to set up:
+
+- Get the latest release at https://github.com/cmorley191/MusicBot/releases
+  - Or compile from the source code; see section below
+- Complete [the setup steps of the base JMusicBot](https://jmusicbot.com/setup/), but use the .jar file downloaded from this version. Then...
+- Enable Spotify support (optional)
+  - Set up a Spotify "application" at https://developer.spotify.com/dashboard
+    - This is extremely straightforward; the Spotify developer page guides you through the few easy-to-do steps.
+    - Name the "app" whatever you want.
+    - Note: your personal Spotify account will be the "owner" of this application, but your private Spotify account data won't be accessible by the app or this bot, AFAIK.
+  - Edit the config.txt created by JMusicBot to add the app's Client ID and Secret, or (if you haven't run the bot yet) let the startup prompts of the bot program guide you.
+
+## Features
+
+### Spotify Support
+
+- Queue up a Spotify Track, Playlist, or Album by using the "play" command with a Spotify link. (right-click...Share...Copy Link)
+
+#### _Rant from the Author_
+
+_Given that Spotify has unparalleled features (an amazing playlist ecosystem, comprehensive artist pages, and curated playlists/"radios"), this project is pleased to offer this essential Discord music bot feature._
+
+_The original JMusicBot project [will not add Spotify support](https://github.com/jagrosh/MusicBot/wiki/Things-That-Won%27t-Be-Added), purporting that it would be_
+- _"confusing for some users" due to the need of a second API key,_
+- _"unreliable at best" since it needs to search YouTube for the requested Spotify tracks, and_
+- _an unuseful duplication of Discord's native [Spotify "Listening Parties"](https://support.discord.com/hc/en-us/articles/115003966072-Listening-Along-with-Spotify)_
+
+_With cmorley191/MusicBot, you'll find that:_
+- _it is **incredibly simple** to set up Spotify support within a few minutes (described in "Setup" above),_
+- _JMusicBot's YouTube searches **almost never find the wrong audio** when the full song name and artist list is provided (which this bot's Spotify-based searches do automatically), and_
+- _playing Spotify through this music bot has **a number of advantages over Spotify Listening Parties**:_
+  - _Guild members can listen along regardless of whether they have a Spotify account._
+  - _JMusicBot's vast set of features allow a better listening experience for a Discord voice channel; contrasted with a Listening Party with one person in control._
+  - _Users will never desync or disconnect - issues that have been common with Listening Parties._
+
+### Other Extra Features
+- Emojis used by the bot can be configured per-guild via the interactive `setemoji` command.
+  - Several emojis can be set for the bot's various usages ("success", "error", etc.).
     - The bot selects randomly from the list of emojis.
     - Weights can be added to do a weighted select - to do this, edit serversettings.json and replace the emoji strings with json objects like:
       ```{ "emoji": "<emojistring>", "weight": <weight> }```
-
+  
       e.g.
       ```
       {{"<serverid>": {"success": [
@@ -21,82 +58,14 @@
       ]}}}
       ```
 
-## Setup
-- Get the latest release at https://github.com/cmorley191/MusicBot/releases
-  - Or compile from source, see section below
-- Setup a Spotify "application" at https://developer.spotify.com/dashboard
-  - This is incredibly straightforward. Name it whatever you want (hopefully something useful to you).
-  - Your spotify account will be linked as the "owner" of this application, but your private spotify account data won't be accessible by it AFAIK.
-  - Edit the config.txt created by JMusicBot to add the app's Client ID and Secret, or (if you haven't run the bot yet) let the startup prompts of the bot program guide you.
-
-That's it. Do the other standard setup described on the main JMusicBot repo.
-
 ## Compiling from source
 The main JMusicBot repo makes this sound way harder than it actually is, and doesn't provide instructions. Here they are:
-- Clone this repo.
+- Clone this repo. (https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 - Install the JDK (Java SE Development Kit), which allows you to compile java programs: https://www.oracle.com/java/technologies/downloads/
   - Setup a JAVA_HOME environment variable with the path to where this is installed (e.g. C:\Program Files\Java\jdk1.8.0_201)
-- Download maven - it's a zip: https://maven.apache.org/download.cgi
-  - Copy the extracted contents to a folder called "maven" in the top level of this repository. (so maven's "bin" folder should be at "MusicBot\maven\bin")
+    - Atlassian has a great 7-step tutorial for this: https://confluence.atlassian.com/doc/setting-the-java_home-variable-in-windows-8895.html
+- Download maven - it's a zip file: https://maven.apache.org/download.cgi
+  - Copy the extracted contents of ther zip to a folder called "maven" in the top level of this repository. (so that maven's "bin" folder should be at "MusicBot\maven\bin")
 - Run "buildandrun.bat" in a command window, which essentially just runs "mvn compile && mvn package && java -jar MusicBot.jar".
 
 Again, not sure why this was made to sound so difficult in the main repo.
-
-# JMusicBot Readme:
-
-[![Downloads](https://img.shields.io/github/downloads/jagrosh/MusicBot/total.svg)](https://github.com/jagrosh/MusicBot/releases/latest)
-[![Stars](https://img.shields.io/github/stars/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/stargazers)
-[![Release](https://img.shields.io/github/release/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/releases/latest)
-[![License](https://img.shields.io/github/license/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/blob/master/LICENSE)
-[![Discord](https://discordapp.com/api/guilds/147698382092238848/widget.png)](https://discord.gg/0p9LSGoRLu6Pet0k)<br>
-[![CircleCI](https://img.shields.io/circleci/project/github/jagrosh/MusicBot/master.svg)](https://circleci.com/gh/jagrosh/MusicBot)
-[![AppVeyor](https://ci.appveyor.com/api/projects/status/gdu6nyte5psj6xfk/branch/master?svg=true)](https://ci.appveyor.com/project/jagrosh/musicbot/branch/master)
-[![CodeFactor](https://www.codefactor.io/repository/github/jagrosh/musicbot/badge)](https://www.codefactor.io/repository/github/jagrosh/musicbot)
-
-A cross-platform Discord music bot with a clean interface, and that is easy to set up and run yourself!
-
-[![Setup](http://i.imgur.com/VvXYp5j.png)](https://jmusicbot.com/setup)
-
-## Features
-  * Easy to run (just make sure Java is installed, and run!)
-  * Fast loading of songs
-  * No external keys needed (besides a Discord Bot token)
-  * Smooth playback
-  * Server-specific setup for the "DJ" role that can moderate the music
-  * Clean and beautiful menus
-  * Supports many sites, including Youtube, Soundcloud, and more
-  * Supports many online radio/streams
-  * Supports local files
-  * Playlist support (both web/youtube, and local)
-
-## Supported sources and formats
-JMusicBot supports all sources and formats supported by [lavaplayer](https://github.com/sedmelluq/lavaplayer#supported-formats):
-### Sources
-  * YouTube
-  * SoundCloud
-  * Bandcamp
-  * Vimeo
-  * Twitch streams
-  * Local files
-  * HTTP URLs
-### Formats
-  * MP3
-  * FLAC
-  * WAV
-  * Matroska/WebM (AAC, Opus or Vorbis codecs)
-  * MP4/M4A (AAC codec)
-  * OGG streams (Opus, Vorbis and FLAC codecs)
-  * AAC streams
-  * Stream playlists (M3U and PLS)
-
-## Example
-![Loading Example...](https://i.imgur.com/kVtTKvS.gif)
-
-## Setup
-Please see the [Setup Page](https://jmusicbot.com/setup) to run this bot yourself!
-
-## Questions/Suggestions/Bug Reports
-**Please read the [Issues List](https://github.com/jagrosh/MusicBot/issues) before suggesting a feature**. If you have a question, need troubleshooting help, or want to brainstorm a new feature, please start a [Discussion](https://github.com/jagrosh/MusicBot/discussions). If you'd like to suggest a feature or report a reproducible bug, please open an [Issue](https://github.com/jagrosh/MusicBot/issues) on this repository. If you like this bot, be sure to add a star to the libraries that make this possible: [**JDA**](https://github.com/DV8FromTheWorld/JDA) and [**lavaplayer**](https://github.com/sedmelluq/lavaplayer)!
-
-## Editing
-This bot (and the source code here) might not be easy to edit for inexperienced programmers. The main purpose of having the source public is to show the capabilities of the libraries, to allow others to understand how the bot works, and to allow those knowledgeable about java, JDA, and Discord bot development to contribute. There are many requirements and dependencies required to edit and compile it, and there will not be support provided for people looking to make changes on their own. Instead, consider making a feature request (see the above section). If you choose to make edits, please do so in accordance with the Apache 2.0 License.
