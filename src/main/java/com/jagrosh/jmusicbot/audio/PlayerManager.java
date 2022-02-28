@@ -20,6 +20,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeHttpContextFilter;
 import com.typesafe.config.Config;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -41,6 +42,11 @@ public class PlayerManager extends DefaultAudioPlayerManager
         TransformativeAudioSourceManager.createTransforms(bot.getConfig().getTransforms()).forEach(t -> registerSourceManager(t));
         AudioSourceManagers.registerRemoteSources(this);
         AudioSourceManagers.registerLocalSource(this);
+        if (bot.getConfig().getPAPISID() != null && bot.getConfig().getPSID() != null)
+        {
+            YoutubeHttpContextFilter.setPAPISID(bot.getConfig().getPAPISID());
+            YoutubeHttpContextFilter.setPSID(bot.getConfig().getPSID());
+        }
         source(YoutubeAudioSourceManager.class).setPlaylistPageCount(10);
     }
     
