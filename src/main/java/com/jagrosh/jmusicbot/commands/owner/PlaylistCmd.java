@@ -16,12 +16,33 @@
 package com.jagrosh.jmusicbot.commands.owner;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.menu.Paginator;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.JMusicBot;
+import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
+import com.jagrosh.jmusicbot.playlist.PlaylistDetailedItem;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
+import com.jagrosh.jmusicbot.audio.PlayerManager;
+import com.jagrosh.jmusicbot.settings.RepeatMode;
+import com.jagrosh.jmusicbot.settings.Settings;
+import com.jagrosh.jmusicbot.utils.FormatUtil;
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.jagrosh.jmusicbot.audio.QueuedTrack;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 
 /**
  *
@@ -30,6 +51,9 @@ import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 public class PlaylistCmd extends OwnerCommand 
 {
     private final Bot bot;
+
+    private final Paginator.Builder builder;
+
     public PlaylistCmd(Bot bot)
     {
         this.bot = bot;
@@ -46,6 +70,16 @@ public class PlaylistCmd extends OwnerCommand
             new DefaultlistCmd(bot),
             new ShowListCmd()
         };
+        builder = new Paginator.Builder()
+                .setColumns(1)
+                .setFinalAction(m -> {try{m.clearReactions().queue();}catch(PermissionException ignore){}})
+                .setItemsPerPage(10)
+                .waitOnSinglePage(false)
+                .useNumberedItems(true)
+                .showPageNumbers(true)
+                .wrapPageEnds(true)
+                .setEventWaiter(bot.getWaiter())
+                .setTimeout(1, TimeUnit.MINUTES);
     }
 
     @Override
@@ -56,6 +90,14 @@ public class PlaylistCmd extends OwnerCommand
             builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" ").append(cmd.getName())
                     .append(" ").append(cmd.getArguments()==null ? "" : cmd.getArguments()).append("` - ").append(cmd.getHelp());
         event.reply(builder.toString());
+    }
+
+    private static String getPlaylistTitle(String playlistName, int songslength, long total)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        return FormatUtil.filter(sb.append(" " + playlistName).append(" | ").append(songslength)
+                .append(" entries | `").append(FormatUtil.formatTime(total)).append("` ").toString());
     }
     
     public class MakelistCmd extends OwnerCommand 
@@ -124,6 +166,7 @@ public class PlaylistCmd extends OwnerCommand
     
     public class AppendlistCmd extends OwnerCommand 
     {
+
         public AppendlistCmd()
         {
             this.name = "append";
@@ -148,20 +191,72 @@ public class PlaylistCmd extends OwnerCommand
                 event.reply(event.getClient().getError()+" Playlist `"+pname+"` doesn't exist!");
             else
             {
-                StringBuilder builder = new StringBuilder();
-                playlist.getItems().forEach(item -> builder.append("\r\n").append(item));
+                List<String> newList = new ArrayList<String>();
+                playlist.getUserViewItems().forEach(item -> newList.add(item.toString()));
+                List<String> errors = new ArrayList<String>();
                 String[] urls = parts[1].split("\\|");
+
+                PlayerManager manager = bot.getPlayerManager();
+                List<Future> jobs = new ArrayList<>();
+
                 for(String url: urls)
                 {
-                    String u = url.trim();
-                    if(u.startsWith("<") && u.endsWith(">"))
-                        u = u.substring(1, u.length()-1);
-                    builder.append("\r\n").append(u);
+                    Future<Void> job = manager.loadItem(url, new AudioLoadResultHandler() {
+                          @Override
+                          public void trackLoaded(AudioTrack track) {
+                              newList.add((new QueuedTrack(track, event.getAuthor())).toString());
+                          }
+
+                          @Override
+                          public void playlistLoaded(AudioPlaylist playlist) {
+                            for (AudioTrack track : playlist.getTracks()) {
+                                newList.add((new QueuedTrack(track, event.getAuthor())).toString());
+                            }
+                          }
+
+                          @Override
+                          public void noMatches() {
+                              errors.add("Unable to find track for " + url);
+                          }
+
+                          @Override
+                          public void loadFailed(FriendlyException throwable) {
+                            // Notify the user that everything exploded
+                              errors.add("Unable to find track for " + url);
+                          }
+                        });
+                    jobs.add(job);
                 }
+
+                for (int i = 0; i < jobs.size(); i++) {
+                    try 
+                    {
+                        jobs.get(i).get();
+                    } 
+                    catch (InterruptedException | ExecutionException e)
+                    {
+                        errors.add("Unable to find track for " + urls[i] + " \r\n");
+                    }
+                }
+
                 try
                 {
-                    bot.getPlaylistLoader().writePlaylist(pname, builder.toString());
-                    event.reply(event.getClient().getSuccess()+" Successfully added "+urls.length+" items to playlist `"+pname+"`!");
+                    bot.getPlaylistLoader().writePlaylist(pname, String.join("\r\n", newList));
+
+                    long total = 0;
+                    for (PlaylistDetailedItem item : playlist.getUserViewItems()) {
+                        total += item.getDuration();
+                    }
+
+                    long finalTotal = total;
+                    builder.setText((i1,i2) -> getPlaylistTitle(pname, newList.size(), finalTotal))
+                            .setItems(newList.toArray(new String[0]))
+                            .setUsers(event.getAuthor())
+                            .setColor(event.getSelfMember().getColor())
+                    ;
+                    builder.build().paginate(event.getChannel(), 1);
+
+                    //event.reply(event.getClient().getSuccess()+" Successfully added "+urls.length+" items to playlist `"+pname+"`!" + outputBuilder);
                 }
                 catch(IOException e)
                 {
@@ -262,9 +357,21 @@ public class PlaylistCmd extends OwnerCommand
                 event.reply(event.getClient().getError()+" Playlist `"+pname+"` doesn't exist!");
             else
             {
-                StringBuilder builder = new StringBuilder();
-                playlist.getItems().forEach(item -> builder.append("\r\n").append(item));
-                event.reply(event.getClient().getSuccess()+ " Playlist `"+pname+"`:" + builder.toString() );
+                long total = 0;
+                for (PlaylistDetailedItem item : playlist.getUserViewItems()) {
+                    total += item.getDuration();
+                }
+
+                List<String> itemsInPage = new ArrayList<String>();
+
+                playlist.getUserViewItems().forEach(item -> itemsInPage.add(item.toString()));
+
+                long finalTotal = total;
+                builder.setText((i1,i2) -> getPlaylistTitle(pname, playlist.getUserViewItems().size(), finalTotal))
+                        .setItems(itemsInPage.toArray(new String[0]))
+                        .setUsers(event.getAuthor())
+                        .setColor(event.getSelfMember().getColor());
+                builder.build().paginate(event.getChannel(), 1);
             }
         }
     }

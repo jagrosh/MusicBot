@@ -24,9 +24,14 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +46,10 @@ public class PlaylistLoader
     {
         this.config = config;
     }
+
+    private static final Pattern playlistPattern = Pattern.compile("^`\\[(([0-9]+):)?([0-9]+):([0-9]+)\\]` \\[\\*\\*(.+)\\*\\*\\]\\(([\\S]+)\\) - <@([0-9]+)>$");
+
+    private static final Charset IOCharset = StandardCharsets.UTF_8;
     
     public List<String> getPlaylistNames()
     {
@@ -83,7 +92,7 @@ public class PlaylistLoader
     
     public void writePlaylist(String name, String text) throws IOException
     {
-        Files.write(OtherUtil.getPath(config.getPlaylistsFolder()+File.separator+name+".txt"), text.trim().getBytes());
+        Files.write(OtherUtil.getPath(config.getPlaylistsFolder()+File.separator+name+".txt"), text.trim().getBytes(PlaylistLoader.IOCharset));
     }
     
     public Playlist getPlaylist(String name)
@@ -96,7 +105,9 @@ public class PlaylistLoader
             {
                 boolean[] shuffle = {false};
                 List<String> list = new ArrayList<>();
-                Files.readAllLines(OtherUtil.getPath(config.getPlaylistsFolder()+File.separator+name+".txt")).forEach(str -> 
+                List<PlaylistDetailedItem> userViewList = new ArrayList<>();
+
+                Files.readAllLines(OtherUtil.getPath(config.getPlaylistsFolder()+File.separator+name+".txt"), PlaylistLoader.IOCharset).forEach(str ->
                 {
                     String s = str.trim();
                     if(s.isEmpty())
@@ -106,13 +117,20 @@ public class PlaylistLoader
                         s = s.replaceAll("\\s+", "");
                         if(s.equalsIgnoreCase("#shuffle") || s.equalsIgnoreCase("//shuffle"))
                             shuffle[0]=true;
+                        return;
                     }
-                    else
-                        list.add(s);
+
+                    Matcher m = playlistPattern.matcher(s);
+
+                    if (m.matches())
+                    {
+                        userViewList.add(PlaylistLoader.ParsePlaylistDetailedItem(m));
+                        list.add(m.group(6));
+                    }
                 });
                 if(shuffle[0])
                     shuffle(list);
-                return new Playlist(name, list, shuffle[0]);
+                return new Playlist(name, list, userViewList, shuffle[0]);
             }
             else
             {
@@ -122,10 +140,27 @@ public class PlaylistLoader
         }
         catch(IOException e)
         {
+            e.printStackTrace();
             return null;
         }
     }
-    
+
+    private static PlaylistDetailedItem ParsePlaylistDetailedItem(Matcher m){
+        String hoursStr = m.group(2);
+        int hours = hoursStr == null ? 0 : Integer.parseInt(hoursStr);
+
+        String minutesStr = m.group(3);
+        int minutes = Integer.parseInt(minutesStr);
+
+        String secondsStr = m.group(4);
+        int seconds = Integer.parseInt(secondsStr);
+
+        String title = m.group(5);
+        String uri = m.group(6);
+        String username = m.group(7);
+
+        return new PlaylistDetailedItem((hours * 3600 + minutes * 60 + seconds) * 1000, title, uri, username);
+    }
     
     private static <T> void shuffle(List<T> list)
     {
@@ -143,15 +178,17 @@ public class PlaylistLoader
     {
         private final String name;
         private final List<String> items;
+        private final List<PlaylistDetailedItem> detailedItems;
         private final boolean shuffle;
         private final List<AudioTrack> tracks = new LinkedList<>();
         private final List<PlaylistLoadError> errors = new LinkedList<>();
         private boolean loaded = false;
         
-        private Playlist(String name, List<String> items, boolean shuffle)
+        private Playlist(String name, List<String> items, List<PlaylistDetailedItem> detailedItems, boolean shuffle)
         {
             this.name = name;
             this.items = items;
+            this.detailedItems = detailedItems;
             this.shuffle = shuffle;
         }
         
@@ -251,6 +288,11 @@ public class PlaylistLoader
         public List<String> getItems()
         {
             return items;
+        }
+
+        public List<PlaylistDetailedItem> getUserViewItems()
+        {
+            return detailedItems;
         }
 
         public List<AudioTrack> getTracks()
