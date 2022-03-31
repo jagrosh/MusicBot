@@ -15,6 +15,7 @@
  */
 package com.jagrosh.jmusicbot.settings;
 
+import com.jagrosh.jmusicbot.BotConfig;
 import com.jagrosh.jdautilities.command.GuildSettingsManager;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import java.io.IOException;
@@ -31,12 +32,14 @@ import org.slf4j.LoggerFactory;
  */
 public class SettingsManager implements GuildSettingsManager
 {
-    private final static double SKIP_RATIO = .55;
     private final HashMap<Long,Settings> settings;
+    private final BotConfig config;
 
-    public SettingsManager()
+    public SettingsManager(BotConfig config)
     {
         this.settings = new HashMap<>();
+        this.config = config;
+        
         try {
             JSONObject loadedSettings = new JSONObject(new String(Files.readAllBytes(OtherUtil.getPath("serversettings.json"))));
             loadedSettings.keySet().forEach((id) -> {
@@ -55,7 +58,7 @@ public class SettingsManager implements GuildSettingsManager
                         o.has("default_playlist")? o.getString("default_playlist")           : null,
                         o.has("repeat_mode")     ? o.getEnum(RepeatMode.class, "repeat_mode"): RepeatMode.OFF,
                         o.has("prefix")          ? o.getString("prefix")                     : null,
-                        o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO));
+                        o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : this.config.getSkipRatio()));
             });
         } catch(IOException | JSONException e) {
             LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
@@ -81,7 +84,7 @@ public class SettingsManager implements GuildSettingsManager
     
     private Settings createDefaultSettings()
     {
-        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO);
+        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, this.config.getSkipRatio());
     }
     
     protected void writeSettings()
@@ -104,7 +107,7 @@ public class SettingsManager implements GuildSettingsManager
                 o.put("repeat_mode", s.getRepeatMode());
             if(s.getPrefix() != null)
                 o.put("prefix", s.getPrefix());
-            if(s.getSkipRatio() != SKIP_RATIO)
+            if(s.getSkipRatio() != this.config.getSkipRatio())
                 o.put("skip_ratio", s.getSkipRatio());
             obj.put(Long.toString(key), o);
         });
