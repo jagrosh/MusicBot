@@ -238,7 +238,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
                     + " `[" + FormatUtil.formatTime(track.getPosition()) + "/" + FormatUtil.formatTime(track.getDuration()) + "]` "
                     + FormatUtil.volumeIcon(audioPlayer.getVolume()));
             
-            return mb.setEmbed(eb.build()).build();
+            return mb.setEmbeds(eb.build()).build();
         }
         else return null;
     }
@@ -248,7 +248,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         Guild guild = guild(jda);
         return new MessageBuilder()
                 .setContent(FormatUtil.filter(manager.getBot().getConfig().getSuccess()+" **Now Playing...**"))
-                .setEmbed(new EmbedBuilder()
+                .setEmbeds(new EmbedBuilder()
                 .setTitle("No music playing")
                 .setDescription(JMusicBot.STOP_EMOJI+" "+FormatUtil.progressBar(-1)+" "+FormatUtil.volumeIcon(audioPlayer.getVolume()))
                 .setColor(guild.getSelfMember().getColor())
