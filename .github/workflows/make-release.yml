@@ -42,7 +42,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.event.version_number }}
+          tag: ${{ github.event.inputs.version_number }}
           name: Version ${{ github.event.inputs.version_number }}
           draft: true
           prerelease: false
