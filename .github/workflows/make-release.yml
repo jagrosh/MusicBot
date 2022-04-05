@@ -33,11 +33,24 @@ jobs:
         run: mvn --batch-mode --update-snapshots verify
       - name: Rename jar
         run: mv target/*-All.jar JMusicBot-${{ github.event.inputs.version_number }}.jar
+      - name: Upload jar
+        uses: actions/upload-artifact@v3
+        with:
+          name: jar
+          path: JMusicBot-${{ github.event.inputs.version_number }}.jar
+          if-no-files-found: error
   create_release:
     name: Create Release
     runs-on: ubuntu-latest
     needs: build_jar
     steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.0.0
+        with:
+          name: jar
+          path: /
+      - name: Show Artifacts
+        run: ls -R
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
