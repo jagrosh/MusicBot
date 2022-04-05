@@ -28,11 +28,11 @@ jobs:
         uses: datamonsters/replace-action@v2
         with:
           files: 'pom.xml'
-          replacements: 'Snapshot=${{ inputs.version_number }}'
+          replacements: 'Snapshot=${{ github.event.inputs.version_number }}'
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
       - name: Rename jar
-        run: mv target/*-All.jar JMusicBot-${{ inputs.version_number }}.jar
+        run: mv target/*-All.jar JMusicBot-${{ github.event.inputs.version_number }}.jar
   create_release:
     name: Create Release
     runs-on: ubuntu-latest
@@ -42,13 +42,13 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ inputs.version_number }}
-          name: Version ${{ inputs.version_number }}
+          tag: ${{ github.event.version_number }}
+          name: Version ${{ github.event.inputs.version_number }}
           draft: true
           prerelease: false
           artifacts: "*.jar"
           body: |
-            ${{ inputs.info }}
+            ${{ github.event.inputs.info }}
             ---
             ### Setup
             https://jmusicbot.com/setup  
