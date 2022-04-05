@@ -39,3 +39,14 @@ jobs:
 
       # run tests!
       - run: mvn integration-test
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - gh-pages
+                - gh-pages-generated
