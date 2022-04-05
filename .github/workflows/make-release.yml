@@ -2,7 +2,7 @@ name: Make Release
 on:
   workflow_dispatch:
     inputs:
-      version:
+      version_number:
         description: 'Version Number'     
         required: true
         type: string
@@ -12,9 +12,9 @@ on:
         type: string
 
 jobs:
-  make-release:
+  build_jar:
+    name: Build Jar
     runs-on: ubuntu-latest
-    name: Create Release
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -25,21 +25,25 @@ jobs:
           distribution: 'adopt'
           cache: maven
       - name: Set Version
-        uses: bluwy/substitute-string-action@v1
+        uses: datamonsters/replace-action@v2
         with:
-          _input-file: 'pom.xml'
-          _format-key: '>key<'
-          Snapshot: ${{ inputs.version }}
+          files: 'pom.xml'
+          replacements: 'Snapshot=${{ inputs.version_number }}'
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
       - name: Rename jar
-        run: mv target/*-All.jar JMusicBot-${{ inputs.version }}.jar
+        run: mv target/*-All.jar JMusicBot-${{ inputs.version_number }}.jar
+  create_release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: build_jar
+    steps:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ inputs.version }}
-          name: Version ${{ inputs.version }}
+          tag: ${{ inputs.version_number }}
+          name: Version ${{ inputs.version_number }}
           draft: true
           prerelease: false
           artifacts: "*.jar"
