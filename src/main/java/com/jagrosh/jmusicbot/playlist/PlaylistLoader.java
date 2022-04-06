@@ -53,7 +53,7 @@ public class PlaylistLoader
         else
         {
             createFolder();
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
     
