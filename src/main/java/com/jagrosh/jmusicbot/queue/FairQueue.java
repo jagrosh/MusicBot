@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/751
 /**
  *
  * @author John Grosh (jagrosh)
@@ -28,6 +29,7 @@ import java.util.Set;
 public class FairQueue<T extends Queueable> {
     private final List<T> list = new ArrayList<>();
     private final Set<Long> set = new HashSet<>();
+    private T previousTrack;
     
     public int add(T item)
     {
@@ -140,5 +142,25 @@ public class FairQueue<T extends Queueable> {
         T item = list.remove(from);
         list.add(to, item);
         return item;
+    }
+
+    // CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/751
+    /** 
+     * Getter for the previously-played track
+     * 
+     * @return the previously-played track
+     */
+    public T getPreviousTrack() {
+        return this.previousTrack;
+    }
+ 
+    // CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/751
+    /** 
+     * Setter for the previously-played track
+     * 
+     * @param previousTrack the previously-played track
+     */
+    public void setPreviousTrack(T previousTrack) {
+        this.previousTrack = previousTrack;
     }
 }

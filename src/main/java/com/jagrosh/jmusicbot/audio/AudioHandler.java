@@ -151,8 +151,34 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         });
         return true;
     }
+
+    // CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/751
+    /** 
+     * Play or put in the back of queue the previously-played track
+     * 
+     * @return the previously-played track
+     */
+    public AudioTrack backTrack()
+    {
+        if(audioPlayer.getPlayingTrack()==null)
+        {
+            audioPlayer.playTrack(queue.getPreviousTrack().getTrack());
+        }
+        else {
+            queue.add(queue.getPreviousTrack());
+        }
+        return queue.getPreviousTrack().getTrack();
+    }
     
+    // CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/751
     // Audio Events
+    /**
+     * Perform tasks on track end
+     * 
+     * @param player the audio player
+     * @param track the track ending
+     * @param endReason the reason the track is ending
+     */
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) 
     {
@@ -184,6 +210,10 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
             QueuedTrack qt = queue.pull();
             player.playTrack(qt.getTrack());
         }
+
+        // add ended track to queue's previousTrack field (used for back command)
+        QueuedTrack previousTrack = new QueuedTrack(track.makeClone(), track.getUserData(RequestMetadata.class));
+        queue.setPreviousTrack(previousTrack);
     }
 
     @Override

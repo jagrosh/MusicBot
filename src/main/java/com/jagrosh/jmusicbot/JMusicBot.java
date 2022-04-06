@@ -50,6 +50,8 @@ public class JMusicBot
                                 Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
                                 Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
     public final static GatewayIntent[] INTENTS = {GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_VOICE_STATES};
+    
+    // CS427 Issue link: https://github.com/jagrosh/MusicBot/issues/751
     /**
      * @param args the command line arguments
      */
@@ -102,6 +104,7 @@ public class JMusicBot
                         new LyricsCmd(bot),
                         new NowplayingCmd(bot),
                         new PlayCmd(bot),
+                        new BackCmd(bot),
                         new PlaylistsCmd(bot),
                         new QueueCmd(bot),
                         new RemoveCmd(bot),
