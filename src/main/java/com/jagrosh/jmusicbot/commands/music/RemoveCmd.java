@@ -56,7 +56,7 @@ public class RemoveCmd extends MusicCommand
             if(count==0)
                 event.replyWarning("You don't have any songs in the queue!");
             else
-                event.replySuccess("Successfully removed your "+count+" entries.");
+                event.replySuccess("Successfully removed your "+count+(count==1 ? " entry." : " entries."));
             return;
         }
         int pos;

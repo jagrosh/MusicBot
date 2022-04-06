@@ -113,7 +113,7 @@ public class ForceRemoveCmd extends DJCommand
         }
         else
         {
-            event.replySuccess("Successfully removed `"+count+"` entries from **"+target.getName()+"**#"+target.getDiscriminator()+".");
+            event.replySuccess("Successfully removed `"+count+(count==1 ? "` entry from **" : "` entries from **")+target.getName()+"**#"+target.getDiscriminator()+".");
         }
     }
 }

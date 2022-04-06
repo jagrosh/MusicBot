@@ -235,13 +235,13 @@ public class PlayCmd extends MusicCommand
                 event.replyError("I could not find `"+event.getArgs()+".txt` in the Playlists folder.");
                 return;
             }
-            event.getChannel().sendMessage(loadingEmoji+" Loading playlist **"+event.getArgs()+"**... ("+playlist.getItems().size()+" items)").queue(m -> 
+            event.getChannel().sendMessage(loadingEmoji+" Loading playlist **"+event.getArgs()+"**... ("+playlist.getItems().size()+(playlist.getItems().size()==1 ? " item)" : " items)")).queue(m -> 
             {
                 AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
                 playlist.loadTracks(bot.getPlayerManager(), (at)->handler.addTrack(new QueuedTrack(at, event.getAuthor())), () -> {
                     StringBuilder builder = new StringBuilder(playlist.getTracks().isEmpty() 
                             ? event.getClient().getWarning()+" No tracks were loaded!" 
-                            : event.getClient().getSuccess()+" Loaded **"+playlist.getTracks().size()+"** tracks!");
+                            : event.getClient().getSuccess()+" Loaded **"+playlist.getTracks().size()+(playlist.getTracks().size()==1 ? "** track!" : "** tracks!"));
                     if(!playlist.getErrors().isEmpty())
                         builder.append("\nThe following tracks failed to load:");
                     playlist.getErrors().forEach(err -> builder.append("\n`[").append(err.getIndex()+1).append("]` **").append(err.getItem()).append("**: ").append(err.getReason()));

@@ -164,7 +164,7 @@ public class PlaylistCmd extends OwnerCommand
                 try
                 {
                     bot.getPlaylistLoader().writePlaylist(pname, builder.toString());
-                    event.reply(event.getClient().getSuccess()+" Successfully added "+urls.length+" items to playlist `"+pname+"`!");
+                    event.reply(event.getClient().getSuccess()+" Successfully added "+urls.length+(urls.length==1 ? " item" : " items")+" to playlist `"+pname+"`!");
                 }
                 catch(IOException e)
                 {
