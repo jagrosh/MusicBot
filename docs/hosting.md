@@ -85,7 +85,6 @@ Well, there are many options available; I've described several of the most-commo
 
 ### Replit
 ```diff
-- No permanent file write access (server settings can't be saved)
 - Usage limits
 - Poor performance
 ```
