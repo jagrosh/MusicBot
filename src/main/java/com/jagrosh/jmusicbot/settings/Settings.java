@@ -130,7 +130,7 @@ public class Settings implements GuildSettingsProvider
     @Override
     public Collection<String> getPrefixes()
     {
-        return prefix == null ? Collections.EMPTY_SET : Collections.singleton(prefix);
+        return prefix == null ? Collections.emptySet() : Collections.singleton(prefix);
     }
     
     // Setters

@@ -53,6 +53,6 @@ public class QueuedTrack implements Queueable
     @Override
     public String toString() 
     {
-        return "`[" + TimeUtil.formatTime(track.getDuration()) + "]` **" + track.getInfo().title + "** - <@" + track.getUserData(RequestMetadata.class).getOwner() + ">";
+        return "`[" + TimeUtil.formatTime(track.getDuration()) + "]` [**" + track.getInfo().title + "**]("+track.getInfo().uri+") - <@" + track.getUserData(RequestMetadata.class).getOwner() + ">";
     }
 }
