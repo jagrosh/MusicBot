@@ -28,7 +28,8 @@ import java.util.Set;
 public class FairQueue<T extends Queueable> {
     private final List<T> list = new ArrayList<>();
     private final Set<Long> set = new HashSet<>();
-    
+    private boolean isLocked = false;
+
     public int add(T item)
     {
         int lastIndex;
@@ -68,6 +69,16 @@ public class FairQueue<T extends Queueable> {
     public boolean isEmpty()
     {
         return list.isEmpty();
+    }
+
+    public boolean isLocked()
+    {
+        return isLocked;
+    }
+
+    public void toggleLock()
+    {
+        this.isLocked = !isLocked;
     }
     
     public List<T> getList()
