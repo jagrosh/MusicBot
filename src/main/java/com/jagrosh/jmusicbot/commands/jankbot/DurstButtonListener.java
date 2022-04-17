@@ -8,7 +8,6 @@ import java.util.Random;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.Button;
-import net.dv8tion.jda.api.interactions.components.Component;
 
 public class DurstButtonListener extends ListenerAdapter {
     @Override

@@ -1,6 +1,7 @@
 package com.jagrosh.jmusicbot.commands.jankbot;
 
 import java.io.File;
+import java.net.SocketPermission;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
@@ -44,11 +45,11 @@ public class OtherCommandListener extends ListenerAdapter {
 
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if(!event.getMessage().getContentRaw().startsWith("j!")){
-            List<String> split_msg = Arrays.asList(event.getMessage().getContentRaw().split(" "));
-            String stripped_msg = this.removeStringOf(event.getMessage().getContentRaw(), '?', ',', '.');
+            List<String> split_msg = Arrays.asList(event.getMessage().getContentRaw().toLowerCase().split(" "));
+            String stripped_msg = this.removeStringOf(event.getMessage().getContentRaw().toLowerCase(), '?', ',', '.');
             List<String> stripped_split_msg = Arrays.asList(stripped_msg.split(" "));
             boolean has_found = false;
-            for(String wake_word : new String[] {"<@" + bot.getJDA().getSelfUser().toString() + ">" , "<!@" + bot.getJDA().getSelfUser().toString() + ">", "jankbot", "janky jeff"}){
+            for(String wake_word : new String[] {"<@" + bot.getJDA().getSelfUser().getId() + ">" , "<@!" + bot.getJDA().getSelfUser().getId() + ">", "jankbot", "janky jeff"}){
                 if(stripped_split_msg.indexOf(wake_word) != -1){
                     split_msg = split_msg.subList(stripped_split_msg.indexOf(wake_word)+1, split_msg.size());
                     stripped_split_msg = stripped_split_msg.subList(stripped_split_msg.indexOf(wake_word)+1, stripped_split_msg.size());

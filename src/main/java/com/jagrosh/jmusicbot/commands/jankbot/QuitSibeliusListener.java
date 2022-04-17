@@ -1,11 +1,7 @@
 package com.jagrosh.jmusicbot.commands.jankbot;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 import java.io.File;
-import net.dv8tion.jda.api.entities.Message;
+
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

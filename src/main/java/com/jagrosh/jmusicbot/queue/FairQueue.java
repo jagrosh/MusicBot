@@ -16,12 +16,9 @@
 package com.jagrosh.jmusicbot.queue;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.interactions.components.Button;
 
 /**
  *
@@ -30,21 +27,22 @@ import net.dv8tion.jda.api.interactions.components.Button;
  */
 public class FairQueue<T extends Queueable> {
     private final List<T> list = new ArrayList<>();
-    private final Set<Long> set = new HashSet<>();
+    // private final Set<Long> set = new HashSet<>();
     private Message this_last_message = null;
 
     public int add(T item) {
-        int lastIndex;
-        for (lastIndex = list.size() - 1; lastIndex > -1; lastIndex--)
-            if (list.get(lastIndex).getIdentifier() == item.getIdentifier())
-                break;
-        lastIndex++;
-        set.clear();
-        for (; lastIndex < list.size(); lastIndex++) {
-            if (set.contains(list.get(lastIndex).getIdentifier()))
-                break;
-            set.add(list.get(lastIndex).getIdentifier());
-        }
+        int lastIndex = list.size();
+        //fq?
+        // for (lastIndex = list.size() - 1; lastIndex > -1; lastIndex--) 
+        //     if (list.get(lastIndex).getIdentifier() == item.getIdentifier())
+        //         break;
+        // lastIndex++;
+        // set.clear();
+        // for (; lastIndex < list.size(); lastIndex++) {
+        //     if (set.contains(list.get(lastIndex).getIdentifier()))
+        //         break;
+        //     set.add(list.get(lastIndex).getIdentifier());
+        // }
         list.add(lastIndex, item);
         return lastIndex;
     }

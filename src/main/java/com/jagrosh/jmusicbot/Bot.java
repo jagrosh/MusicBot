@@ -15,11 +15,10 @@
  */
 package com.jagrosh.jmusicbot;
 
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import com.fasterxml.jackson.databind.node.BooleanNode;
-import com.jagrosh.jdautilities.command.CommandBuilder;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jmusicbot.audio.AloneInVoiceHandler;
@@ -29,7 +28,7 @@ import com.jagrosh.jmusicbot.audio.PlayerManager;
 import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
-import java.util.Objects;
+
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
@@ -53,6 +52,7 @@ public class Bot {
     private JDA jda;
     private GUI gui;
     private CommandClient cc;
+    private boolean gramophone_mode = false;
 
     public Bot(EventWaiter waiter, BotConfig config, SettingsManager settings) {
         this.waiter = waiter;
@@ -162,6 +162,14 @@ public class Bot {
 
     public CommandClient getCommandClient() {
         return this.cc;
+    }
+
+    public void setGramophoneMode(boolean mode){
+        this.gramophone_mode = mode;
+    }
+
+    public boolean getGramophoneMode(){
+        return this.gramophone_mode;
     }
 
 }

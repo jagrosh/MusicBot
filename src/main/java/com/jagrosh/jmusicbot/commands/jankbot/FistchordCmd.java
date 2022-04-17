@@ -1,16 +1,11 @@
 package com.jagrosh.jmusicbot.commands.jankbot;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jmusicbot.Bot;
-
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;    
+import com.jagrosh.jmusicbot.Bot;    
 
 public class FistchordCmd extends Command {
     private boolean is_fistchord = false;

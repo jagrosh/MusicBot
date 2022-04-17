@@ -22,15 +22,16 @@ public class FistChordEventListener extends ListenerAdapter {
         if (now.getDayOfWeek().equals(DayOfWeek.FRIDAY) && ev.getChannelJoined().getIdLong() == 638309927005323287L
                 && ev.getChannelJoined().getMembers().size() > 3 && !this.fistchord_command.getIsFistchord()) {
             this.fistchord_command.setIsFistchord(true);
-            ev.getJDA().getTextChannelById(901821949280395264L).sendMessage("IT'S FISTCHORD!").queue();
         }
     }
 
     @Override
     public void onGuildVoiceLeave(GuildVoiceLeaveEvent ev) {
         LocalDateTime now = LocalDateTime.now();
-        if (now.getDayOfWeek().equals(DayOfWeek.SATURDAY) && ev.getChannelLeft().getIdLong() == 638309927005323287L
-                && ev.getChannelJoined().getMembers().size() < 4 && this.fistchord_command.getIsFistchord()) {
+        if (now.getDayOfWeek().equals(DayOfWeek.SATURDAY) 
+                && ev.getChannelLeft().getIdLong() == 638309927005323287L
+                && (ev.getChannelJoined().getMembers() == null ? true : ev.getChannelJoined().getMembers().size() < 4)
+                && this.fistchord_command.getIsFistchord()) {
             this.fistchord_command.setIsFistchord(false);
         }
     }

@@ -16,20 +16,14 @@
 package com.jagrosh.jmusicbot.commands.general;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.settings.RepeatMode;
-import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
-import com.jagrosh.jmusicbot.settings.Settings;
-import com.jagrosh.jmusicbot.utils.FormatUtil;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
+
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
 
 /**
  *
@@ -47,6 +41,7 @@ public class SetDJCmd extends MusicCommand
         //this.bePlaying = true;
     }
     
+
     @Override
     public void doCommand(CommandEvent event) 
     {
@@ -63,11 +58,24 @@ public class SetDJCmd extends MusicCommand
         switch(args){
             case "on":
                 this.bot.setDJMode(true);
-                event.reply("DJ Mode On.");
+                event.reply("DJ Mode On. Auto-off in 2 hours and 10 minutes.");
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if(bot.getDJMode()){
+                            bot.setDJMode(false);
+                            event.reply("DJ Mode has been automatically switched OFF.");
+                        }
+                    }
+                }, (130L * 60000L)); // 300 is the delay in millis
+                
                 break;
             case "off":
                 this.bot.setDJMode(false);
                 event.reply("DJ Mode Off.");
+                break;
+            case "":
+                event.reply("DJ Mode is currently " + (this.bot.getDJMode() ? "ON" : "OFF"));
                 break;
             default:
                 event.reply("Didn't understand. j!dj <on|off>");

@@ -10,10 +10,10 @@ import com.jagrosh.jmusicbot.Bot;
 
 
 public class JankmanCmd extends Command {
-        private Bot bot; 
+        // private Bot bot; 
     
         public JankmanCmd(Bot bot) {
-            this.bot = bot;
+            // this.bot = bot;
             this.name = "jankman";
             this.help = "Get a jankman.";
             this.guildOnly = true;

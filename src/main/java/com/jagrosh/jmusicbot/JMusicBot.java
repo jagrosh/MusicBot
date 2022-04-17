@@ -15,41 +15,76 @@
  */
 package com.jagrosh.jmusicbot;
 
+import java.util.Arrays;
+
+import javax.security.auth.login.LoginException;
+
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import com.jagrosh.jdautilities.examples.command.*;
-import com.jagrosh.jmusicbot.commands.admin.*;
-import com.jagrosh.jmusicbot.commands.dj.*;
-import com.jagrosh.jmusicbot.commands.general.*;
+import com.jagrosh.jdautilities.examples.command.PingCommand;
+import com.jagrosh.jmusicbot.commands.admin.PrefixCmd;
+import com.jagrosh.jmusicbot.commands.admin.SetGramophoneCmd;
+import com.jagrosh.jmusicbot.commands.admin.SetdjCmd;
+import com.jagrosh.jmusicbot.commands.admin.SettcCmd;
+import com.jagrosh.jmusicbot.commands.admin.SetvcCmd;
+import com.jagrosh.jmusicbot.commands.admin.SkipratioCmd;
+import com.jagrosh.jmusicbot.commands.admin.sm;
+import com.jagrosh.jmusicbot.commands.admin.smnr;
+import com.jagrosh.jmusicbot.commands.dj.ForceRemoveCmd;
+import com.jagrosh.jmusicbot.commands.dj.ForceskipCmd;
+import com.jagrosh.jmusicbot.commands.dj.MoveTrackCmd;
+import com.jagrosh.jmusicbot.commands.dj.PauseCmd;
+import com.jagrosh.jmusicbot.commands.dj.PlaynextCmd;
+import com.jagrosh.jmusicbot.commands.dj.RepeatCmd;
+import com.jagrosh.jmusicbot.commands.dj.SkiptoCmd;
+import com.jagrosh.jmusicbot.commands.dj.StopCmd;
+import com.jagrosh.jmusicbot.commands.dj.VolumeCmd;
+import com.jagrosh.jmusicbot.commands.general.SetDJCmd;
+import com.jagrosh.jmusicbot.commands.general.SettingsCmd;
+import com.jagrosh.jmusicbot.commands.jankbot.DurstButtonListener;
+import com.jagrosh.jmusicbot.commands.jankbot.DurstCmd;
+import com.jagrosh.jmusicbot.commands.jankbot.FistChordEventListener;
+import com.jagrosh.jmusicbot.commands.jankbot.FistchordCmd;
+import com.jagrosh.jmusicbot.commands.jankbot.JankedexButtonListener;
 import com.jagrosh.jmusicbot.commands.jankbot.JankedexCmd;
 import com.jagrosh.jmusicbot.commands.jankbot.JankmanCmd;
 import com.jagrosh.jmusicbot.commands.jankbot.LogoButtonListener;
 import com.jagrosh.jmusicbot.commands.jankbot.LogoCmd;
 import com.jagrosh.jmusicbot.commands.jankbot.OtherCommandListener;
 import com.jagrosh.jmusicbot.commands.jankbot.QuitSibeliusListener;
-import com.jagrosh.jmusicbot.commands.jankbot.DurstCmd;
-import com.jagrosh.jmusicbot.commands.jankbot.FistChordEventListener;
-import com.jagrosh.jmusicbot.commands.jankbot.FistchordCmd;
-import com.jagrosh.jmusicbot.commands.jankbot.JankedexButtonListener;
-import com.jagrosh.jmusicbot.commands.jankbot.DurstButtonListener;
-import com.jagrosh.jmusicbot.commands.music.*;
-import com.jagrosh.jmusicbot.commands.owner.*;
+import com.jagrosh.jmusicbot.commands.music.LyricsCmd;
+import com.jagrosh.jmusicbot.commands.music.NowplayingCmd;
+import com.jagrosh.jmusicbot.commands.music.PlayCmd;
+import com.jagrosh.jmusicbot.commands.music.QueueButtonListener;
+import com.jagrosh.jmusicbot.commands.music.QueueCmd;
+import com.jagrosh.jmusicbot.commands.music.RemoveCmd;
+import com.jagrosh.jmusicbot.commands.music.SCSearchCmd;
+import com.jagrosh.jmusicbot.commands.music.SearchCmd;
+import com.jagrosh.jmusicbot.commands.music.SeekCmd;
+import com.jagrosh.jmusicbot.commands.music.ShuffleCmd;
+import com.jagrosh.jmusicbot.commands.music.SkipCmd;
+import com.jagrosh.jmusicbot.commands.owner.AutoplaylistCmd;
+import com.jagrosh.jmusicbot.commands.owner.DebugCmd;
+import com.jagrosh.jmusicbot.commands.owner.EvalCmd;
+import com.jagrosh.jmusicbot.commands.owner.PlaylistCmd;
+import com.jagrosh.jmusicbot.commands.owner.SetavatarCmd;
+import com.jagrosh.jmusicbot.commands.owner.SetgameCmd;
+import com.jagrosh.jmusicbot.commands.owner.SetnameCmd;
+import com.jagrosh.jmusicbot.commands.owner.SetstatusCmd;
+import com.jagrosh.jmusicbot.commands.owner.ShutdownCmd;
 import com.jagrosh.jmusicbot.entities.Prompt;
-import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
-import com.jagrosh.jmusicbot.utils.OtherUtil;
-import java.awt.Color;
-import java.util.Arrays;
-import java.util.List;
 
-import javax.security.auth.login.LoginException;
-import net.dv8tion.jda.api.*;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 /**
  *
@@ -76,7 +111,7 @@ public class JMusicBot
         Prompt prompt = new Prompt("JMusicBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.");
         
         // get and check latest version
-        String version = OtherUtil.checkVersion(prompt);
+        //String version = OtherUtil.checkVersion(prompt);
         
         // check for valid java version
         if(!System.getProperty("java.vm.name").contains("64"))
@@ -149,6 +184,9 @@ public class JMusicBot
                         new LogoCmd(bot),
                         new DurstCmd(bot),
                         new JankmanCmd(bot),
+                        new SetGramophoneCmd(bot),
+                        new sm(bot),
+                        new smnr(bot),
                         fc
                 );
         if(config.useEval())
@@ -221,8 +259,5 @@ public class JMusicBot
             System.exit(1);
         }
 
-        for (Guild g : bot.getJDA().getGuilds()){
-            if(!g.getId().equals("638309926225313832") && !g.getId().equals("697883479857430659")) g.leave().queue();
-        }
     }
 }

@@ -17,9 +17,8 @@ package com.jagrosh.jmusicbot.commands.music;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jdautilities.menu.Paginator;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
@@ -36,7 +35,6 @@ import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.Component;
 
@@ -45,7 +43,6 @@ import net.dv8tion.jda.api.interactions.components.Component;
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class QueueCmd extends MusicCommand {
-    private final Paginator.Builder builder;
 
     public QueueCmd(Bot bot) {
         super(bot);
@@ -55,13 +52,6 @@ public class QueueCmd extends MusicCommand {
         this.aliases = new String[] { "q" };
         this.bePlaying = true;
         this.botPermissions = new Permission[] { Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS };
-        builder = new Paginator.Builder().setColumns(1).setFinalAction(m -> {
-            try {
-                m.clearReactions().queue();
-            } catch (PermissionException ignore) {
-            }
-        }).setItemsPerPage(10).waitOnSinglePage(false).useNumberedItems(true).showPageNumbers(true).wrapPageEnds(true)
-                .setEventWaiter(bot.getWaiter()).setTimeout(1, TimeUnit.MINUTES);
         // bot.
     }
 
@@ -143,7 +133,6 @@ public class QueueCmd extends MusicCommand {
         
         //Return nullptr if there's nothing on the queue. This might happen if the queue is cleared whilst someone is browsing it.
         if(list.isEmpty()) return null;
-        System.out.println("Getting page " + String.valueOf(pagenum)) ;
         String[] songs = new String[list.size()];
         long total = 0;
         for(int i=0; i<list.size(); i++)

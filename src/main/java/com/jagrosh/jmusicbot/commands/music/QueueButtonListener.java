@@ -1,8 +1,6 @@
 package com.jagrosh.jmusicbot.commands.music;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
@@ -11,7 +9,6 @@ import com.jagrosh.jmusicbot.settings.RepeatMode;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.Component;
 
 public class QueueButtonListener extends ListenerAdapter {
@@ -27,13 +24,10 @@ public class QueueButtonListener extends ListenerAdapter {
             int new_page_num = split[0].equals("QUEUE_PREV") ? this_page_num - 1 : this_page_num + 1;
             RepeatMode rm = RepeatMode.valueOf(split[2]);
 
-            System.out.println("Old pn " + String.valueOf(this_page_num) + " new pn " + String.valueOf(new_page_num));
-
             AudioHandler ah = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
             List<QueuedTrack> list = ah.getQueue().getList();
 
             if (list.isEmpty()) {
-                System.out.println("isempty, setting edit");
                 ah.getQueue().getLastMessage().editMessage("This queue is empty.").override(true)
                         .queue(msg -> ah.getQueue().setLastMessage(null));
 

@@ -10,16 +10,14 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.Component;
 
 public class JankedexCmd extends Command {
-    private Bot bot; 
+    // private Bot bot; 
 
     public JankedexCmd(Bot bot) {
-        this.bot = bot;
+        // this.bot = bot;
         this.name = "jankedex";
         this.help = "View the jankedex. Supply a number for the number, else get a random one.";
         this.aliases = new String[] { "jankdex" };

@@ -15,29 +15,32 @@
  */
 package com.jagrosh.jmusicbot.audio;
 
-import com.jagrosh.jmusicbot.JMusicBot;
-import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
-import com.jagrosh.jmusicbot.settings.RepeatMode;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
+import java.nio.ByteBuffer;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import com.jagrosh.jmusicbot.JMusicBot;
+import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 import com.jagrosh.jmusicbot.queue.FairQueue;
+import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
-import java.nio.ByteBuffer;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.StageChannel;
 import net.dv8tion.jda.api.entities.User;
 
 /**
@@ -189,10 +192,27 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) 
     {
+        if(manager.getBot().getJDA().getGuildById(638309926225313832L).getSelfMember().getVoiceState().getChannel() instanceof StageChannel){
+            StageChannel sc = (StageChannel) manager.getBot().getJDA().getGuildById(638309926225313832L).getSelfMember().getVoiceState().getChannel();
+            if(sc.getStageInstance() != null) sc.getGuild().requestToSpeak();
+        }
+        if(manager.getBot().getGramophoneMode()){
+            manager.getBot().getJDA().getTextChannelById(850700283767554068L).sendMessage("GRAMOPHONE MODE: \"" + track.getInfo().title + "\" queued and ready to play.").queue();
+            player.setPaused(true);
+        }
         votes.clear();
         manager.getBot().getNowplayingHandler().onTrackUpdate(guildId, track, this);
     }
 
+    // @Override
+    // public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception){
+    //     if(retry_counter++ == 0) manager.getBot().getJDA().getTextChannelById(850700283767554068L).sendMessage("Encountered exception. Trying to play the track " + track.getInfo().title + " again...").queue();
+    //     if(retry_counter < 3) player.playTrack(track);
+    //     else {
+    //         retry_counter = 0;
+    //         manager.getBot().getJDA().getTextChannelById(850700283767554068L).sendMessage("Could not play after 3 retries. Sorry!").queue();
+    //     }
+    // }
     
     // Formatting
     public Message getNowPlaying(JDA jda)

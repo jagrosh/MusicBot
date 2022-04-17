@@ -156,7 +156,7 @@ public class OtherUtil
         String version = getCurrentVersion();
         
         // Check for new version
-        String latestVersion = getLatestVersion();
+        //String latestVersion = getLatestVersion();
         
         // if(latestVersion!=null && !latestVersion.equals(version))
         // {
