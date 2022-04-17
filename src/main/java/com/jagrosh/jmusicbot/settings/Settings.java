@@ -15,13 +15,15 @@
  */
 package com.jagrosh.jmusicbot.settings;
 
-import com.jagrosh.jdautilities.command.GuildSettingsProvider;
 import java.util.Collection;
 import java.util.Collections;
+
+import com.jagrosh.jdautilities.command.GuildSettingsProvider;
+
+import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
 
 /**
  *
@@ -92,7 +94,7 @@ public class Settings implements GuildSettingsProvider
         return guild == null ? null : guild.getTextChannelById(textId);
     }
     
-    public VoiceChannel getVoiceChannel(Guild guild)
+    public AudioChannel getVoiceChannel(Guild guild)
     {
         return guild == null ? null : guild.getVoiceChannelById(voiceId);
     }
@@ -130,7 +132,7 @@ public class Settings implements GuildSettingsProvider
     @Override
     public Collection<String> getPrefixes()
     {
-        return prefix == null ? Collections.EMPTY_SET : Collections.singleton(prefix);
+        return prefix == null ? Collections.emptySet() : Collections.singleton(prefix);
     }
     
     // Setters
@@ -140,7 +142,7 @@ public class Settings implements GuildSettingsProvider
         this.manager.writeSettings();
     }
     
-    public void setVoiceChannel(VoiceChannel vc)
+    public void setVoiceChannel(AudioChannel vc)
     {
         this.voiceId = vc == null ? 0 : vc.getIdLong();
         this.manager.writeSettings();

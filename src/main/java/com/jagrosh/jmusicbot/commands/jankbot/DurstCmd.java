@@ -9,7 +9,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 
-import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 
 public class DurstCmd extends Command {
@@ -26,7 +26,7 @@ public class DurstCmd extends Command {
     public void execute(CommandEvent event) {
         if(event.getArgs().length() == 0){
             List<String> files = new ArrayList<String>();
-            for (final File fileEntry : new File("/home/callum/MusicBot/durst").listFiles()) {
+            for (final File fileEntry : new File("/home/calluml/MusicBot/durst").listFiles()) {
                 if (!fileEntry.isDirectory()) {
                     files.add(fileEntry.getName());
                 }
@@ -38,7 +38,7 @@ public class DurstCmd extends Command {
             pos = rv.nextInt(files.size());
             file_to_ret = files.get(pos);
 
-            event.getEvent().getMessage().reply(" ").addFile(new File("/home/callum/MusicBot/durst/" + file_to_ret)).setActionRow(Button.primary("DURST" + String.valueOf(pos), "Break Stuff")).queue();
+            event.getEvent().getMessage().reply(" ").addFile(new File("/home/calluml/MusicBot/durst/" + file_to_ret)).setActionRow(Button.primary("DURST" + String.valueOf(pos), "Break Stuff")).queue();
         } else if (event.getArgs().equals("add")) {
 
         }

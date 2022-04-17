@@ -145,6 +145,6 @@ public class FairQueue<T extends Queueable> {
 
     public void removeControlsFromLastMessage() {
         if (this.this_last_message != null)
-            this.this_last_message.editMessage(this.this_last_message.getEmbeds().get(0)).setActionRows().queue();
+            this.this_last_message.editMessageEmbeds(this.this_last_message.getEmbeds().get(0)).setActionRows().queue();
     }
 }

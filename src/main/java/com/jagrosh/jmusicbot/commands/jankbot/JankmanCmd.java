@@ -20,7 +20,7 @@ public class JankmanCmd extends Command {
         }
     
         public void execute(CommandEvent event) {
-            event.getEvent().getMessage().reply(" ").addFile(new File("/home/callum/MusicBot/images/jman.png")).queue();
+            event.getEvent().getMessage().reply(" ").addFile(new File("/home/calluml/MusicBot/images/jman.png")).queue();
         }
     
     }

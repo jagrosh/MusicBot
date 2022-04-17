@@ -7,13 +7,14 @@ import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.Component;
+import net.dv8tion.jda.api.interactions.components.ItemComponent;
 
 public class QueueButtonListener extends ListenerAdapter {
     @Override
-    public void onButtonClick(ButtonClickEvent event) {
+    public void onButtonInteraction(ButtonInteractionEvent event) {
         if (!event.getComponentId().startsWith("QUEUE"))
             return;
         if (event.getComponentId().startsWith("QUEUE_PLAYLIST")) {
@@ -39,9 +40,9 @@ public class QueueButtonListener extends ListenerAdapter {
                 new_page_num = ah.getQueue().getNumberOfPages();
 
             MessageEmbed eb = QueueCmd.getQueueEmbed(new_page_num, event, ah, list, rm, split[3]);
-            Component[] cl = QueueCmd.getButtonsForQueue(new_page_num, ah.getQueue().getNumberOfPages(), rm, split[3]);
+            ItemComponent[] cl = QueueCmd.getButtonsForQueue(new_page_num, ah.getQueue().getNumberOfPages(), rm, split[3]);
 
-            event.getMessage().editMessage(eb).setActionRow(cl).queue();
+            event.getMessage().editMessageEmbeds(eb).setActionRow(cl).queue();
             event.deferEdit().queue();
         }
 

@@ -4,6 +4,7 @@
 /test/
 /Jankedex/
 /muselogos/
+deployed/
 .vscode/
 *.json
 *.txt

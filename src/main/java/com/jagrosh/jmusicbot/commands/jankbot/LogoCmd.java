@@ -9,7 +9,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 
-import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 
 public class LogoCmd extends Command {
@@ -24,7 +24,7 @@ public class LogoCmd extends Command {
 
     public void execute(CommandEvent event) {
         List<String> files = new ArrayList<String>();
-        for (final File fileEntry : new File("/home/callum/MusicBot/muselogos").listFiles()) {
+        for (final File fileEntry : new File("/home/calluml/MusicBot/muselogos").listFiles()) {
             if (!fileEntry.isDirectory()) {
                 files.add(fileEntry.getName());
             }
@@ -36,7 +36,7 @@ public class LogoCmd extends Command {
         pos = rv.nextInt(files.size());
         file_to_ret = files.get(pos);
 
-        event.getEvent().getMessage().reply(" ").addFile(new File("/home/callum/MusicBot/muselogos/" + file_to_ret)).setActionRow(Button.primary("LOGO_NEW:" + String.valueOf(pos), "New All")).queue();
+        event.getEvent().getMessage().reply(" ").addFile(new File("/home/calluml/MusicBot/muselogos/" + file_to_ret)).setActionRow(Button.primary("LOGO_NEW:" + String.valueOf(pos), "New All")).queue();
     }
 
 }

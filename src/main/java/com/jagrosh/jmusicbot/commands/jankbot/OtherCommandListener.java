@@ -1,25 +1,17 @@
 package com.jagrosh.jmusicbot.commands.jankbot;
 
-import java.io.File;
-import java.net.SocketPermission;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.interactions.components.Button;
-import net.dv8tion.jda.api.interactions.components.Component;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class OtherCommandListener extends ListenerAdapter {
 
@@ -43,7 +35,7 @@ public class OtherCommandListener extends ListenerAdapter {
         return str.toString();
     }
 
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+    public void onMessageReceived(MessageReceivedEvent event) {
         if(!event.getMessage().getContentRaw().startsWith("j!")){
             List<String> split_msg = Arrays.asList(event.getMessage().getContentRaw().toLowerCase().split(" "));
             String stripped_msg = this.removeStringOf(event.getMessage().getContentRaw().toLowerCase(), '?', ',', '.');

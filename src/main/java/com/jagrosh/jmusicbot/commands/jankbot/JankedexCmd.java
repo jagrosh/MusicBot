@@ -10,8 +10,8 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 
-import net.dv8tion.jda.api.interactions.components.Button;
-import net.dv8tion.jda.api.interactions.components.Component;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.ItemComponent;
 
 public class JankedexCmd extends Command {
     // private Bot bot; 
@@ -27,7 +27,7 @@ public class JankedexCmd extends Command {
     public void execute(CommandEvent event) {
         List<String> files = new ArrayList<String>();
         Collections.sort(files);
-        for (final File fileEntry : new File("/home/callum/MusicBot/Jankedex").listFiles()) {
+        for (final File fileEntry : new File("/home/calluml/MusicBot/Jankedex").listFiles()) {
             if (!fileEntry.isDirectory()) {
                 files.add(fileEntry.getName());
             }
@@ -51,12 +51,12 @@ public class JankedexCmd extends Command {
             file_to_ret = files.get(pos);
         }
         msg_to_send += "JANKEDEX ENTRY " + file_to_ret.split("\\.")[0] + ":";
-        List<Component> comps = new ArrayList<Component>();
+        List<ItemComponent> comps = new ArrayList<ItemComponent>();
         if (pos - 1 >= 0)
             comps.add(Button.secondary("JDX_PREV:" + files.get(pos - 1).split("\\.")[0], "⬅️"));
         if (pos + 1 < files.size() - 1)
             comps.add(Button.secondary("JDX_NEXT:" + files.get(pos + 1).split("\\.")[0], "➡️"));
-        event.getEvent().getMessage().reply(msg_to_send).addFile(new File("/home/callum/MusicBot/Jankedex/" + file_to_ret)).setActionRow(comps).queue();
+        event.getEvent().getMessage().reply(msg_to_send).addFile(new File("/home/calluml/MusicBot/Jankedex/" + file_to_ret)).setActionRow(comps).queue();
     }
 
 }

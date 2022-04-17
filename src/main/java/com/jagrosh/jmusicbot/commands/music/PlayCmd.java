@@ -34,9 +34,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.interactions.components.Button;
-import net.dv8tion.jda.api.interactions.components.Component;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.ItemComponent;
 
 /**
  *
@@ -125,9 +125,9 @@ public class PlayCmd extends MusicCommand {
             else
             {
                 m.editMessage(addMsg+"\n"+event.getClient().getWarning()+" This track has a playlist of **"+playlist.getTracks().size()+"** tracks attached. Select \"Load\" to load playlist.")
-                    .setActionRow(new Component[]{Button.primary("QUEUE_PLAYLIST:ACCEPT", "Load").withEmoji(Emoji.fromUnicode(LOAD)), Button.danger("QUEUE_PLAYLIST:REJECT", "Cancel").withEmoji(Emoji.fromUnicode(CANCEL))})
+                    .setActionRow(new ItemComponent[]{Button.primary("QUEUE_PLAYLIST:ACCEPT", "Load").withEmoji(Emoji.fromUnicode(LOAD)), Button.danger("QUEUE_PLAYLIST:REJECT", "Cancel").withEmoji(Emoji.fromUnicode(CANCEL))})
                     .override(true).queue((msg) -> {
-                        bot.getWaiter().waitForEvent(ButtonClickEvent.class, (ev) -> {
+                        bot.getWaiter().waitForEvent(ButtonInteractionEvent.class, (ev) -> {
                             return ev.getMessage().getId().equals(m.getId());
                         } ,(msgev) -> {
                             if (msgev.getComponentId().startsWith("QUEUE_PLAYLIST")) {

@@ -34,9 +34,10 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.interactions.components.Button;
-import net.dv8tion.jda.api.interactions.components.Component;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.ItemComponent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 /**
  *
@@ -72,7 +73,7 @@ public class QueueCmd extends MusicCommand {
             Message nonowp = ah.getNoMusicPlaying(event.getJDA());
             Message built = new MessageBuilder()
                     .setContent(event.getClient().getWarning() + " There is no music in the queue!")
-                    .setEmbed((nowp==null ? nonowp : nowp).getEmbeds().get(0)).build();
+                    .setEmbeds((nowp==null ? nonowp : nowp).getEmbeds().get(0)).build();
             event.reply(built, m -> 
             {
                 if(nowp!=null)
@@ -88,10 +89,10 @@ public class QueueCmd extends MusicCommand {
 
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
 
-        event.getChannel().sendMessage(getQueueEmbed(pagenum, event, ah, list))
-                .setActionRow(QueueCmd.getButtonsForQueue(pagenum, ah.getQueue().getNumberOfPages(), settings.getRepeatMode(), event.getClient().getSuccess())).queue((msg) -> {
-                    ah.getQueue().setLastMessage(msg);
-                });
+        ActionRow ar = ActionRow.of(QueueCmd.getButtonsForQueue(pagenum, ah.getQueue().getNumberOfPages(), settings.getRepeatMode(), event.getClient().getSuccess()));
+
+        event.getChannel().sendMessage(new MessageBuilder().setEmbeds(getQueueEmbed(pagenum, event, ah, list))
+                .setActionRows(ar).build()).queue();
 
     }
 
@@ -125,7 +126,7 @@ public class QueueCmd extends MusicCommand {
     }
 
     
-    public static MessageEmbed getQueueEmbed(int pagenum, ButtonClickEvent event, AudioHandler ah, List<QueuedTrack> list, RepeatMode rm, String success_emoji){
+    public static MessageEmbed getQueueEmbed(int pagenum, ButtonInteractionEvent event, AudioHandler ah, List<QueuedTrack> list, RepeatMode rm, String success_emoji){
         //Don't waste time by reacquiring them if this is being called from the queue command rather than the button.
         if(ah == null) ah = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
         if(list == null) list = ah.getQueue().getList();
@@ -149,8 +150,8 @@ public class QueueCmd extends MusicCommand {
                         .build();
     }
 
-    public static Component[] getButtonsForQueue(int page_num, int max_queue_pages, RepeatMode rm, String success_emoji){
-        Component[] btns = {null, null};
+    public static ItemComponent[] getButtonsForQueue(int page_num, int max_queue_pages, RepeatMode rm, String success_emoji){
+        ItemComponent[] btns = {null, null};
         btns[0] = page_num == 1 ? Button.secondary("QUEUE_PREV:DISABLED", "Previous").asDisabled() : Button.secondary("QUEUE_PREV:" + page_num + ":" + rm.toString() + ":" + success_emoji, "Previous").withEmoji(Emoji.fromUnicode("⬅️"));
         btns[1] = page_num == max_queue_pages ? Button.secondary("QUEUE_NEXT:DISABLED", "Next").asDisabled() : Button.secondary("QUEUE_NEXT:" + page_num + ":" + rm.toString() + ":" + success_emoji, "Next").withEmoji(Emoji.fromUnicode("➡️"));
         return btns;
