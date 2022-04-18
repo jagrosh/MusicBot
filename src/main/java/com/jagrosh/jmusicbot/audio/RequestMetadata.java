@@ -23,13 +23,15 @@ import net.dv8tion.jda.api.entities.User;
  */
 public class RequestMetadata
 {
-    public static final RequestMetadata EMPTY = new RequestMetadata(null);
+    public static final RequestMetadata EMPTY = new RequestMetadata(null, null);
     
     public final UserInfo user;
+    public final RequestInfo requestInfo;
     
-    public RequestMetadata(User user)
+    public RequestMetadata(User user, RequestInfo requestInfo)
     {
         this.user = user == null ? null : new UserInfo(user.getIdLong(), user.getName(), user.getDiscriminator(), user.getEffectiveAvatarUrl());
+        this.requestInfo = requestInfo;
     }
     
     public long getOwner()
@@ -37,7 +39,7 @@ public class RequestMetadata
         return user == null ? 0L : user.id;
     }
     
-    public class RequestInfo
+    public static class RequestInfo
     {
         public final String query, url;
         public final long startTimestamp;
@@ -49,13 +51,13 @@ public class RequestMetadata
 
         private RequestInfo(String query, String url, long startTimestamp)
         {
-            this.query = query;
             this.url = url;
+            this.query = query;
             this.startTimestamp = startTimestamp;
         }
     }
     
-    public class UserInfo
+    public static class UserInfo
     {
         public final long id;
         public final String username, discrim, avatar;
