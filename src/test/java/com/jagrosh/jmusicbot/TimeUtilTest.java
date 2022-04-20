@@ -40,6 +40,10 @@ public class TimeUtilTest
         TimeUtil.SeekTime seek = TimeUtil.parseTime("99:9:999");
         assertNotNull(seek);
         assertEquals(357939000, seek.milliseconds);
+
+        seek = TimeUtil.parseTime("99h9m999s");
+        assertNotNull(seek);
+        assertEquals(357939000, seek.milliseconds);
     }
 
     @Test
@@ -89,6 +93,10 @@ public class TimeUtilTest
     {
         TimeUtil.SeekTime seek = TimeUtil.parseTime("1:1:1:1");
         assertNull(seek);
+
+        seek = TimeUtil.parseTime("1h2m3m4s5s");
+        assertNotNull(seek);
+        assertEquals(3909000, seek.milliseconds);
     }
 
     @Test
@@ -103,5 +111,9 @@ public class TimeUtilTest
     {
         TimeUtil.SeekTime seek = TimeUtil.parseTime("1:1:a");
         assertNull(seek);
+
+        seek = TimeUtil.parseTime("1a2s");
+        assertNotNull(seek);
+        assertEquals(3000, seek.milliseconds);
     }
 }
