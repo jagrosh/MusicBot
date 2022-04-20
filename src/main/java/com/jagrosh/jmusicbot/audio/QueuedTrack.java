@@ -27,27 +27,32 @@ import net.dv8tion.jda.api.entities.User;
 public class QueuedTrack implements Queueable
 {
     private final AudioTrack track;
-    
-    public QueuedTrack(AudioTrack track, User owner)
-    {
-        this(track, new RequestMetadata(owner));
-    }
-    
+    private final RequestMetadata requestMetadata;
+
     public QueuedTrack(AudioTrack track, RequestMetadata rm)
     {
         this.track = track;
         this.track.setUserData(rm);
+
+        this.requestMetadata = rm;
+        if (this.track.isSeekable() && rm != null)
+            track.setPosition(rm.requestInfo.startTimestamp);
     }
     
     @Override
     public long getIdentifier() 
     {
-        return track.getUserData(RequestMetadata.class).getOwner();
+        return requestMetadata.getOwner();
     }
     
     public AudioTrack getTrack()
     {
         return track;
+    }
+
+    public RequestMetadata getRequestMetadata()
+    {
+        return requestMetadata;
     }
 
     @Override

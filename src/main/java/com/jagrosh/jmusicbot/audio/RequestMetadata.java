@@ -15,7 +15,9 @@
  */
 package com.jagrosh.jmusicbot.audio;
 
+import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.utils.TimeUtil;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.regex.Matcher;
@@ -42,15 +44,20 @@ public class RequestMetadata
     {
         return user == null ? 0L : user.id;
     }
+
+    public static RequestMetadata fromResultHandler(AudioTrack track, CommandEvent event)
+    {
+        return new RequestMetadata(event.getAuthor(), new RequestInfo(event.getArgs(), track.getInfo().uri));
+    }
     
     public static class RequestInfo
     {
         public final String query, url;
         public final long startTimestamp;
 
-        private RequestInfo(String query, String url)
+        public RequestInfo(String query, String url)
         {
-            this(query, url, tryGetTimestamp(url));
+            this(query, url, tryGetTimestamp(query));
         }
 
         private RequestInfo(String query, String url, long startTimestamp)
@@ -60,7 +67,7 @@ public class RequestMetadata
             this.startTimestamp = startTimestamp;
         }
 
-        private static final Pattern youtubeTimestampPattern = Pattern.compile("youtu(?:\\.be|be\\..*)/.*\\?.*t=([\\dhms]+)");
+        private static final Pattern youtubeTimestampPattern = Pattern.compile("youtu(?:\\.be|be\\..+)/.*\\?.*(?!.*list=)t=([\\dhms]+)");
         private static long tryGetTimestamp(String url)
         {
             Matcher matcher = youtubeTimestampPattern.matcher(url);

@@ -96,16 +96,14 @@ public class TimeUtil
                 if(vals.length > j+1)
                 {
                     if(vals[j+1].toLowerCase().startsWith("m"))
-                        num*=1000*60;
+                        num*=60;
                     else if(vals[j+1].toLowerCase().startsWith("h"))
-                        num*=1000*60*60;
+                        num*=60*60;
                     else if(vals[j+1].toLowerCase().startsWith("d"))
-                        num*=1000*60*60*24;
-                    else
-                        num*=1000;
+                        num*=60*60*24;
                 }
 
-                time+=num;
+                time+=num*1000;
             }
         }
         catch(Exception ex)
