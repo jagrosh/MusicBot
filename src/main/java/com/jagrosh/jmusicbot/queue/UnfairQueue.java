@@ -1,0 +1,99 @@
+/*
+ * Copyright 2016 John Grosh (jagrosh).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.jagrosh.jmusicbot.queue;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * queue that maintains addition order, no fairness between different users
+ * who adds first gets to play first
+ * @author SH1n3g4ter
+ * @param <T>
+ */
+public class UnfairQueue <T extends Queueable> implements Queue<T> {
+    private final List<T> list = new ArrayList<>();
+
+    public int add(T item) {
+        list.add(item);
+        return list.size()-1;
+    }
+
+    public void addAt(int index, T item) {
+        if (index >= list.size())
+            list.add(item);
+        else
+            list.add(index, item);
+    }
+
+    public int size() {
+        return list.size();
+    }
+
+    public T pull() {
+        return list.remove(0);
+    }
+
+    public boolean isEmpty() {
+        return list.isEmpty();
+    }
+
+    public List<T> getList() {
+        return list;
+    }
+
+    public T get(int index) {
+        return list.get(index);
+    }
+
+    public T remove(int index) {
+        return list.remove(index);
+    }
+
+    public int removeAll(long identifier) {
+        int listSize = list.size();
+        list.clear();
+        return listSize;
+    }
+
+    public void clear() {
+        list.clear();
+    }
+
+    public int shuffle(long identifier) {
+        Collections.shuffle(list);
+        return list.size();
+    }
+
+    public void skip(int number) {
+        for (int i = 0; i < number; i++)
+            list.remove(0);
+    }
+
+    /**
+     * Move an item to a different position in the list
+     *
+     * @param from The position of the item
+     * @param to   The new position of the item
+     * @return the moved item
+     */
+    public T moveItem(int from, int to) {
+        T item = list.remove(from);
+        list.add(to, item);
+        return item;
+    }
+}

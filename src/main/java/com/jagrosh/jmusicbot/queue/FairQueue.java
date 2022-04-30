@@ -25,7 +25,7 @@ import java.util.Set;
  * @author John Grosh (jagrosh)
  * @param <T>
  */
-public class FairQueue<T extends Queueable> {
+public class FairQueue<T extends Queueable> implements Queue<T> {
     private final List<T> list = new ArrayList<>();
     private final Set<Long> set = new HashSet<>();
     
