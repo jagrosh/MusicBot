@@ -40,7 +40,7 @@ public class BotConfig
     
     private Path path = null;
     private String token, prefix, altprefix, helpWord, playlistsFolder,
-            successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
+            successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji, queueType;
     private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
     private long owner, maxSeconds, aloneTimeUntilStop;
     private OnlineStatus status;
@@ -91,6 +91,7 @@ public class BotConfig
             playlistsFolder = config.getString("playlistsfolder");
             aliases = config.getConfig("aliases");
             transforms = config.getConfig("transforms");
+            queueType = config.getString("queuetype");
             dbots = owner == 113156185389092864L;
             
             // we may need to write a new config file
@@ -348,5 +349,10 @@ public class BotConfig
     public Config getTransforms()
     {
         return transforms;
+    }
+
+    public String getQueueType()
+    {
+        return queueType;
     }
 }

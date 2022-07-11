@@ -17,6 +17,8 @@ package com.jagrosh.jmusicbot.audio;
 
 import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
+import com.jagrosh.jmusicbot.queue.AbstractQueue;
+import com.jagrosh.jmusicbot.queue.LinearQueue;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
@@ -50,7 +52,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
     public final static String PAUSE_EMOJI = "\u23F8"; // ⏸
     public final static String STOP_EMOJI  = "\u23F9"; // ⏹
     
-    private final FairQueue<QueuedTrack> queue = new FairQueue<>();
+    private final AbstractQueue<QueuedTrack> queue;
     private final List<AudioTrack> defaultQueue = new LinkedList<>();
     private final Set<String> votes = new HashSet<>();
     
@@ -65,6 +67,15 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         this.manager = manager;
         this.audioPlayer = player;
         this.guildId = guild.getIdLong();
+
+        if ("linear".equalsIgnoreCase(manager.getBot().getConfig().getQueueType()))
+        {
+            queue = new LinearQueue<>();
+        }
+        else
+        {
+            queue = new FairQueue<>();
+        }
     }
 
     public int addTrackToFront(QueuedTrack qtrack)
@@ -92,7 +103,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
             return queue.add(qtrack);
     }
     
-    public FairQueue<QueuedTrack> getQueue()
+    public AbstractQueue<QueuedTrack> getQueue()
     {
         return queue;
     }

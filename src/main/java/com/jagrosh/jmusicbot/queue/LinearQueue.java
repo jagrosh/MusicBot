@@ -15,35 +15,18 @@
  */
 package com.jagrosh.jmusicbot.queue;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  *
- * @author John Grosh (jagrosh)
+ * @author Wolfgang Schwendtbauer
  * @param <T>
  */
-public class FairQueue<T extends Queueable> extends AbstractQueue<T> {
-
-    protected final Set<Long> set = new HashSet<>();
+public class LinearQueue<T extends Queueable> extends AbstractQueue<T> {
 
     @Override
     public int add(T item)
     {
-        int lastIndex;
-        for(lastIndex=list.size()-1; lastIndex>-1; lastIndex--)
-            if(list.get(lastIndex).getIdentifier()==item.getIdentifier())
-                break;
-        lastIndex++;
-        set.clear();
-        for(; lastIndex<list.size(); lastIndex++)
-        {
-            if(set.contains(list.get(lastIndex).getIdentifier()))
-                break;
-            set.add(list.get(lastIndex).getIdentifier());
-        }
-        list.add(lastIndex, item);
-        return lastIndex;
+        list.add(item);
+        return list.size() - 1;
     }
 
 }
