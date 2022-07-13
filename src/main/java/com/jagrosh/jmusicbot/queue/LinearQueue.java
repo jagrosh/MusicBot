@@ -22,6 +22,14 @@ package com.jagrosh.jmusicbot.queue;
  */
 public class LinearQueue<T extends Queueable> extends AbstractQueue<T> {
 
+    public LinearQueue(AbstractQueue<T> queue) {
+        super(queue);
+    }
+
+    public LinearQueue() {
+        super();
+    }
+
     @Override
     public int add(T item)
     {

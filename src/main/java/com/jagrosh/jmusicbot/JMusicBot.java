@@ -122,6 +122,7 @@ public class JMusicBot
                         new MoveTrackCmd(bot),
                         new PauseCmd(bot),
                         new PlaynextCmd(bot),
+                        new QueueTypeCmd(bot),
                         new RepeatCmd(bot),
                         new SkiptoCmd(bot),
                         new StopCmd(bot),

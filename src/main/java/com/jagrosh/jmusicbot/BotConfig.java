@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot;
 
 import com.jagrosh.jmusicbot.entities.Prompt;
+import com.jagrosh.jmusicbot.settings.QueueType;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -40,7 +41,7 @@ public class BotConfig
     
     private Path path = null;
     private String token, prefix, altprefix, helpWord, playlistsFolder,
-            successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji, queueType;
+            successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
     private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
     private long owner, maxSeconds, aloneTimeUntilStop;
     private OnlineStatus status;
@@ -91,7 +92,6 @@ public class BotConfig
             playlistsFolder = config.getString("playlistsfolder");
             aliases = config.getConfig("aliases");
             transforms = config.getConfig("transforms");
-            queueType = config.getString("queuetype");
             dbots = owner == 113156185389092864L;
             
             // we may need to write a new config file
@@ -351,8 +351,4 @@ public class BotConfig
         return transforms;
     }
 
-    public String getQueueType()
-    {
-        return queueType;
-    }
 }

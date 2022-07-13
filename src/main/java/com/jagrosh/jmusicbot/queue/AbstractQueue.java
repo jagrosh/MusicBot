@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.queue;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -23,9 +24,19 @@ import java.util.List;
  * @author Wolfgang Schwendtbauer
  * @param <T>
  */
-public abstract class AbstractQueue<T extends Queueable> {
+public abstract class AbstractQueue<T extends Queueable>
+{
+    AbstractQueue(AbstractQueue<T> queue)
+    {
+        this.list = queue.getList();
+    }
 
-    protected final List<T> list = new ArrayList<>();
+    AbstractQueue()
+    {
+        this.list = new LinkedList<>();
+    }
+
+    protected final List<T> list;
 
     public abstract int add(T item);
 

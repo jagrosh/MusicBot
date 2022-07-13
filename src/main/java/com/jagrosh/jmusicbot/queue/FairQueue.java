@@ -25,6 +25,14 @@ import java.util.Set;
  */
 public class FairQueue<T extends Queueable> extends AbstractQueue<T> {
 
+    public FairQueue(AbstractQueue<T> queue) {
+        super(queue);
+    }
+
+    public FairQueue() {
+        super();
+    }
+
     protected final Set<Long> set = new HashSet<>();
 
     @Override
