@@ -48,7 +48,7 @@ public class QueueTypeCmd extends DJCommand
         if (args.isEmpty())
         {
             QueueType currentType = settings.getQueueType();
-            event.reply("Current queue type is " + currentType.getEmoji() + " " + currentType.getUserFriendlyName());
+            event.reply("Current queue type is: " + currentType.getEmoji() + " `" + currentType.getUserFriendlyName() + "`.");
             return;
         }
 
