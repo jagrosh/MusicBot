@@ -33,7 +33,7 @@ public class QueueTypeCmd extends DJCommand
         super(bot);
         this.name = "queuetype";
         this.help = "changes the queue type";
-        this.arguments = "[" + QueueType.getNames() + "]";
+        this.arguments = "[" + String.join("|", QueueType.getNames()) + "]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
     }
@@ -52,17 +52,22 @@ public class QueueTypeCmd extends DJCommand
             else
                 value = QueueType.FAIR;
         }
-        else if(args.equalsIgnoreCase("linear"))
-        {
-            value = QueueType.LINEAR;
-        }
-        else if(args.equalsIgnoreCase("fair"))
-        {
-            value = QueueType.FAIR;
-        }
         else
         {
-            event.replyError("Invalid queue type. Valid types are: " + QueueType.getNames());
+            try
+            {
+                value = QueueType.valueOf(args.toUpperCase());
+            }
+            catch (IllegalArgumentException e)
+            {
+                event.replyError("Invalid queue type. Valid types are: [" + String.join("|", QueueType.getNames()) + "]");
+                return;
+            }
+        }
+
+        if (settings.getQueueType() == value)
+        {
+            event.reply("The queue type is already set to `" + value.getUserFriendlyName() + "`.");
             return;
         }
 
@@ -70,9 +75,10 @@ public class QueueTypeCmd extends DJCommand
 
         AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
         if (handler != null)
-            handler.switchQueueType(value);
+            handler.setQueueType(value);
 
-        event.replySuccess("Queue type was set to `" + value.getUserFriendlyName() + "`");
+        event.replySuccess("Queue type was set to `" + value.getUserFriendlyName() + "`.");
+
     }
 
     @Override

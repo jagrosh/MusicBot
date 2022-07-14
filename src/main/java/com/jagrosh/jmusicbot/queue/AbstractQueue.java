@@ -28,7 +28,7 @@ public abstract class AbstractQueue<T extends Queueable>
 {
     AbstractQueue(AbstractQueue<T> queue)
     {
-        this.list = queue.getList();
+        this.list = queue != null ? queue.getList() : new LinkedList<>();
     }
 
     AbstractQueue()

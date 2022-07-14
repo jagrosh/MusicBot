@@ -15,7 +15,6 @@
  */
 package com.jagrosh.jmusicbot.audio;
 
-import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 import com.jagrosh.jmusicbot.queue.AbstractQueue;
 import com.jagrosh.jmusicbot.queue.LinearQueue;
@@ -67,12 +66,11 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         this.manager = manager;
         this.audioPlayer = player;
         this.guildId = guild.getIdLong();
-        this.queue = new FairQueue<>();
 
-        this.switchQueueType(manager.getBot().getSettingsManager().getSettings(guildId).getQueueType());
+        this.setQueueType(manager.getBot().getSettingsManager().getSettings(guildId).getQueueType());
     }
 
-    public void switchQueueType(QueueType type)
+    public void setQueueType(QueueType type)
     {
         switch(type) {
             case LINEAR:

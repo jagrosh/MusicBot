@@ -15,6 +15,10 @@
  */
 package com.jagrosh.jmusicbot.settings;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  *
  * @author Wolfgang Schwendtbauer
@@ -22,8 +26,7 @@ package com.jagrosh.jmusicbot.settings;
 public enum QueueType
 {
     LINEAR("\u23E9", "Linear"),       // ⏩
-    FAIR("\uD83D\uDD22", "Fair"),     // 🔢
-    RANDOM("\uD83D\uDD00", "Random"); // 🔀
+    FAIR("\uD83D\uDD22", "Fair");     // 🔢
 
     private final String userFriendlyName;
     private final String emoji;
@@ -33,8 +36,10 @@ public enum QueueType
         this.emoji = emoji;
     }
 
-    public static String getNames() {
-        return "linear|fair";
+    public static List<String> getNames() {
+        return Arrays.stream(QueueType.values())
+                .map(type -> type.name().toLowerCase())
+                .collect(Collectors.toList());
     }
 
     public String getUserFriendlyName() {
