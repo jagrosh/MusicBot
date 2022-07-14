@@ -29,7 +29,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import com.jagrosh.jmusicbot.queue.FairQueue;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
@@ -72,14 +71,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
 
     public void setQueueType(QueueType type)
     {
-        switch(type) {
-            case LINEAR:
-                queue = new LinearQueue<>(queue);
-                break;
-            default:
-                queue = new FairQueue<>(queue);
-                break;
-        }
+        queue = (AbstractQueue<QueuedTrack>) type.createInstance(queue);
     }
 
     public int addTrackToFront(QueuedTrack qtrack)

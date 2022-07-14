@@ -15,8 +15,14 @@
  */
 package com.jagrosh.jmusicbot.settings;
 
+import com.jagrosh.jmusicbot.queue.AbstractQueue;
+import com.jagrosh.jmusicbot.queue.FairQueue;
+import com.jagrosh.jmusicbot.queue.LinearQueue;
+import com.jagrosh.jmusicbot.queue.Queueable;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -25,21 +31,28 @@ import java.util.stream.Collectors;
  */
 public enum QueueType
 {
-    LINEAR("\u23E9", "Linear"),       // ⏩
-    FAIR("\uD83D\uDD22", "Fair");     // 🔢
+    LINEAR("\u23E9", "Linear", LinearQueue::new),     // ⏩
+    FAIR("\uD83D\uDD22", "Fair", FairQueue::new);     // 🔢
 
     private final String userFriendlyName;
     private final String emoji;
+    private final Function<AbstractQueue<?>, ? extends AbstractQueue<?>> supplier;
 
-    QueueType(final String emoji, final String userFriendlyName) {
+    <T extends Queueable> QueueType(final String emoji, final String userFriendlyName, Function<AbstractQueue<?>, ? extends AbstractQueue<?>> supplier) {
         this.userFriendlyName = userFriendlyName;
         this.emoji = emoji;
+        this.supplier = supplier;
     }
 
     public static List<String> getNames() {
         return Arrays.stream(QueueType.values())
                 .map(type -> type.name().toLowerCase())
                 .collect(Collectors.toList());
+    }
+
+    public AbstractQueue<?> createInstance(AbstractQueue<?> previous)
+    {
+        return supplier.apply(previous);
     }
 
     public String getUserFriendlyName() {

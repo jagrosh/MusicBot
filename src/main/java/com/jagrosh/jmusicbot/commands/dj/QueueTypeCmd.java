@@ -47,22 +47,19 @@ public class QueueTypeCmd extends DJCommand
 
         if (args.isEmpty())
         {
-            if (settings.getQueueType() == QueueType.FAIR)
-                value = QueueType.LINEAR;
-            else
-                value = QueueType.FAIR;
+            QueueType currentType = settings.getQueueType();
+            event.reply("Current queue type is " + currentType.getEmoji() + " " + currentType.getUserFriendlyName());
+            return;
         }
-        else
+
+        try
         {
-            try
-            {
-                value = QueueType.valueOf(args.toUpperCase());
-            }
-            catch (IllegalArgumentException e)
-            {
-                event.replyError("Invalid queue type. Valid types are: [" + String.join("|", QueueType.getNames()) + "]");
-                return;
-            }
+            value = QueueType.valueOf(args.toUpperCase());
+        }
+        catch (IllegalArgumentException e)
+        {
+            event.replyError("Invalid queue type. Valid types are: [" + String.join("|", QueueType.getNames()) + "]");
+            return;
         }
 
         if (settings.getQueueType() == value)
