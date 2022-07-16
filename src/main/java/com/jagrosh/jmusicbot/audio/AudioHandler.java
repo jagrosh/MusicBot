@@ -17,7 +17,6 @@ package com.jagrosh.jmusicbot.audio;
 
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 import com.jagrosh.jmusicbot.queue.AbstractQueue;
-import com.jagrosh.jmusicbot.queue.LinearQueue;
 import com.jagrosh.jmusicbot.settings.QueueType;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
@@ -71,7 +70,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
 
     public void setQueueType(QueueType type)
     {
-        queue = (AbstractQueue<QueuedTrack>) type.createInstance(queue);
+        queue = type.createInstance(queue);
     }
 
     public int addTrackToFront(QueuedTrack qtrack)

@@ -19,10 +19,10 @@ import com.jagrosh.jmusicbot.queue.AbstractQueue;
 import com.jagrosh.jmusicbot.queue.FairQueue;
 import com.jagrosh.jmusicbot.queue.LinearQueue;
 import com.jagrosh.jmusicbot.queue.Queueable;
+import com.jagrosh.jmusicbot.utils.QueueSupplier;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -36,9 +36,9 @@ public enum QueueType
 
     private final String userFriendlyName;
     private final String emoji;
-    private final Function<AbstractQueue<?>, ? extends AbstractQueue<?>> supplier;
+    private final QueueSupplier supplier;
 
-    <T extends Queueable> QueueType(final String emoji, final String userFriendlyName, Function<AbstractQueue<?>, ? extends AbstractQueue<?>> supplier) {
+    <T extends Queueable> QueueType(final String emoji, final String userFriendlyName, QueueSupplier supplier) {
         this.userFriendlyName = userFriendlyName;
         this.emoji = emoji;
         this.supplier = supplier;
@@ -50,7 +50,7 @@ public enum QueueType
                 .collect(Collectors.toList());
     }
 
-    public AbstractQueue<?> createInstance(AbstractQueue<?> previous)
+    public <T extends Queueable> AbstractQueue<T> createInstance(AbstractQueue<T> previous)
     {
         return supplier.apply(previous);
     }
