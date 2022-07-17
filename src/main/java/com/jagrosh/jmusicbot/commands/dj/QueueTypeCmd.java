@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
+ * Copyright 2022 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class QueueTypeCmd extends DJCommand
         if (args.isEmpty())
         {
             QueueType currentType = settings.getQueueType();
-            event.reply("Current queue type is: " + currentType.getEmoji() + " `" + currentType.getUserFriendlyName() + "`.");
+            event.reply(currentType.getEmoji() + " Current queue type is: `" + currentType.getUserFriendlyName() + "`.");
             return;
         }
 
@@ -62,19 +62,16 @@ public class QueueTypeCmd extends DJCommand
             return;
         }
 
-        if (settings.getQueueType() == value)
+        if (settings.getQueueType() != value)
         {
-            event.reply("The queue type is already set to `" + value.getUserFriendlyName() + "`.");
-            return;
+            settings.setQueueType(value);
+
+            AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+            if (handler != null)
+                handler.setQueueType(value);
         }
 
-        settings.setQueueType(value);
-
-        AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
-        if (handler != null)
-            handler.setQueueType(value);
-
-        event.replySuccess("Queue type was set to `" + value.getUserFriendlyName() + "`.");
+        event.reply(value.getEmoji() + " Queue type was set to `" + value.getUserFriendlyName() + "`.");
 
     }
 

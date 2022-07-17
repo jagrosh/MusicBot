@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 John Grosh (jagrosh).
+ * Copyright 2022 John Grosh (jagrosh).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,11 @@ package com.jagrosh.jmusicbot.queue;
  * @author Wolfgang Schwendtbauer
  * @param <T>
  */
-public class LinearQueue<T extends Queueable> extends AbstractQueue<T> {
-
-    public LinearQueue(AbstractQueue<T> queue) {
+public class LinearQueue<T extends Queueable> extends AbstractQueue<T>
+{
+    public LinearQueue(AbstractQueue<T> queue)
+    {
         super(queue);
-    }
-
-    public LinearQueue() {
-        super();
     }
 
     @Override

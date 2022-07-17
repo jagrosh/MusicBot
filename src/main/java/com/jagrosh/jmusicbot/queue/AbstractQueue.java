@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 John Grosh (jagrosh).
+ * Copyright 2022 John Grosh (jagrosh).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,14 +26,9 @@ import java.util.List;
  */
 public abstract class AbstractQueue<T extends Queueable>
 {
-    AbstractQueue(AbstractQueue<T> queue)
+    protected AbstractQueue(AbstractQueue<T> queue)
     {
         this.list = queue != null ? queue.getList() : new LinkedList<>();
-    }
-
-    AbstractQueue()
-    {
-        this.list = new LinkedList<>();
     }
 
     protected final List<T> list;

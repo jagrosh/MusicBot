@@ -23,14 +23,11 @@ import java.util.Set;
  * @author John Grosh (jagrosh)
  * @param <T>
  */
-public class FairQueue<T extends Queueable> extends AbstractQueue<T> {
-
-    public FairQueue(AbstractQueue<T> queue) {
+public class FairQueue<T extends Queueable> extends AbstractQueue<T>
+{
+    public FairQueue(AbstractQueue<T> queue)
+    {
         super(queue);
-    }
-
-    public FairQueue() {
-        super();
     }
 
     protected final Set<Long> set = new HashSet<>();

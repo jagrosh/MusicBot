@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 John Grosh <john.a.grosh@gmail.com>.
+ * Copyright 2022 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,13 +38,15 @@ public enum QueueType
     private final String emoji;
     private final QueueSupplier supplier;
 
-    <T extends Queueable> QueueType(final String emoji, final String userFriendlyName, QueueSupplier supplier) {
+    QueueType(final String emoji, final String userFriendlyName, QueueSupplier supplier)
+    {
         this.userFriendlyName = userFriendlyName;
         this.emoji = emoji;
         this.supplier = supplier;
     }
 
-    public static List<String> getNames() {
+    public static List<String> getNames()
+    {
         return Arrays.stream(QueueType.values())
                 .map(type -> type.name().toLowerCase())
                 .collect(Collectors.toList());
@@ -55,11 +57,13 @@ public enum QueueType
         return supplier.apply(previous);
     }
 
-    public String getUserFriendlyName() {
+    public String getUserFriendlyName()
+    {
         return userFriendlyName;
     }
 
-    public String getEmoji() {
+    public String getEmoji()
+    {
         return emoji;
     }
 }
