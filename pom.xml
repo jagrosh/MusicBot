@@ -25,6 +25,11 @@
                 <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
+        <repository>
+            <id>m2.duncte123.dev</id>
+            <name>m2-duncte123</name>
+            <url>https://m2.duncte123.dev/releases</url>
+        </repository>
     </repositories>
     
     <dependencies>
@@ -53,17 +58,16 @@
 	    <artifactId>lavaplayer</artifactId>
 	    <version>jmusicbot-SNAPSHOT</version>
 	</dependency>
-        <!-- this is needed, but isn't actually hosted anywhere anymore... uh -->
-        <!--dependency>
-            <groupId>com.sedmelluq</groupId>
-            <artifactId>lavaplayer-natives-extra</artifactId>
-            <version>1.3.13</version>
-        </dependency-->
 	<dependency>
 	    <groupId>com.github.jagrosh</groupId>
 	    <artifactId>JLyrics</artifactId>
 	    <version>master-SNAPSHOT</version>
 	</dependency>
+        <dependency>
+            <groupId>com.dunctebot</groupId>
+            <artifactId>sourcemanagers</artifactId>
+            <version>1.8.1</version>
+        </dependency>
         
         <!-- Misc Internal Dependencies -->
         <dependency>
