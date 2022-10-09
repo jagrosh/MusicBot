@@ -22,8 +22,11 @@ This page will describe, in detail, how to obtain a token for your music bot.
 6. Set a name, an avatar (optional), and make sure bot checkboxes are **unchecked**  
 ![Settings](/assets/images/customize-bot.png)
 
-7. Save your settings  
+7. Check the **Message Content Intent** checkbox
+![Message Content Intent](/assets/images/message-content-intent.png)
+
+8. Save your settings  
 ![Save](/assets/images/save-changes.png)
 
-8. Select the **Copy** button in the token section to copy the bot's token to your clipboard.  
+9. Select the **Copy** button in the token section to copy the bot's token to your clipboard.  
 ![Copy Token](/assets/images/copy-token.png)
