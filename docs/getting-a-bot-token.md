@@ -22,8 +22,12 @@ This page will describe, in detail, how to obtain a token for your music bot.
 6. Set a name, an avatar (optional), and make sure bot checkboxes are **unchecked**  
 ![Settings](/assets/images/customize-bot.png)
 
-7. Check the **Message Content Intent** checkbox
-![Message Content Intent](/assets/images/message-content-intent.png)
+!!! warning
+    If **Public Bot** is left checked, anyone will be able to invite your bot into servers. JMusicBot is not
+    intended to be used as a public music bot, and **will break on verified bots!**
+
+7. Check **Message Content Intent** and **Server Members Intents**
+![Message Content Intent](/assets/images/privileged-intents.png)
 
 8. Save your settings  
 ![Save](/assets/images/save-changes.png)
