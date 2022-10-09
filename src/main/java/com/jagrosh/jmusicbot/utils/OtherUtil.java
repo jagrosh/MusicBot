@@ -207,4 +207,8 @@ public class OtherUtil
             return null;
         }
     }
+
+    public static boolean isValidUserID(String ID) {
+        return ID.matches("<@[0-9]*>");
+    }
 }

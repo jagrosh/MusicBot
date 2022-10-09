@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import net.dv8tion.jda.api.entities.Guild;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,6 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                 if (!o.has("repeat_mode") && o.has("repeat") && o.getBoolean("repeat"))
                     o.put("repeat_mode", RepeatMode.ALL);
 
-
                 settings.put(Long.parseLong(id), new Settings(this,
                         o.has("text_channel_id") ? o.getString("text_channel_id")            : null,
                         o.has("voice_channel_id")? o.getString("voice_channel_id")           : null,
@@ -55,7 +55,8 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                         o.has("default_playlist")? o.getString("default_playlist")           : null,
                         o.has("repeat_mode")     ? o.getEnum(RepeatMode.class, "repeat_mode"): RepeatMode.OFF,
                         o.has("prefix")          ? o.getString("prefix")                     : null,
-                        o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO));
+                        o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO,
+                        o.has("blacklisted_users") ? o.getJSONArray("blacklisted_users")    : new JSONArray()));
             });
         } catch(IOException | JSONException e) {
             LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
@@ -81,7 +82,7 @@ public class SettingsManager implements GuildSettingsManager<Settings>
     
     private Settings createDefaultSettings()
     {
-        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO);
+        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO, new JSONArray());
     }
     
     protected void writeSettings()
@@ -106,6 +107,8 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                 o.put("prefix", s.getPrefix());
             if(s.getSkipRatio() != SKIP_RATIO)
                 o.put("skip_ratio", s.getSkipRatio());
+            if(s.getBlacklistedUsers() != null)
+                o.put("blacklisted_users", s.getBlacklistedUsers());
             obj.put(Long.toString(key), o);
         });
         try {

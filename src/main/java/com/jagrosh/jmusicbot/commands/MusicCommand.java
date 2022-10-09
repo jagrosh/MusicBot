@@ -20,10 +20,13 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.exceptions.PermissionException;
+import org.json.JSONArray;
 
 /**
  *
@@ -39,7 +42,15 @@ public abstract class MusicCommand extends Command
     {
         this.bot = bot;
         this.guildOnly = true;
-        this.category = new Category("Music");
+        this.category = new Category("Music", commandEvent -> checkBlacklistedUsers(commandEvent));
+    }
+
+    public static boolean checkBlacklistedUsers(CommandEvent event)
+    {
+        Settings s = event.getClient().getSettingsFor(event.getGuild());
+        String cmdAuthor = "<@"+event.getAuthor().getId()+">";
+        JSONArray blacklist = s.getBlacklistedUsers();
+        return checkBlacklistUser(cmdAuthor, blacklist);
     }
     
     @Override
@@ -96,6 +107,17 @@ public abstract class MusicCommand extends Command
         }
         
         doCommand(event);
+    }
+
+    public static boolean checkBlacklistUser(String user, JSONArray blacklist) {
+        boolean isBlacklisted = false;
+        for (int i=0;i<blacklist.length();i++){
+            if(blacklist.get(i).equals(user)) {
+                isBlacklisted = true;
+                break;
+            }
+        }
+        return !isBlacklisted;
     }
     
     public abstract void doCommand(CommandEvent event);

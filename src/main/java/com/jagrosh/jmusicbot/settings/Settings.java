@@ -22,6 +22,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import org.json.JSONArray;
 
 /**
  *
@@ -38,8 +39,9 @@ public class Settings implements GuildSettingsProvider
     private RepeatMode repeatMode;
     private String prefix;
     private double skipRatio;
+    private JSONArray blacklistedUsers;
 
-    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio)
+    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, JSONArray blacklistedUsers)
     {
         this.manager = manager;
         try
@@ -71,9 +73,10 @@ public class Settings implements GuildSettingsProvider
         this.repeatMode = repeatMode;
         this.prefix = prefix;
         this.skipRatio = skipRatio;
+        this.blacklistedUsers = blacklistedUsers;
     }
     
-    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio)
+    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, JSONArray blacklistedUsers)
     {
         this.manager = manager;
         this.textId = textId;
@@ -84,9 +87,13 @@ public class Settings implements GuildSettingsProvider
         this.repeatMode = repeatMode;
         this.prefix = prefix;
         this.skipRatio = skipRatio;
+        this.blacklistedUsers = blacklistedUsers;
     }
     
     // Getters
+    public JSONArray getBlacklistedUsers() {
+        return blacklistedUsers;
+    }
     public TextChannel getTextChannel(Guild guild)
     {
         return guild == null ? null : guild.getTextChannelById(textId);
@@ -134,6 +141,34 @@ public class Settings implements GuildSettingsProvider
     }
     
     // Setters
+    public void setBlacklistedUsers(String action, String user)
+    {
+        if(action.equalsIgnoreCase("add"))
+        {
+            boolean contains_user = false;
+            for (int i=0;i<this.blacklistedUsers.length();i++){
+                if(this.blacklistedUsers.get(i).equals(user)) {
+                    contains_user = true;
+                    break;
+                }
+            }
+            if (!contains_user) {
+                this.blacklistedUsers.put(user);
+            } else {
+                return;
+            }
+        }
+        else if(action.equalsIgnoreCase("remove"))
+        {
+            for (int i=0;i<this.blacklistedUsers.length();i++){
+                if(this.blacklistedUsers.get(i).equals(user)) {
+                    this.blacklistedUsers.remove(i);
+                    break;
+                }
+            }
+        }
+        this.manager.writeSettings();
+    }
     public void setTextChannel(TextChannel tc)
     {
         this.textId = tc == null ? 0 : tc.getIdLong();
