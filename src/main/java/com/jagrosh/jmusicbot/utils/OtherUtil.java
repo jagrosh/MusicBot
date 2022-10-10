@@ -23,6 +23,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import okhttp3.*;
@@ -208,7 +211,16 @@ public class OtherUtil
         }
     }
 
-    public static boolean isValidUserID(String ID) {
-        return ID.matches("<@[0-9]*>");
+    public static String parseUserID(String ID) {
+        String IDPattern = "<@([0-9]*)>";
+        Pattern r = Pattern.compile(IDPattern);
+        Matcher m = r.matcher(ID);
+
+        if (m.find()) {
+            return m.group(1);
+        } else {
+            return null;
+        }
+
     }
 }

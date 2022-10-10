@@ -40,15 +40,27 @@ public abstract class MusicCommand extends Command
     {
         this.bot = bot;
         this.guildOnly = true;
-        this.category = new Category("Music", commandEvent -> checkBlacklistedUsers(commandEvent));
+        this.category = new Category("Music", commandEvent -> checkListedUsers(commandEvent));
     }
 
-    public static boolean checkBlacklistedUsers(CommandEvent event)
+    public static boolean checkListedUsers(CommandEvent event)
     {
         Settings s = event.getClient().getSettingsFor(event.getGuild());
-        String cmdAuthor = "<@"+event.getAuthor().getId()+">";
+        boolean blacklistEnabled = s.getBlacklistSettings();
+        boolean whitelistEnabled = s.getWhiteListSettings();
+        String cmdAuthor = event.getAuthor().getId();
         JSONArray blacklist = s.getBlacklistedUsers();
-        return checkBlacklistUser(cmdAuthor, blacklist);
+        JSONArray whitelist = s.getWhitelistedUsers();
+
+        if (blacklistEnabled && !whitelistEnabled)
+        {
+            return checkListedUser(cmdAuthor, "blacklist", blacklist);
+        }
+        else if (whitelistEnabled && !blacklistEnabled)
+        {
+            return checkListedUser(cmdAuthor, "whitelist", whitelist);
+        }
+        return true;
     }
     
     @Override
@@ -107,15 +119,23 @@ public abstract class MusicCommand extends Command
         doCommand(event);
     }
 
-    public static boolean checkBlacklistUser(String user, JSONArray blacklist) {
-        boolean isBlacklisted = false;
-        for (int i=0;i<blacklist.length();i++){
-            if(blacklist.get(i).equals(user)) {
-                isBlacklisted = true;
+    public static boolean checkListedUser(String user, String listType, JSONArray permissionList) {
+        boolean isListed = false;
+        for (int i=0;i<permissionList.length();i++){
+            if(permissionList.get(i).equals(user)) {
+                isListed = true;
                 break;
             }
         }
-        return !isBlacklisted;
+        if (listType.equalsIgnoreCase("blacklist"))
+        {
+            return !isListed;
+        }
+        if (listType.equalsIgnoreCase("whitelist"))
+        {
+            return isListed;
+        }
+        return true;
     }
     
     public abstract void doCommand(CommandEvent event);

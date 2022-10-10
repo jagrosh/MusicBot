@@ -40,8 +40,11 @@ public class Settings implements GuildSettingsProvider
     private String prefix;
     private double skipRatio;
     private JSONArray blacklistedUsers;
+    private JSONArray whitelistedUsers;
+    private boolean blacklistEnabled;
+    private boolean whitelistEnabled;
 
-    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, JSONArray blacklistedUsers)
+    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, JSONArray blacklistedUsers, JSONArray whitelistedUsers, boolean blacklistEnabled, boolean whitelistEnabled)
     {
         this.manager = manager;
         try
@@ -74,9 +77,12 @@ public class Settings implements GuildSettingsProvider
         this.prefix = prefix;
         this.skipRatio = skipRatio;
         this.blacklistedUsers = blacklistedUsers;
+        this.whitelistedUsers = whitelistedUsers;
+        this.blacklistEnabled = blacklistEnabled;
+        this.whitelistEnabled = whitelistEnabled;
     }
     
-    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, JSONArray blacklistedUsers)
+    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, JSONArray blacklistedUsers, JSONArray whitelistedUsers, boolean blacklistEnabled, boolean whitelistEnabled)
     {
         this.manager = manager;
         this.textId = textId;
@@ -88,11 +94,27 @@ public class Settings implements GuildSettingsProvider
         this.prefix = prefix;
         this.skipRatio = skipRatio;
         this.blacklistedUsers = blacklistedUsers;
+        this.whitelistedUsers = whitelistedUsers;
+        this.blacklistEnabled = blacklistEnabled;
+        this.whitelistEnabled = whitelistEnabled;
     }
     
     // Getters
-    public JSONArray getBlacklistedUsers() {
-        return blacklistedUsers;
+    public boolean getBlacklistSettings()
+    {
+        return this.blacklistEnabled;
+    }
+    public boolean getWhiteListSettings()
+    {
+        return this.whitelistEnabled;
+    }
+    public JSONArray getBlacklistedUsers()
+    {
+        return this.blacklistedUsers;
+    }
+    public JSONArray getWhitelistedUsers()
+    {
+        return this.whitelistedUsers;
     }
     public TextChannel getTextChannel(Guild guild)
     {
@@ -141,6 +163,49 @@ public class Settings implements GuildSettingsProvider
     }
     
     // Setters
+    public String setPermissionListSettings(String type, String action)
+    {
+        if(type.equalsIgnoreCase("blacklist"))
+        {
+            if(action.equalsIgnoreCase("enable"))
+            {
+                if(!this.whitelistEnabled)
+                {
+                    this.blacklistEnabled = true;
+                    return "blacklist enabled";
+                }
+                else
+                {
+                    return "please disable whitelist before using this command";
+                }
+            }
+            else if (action.equalsIgnoreCase("disable"))
+            {
+                this.blacklistEnabled = false;
+                return "blacklist disabled";
+            }
+        }
+        else if (type.equalsIgnoreCase("whitelist"))
+        {
+            if(action.equalsIgnoreCase("enable")) {
+                if(!this.blacklistEnabled)
+                {
+                    this.whitelistEnabled = true;
+                    return "whitelist enabled";
+                }
+                else
+                {
+                    return "please disable blacklist before using this command";
+                }
+            }
+            else if (action.equalsIgnoreCase("disable"))
+            {
+                this.whitelistEnabled = false;
+                return "whitelist disabled";
+            }
+        }
+        return "invalid list type provided";
+    }
     public void setBlacklistedUsers(String action, String user)
     {
         if(action.equalsIgnoreCase("add"))
@@ -163,6 +228,34 @@ public class Settings implements GuildSettingsProvider
             for (int i=0;i<this.blacklistedUsers.length();i++){
                 if(this.blacklistedUsers.get(i).equals(user)) {
                     this.blacklistedUsers.remove(i);
+                    break;
+                }
+            }
+        }
+        this.manager.writeSettings();
+    }
+    public void setWhitelistUsers(String action, String user)
+    {
+        if(action.equalsIgnoreCase("add"))
+        {
+            boolean contains_user = false;
+            for (int i=0;i<this.whitelistedUsers.length();i++){
+                if(this.whitelistedUsers.get(i).equals(user)) {
+                    contains_user = true;
+                    break;
+                }
+            }
+            if (!contains_user) {
+                this.whitelistedUsers.put(user);
+            } else {
+                return;
+            }
+        }
+        else if(action.equalsIgnoreCase("remove"))
+        {
+            for (int i=0;i<this.whitelistedUsers.length();i++){
+                if(this.whitelistedUsers.get(i).equals(user)) {
+                    this.whitelistedUsers.remove(i);
                     break;
                 }
             }

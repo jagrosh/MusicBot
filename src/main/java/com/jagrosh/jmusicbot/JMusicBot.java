@@ -141,7 +141,9 @@ public class JMusicBot
                         new SetnameCmd(bot),
                         new SetstatusCmd(bot),
                         new ShutdownCmd(bot),
-                        new BlacklistUser(bot)
+                        new BlacklistUserCmd(bot),
+                        new WhitelistUserCmd(bot),
+                        new SetPermissionListSettingsCmd(bot)
                 );
         if(config.useEval())
             cb.addCommand(new EvalCmd(bot));
