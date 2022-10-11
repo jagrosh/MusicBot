@@ -56,10 +56,8 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                         o.has("repeat_mode")     ? o.getEnum(RepeatMode.class, "repeat_mode"): RepeatMode.OFF,
                         o.has("prefix")          ? o.getString("prefix")                     : null,
                         o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO,
-                        o.has("blacklisted_users") ? o.getJSONArray("blacklisted_users")    : new JSONArray(),
-                        o.has("whitelisted_users") ? o.getJSONArray("whitelisted_users")    : new JSONArray(),
-                        o.has("blacklist_enabled") ? o.getBoolean("blacklist_enabled")      : false,
-                        o.has("whitelist_enabled") ? o.getBoolean("whitelist_enabled")      : false));
+                        o.has("usage_list_settings") ? o.getString("usage_list_settings")    : "",
+                        o.has("usage_list") ? o.getJSONArray("usage_list")    : new JSONArray()));
             });
         } catch(IOException | JSONException e) {
             LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
@@ -85,7 +83,7 @@ public class SettingsManager implements GuildSettingsManager<Settings>
     
     private Settings createDefaultSettings()
     {
-        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO, new JSONArray(), new JSONArray(), false, false);
+        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO, "", new JSONArray());
     }
     
     protected void writeSettings()
@@ -110,10 +108,8 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                 o.put("prefix", s.getPrefix());
             if(s.getSkipRatio() != SKIP_RATIO)
                 o.put("skip_ratio", s.getSkipRatio());
-            o.put("blacklisted_users", s.getBlacklistedUsers());
-            o.put("whitelisted_users", s.getWhitelistedUsers());
-            o.put("blacklist_enabled", s.getBlacklistSettings());
-            o.put("whitelist_enabled", s.getWhiteListSettings());
+            o.put("usage_list_settings", s.getUsageListSettings());
+            o.put("usage_list", s.getUsageList());
             obj.put(Long.toString(key), o);
         });
         try {

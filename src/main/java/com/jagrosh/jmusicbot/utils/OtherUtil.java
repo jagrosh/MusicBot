@@ -211,16 +211,41 @@ public class OtherUtil
         }
     }
 
+    public static String checkUserOrRole(String ID)
+    {
+        String UserIDPattern = "<@([0-9]*)>";
+        Pattern userPattern = Pattern.compile(UserIDPattern);
+        Matcher userMatcher = userPattern.matcher(ID);
+
+        String RoleIDPattern = "<@&([0-9]*)>";
+        Pattern rolePattern = Pattern.compile(RoleIDPattern);
+        Matcher roleMatcher = rolePattern.matcher(ID);
+
+        if (userMatcher.find())
+        {
+            return "user";
+        }
+        else if (roleMatcher.find())
+        {
+            return "role";
+        }
+        else
+        {
+            return "None";
+        }
+    }
+
     public static String parseUserID(String ID) {
         String IDPattern = "<@([0-9]*)>";
         Pattern r = Pattern.compile(IDPattern);
         Matcher m = r.matcher(ID);
-
-        if (m.find()) {
+        if (m.find())
+        {
             return m.group(1);
-        } else {
+        }
+        else
+        {
             return null;
         }
-
     }
 }

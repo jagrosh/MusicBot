@@ -20,11 +20,11 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
-import net.dv8tion.jda.api.entities.GuildVoiceState;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import org.json.JSONArray;
+
+import static com.jagrosh.jmusicbot.utils.OtherUtil.checkUserOrRole;
 
 /**
  *
@@ -46,21 +46,51 @@ public abstract class MusicCommand extends Command
     public static boolean checkListedUsers(CommandEvent event)
     {
         Settings s = event.getClient().getSettingsFor(event.getGuild());
-        boolean blacklistEnabled = s.getBlacklistSettings();
-        boolean whitelistEnabled = s.getWhiteListSettings();
-        String cmdAuthor = event.getAuthor().getId();
-        JSONArray blacklist = s.getBlacklistedUsers();
-        JSONArray whitelist = s.getWhitelistedUsers();
+        User cmdAuthor = event.getAuthor();
+        String usageListSettings = s.getUsageListSettings();
+        JSONArray usageList = s.getUsageList();
 
-        if (blacklistEnabled && !whitelistEnabled)
-        {
-            return checkListedUser(cmdAuthor, "blacklist", blacklist);
+        //check basic permission overrides
+        //if(cmdAuthor.getId().equals(event.getClient().getOwnerId()))
+            //return true;
+        if(event.getGuild()==null)
+            return true;
+        //if(event.getMember().hasPermission(Permission.MANAGE_SERVER))
+            //return true;
+        if(usageListSettings.equals(""))
+            return true;
+
+        //check usage list for users ID
+        for (int i=0;i<usageList.length();i++){
+            if(usageList.get(i).equals(cmdAuthor.getId())) {
+                if (usageListSettings.equalsIgnoreCase("blacklist"))
+                {
+                    return false;
+                }
+                if (usageListSettings.equalsIgnoreCase("whitelist"))
+                {
+                    return true;
+                }
+            }
         }
-        else if (whitelistEnabled && !blacklistEnabled)
+
+        //check usage list for users role
+        for (int i=0;i<usageList.length();i++)
         {
-            return checkListedUser(cmdAuthor, "whitelist", whitelist);
+            Role listedRole = event.getGuild().getRoleById((String) usageList.get(i));
+            if(listedRole != null && (event.getMember().getRoles().contains(listedRole) || listedRole.getIdLong()==event.getGuild().getIdLong()))
+            {
+                if (usageListSettings.equalsIgnoreCase("blacklist"))
+                {
+                    return false;
+                }
+                if (usageListSettings.equalsIgnoreCase("whitelist"))
+                {
+                    return true;
+                }
+            }
         }
-        return true;
+        return false;
     }
     
     @Override
@@ -117,25 +147,6 @@ public abstract class MusicCommand extends Command
         }
         
         doCommand(event);
-    }
-
-    public static boolean checkListedUser(String user, String listType, JSONArray permissionList) {
-        boolean isListed = false;
-        for (int i=0;i<permissionList.length();i++){
-            if(permissionList.get(i).equals(user)) {
-                isListed = true;
-                break;
-            }
-        }
-        if (listType.equalsIgnoreCase("blacklist"))
-        {
-            return !isListed;
-        }
-        if (listType.equalsIgnoreCase("whitelist"))
-        {
-            return isListed;
-        }
-        return true;
     }
     
     public abstract void doCommand(CommandEvent event);

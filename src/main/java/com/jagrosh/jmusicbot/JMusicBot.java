@@ -127,14 +127,13 @@ public class JMusicBot
                         new StopCmd(bot),
                         new VolumeCmd(bot),
 
-                        new BlacklistUserCmd(bot),
                         new PrefixCmd(bot),
                         new SetdjCmd(bot),
                         new SkipratioCmd(bot),
-                        new SetPermissionListSettingsCmd(bot),
+                        new SetUsageListSettingsCmd(bot),
+                        new SetUsageListUserCmd(bot),
                         new SettcCmd(bot),
                         new SetvcCmd(bot),
-                        new WhitelistUserCmd(bot),
 
                         new AutoplaylistCmd(bot),
                         new DebugCmd(bot),

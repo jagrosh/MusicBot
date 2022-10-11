@@ -10,9 +10,9 @@ import com.jagrosh.jmusicbot.settings.Settings;
  * @author Omar Sanchez <omarsanchezdev@gmail.com>
  */
 
-public class SetPermissionListSettingsCmd extends AdminCommand
+public class SetUsageListSettingsCmd extends AdminCommand
 {
-    public SetPermissionListSettingsCmd(Bot bot)
+    public SetUsageListSettingsCmd(Bot bot)
     {
         this.name = "setlist";
         this.help = "enable, disable, black/white list for music commands";
@@ -49,16 +49,8 @@ public class SetPermissionListSettingsCmd extends AdminCommand
             }
             else
             {
-                if(listType.equalsIgnoreCase("blacklist"))
-                {
-                    String resp = s.setPermissionListSettings(listType, action);
-                    event.reply(resp);
-                }
-                else if (listType.equalsIgnoreCase("whitelist"))
-                {
-                    String resp = s.setPermissionListSettings(listType, action);
-                    event.reply(resp);
-                }
+                s.setUsageListSettings(listType, action);
+                event.reply(String.format("%s 📃 set to %s", listType, action.toUpperCase()));
             }
         }
     }
