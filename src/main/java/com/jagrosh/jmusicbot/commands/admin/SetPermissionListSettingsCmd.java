@@ -1,8 +1,8 @@
-package com.jagrosh.jmusicbot.commands.owner;
+package com.jagrosh.jmusicbot.commands.admin;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.commands.OwnerCommand;
+import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 
 /**
@@ -10,15 +10,15 @@ import com.jagrosh.jmusicbot.settings.Settings;
  * @author Omar Sanchez <omarsanchezdev@gmail.com>
  */
 
-public class SetPermissionListSettingsCmd extends OwnerCommand
+public class SetPermissionListSettingsCmd extends AdminCommand
 {
     public SetPermissionListSettingsCmd(Bot bot)
     {
         this.name = "setlist";
         this.help = "enable, disable, black/white list for music commands";
-        this.arguments = "<listType>|<action>";
+        this.arguments = "<listType> <action>";
         this.aliases = bot.getConfig().getAliases(this.name);
-        this.guildOnly = false;
+        this.guildOnly = true;
     }
 
     @Override

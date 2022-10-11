@@ -126,13 +126,16 @@ public class JMusicBot
                         new SkiptoCmd(bot),
                         new StopCmd(bot),
                         new VolumeCmd(bot),
-                        
+
+                        new BlacklistUserCmd(bot),
                         new PrefixCmd(bot),
                         new SetdjCmd(bot),
                         new SkipratioCmd(bot),
+                        new SetPermissionListSettingsCmd(bot),
                         new SettcCmd(bot),
                         new SetvcCmd(bot),
-                        
+                        new WhitelistUserCmd(bot),
+
                         new AutoplaylistCmd(bot),
                         new DebugCmd(bot),
                         new PlaylistCmd(bot),
@@ -140,10 +143,7 @@ public class JMusicBot
                         new SetgameCmd(bot),
                         new SetnameCmd(bot),
                         new SetstatusCmd(bot),
-                        new ShutdownCmd(bot),
-                        new BlacklistUserCmd(bot),
-                        new WhitelistUserCmd(bot),
-                        new SetPermissionListSettingsCmd(bot)
+                        new ShutdownCmd(bot)
                 );
         if(config.useEval())
             cb.addCommand(new EvalCmd(bot));

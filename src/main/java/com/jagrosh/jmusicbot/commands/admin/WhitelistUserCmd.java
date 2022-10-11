@@ -1,8 +1,8 @@
-package com.jagrosh.jmusicbot.commands.owner;
+package com.jagrosh.jmusicbot.commands.admin;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.commands.OwnerCommand;
+import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 import static com.jagrosh.jmusicbot.utils.OtherUtil.parseUserID;
 
@@ -11,15 +11,15 @@ import static com.jagrosh.jmusicbot.utils.OtherUtil.parseUserID;
  * @author Omar Sanchez <omarsanchezdev@gmail.com>
  */
 
-public class BlacklistUserCmd extends OwnerCommand
+public class WhitelistUserCmd extends AdminCommand
 {
-    public BlacklistUserCmd(Bot bot)
+    public WhitelistUserCmd(Bot bot)
     {
-        this.name = "blacklist";
-        this.help = "blocks or unblocks a user from using commands";
+        this.name = "whitelist";
+        this.help = "allows or disallows a user from using commands";
         this.arguments = "<action> <user>";
         this.aliases = bot.getConfig().getAliases(this.name);
-        this.guildOnly = false;
+        this.guildOnly = true;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class BlacklistUserCmd extends OwnerCommand
     {
         if(event.getArgs().isEmpty())
         {
-            event.replyError("Please include a user");
+            event.reply(event.getClient().getError()+" Please include a user");
         }
         else if(event.getArgs().split("\\s+").length < 2)
         {
@@ -51,8 +51,8 @@ public class BlacklistUserCmd extends OwnerCommand
             }
             else
             {
-                s.setBlacklistedUsers(action, user_id);
-                String response = String.format("%s %s blacklist 📃", user, action.equalsIgnoreCase("add") ? "added to" : "removed from");
+                s.setWhitelistUsers(action, user_id);
+                String response = String.format("%s %s whitelist 📃", user, action.equalsIgnoreCase("add") ? "added to" : "removed from");
                 event.reply(response);
             }
         }
