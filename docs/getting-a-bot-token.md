@@ -25,9 +25,9 @@ This page will describe, in detail, how to obtain a token for your music bot.
 7. Uncheck **Public Bot** and Check **Message Content Intent** and **Server Members Intents**
 ![Message Content Intent](/assets/images/oauth-and-intents.png)
 
-!!! warning
-    If **Public Bot** is left checked, anyone will be able to invite your bot into servers. JMusicBot is not
-    intended to be used as a public music bot, and **will break on verified bots!**
+    !!! warning
+        If **Public Bot** is left checked, anyone will be able to invite your bot into servers. JMusicBot is not
+        intended to be used as a public music bot, and **will break on verified bots!**
 
 8. Save your settings  
 ![Save](/assets/images/save-changes.png)
