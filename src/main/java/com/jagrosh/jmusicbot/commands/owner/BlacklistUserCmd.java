@@ -17,7 +17,7 @@ public class BlacklistUserCmd extends OwnerCommand
     {
         this.name = "blacklist";
         this.help = "blocks or unblocks a user from using commands";
-        this.arguments = "<action>|<user>";
+        this.arguments = "<action> <user>";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
     }
