@@ -156,11 +156,11 @@ public class Settings implements GuildSettingsProvider
         }
         else if(type.equalsIgnoreCase("blacklist"))
         {
-            this.usageListSettings = "blacklist";
+            this.usageListSettings = "Blacklist";
         }
         else if (type.equalsIgnoreCase("whitelist"))
         {
-            this.usageListSettings = "whitelist";
+            this.usageListSettings = "Whitelist";
         }
         this.manager.writeSettings();
     }
