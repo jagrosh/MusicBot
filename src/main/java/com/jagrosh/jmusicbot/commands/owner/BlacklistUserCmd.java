@@ -27,7 +27,7 @@ public class BlacklistUserCmd extends OwnerCommand
     {
         if(event.getArgs().isEmpty())
         {
-            event.reply(event.getClient().getError()+" Please include a user");
+            event.replyError("Please include a user");
         }
         else if(event.getArgs().split("\\s+").length < 2)
         {
