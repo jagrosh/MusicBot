@@ -25,6 +25,7 @@ sudo nano /etc/systemd/system/JMusicBot.service
 ```ini
 [Unit]
 Description=JMusicBot
+Wants=network.target
 After=network.target
 
 [Service]
@@ -32,7 +33,7 @@ WorkingDirectory=/home/<username>
 User=<username>
 Group=<username>
 Type=simple
-ExecStart=/usr/bin/java -Dnogui=true -jar /home/<username>/JMusicBot.jar
+ExecStart=/usr/bin/env java -Dnogui=true -jar JMusicBot.jar
 Restart=always
 RestartSec=10
 
