@@ -25,7 +25,7 @@ sudo nano /etc/systemd/system/JMusicBot.service
 ```ini
 [Unit]
 Description=JMusicBot
-Wants=network.target
+Requires=network.target
 After=network.target
 
 [Service]
