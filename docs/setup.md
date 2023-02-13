@@ -29,9 +29,11 @@ prefix = "!"
 * Run the jar file (choose one of these options):
   * Double-click the jar file (on desktop environments), OR
   * Run `java -Dnogui=true -jar JMusicBot-X.Y.Z.jar` from the command line (replace X, Y, and Z with the release numbers), OR
-  * Run `nohup java -Dnogui=true -jar JMusicBot-X.Y.Z.jar &` to run in the background (Linux only)
 * Provide the requested information, if prompted.
 * Wait for the "Finished Loading" message.
+
+!!! tip
+    If you want to run the bot in the background, see [Running as a Service](running-as-a-service.md)
 
 ## 5️⃣ Add your bot to your server
 * When the bot starts, if it hasn't been added to any servers yet, it will provide you with a link in the console.
