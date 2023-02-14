@@ -6,19 +6,19 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Instructions for finding your Discord user ID">
+        <meta name="description" content="How to run JMusicBot as a service, so that it can run in the background without needing to be manually started.">
       
       
       
       
-        <link rel="canonical" href="https://jmusicbot.com/finding-your-user-id/">
+        <link rel="canonical" href="https://jmusicbot.com/running-as-a-service/">
       
       <link rel="icon" href="../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-7.3.6">
     
     
       
-        <title>Finding Your User ID - JMusicBot Wiki</title>
+        <title>Running as a service - JMusicBot Wiki</title>
       
     
     
@@ -66,9 +66,9 @@
 
   <!-- Open graph meta tags -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="JMusicBot Wiki - Finding Your User ID" />
-  <meta property="og:description" content="Instructions for finding your Discord user ID" />
-  <meta property="og:url" content="https://jmusicbot.com/finding-your-user-id/" />
+  <meta property="og:title" content="JMusicBot Wiki - Running as a service" />
+  <meta property="og:description" content="How to run JMusicBot as a service, so that it can run in the background without needing to be manually started." />
+  <meta property="og:url" content="https://jmusicbot.com/running-as-a-service/" />
   <meta property="og:image" content="https://jmusicbot.com/assets/images/logo.png" />
   <meta property="og:image:type" content="image/png" />
 
@@ -76,8 +76,8 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@jagrosh" />
   <meta name="twitter:creator" content="@jagrosh" />
-  <meta name="twitter:title" content="JMusicBot Wiki - Finding Your User ID" />
-  <meta name="twitter:description" content="Instructions for finding your Discord user ID" />
+  <meta name="twitter:title" content="JMusicBot Wiki - Running as a service" />
+  <meta name="twitter:description" content="How to run JMusicBot as a service, so that it can run in the background without needing to be manually started." />
   <meta name="twitter:image" content="https://jmusicbot.com/assets/images/logo.png" />
 
   </head>
@@ -103,7 +103,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#method-1" class="md-skip">
+        <a href="#running-as-a-service" class="md-skip">
           Skip to content
         </a>
       
@@ -135,7 +135,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Finding Your User ID
+              Running as a service
             
           </span>
         </div>
@@ -375,56 +375,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Finding Your User ID
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../finding-your-user-id/" class="md-nav__link">
         Finding Your User ID
       </a>
-      
-        
-
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#method-1" class="md-nav__link">
-    Method 1
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#method-2" class="md-nav__link">
-    Method 2
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -490,11 +445,76 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../running-as-a-service/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Running as a service
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Running as a service
       </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#running-as-a-service" class="md-nav__link">
+    Running as a service
+  </a>
+  
+    <nav class="md-nav" aria-label="Running as a service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linux-using-systemd" class="md-nav__link">
+    Linux using systemd
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linux-using-screen" class="md-nav__link">
+    Linux using screen
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows" class="md-nav__link">
+    Windows
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -666,16 +686,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#method-1" class="md-nav__link">
-    Method 1
+  <a href="#running-as-a-service" class="md-nav__link">
+    Running as a service
+  </a>
+  
+    <nav class="md-nav" aria-label="Running as a service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linux-using-systemd" class="md-nav__link">
+    Linux using systemd
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#method-2" class="md-nav__link">
-    Method 2
+        
+          <li class="md-nav__item">
+  <a href="#linux-using-screen" class="md-nav__link">
+    Linux using screen
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows" class="md-nav__link">
+    Windows
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -691,27 +731,117 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/jagrosh/MusicBot/edit/gh-pages/docs/finding-your-user-id.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/jagrosh/MusicBot/edit/gh-pages/docs/running-as-a-service.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                  <h1>Finding Your User ID</h1>
+                  <h1>Running as a service</h1>
                 
-                <p>This page describes how to find your unique User ID. Any of these methods work, and you only need to do one of them.</p>
-<h2 id="method-1">Method 1<a class="headerlink" href="#method-1" title="Permanent link">#</a></h2>
+                <h2 id="running-as-a-service">Running as a service<a class="headerlink" href="#running-as-a-service" title="Permanent link">#</a></h2>
+<p>Running JMusicBot as a service allows it to run in the background without needing to be manually started. This is useful for running the bot on a server, or if you want to be able to close your terminal without stopping the bot.</p>
+<h3 id="linux-using-systemd">Linux using systemd<a class="headerlink" href="#linux-using-systemd" title="Permanent link">#</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method assumes that you've created a user for the bot to run as. If you haven't, see <a href="https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart">this guide</a> for instructions.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Copy the jar file to the home directory of the user that the bot is running as, or change the <code>WorkingDirectory</code> and <code>ExecStart</code> lines in the service file to point to the correct location.</p>
+</div>
 <ol>
-<li>Enter text as if you are going to mention (ping) yourself. (Make sure that you are mentioning yourself and no one else)<br><img alt="Mention" src="/assets/images/mention.png" /></li>
-<li>Insert a backslash (<code>\</code>) before the mention<br><img alt="Backslash" src="/assets/images/backslash.png" /></li>
-<li>Send the message. What will appear is your ID surrounded by <code>&lt;@</code> or <code>&lt;@!</code> on the left and <code>&gt;</code> on the right (the message should be highlighted)<br><img alt="ID" src="/assets/images/message-id.png" /></li>
-<li>Copy <em>only</em> the numbers; the other symbols are not part of your User ID<br><img alt="Copy" src="/assets/images/id-copy.png" /></li>
+<li>Open a terminal and run the following command to create a new service file:</li>
 </ol>
-<h2 id="method-2">Method 2<a class="headerlink" href="#method-2" title="Permanent link">#</a></h2>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/systemd/system/JMusicBot.service
+</code></pre></div>
 <ol>
-<li>Click the User Settings button<br><img alt="User Settings" src="/assets/images/user-settings.png" /></li>
-<li>In the <em>Appearance</em> tab, check the <em>Developer Mode</em> option<br><img alt="Developer Mode" src="/assets/images/developer-mode.png" /></li>
-<li>Right-click your username in a member list, and select <em>Copy ID</em><br><img alt="Copy ID" src="/assets/images/devmode-copy-id.png" /></li>
+<li>Copy the following text into the file and save it:</li>
 </ol>
+<div class="highlight"><pre><span></span><code><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">JMusicBot</span>
+<span class="na">Requires</span><span class="o">=</span><span class="s">network.target</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
+
+<span class="k">[Service]</span>
+<span class="na">WorkingDirectory</span><span class="o">=</span><span class="s">/home/&lt;username&gt;</span>
+<span class="na">User</span><span class="o">=</span><span class="s">&lt;username&gt;</span>
+<span class="na">Group</span><span class="o">=</span><span class="s">&lt;username&gt;</span>
+<span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/env java -Dnogui=true -jar JMusicBot.jar</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
+<span class="na">RestartSec</span><span class="o">=</span><span class="s">10</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <code>&lt;username&gt;</code> with the name of the user that the bot is running as.</p>
+</div>
+<ol>
+<li>Run the following command to start the bot:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>JMusicBot
+</code></pre></div>
+<ol>
+<li>Run the following command to stop the bot:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>JMusicBot
+</code></pre></div>
+<ol>
+<li>Run the following command to restart the bot:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>JMusicBot
+</code></pre></div>
+<ol>
+<li>Run the following command to enable the bot to start on boot:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>JMusicBot
+</code></pre></div>
+<h3 id="linux-using-screen">Linux using screen<a class="headerlink" href="#linux-using-screen" title="Permanent link">#</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method is not recommended for production use, see <a href="#linux-using-systemd">systemd</a> instead.</p>
+</div>
+<ol>
+<li>Install the <a href="https://www.howtoforge.com/linux_screen">screen</a> utility, if it isn't already installed.</li>
+<li>Run the following command to start the bot:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>screen<span class="w"> </span>-dmS<span class="w"> </span>JMusicBot<span class="w"> </span>java<span class="w"> </span>-jar<span class="w"> </span>JMusicBot.jar
+</code></pre></div>
+<ol>
+<li>Run the following command to stop the bot:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>screen<span class="w"> </span>-S<span class="w"> </span>JMusicBot<span class="w"> </span>-X<span class="w"> </span>quit
+</code></pre></div>
+<ol>
+<li>Run the following command to restart the bot:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>screen<span class="w"> </span>-S<span class="w"> </span>JMusicBot<span class="w"> </span>-X<span class="w"> </span>quit
+screen<span class="w"> </span>-dmS<span class="w"> </span>JMusicBot<span class="w"> </span>java<span class="w"> </span>-jar<span class="w"> </span>JMusicBot.jar
+</code></pre></div>
+<h3 id="windows">Windows<a class="headerlink" href="#windows" title="Permanent link">#</a></h3>
+<ol>
+<li>Download the <a href="https://nssm.cc/download">NSSM</a> executable and place it in the same directory as the JMusicBot jar file.</li>
+<li>Open a command prompt in the same directory as the JMusicBot jar file and run the following command:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nssm install JMusicBot java -jar JMusicBot.jar
+</code></pre></div>
+<ol>
+<li>Run the following command to start the service:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nssm start JMusicBot
+</code></pre></div>
+<ol>
+<li>Run the following command to stop the service:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nssm stop JMusicBot
+</code></pre></div>
+<ol>
+<li>Run the following command to remove the service:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>nssm remove JMusicBot
+</code></pre></div>
                 
                   
                 
@@ -738,7 +868,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../getting-a-bot-token/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Getting a Bot Token" rel="prev">
+        <a href="../hosting/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Hosting" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -747,20 +877,20 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Getting a Bot Token
+              Hosting
             </div>
           </div>
         </a>
       
       
         
-        <a href="../adding-your-bot/" class="md-footer__link md-footer__link--next" aria-label="Next: Adding Your Bot To Your Server" rel="next">
+        <a href="../commands/" class="md-footer__link md-footer__link--next" aria-label="Next: Commands" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Adding Your Bot To Your Server
+              Commands
             </div>
           </div>
           <div class="md-footer__button md-icon">

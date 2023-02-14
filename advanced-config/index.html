@@ -14,7 +14,7 @@
         <link rel="canonical" href="https://jmusicbot.com/advanced-config/">
       
       <link rel="icon" href="../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-7.3.6">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-7.3.6">
     
     
       
@@ -313,6 +313,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_2">
@@ -505,6 +507,20 @@
     <li class="md-nav__item">
       <a href="../hosting/" class="md-nav__link">
         Hosting
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../running-as-a-service/" class="md-nav__link">
+        Running as a service
       </a>
     </li>
   
@@ -738,18 +754,18 @@
                 
                 <h2 id="specify-a-different-config-file">Specify a different config file<a class="headerlink" href="#specify-a-different-config-file" title="Permanent link">#</a></h2>
 <p>Setting a different file to use as the config file is possible via the <code>-Dconfig=/path/to/config.file</code> command-line option. For example:
-<div class="highlight"><pre><span></span><code>java -Dconfig<span class="o">=</span>alternate_config.txt -jar JMusicBot.jar
+<div class="highlight"><pre><span></span><code>java<span class="w"> </span>-Dconfig<span class="o">=</span>alternate_config.txt<span class="w"> </span>-jar<span class="w"> </span>JMusicBot.jar
 </code></pre></div>
 will run the bot, loading from <code>alternate_config.txt</code> instead of <code>config.txt</code>.</p>
 <h2 id="specify-config-options-from-the-command-line">Specify config options from the command line<a class="headerlink" href="#specify-config-options-from-the-command-line" title="Permanent link">#</a></h2>
 <p>Similar to the <code>-Dconfig</code> option, any setting in the config file can also be set from the command line. For example, to set the prefix from the command line (instead of from the config), you would use <code>-Dprefix="!!"</code> (values need to be quoted if they contain spaces or some special characters). For example:
-<div class="highlight"><pre><span></span><code>java -Dprefix<span class="o">=</span><span class="s2">&quot;!&quot;</span> -jar JMusicBot.jar
+<div class="highlight"><pre><span></span><code>java<span class="w"> </span>-Dprefix<span class="o">=</span><span class="s2">&quot;!&quot;</span><span class="w"> </span>-jar<span class="w"> </span>JMusicBot.jar
 </code></pre></div></p>
 <h2 id="specify-config-options-from-environment-variables">Specify config options from environment variables<a class="headerlink" href="#specify-config-options-from-environment-variables" title="Permanent link">#</a></h2>
 <p>To use environment variables for the config, there are two options. For the following examples, assume that a prefix has been set to the environment variable <code>CUSTOM_PREFIX</code>.</p>
 <h3 id="from-the-command-line">From the command line<a class="headerlink" href="#from-the-command-line" title="Permanent link">#</a></h3>
 <p>To use environment variables from the command line, use the same system from above, but substitute in a resolved variable name. For example:
-<div class="highlight"><pre><span></span><code>java -Dprefix<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$CUSTOM_PREFIX</span><span class="s2">&quot;</span> -jar JMusicBot.jar
+<div class="highlight"><pre><span></span><code>java<span class="w"> </span>-Dprefix<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$CUSTOM_PREFIX</span><span class="s2">&quot;</span><span class="w"> </span>-jar<span class="w"> </span>JMusicBot.jar
 </code></pre></div></p>
 <h3 id="in-the-config-file">In the config file<a class="headerlink" href="#in-the-config-file" title="Permanent link">#</a></h3>
 <p>To use an environment in the config file, specify it as follows

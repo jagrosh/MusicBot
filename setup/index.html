@@ -14,7 +14,7 @@
         <link rel="canonical" href="https://jmusicbot.com/setup/">
       
       <link rel="icon" href="../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-7.3.6">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-7.3.6">
     
     
       
@@ -313,6 +313,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_2">
@@ -499,6 +501,20 @@
     <li class="md-nav__item">
       <a href="../hosting/" class="md-nav__link">
         Hosting
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../running-as-a-service/" class="md-nav__link">
+        Running as a service
       </a>
     </li>
   
@@ -758,11 +774,14 @@ prefix = &quot;!&quot;
 <ul>
 <li>Run the jar file (choose one of these options):</li>
 <li>Double-click the jar file (on desktop environments), OR</li>
-<li>Run <code>java -Dnogui=true -jar JMusicBot-X.Y.Z.jar</code> from the command line (replace X, Y, and Z with the release numbers), OR</li>
-<li>Run <code>nohup java -Dnogui=true -jar JMusicBot-X.Y.Z.jar &amp;</code> to run in the background (Linux only)</li>
+<li>Run <code>java -Dnogui=true -jar JMusicBot-X.Y.Z.jar</code> from the command line (replace X, Y, and Z with the release numbers)</li>
 <li>Provide the requested information, if prompted.</li>
 <li>Wait for the "Finished Loading" message.</li>
 </ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you want to run the bot in the background, see <a href="../running-as-a-service/">Running as a Service</a></p>
+</div>
 <h2 id="5-add-your-bot-to-your-server">5️⃣ Add your bot to your server<a class="headerlink" href="#5-add-your-bot-to-your-server" title="Permanent link">#</a></h2>
 <ul>
 <li>When the bot starts, if it hasn't been added to any servers yet, it will provide you with a link in the console.</li>
