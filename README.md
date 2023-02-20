@@ -58,6 +58,8 @@ _With cmorley191/MusicBot, you'll find that:_
           { "emoji": "❓", "weight": 7 }
       ]}}}
       ```
+- Quality of life fixes:
+  - The counter showing progress on loading additional tracks in a playlist now accurately shows the speed at which they are loaded.
 
 ## Compiling from source
 The main JMusicBot repo makes this sound way harder than it actually is, and doesn't provide instructions. Here they are:

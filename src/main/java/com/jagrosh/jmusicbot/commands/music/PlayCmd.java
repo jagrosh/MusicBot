@@ -136,25 +136,76 @@ public class PlayCmd extends MusicCommand
         }
     }
     
+    /**
+     * A proxy for Message.editMessage requests to help with discord rate limits.
+     * 
+     * Only queues one editMessage request at a time. Drops redundant
+     * requests if mulitple are made while a request is active, which
+     * can happen during editMessage rate limiting.
+     */
+    private class FrequentMessageEditAgent { 
+        private final Message m;
+        private boolean editInProgress;
+        private String queuedNewText;
+
+        private FrequentMessageEditAgent(Message m) {
+            this.m = m;
+            this.editInProgress = false;
+            this.queuedNewText = null;
+        }
+
+        private synchronized void handleEditComplete() {
+            String queuedNewText = this.queuedNewText;
+            if (queuedNewText == null) {
+                editInProgress = false;
+            } else {
+                this.m.editMessage(queuedNewText).queue((_m) -> {
+                    this.handleEditComplete();
+                });
+                this.queuedNewText = null;
+            }
+        }
+
+        private synchronized void queueEditMessage(String newText) {
+            if (newText == null) return;
+
+            if (!editInProgress) {
+                this.m.editMessage(newText).queue((_m) -> {
+                    this.handleEditComplete();
+                });
+                this.editInProgress = true;
+            } else {
+                this.queuedNewText = newText;
+            }
+        }
+    }
+
     private class ResultHandler implements AudioLoadResultHandler
     {
         protected final Message m;
         protected final CommandEvent event;
         protected final boolean ytsearch;
+        protected final FrequentMessageEditAgent frequentEditAgent;
         
         private ResultHandler(Message m, CommandEvent event, boolean ytsearch)
+        {
+            this(m, event, ytsearch, new FrequentMessageEditAgent(m));
+        }
+
+        private ResultHandler(Message m, CommandEvent event, boolean ytsearch, FrequentMessageEditAgent frequentEditAgent)
         {
             this.m = m;
             this.event = event;
             this.ytsearch = ytsearch;
+            this.frequentEditAgent = frequentEditAgent;
         }
         
         protected void loadSingle(AudioTrack track, AudioPlaylist playlist)
         {
             if(bot.getConfig().isTooLong(track))
             {
-                m.editMessage(FormatUtil.filter(bot.getWarning(event)+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
-                        +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(bot.getConfig().getMaxSeconds()*1000)+"`")).queue();
+                frequentEditAgent.queueEditMessage(FormatUtil.filter(bot.getWarning(event)+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
+                        +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(bot.getConfig().getMaxSeconds()*1000)+"`"));
                 return;
             }
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
@@ -162,7 +213,7 @@ public class PlayCmd extends MusicCommand
             String addMsg = FormatUtil.filter(bot.getSuccess(event)+" Added **"+track.getInfo().title
                     +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0?"to begin playing":" to the queue at position "+pos));
             if(playlist==null || !event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ADD_REACTION))
-                m.editMessage(addMsg).queue();
+                frequentEditAgent.queueEditMessage(addMsg);
             else
             {
                 new ButtonMenu.Builder()
@@ -173,9 +224,9 @@ public class PlayCmd extends MusicCommand
                         .setAction(re ->
                         {
                             if(re.getName().equals(LOAD))
-                                m.editMessage(addMsg+"\n"+bot.getSuccess(event)+" Loaded **"+loadPlaylist(playlist, track)+"** additional tracks!").queue();
+                                frequentEditAgent.queueEditMessage(addMsg+"\n"+bot.getSuccess(event)+" Loaded **"+loadPlaylist(playlist, track)+"** additional tracks!");
                             else
-                                m.editMessage(addMsg).queue();
+                                frequentEditAgent.queueEditMessage(addMsg);
                         }).setFinalAction(m ->
                         {
                             try{ m.clearReactions().queue(); }catch(PermissionException ignore) {}
@@ -221,16 +272,16 @@ public class PlayCmd extends MusicCommand
                 int count = loadPlaylist(playlist, null);
                 if(count==0)
                 {
-                    m.editMessage(FormatUtil.filter(bot.getWarning(event)+" All entries in this playlist "+(playlist.getName()==null ? "" : "(**"+playlist.getName()
-                            +"**) ")+"were longer than the allowed maximum (`"+bot.getConfig().getMaxTime()+"`)")).queue();
+                    frequentEditAgent.queueEditMessage(FormatUtil.filter(bot.getWarning(event)+" All entries in this playlist "+(playlist.getName()==null ? "" : "(**"+playlist.getName()
+                            +"**) ")+"were longer than the allowed maximum (`"+bot.getConfig().getMaxTime()+"`)"));
                 }
                 else
                 {
-                    m.editMessage(FormatUtil.filter(bot.getSuccess(event)+" Found "
+                    frequentEditAgent.queueEditMessage(FormatUtil.filter(bot.getSuccess(event)+" Found "
                             +(playlist.getName()==null?"a playlist":"playlist **"+playlist.getName()+"**")+" with `"
                             + playlist.getTracks().size()+"` entries; added to the queue!"
                             + (count<playlist.getTracks().size() ? "\n"+bot.getWarning(event)+" Tracks longer than the allowed maximum (`"
-                            + bot.getConfig().getMaxTime()+"`) have been omitted." : ""))).queue();
+                            + bot.getConfig().getMaxTime()+"`) have been omitted." : "")));
                 }
             }
         }
@@ -239,7 +290,7 @@ public class PlayCmd extends MusicCommand
         public void noMatches()
         {
             if(ytsearch)
-                m.editMessage(FormatUtil.filter(bot.getWarning(event)+" No results found for `"+event.getArgs()+"`.")).queue();
+                frequentEditAgent.queueEditMessage(FormatUtil.filter(bot.getWarning(event)+" No results found for `"+event.getArgs()+"`."));
             else
                 bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+event.getArgs(), new ResultHandler(m,event,true));
         }
@@ -248,9 +299,9 @@ public class PlayCmd extends MusicCommand
         public void loadFailed(FriendlyException throwable)
         {
             if(throwable.severity==Severity.COMMON)
-                m.editMessage(bot.getError(event)+" Error loading: "+throwable.getMessage()).queue();
+                frequentEditAgent.queueEditMessage(bot.getError(event)+" Error loading: "+throwable.getMessage());
             else
-                m.editMessage(bot.getError(event)+" Error loading track.").queue();
+                frequentEditAgent.queueEditMessage(bot.getError(event)+" Error loading track.");
         }
     }
     
@@ -264,35 +315,37 @@ public class PlayCmd extends MusicCommand
         private final int iTrack;
         private final String prevMessageText;
         private final int prevErrors;
+        private final FrequentMessageEditAgent frequentEditAgent;
 
         private SpotifyResultHandler(Message m, CommandEvent event, SpotifyTrack track){
             this(m, event, new SpotifyPlaylist(track.name, new SpotifyTrack[] { track }));
         }
 
         private SpotifyResultHandler(Message m, CommandEvent event, SpotifyPlaylist playlist) {
-            this(m, event, playlist, 0, "", 0);
+            this(m, event, playlist, 0, "", 0, new FrequentMessageEditAgent(m));
         }
 
-        private SpotifyResultHandler(Message m, CommandEvent event, SpotifyPlaylist playlist, int iTrack, String prevMessageText, int prevErrors)
+        private SpotifyResultHandler(Message m, CommandEvent event, SpotifyPlaylist playlist, int iTrack, String prevMessageText, int prevErrors, FrequentMessageEditAgent frequentEditAgent)
         {
             super(m, event, true);
             this.playlist = playlist;
             this.iTrack = iTrack;
             this.prevMessageText = prevMessageText;
             this.prevErrors = prevErrors;
+            this.frequentEditAgent = frequentEditAgent;
         }
 
         protected void loadSingle(AudioTrack track, AudioPlaylist UNUSED)
         {
             if (iTrack == 0) {
                 if (track == null) {
-                    m.editMessage(FormatUtil.filter(bot.getError(event)+" Couldn't find youtube link for "+(playlist.tracks.length == 1 ? "track" : "first track")+": "+playlist.tracks[0].name)).queue();
+                    frequentEditAgent.queueEditMessage(FormatUtil.filter(bot.getError(event)+" Couldn't find youtube link for "+(playlist.tracks.length == 1 ? "track" : "first track")+": "+playlist.tracks[0].name));
                     return;
                 }
                 if(bot.getConfig().isTooLong(track))
                 {
-                    m.editMessage(FormatUtil.filter(bot.getWarning(event)+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
-                            +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(bot.getConfig().getMaxSeconds()*1000)+"`")).queue();
+                    frequentEditAgent.queueEditMessage(FormatUtil.filter(bot.getWarning(event)+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
+                            +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(bot.getConfig().getMaxSeconds()*1000)+"`"));
                     return;
                 }
                 AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
@@ -300,7 +353,7 @@ public class PlayCmd extends MusicCommand
                 String addMsg = FormatUtil.filter(bot.getSuccess(event)+" Added **"+track.getInfo().title
                         +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0?"to begin playing":" to the queue at position "+pos));
                 if(playlist.tracks.length == 1 || !event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ADD_REACTION))
-                    m.editMessage(addMsg).queue();
+                    frequentEditAgent.queueEditMessage(addMsg);
                 else
                 {
                     new ButtonMenu.Builder()
@@ -312,11 +365,11 @@ public class PlayCmd extends MusicCommand
                             {
                                 if(re.getName().equals(LOAD)) {
                                     String newMessageText = addMsg+"\n"+bot.getSuccess(event)+" Loading **1/"+(playlist.tracks.length - 1)+"** additional tracks...";
-                                    m.editMessage(newMessageText).queue();
-                                    bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(playlist.tracks[1]), new SpotifyResultHandler(m,event,playlist,1,newMessageText,prevErrors));
+                                    frequentEditAgent.queueEditMessage(newMessageText);
+                                    bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(playlist.tracks[1]), new SpotifyResultHandler(m,event,playlist,1,newMessageText,prevErrors, frequentEditAgent));
                                 }
                                 else
-                                    m.editMessage(addMsg).queue();
+                                    frequentEditAgent.queueEditMessage(addMsg);
                             }).setFinalAction(m ->
                             {
                                 try{ m.clearReactions().queue(); }catch(PermissionException ignore) {}
@@ -331,14 +384,14 @@ public class PlayCmd extends MusicCommand
                 {
                     newMessageText = prevMessageText+"\n"+FormatUtil.filter(bot.getError(event)+" Couldn't find youtube link for track " + (iTrack + 1) + " of " + playlist.tracks.length + ": "+playlist.tracks[iTrack].name);
                     newErrors++;
-                    m.editMessage(newMessageText).queue();
+                    frequentEditAgent.queueEditMessage(newMessageText);
                 }
                 else if(bot.getConfig().isTooLong(track))
                 {
                     newMessageText = prevMessageText+"\n"+FormatUtil.filter(bot.getWarning(event)+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
                         +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(bot.getConfig().getMaxSeconds()*1000)+"`");
                     newErrors++;
-                    m.editMessage(newMessageText).queue();
+                    frequentEditAgent.queueEditMessage(newMessageText);
                 } else {
                     AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
                     handler.addTrack(new QueuedTrack(track, event.getAuthor()));
@@ -354,8 +407,8 @@ public class PlayCmd extends MusicCommand
                 if (iTrack < playlist.tracks.length - 1) {
                     // update second line ("loading tracks...")
                     newMessageText = firstLine+"\n"+(bot.getSuccess(event)+" Loading **" + (iTrack + 1) + "/"+(playlist.tracks.length - 1)+"** additional tracks...")+(remainingParts.length == 0 ? "" : "\n"+String.join("\n", remainingParts));
-                    m.editMessage(newMessageText).queue();
-                    bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(playlist.tracks[iTrack + 1]), new SpotifyResultHandler(m,event,playlist,iTrack + 1,newMessageText,newErrors));
+                    frequentEditAgent.queueEditMessage(newMessageText);
+                    bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(playlist.tracks[iTrack + 1]), new SpotifyResultHandler(m,event,playlist,iTrack + 1,newMessageText,newErrors,frequentEditAgent));
                 } else {
                     // all done! finalize message
                     // remove the second line ("loading tracks...") but keep everything else
@@ -363,7 +416,7 @@ public class PlayCmd extends MusicCommand
                         firstLine + (remainingParts.length == 0 ? "" : "\n"+String.join("\n", remainingParts)),
                         bot.getSuccess(event)+" Loaded **"+(playlist.tracks.length - newErrors - 1)+"** additional tracks!"
                     );
-                    m.editMessage(newMessageText).queue();
+                    frequentEditAgent.queueEditMessage(newMessageText);
                 }
             }
         }
@@ -397,7 +450,7 @@ public class PlayCmd extends MusicCommand
             if(ytsearch)
                 loadSingle(null, null);
             else
-                bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(playlist.tracks[iTrack]), new SpotifyResultHandler(m,event,playlist,iTrack + 1,prevMessageText,prevErrors));
+                bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+getYoutubeQueryOfTrack(playlist.tracks[iTrack]), new SpotifyResultHandler(m,event,playlist,iTrack + 1,prevMessageText,prevErrors,frequentEditAgent));
         }
 
         @Override

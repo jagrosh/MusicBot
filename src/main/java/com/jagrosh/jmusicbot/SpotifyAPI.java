@@ -227,6 +227,8 @@ public class SpotifyAPI {
   }
 
   public SpotifyPlaylist getPlaylist(String playlistId) throws IOException {
+    ArrayList<SpotifyTrack> tracks = new ArrayList<SpotifyTrack>();
+
     String response = executeQuery(
       "GET", 
       "api.spotify.com", 
@@ -239,16 +241,38 @@ public class SpotifyAPI {
     if (!jo.has("id") || !jo.getString("id").equals(playlistId)
       || !jo.has("name") 
       || !jo.has("owner") || !jo.getJSONObject("owner").has("display_name")
-      || !jo.has("tracks") || !jo.getJSONObject("tracks").has("items")) {
+      || !jo.has("tracks") || !jo.getJSONObject("tracks").has("items") || !jo.getJSONObject("tracks").has("total")) {
       throw new RuntimeException(String.format("Unexpected response from spotify /v1/playlists endpoint: %s", response));
     }
   
     String playlistName = String.format("%s by %s", jo.getString("name"), jo.getJSONObject("owner").getString("display_name"));
-
+    int totalTracks = jo.getJSONObject("tracks").getInt("total");
     JSONArray tracksData = jo.getJSONObject("tracks").getJSONArray("items");
-    ArrayList<SpotifyTrack> tracks = new ArrayList<SpotifyTrack>();
-    for (int iTrack = 0; iTrack < tracksData.length(); iTrack++) {
-      tracks.add(parseTrack(tracksData.getJSONObject(iTrack).getJSONObject("track")));
+
+    int iQuery = 0;
+    while(iQuery < 20) {
+      for (int iTrack = 0; iTrack < tracksData.length(); iTrack++) {
+        tracks.add(parseTrack(tracksData.getJSONObject(iTrack).getJSONObject("track")));
+      }
+
+      iQuery += 1;
+
+      int offset = 100 * iQuery;
+      if (offset >= totalTracks) break;
+
+      response = executeQuery(
+        "GET", 
+        "api.spotify.com", 
+        "/v1/playlists",
+        playlistId.replaceAll("[^a-zA-Z0-9_-]", "") + "/tracks?offset=" + offset + "&limit=100",
+        null,
+        null);
+  
+      jo = new JSONObject(response);
+      if (!jo.has("items")) {
+        throw new RuntimeException(String.format("Unexpected response from spotify /v1/playlists/.../tracks endpoint: %s", response));
+      }
+      tracksData = jo.getJSONArray("items");
     }
 
     return new SpotifyPlaylist(playlistName, Arrays.copyOf(tracks.toArray(), tracks.size(), SpotifyTrack[].class));
