@@ -200,5 +200,11 @@ public class JMusicBot
                     + "invalid: " + ex + "\nConfig Location: " + config.getConfigLocation());
             System.exit(1);
         }
+        catch(ErrorResponseException ex)
+        {
+            prompt.alert(Prompt.Level.ERROR, "JMusicBot", ex + "\n Invalid reponse returned when "
+                    + "attempting to connect, please make sure you're connected to the internet");
+            System.exit(1);
+        }
     }
 }
