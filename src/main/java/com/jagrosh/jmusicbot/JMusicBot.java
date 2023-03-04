@@ -34,6 +34,7 @@ import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -202,7 +203,7 @@ public class JMusicBot
         }
         catch(ErrorResponseException ex)
         {
-            prompt.alert(Prompt.Level.ERROR, "JMusicBot", ex + "\n Invalid reponse returned when "
+            prompt.alert(Prompt.Level.ERROR, "JMusicBot", ex + "\nInvalid reponse returned when "
                     + "attempting to connect, please make sure you're connected to the internet");
             System.exit(1);
         }
