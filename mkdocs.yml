@@ -13,6 +13,7 @@ theme:
   custom_dir: docs/overrides
   font:
     text: 'Fira Sans'
+    code: 'Fira Code'
   name: material
   palette:
     - media: "(prefers-color-scheme: light)"
