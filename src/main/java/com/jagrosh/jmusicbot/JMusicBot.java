@@ -71,16 +71,23 @@ public class JMusicBot
         // create prompt to handle startup
         Prompt prompt = new Prompt("JMusicBot");
         
-        // startup checks
-        OtherUtil.checkVersion(prompt);
+        // Make sure Java is supported
         OtherUtil.checkJavaVersion(prompt);
         
         // load config
         BotConfig config = new BotConfig(prompt);
         config.load();
-        if(!config.isValid())
+        if(!config.isValid()) {
+            LOG.info("Config file was not loaded properly. Writing default config to " + config.getConfigLocation());
+            BotConfig.writeDefaultConfig();
             return;
+        }
         LOG.info("Loaded config from " + config.getConfigLocation());
+        
+        // check for newer version
+        if(config.getUpdateCheck()) {
+          OtherUtil.checkVersion(prompt);
+        }
         
         // set up the listener
         EventWaiter waiter = new EventWaiter();
