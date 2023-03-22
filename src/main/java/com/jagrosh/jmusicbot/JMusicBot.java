@@ -76,7 +76,7 @@ public class JMusicBot
         
         // set up the listener
         EventWaiter waiter = new EventWaiter();
-        SettingsManager settings = new SettingsManager(config);
+        SettingsManager settings = new SettingsManager();
         Bot bot = new Bot(waiter, config, settings);
         
         AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(),
