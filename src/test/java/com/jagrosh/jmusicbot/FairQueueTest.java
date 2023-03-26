@@ -56,7 +56,7 @@ public class FairQueueTest
         }
         
         @Override
-        public long getIdentifier()
+        public long getCallerIdentifier()
         {
             return identifier;
         }

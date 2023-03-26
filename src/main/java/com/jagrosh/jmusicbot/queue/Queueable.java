@@ -20,6 +20,11 @@ package com.jagrosh.jmusicbot.queue;
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public interface Queueable {
-    
-    public long getIdentifier();
+    /**
+     * Deeper into the JDA, the user who added Queueable to Queue is referred to as the owner. From here on in we refer
+     * to this user as the caller, as the term owner is reserved for user who owns and manages the bot.
+     *
+     * @return ID of user who added Queueable to Queue.
+     */
+    long getCallerIdentifier();
 }

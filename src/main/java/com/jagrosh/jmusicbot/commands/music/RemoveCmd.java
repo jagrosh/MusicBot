@@ -75,7 +75,7 @@ public class RemoveCmd extends MusicCommand
         if(!isDJ)
             isDJ = event.getMember().getRoles().contains(settings.getRole(event.getGuild()));
         QueuedTrack qt = handler.getQueue().get(pos-1);
-        if(qt.getIdentifier()==event.getAuthor().getIdLong())
+        if(qt.getCallerIdentifier()==event.getAuthor().getIdLong())
         {
             handler.getQueue().remove(pos-1);
             event.replySuccess("Removed **"+qt.getTrack().getInfo().title+"** from the queue");
@@ -85,7 +85,7 @@ public class RemoveCmd extends MusicCommand
             handler.getQueue().remove(pos-1);
             User u;
             try {
-                u = event.getJDA().getUserById(qt.getIdentifier());
+                u = event.getJDA().getUserById(qt.getCallerIdentifier());
             } catch(Exception e) {
                 u = null;
             }

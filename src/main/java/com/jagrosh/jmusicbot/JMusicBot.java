@@ -131,6 +131,7 @@ public class JMusicBot
                         new PrefixCmd(bot),
                         new SetdjCmd(bot),
                         new SkipratioCmd(bot),
+                        new SetQueueTypeCmd(bot),
                         new SettcCmd(bot),
                         new SetvcCmd(bot),
                         

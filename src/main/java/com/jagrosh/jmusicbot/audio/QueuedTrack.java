@@ -41,7 +41,7 @@ public class QueuedTrack implements Queueable
     }
     
     @Override
-    public long getIdentifier() 
+    public long getCallerIdentifier()
     {
         return track.getUserData(RequestMetadata.class).getOwner();
     }
