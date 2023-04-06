@@ -21,30 +21,23 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- *
- * @author John Grosh (jagrosh)
  * @param <T>
+ * @author John Grosh (jagrosh)
  */
-public class FairQueue<T extends Queueable> extends Queue<T>
-{
-    public FairQueue()
-    {
+public class FairQueue<T extends Queueable> extends Queue<T> {
+    public FairQueue() {
     }
 
-    public FairQueue(List<T> tList)
-    {
+    public FairQueue(List<T> tList) {
         super(tList);
     }
 
     @Override
-    public int add(T item)
-    {
+    public int add(T item) {
         // Get index of Queueable furthest in queue from same owner
         int lastIndex;
-        for (lastIndex = super.list.size() - 1; lastIndex > -1; lastIndex--)
-        {
-            if (super.list.get(lastIndex).getCallerIdentifier() == item.getCallerIdentifier())
-            {
+        for (lastIndex = super.list.size() - 1; lastIndex > -1; lastIndex--) {
+            if (super.list.get(lastIndex).getCallerIdentifier() == item.getCallerIdentifier()) {
                 break;
             }
         }
@@ -54,10 +47,8 @@ public class FairQueue<T extends Queueable> extends Queue<T>
 
         // Skip everybody else once
         HashSet<Long> callers = new HashSet<>();
-        for (; lastIndex < super.list.size(); lastIndex++)
-        {
-            if (callers.contains(super.list.get(lastIndex).getCallerIdentifier()))
-            {
+        for (; lastIndex < super.list.size(); lastIndex++) {
+            if (callers.contains(super.list.get(lastIndex).getCallerIdentifier())) {
                 break;
             }
             callers.add(super.list.get(lastIndex).getCallerIdentifier());
@@ -68,8 +59,7 @@ public class FairQueue<T extends Queueable> extends Queue<T>
     }
 
     @Override
-    public QueueType getQueueType()
-    {
+    public QueueType getQueueType() {
         return QueueType.FAIR_QUEUE;
     }
 }

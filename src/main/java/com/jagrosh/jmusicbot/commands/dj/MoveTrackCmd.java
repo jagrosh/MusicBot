@@ -8,14 +8,14 @@ import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.queue.Queue;
 
+import java.util.Objects;
+
 /**
  * Command that provides users the ability to move a track in the playlist.
  */
-public class MoveTrackCmd extends DJCommand
-{
+public class MoveTrackCmd extends DJCommand {
 
-    public MoveTrackCmd(Bot bot)
-    {
+    public MoveTrackCmd(Bot bot) {
         super(bot);
         this.name = "movetrack";
         this.help = "move a track in the current queue to a different position";
@@ -24,48 +24,44 @@ public class MoveTrackCmd extends DJCommand
         this.bePlaying = true;
     }
 
+    private static boolean isUnavailablePosition(Queue<QueuedTrack> queue, int position) {
+        return (position < 1 || position > queue.size());
+    }
+
     @Override
-    public void doCommand(CommandEvent event)
-    {
+    public void doCommand(CommandEvent event) {
         int from;
         int to;
 
         String[] parts = event.getArgs().split("\\s+", 2);
-        if(parts.length < 2)
-        {
+        if (parts.length < 2) {
             event.replyError("Please include two valid indexes.");
             return;
         }
 
-        try
-        {
+        try {
             // Validate the args
             from = Integer.parseInt(parts[0]);
             to = Integer.parseInt(parts[1]);
-        }
-        catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             event.replyError("Please provide two valid indexes.");
             return;
         }
 
-        if (from == to)
-        {
+        if (from == to) {
             event.replyError("Can't move a track to the same position.");
             return;
         }
 
         // Validate that from and to are available
         AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
-        Queue<QueuedTrack> queue = handler.getQueue();
-        if (isUnavailablePosition(queue, from))
-        {
+        Queue<QueuedTrack> queue = Objects.requireNonNull(handler).getQueue();
+        if (isUnavailablePosition(queue, from)) {
             String reply = String.format("`%d` is not a valid position in the queue!", from);
             event.replyError(reply);
             return;
         }
-        if (isUnavailablePosition(queue, to))
-        {
+        if (isUnavailablePosition(queue, to)) {
             String reply = String.format("`%d` is not a valid position in the queue!", to);
             event.replyError(reply);
             return;
@@ -76,10 +72,5 @@ public class MoveTrackCmd extends DJCommand
         String trackTitle = track.getTrack().getInfo().title;
         String reply = String.format("Moved **%s** from position `%d` to `%d`.", trackTitle, from, to);
         event.replySuccess(reply);
-    }
-
-    private static boolean isUnavailablePosition(Queue<QueuedTrack> queue, int position)
-    {
-        return (position < 1 || position > queue.size());
     }
 }

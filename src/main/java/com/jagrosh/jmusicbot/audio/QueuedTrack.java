@@ -15,48 +15,41 @@
  */
 package com.jagrosh.jmusicbot.audio;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.jagrosh.jmusicbot.queue.Queueable;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.entities.User;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class QueuedTrack implements Queueable
-{
+public class QueuedTrack implements Queueable {
     private final AudioTrack track;
-    
-    public QueuedTrack(AudioTrack track, User owner)
-    {
+
+    public QueuedTrack(AudioTrack track, User owner) {
         this(track, new RequestMetadata(owner));
     }
-    
-    public QueuedTrack(AudioTrack track, RequestMetadata rm)
-    {
+
+    public QueuedTrack(AudioTrack track, RequestMetadata rm) {
         this.track = track;
         this.track.setUserData(rm);
     }
-    
+
     @Override
-    public long getCallerIdentifier()
-    {
+    public long getCallerIdentifier() {
         return track.getUserData(RequestMetadata.class).getOwner();
     }
-    
-    public AudioTrack getTrack()
-    {
+
+    public AudioTrack getTrack() {
         return track;
     }
 
     @Override
-    public String toString() 
-    {
+    public String toString() {
         String entry = "`[" + FormatUtil.formatTime(track.getDuration()) + "]` ";
         AudioTrackInfo trackInfo = track.getInfo();
-        entry = entry + (trackInfo.uri.startsWith("http") ? "[**" + trackInfo.title + "**]("+trackInfo.uri+")" : "**" + trackInfo.title + "**");
+        entry = entry + (trackInfo.uri.startsWith("http") ? "[**" + trackInfo.title + "**](" + trackInfo.uri + ")" : "**" + trackInfo.title + "**");
         return entry + " - <@" + track.getUserData(RequestMetadata.class).getOwner() + ">";
     }
 }

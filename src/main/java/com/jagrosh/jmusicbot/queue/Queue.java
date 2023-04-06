@@ -5,32 +5,25 @@ import com.jagrosh.jmusicbot.settings.QueueType;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Queue<T extends Queueable>
-{
+public abstract class Queue<T extends Queueable> {
     final List<T> list = new ArrayList<>();
 
-    public Queue()
-    {
+    public Queue() {
     }
 
-    public Queue(List<T> tList)
-    {
+    public Queue(List<T> tList) {
         tList.forEach(this::add);
     }
 
-    public int add(T item)
-    {
+    public int add(T item) {
         this.list.add(item);
         return this.list.size() - 1;
     }
 
-    public void addAt(int index, T item)
-    {
-        if (index >= this.list.size())
-        {
+    public void addAt(int index, T item) {
+        if (index >= this.list.size()) {
             this.list.add(item);
-        } else
-        {
+        } else {
             this.list.add(index, item);
         }
     }
@@ -38,8 +31,7 @@ public abstract class Queue<T extends Queueable>
     /**
      * @return number of Queueables in Queue.
      */
-    public int size()
-    {
+    public int size() {
         return this.list.size();
     }
 
@@ -48,16 +40,14 @@ public abstract class Queue<T extends Queueable>
      *
      * @return next item in Queue.
      */
-    public T pop()
-    {
+    public T pop() {
         return this.list.remove(0);
     }
 
     /**
      * @return true when no items in Queue, otherwise false.
      */
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return this.list.isEmpty();
     }
 
@@ -66,8 +56,7 @@ public abstract class Queue<T extends Queueable>
      *
      * @return entire Queue object.
      */
-    public List<T> getList()
-    {
+    public List<T> getList() {
         return this.list;
     }
 
@@ -77,8 +66,7 @@ public abstract class Queue<T extends Queueable>
      * @param index index of Queueable to be retrieved.
      * @return Queueable at index.
      */
-    public T get(int index)
-    {
+    public T get(int index) {
         return this.list.get(index);
     }
 
@@ -87,8 +75,7 @@ public abstract class Queue<T extends Queueable>
      *
      * @param index the index in Queue of the Queueable to be removed.
      */
-    public void remove(int index)
-    {
+    public void remove(int index) {
         this.list.remove(index);
     }
 
@@ -98,13 +85,10 @@ public abstract class Queue<T extends Queueable>
      * @param identifier ID of caller.
      * @return number of Queueables removed.
      */
-    public int removeAll(long identifier)
-    {
+    public int removeAll(long identifier) {
         int count = 0;
-        for (int i = this.list.size() - 1; i >= 0; i--)
-        {
-            if (this.list.get(i).getCallerIdentifier() == identifier)
-            {
+        for (int i = this.list.size() - 1; i >= 0; i--) {
+            if (this.list.get(i).getCallerIdentifier() == identifier) {
                 this.list.remove(i);
                 count++;
             }
@@ -115,8 +99,7 @@ public abstract class Queue<T extends Queueable>
     /**
      * This command is used by the handler when stopped, shut down or found alone in channel.
      */
-    public void clear()
-    {
+    public void clear() {
         this.list.clear();
     }
 
@@ -126,16 +109,13 @@ public abstract class Queue<T extends Queueable>
      * @param identifier ID of calling user.
      * @return number of shuffled Queueables.
      */
-    public int shuffle(long identifier)
-    {
+    public int shuffle(long identifier) {
         ArrayList<Integer> indexSet = new ArrayList<>();
-        for (int i = 0; i < this.list.size(); i++)
-        {
+        for (int i = 0; i < this.list.size(); i++) {
             if (this.list.get(i).getCallerIdentifier() == identifier) indexSet.add(i);
         }
 
-        for (int j = 0; j < indexSet.size(); j++)
-        {
+        for (int j = 0; j < indexSet.size(); j++) {
             int originalPosition = indexSet.get(j);
             int newRandomPosition = indexSet.get((int) (Math.random() * indexSet.size()));
             T temp = this.list.get(originalPosition);
@@ -145,11 +125,9 @@ public abstract class Queue<T extends Queueable>
         return indexSet.size();
     }
 
-    public void skip(int number)
-    {
-        for (int i = 0; i < number; i++)
-        {
-            this.list.remove(0);
+    public void skip(int number) {
+        if (number > 0) {
+            this.list.subList(0, number).clear();
         }
     }
 
@@ -160,8 +138,7 @@ public abstract class Queue<T extends Queueable>
      * @param to   The new position of the item
      * @return the moved item
      */
-    public T moveItem(int from, int to)
-    {
+    public T moveItem(int from, int to) {
         T item = this.list.remove(from);
         this.list.add(to, item);
         return item;

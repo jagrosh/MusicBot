@@ -16,19 +16,18 @@
 package com.jagrosh.jmusicbot.settings;
 
 import com.jagrosh.jdautilities.command.GuildSettingsProvider;
-import java.util.Collection;
-import java.util.Collections;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 
+import java.util.Collection;
+import java.util.Collections;
+
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class Settings implements GuildSettingsProvider
-{
+public class Settings implements GuildSettingsProvider {
     private final SettingsManager manager;
     protected long textId;
     protected long voiceId;
@@ -51,31 +50,21 @@ public class Settings implements GuildSettingsProvider
             String prefix,
             double skipRatio,
             QueueType queueType
-    )
-    {
+    ) {
         this.manager = manager;
-        try
-        {
+        try {
             this.textId = Long.parseLong(textId);
-        }
-        catch(NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             this.textId = 0;
         }
-        try
-        {
+        try {
             this.voiceId = Long.parseLong(voiceId);
-        }
-        catch(NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             this.voiceId = 0;
         }
-        try
-        {
+        try {
             this.roleId = Long.parseLong(roleId);
-        }
-        catch(NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             this.roleId = 0;
         }
         this.volume = volume;
@@ -85,7 +74,7 @@ public class Settings implements GuildSettingsProvider
         this.skipRatio = skipRatio;
         this.queueType = queueType;
     }
-    
+
     public Settings(
             SettingsManager manager,
             long textId,
@@ -97,8 +86,7 @@ public class Settings implements GuildSettingsProvider
             String prefix,
             double skipRatio,
             QueueType queueType
-    )
-    {
+    ) {
         this.manager = manager;
         this.textId = textId;
         this.voiceId = voiceId;
@@ -110,111 +98,92 @@ public class Settings implements GuildSettingsProvider
         this.skipRatio = skipRatio;
         this.queueType = queueType;
     }
-    
+
     // Getters
-    public TextChannel getTextChannel(Guild guild)
-    {
+    public TextChannel getTextChannel(Guild guild) {
         return guild == null ? null : guild.getTextChannelById(textId);
     }
-    
-    public VoiceChannel getVoiceChannel(Guild guild)
-    {
+
+    public VoiceChannel getVoiceChannel(Guild guild) {
         return guild == null ? null : guild.getVoiceChannelById(voiceId);
     }
-    
-    public Role getRole(Guild guild)
-    {
+
+    public Role getRole(Guild guild) {
         return guild == null ? null : guild.getRoleById(roleId);
     }
-    
-    public int getVolume()
-    {
+
+    public int getVolume() {
         return volume;
     }
-    
-    public String getDefaultPlaylist()
-    {
-        return defaultPlaylist;
-    }
-    
-    public RepeatMode getRepeatMode()
-    {
-        return repeatMode;
-    }
-    
-    public String getPrefix()
-    {
-        return prefix;
-    }
-    
-    public double getSkipRatio()
-    {
-        return skipRatio;
-    }
 
-    public QueueType getQueueType()
-    {
-        return this.queueType;
-    }
-
-    @Override
-    public Collection<String> getPrefixes()
-    {
-        return prefix == null ? Collections.emptySet() : Collections.singleton(prefix);
-    }
-    
-    // Setters
-    public void setTextChannel(TextChannel tc)
-    {
-        this.textId = tc == null ? 0 : tc.getIdLong();
-        this.manager.writeSettings();
-    }
-    
-    public void setVoiceChannel(VoiceChannel vc)
-    {
-        this.voiceId = vc == null ? 0 : vc.getIdLong();
-        this.manager.writeSettings();
-    }
-    
-    public void setDJRole(Role role)
-    {
-        this.roleId = role == null ? 0 : role.getIdLong();
-        this.manager.writeSettings();
-    }
-    
-    public void setVolume(int volume)
-    {
+    public void setVolume(int volume) {
         this.volume = volume;
         this.manager.writeSettings();
     }
-    
-    public void setDefaultPlaylist(String defaultPlaylist)
-    {
+
+    public String getDefaultPlaylist() {
+        return defaultPlaylist;
+    }
+
+    public void setDefaultPlaylist(String defaultPlaylist) {
         this.defaultPlaylist = defaultPlaylist;
         this.manager.writeSettings();
     }
-    
-    public void setRepeatMode(RepeatMode mode)
-    {
+
+    public RepeatMode getRepeatMode() {
+        return repeatMode;
+    }
+
+    public void setRepeatMode(RepeatMode mode) {
         this.repeatMode = mode;
         this.manager.writeSettings();
     }
-    
-    public void setPrefix(String prefix)
-    {
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
         this.prefix = prefix;
         this.manager.writeSettings();
     }
 
-    public void setSkipRatio(double skipRatio)
-    {
+    public double getSkipRatio() {
+        return skipRatio;
+    }
+
+    public void setSkipRatio(double skipRatio) {
         this.skipRatio = skipRatio;
         this.manager.writeSettings();
     }
 
-    public void setQueueType(QueueType queueType)
-    {
+    public QueueType getQueueType() {
+        return this.queueType;
+    }
+
+    public void setQueueType(QueueType queueType) {
         this.queueType = queueType;
+        this.manager.writeSettings();
+    }
+
+    @Override
+    public Collection<String> getPrefixes() {
+        return prefix == null ? Collections.emptySet() : Collections.singleton(prefix);
+    }
+
+    // Setters
+    public void setTextChannel(TextChannel tc) {
+        this.textId = tc == null ? 0 : tc.getIdLong();
+        this.manager.writeSettings();
+    }
+
+    public void setVoiceChannel(VoiceChannel vc) {
+        this.voiceId = vc == null ? 0 : vc.getIdLong();
+        this.manager.writeSettings();
+    }
+
+    public void setDJRole(Role role) {
+        this.roleId = role == null ? 0 : role.getIdLong();
         this.manager.writeSettings();
     }
 }

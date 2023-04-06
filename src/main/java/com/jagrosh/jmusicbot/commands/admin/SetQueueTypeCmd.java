@@ -12,21 +12,17 @@ import com.jagrosh.jmusicbot.settings.Settings;
 
 import java.util.List;
 
-public class SetQueueTypeCmd extends AdminCommand
-{
-    public SetQueueTypeCmd(Bot bot)
-    {
+public class SetQueueTypeCmd extends AdminCommand {
+    public SetQueueTypeCmd(Bot bot) {
         this.name = "setqueuetype";
         this.help = "changes the behavior of the queue";
         this.aliases = bot.getConfig().getAliases(this.name);
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<");
-        for (int i = 0; i < QueueType.values().length; i++)
-        {
+        for (int i = 0; i < QueueType.values().length; i++) {
             stringBuilder.append(QueueType.values()[i]);
-            if (i != QueueType.values().length - 1)
-            {
+            if (i != QueueType.values().length - 1) {
                 stringBuilder.append(", ");
             }
         }
@@ -36,24 +32,20 @@ public class SetQueueTypeCmd extends AdminCommand
     }
 
     @Override
-    protected void execute(CommandEvent event)
-    {
+    protected void execute(CommandEvent event) {
         String newQueueTypeArgument = event.getArgs().toLowerCase().replaceAll("[ _-]", "");
 
         QueueType newQueueType;
-        try
-        {
+        try {
             newQueueType = QueueType.getFromParam(newQueueTypeArgument);
-        } catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             event.replyError("The provided argument is not a valid queue type.");
             return;
         }
 
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
 
-        if (settings.getQueueType() == newQueueType)
-        {
+        if (settings.getQueueType() == newQueueType) {
             event.replyError(String.format("The queue is already a %s.", newQueueType.getFriendlyName()));
             return;
         }
@@ -61,19 +53,16 @@ public class SetQueueTypeCmd extends AdminCommand
         AudioHandler audioHandler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
         settings.setQueueType(newQueueType);
 
-        if (audioHandler == null)
-        {
+        if (audioHandler == null) {
             event.replySuccess(String.format("Queue type switched to %s.", newQueueType.getFriendlyName()));
             return;
         }
 
         List<QueuedTrack> currentQueuedItems = audioHandler.getQueue().getList();
 
-        if (newQueueType.equals(QueueType.FAIR_QUEUE))
-        {
+        if (newQueueType.equals(QueueType.FAIR_QUEUE)) {
             audioHandler.setQueue(new FairQueue<>(currentQueuedItems));
-        } else
-        {
+        } else {
             audioHandler.setQueue(new SimpleQueue<>(currentQueuedItems));
         }
 

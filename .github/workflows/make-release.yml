@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       version_number:
-        description: 'Version Number'     
+        description: 'Version Number'
         required: true
         type: string
       info:

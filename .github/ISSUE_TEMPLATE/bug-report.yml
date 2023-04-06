@@ -1,8 +1,8 @@
 name: Bug Report
 description: Report a bug or unexpected behavior
 title: "[Bug Report] Title Here "
-labels: []
-assignees: []
+labels: [ ]
+assignees: [ ]
 body:
   - type: textarea
     id: description
