@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
+ * Copyright 2019 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jagrosh.jmusicbot.commands.music;
+package com.jagrosh.jmusicbot.commands.dj;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
-import com.jagrosh.jmusicbot.commands.MusicCommand;
+import com.jagrosh.jmusicbot.commands.DJCommand;
 
 /**
  *
- * @author John Grosh <john.a.grosh@gmail.com>
+ * @author Joshua L.
  */
-public class ShuffleCmd extends MusicCommand 
+public class ShuffleAllCmd extends DJCommand
 {
-    public ShuffleCmd(Bot bot)
+    public ShuffleAllCmd(Bot bot)
     {
         super(bot);
-        this.name = "shuffle";
-        this.help = "shuffles songs you have added";
+        this.name = "shuffleall";
+        this.help = "shuffles all songs in the queue";
         this.aliases = bot.getConfig().getAliases(this.name);
-        this.beListening = true;
         this.bePlaying = true;
     }
 
@@ -40,19 +39,18 @@ public class ShuffleCmd extends MusicCommand
     public void doCommand(CommandEvent event) 
     {
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        int s = handler.getQueue().shuffle(event.getAuthor().getIdLong(), false);
+        int s = handler.getQueue().shuffle(0, true);
         switch (s) 
         {
             case 0:
-                event.replyError("You don't have any music in the queue to shuffle!");
+                event.replyError("There isn't any music in the queue to shuffle!");
                 break;
             case 1:
-                event.replyWarning("You only have one song in the queue!");
+                event.replyWarning("There is only one song in the queue!");
                 break;
             default:
-                event.replySuccess("You successfully shuffled your "+s+" entries.");
+                event.replySuccess("You successfully shuffled "+s+" entries.");
                 break;
         }
     }
-    
 }

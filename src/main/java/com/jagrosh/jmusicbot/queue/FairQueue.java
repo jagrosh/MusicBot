@@ -104,15 +104,26 @@ public class FairQueue<T extends Queueable> {
         list.clear();
     }
     
-    public int shuffle(long identifier)
+    public int shuffle(long identifier, Boolean shuffleall)
     {
         List<Integer> iset = new ArrayList<>();
-        for(int i=0; i<list.size(); i++)
+        if (shuffleall)
         {
-            if(list.get(i).getIdentifier()==identifier)
-                iset.add(i);
+            for (int i=0; i<list.size(); i++)
+            {
+                iset.add(i); 
+            }
         }
-        for(int j=0; j<iset.size(); j++)
+        else
+        {
+            for (int i=0; i<list.size(); i++)
+            {
+                if (list.get(i).getIdentifier()==identifier)
+                    iset.add(i);
+            }
+        }
+        
+        for (int j=0; j<iset.size(); j++)
         {
             int first = iset.get(j);
             int second = iset.get((int)(Math.random()*iset.size()));
