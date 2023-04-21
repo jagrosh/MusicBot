@@ -36,7 +36,6 @@ body:
     attributes:
       label: Debug Output
       description: Please run the `debug` command and paste it here or upload it as an attachment. If you cannot run the command, please provide information about your system such as operating system version, JMusicBot version, etc.
-      render: shell
     validations:
       required: true
   - type: textarea
