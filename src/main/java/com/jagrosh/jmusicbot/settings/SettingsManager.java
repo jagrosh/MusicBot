@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public class SettingsManager implements GuildSettingsManager
+public class SettingsManager implements GuildSettingsManager<Settings>
 {
     private final static String SETTINGS_FILE = "serversettings.json";
     private final static double SKIP_RATIO = .55;
