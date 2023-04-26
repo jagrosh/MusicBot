@@ -15,11 +15,6 @@
  */
 package com.jagrosh.jmusicbot.commands.music;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.menu.ButtonMenu;
@@ -30,33 +25,44 @@ import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
-import java.util.concurrent.TimeUnit;
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigValue;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.PermissionException;
+
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class PlayCmd extends MusicCommand
+public class CustomPlayCmd extends MusicCommand
 {
     private final static String LOAD = "\uD83D\uDCE5"; // 📥
     private final static String CANCEL = "\uD83D\uDEAB"; // 🚫
-    
+
     private final String loadingEmoji;
-    
-    public PlayCmd(Bot bot)
+    private final Config shortcuts;
+
+    public CustomPlayCmd(Bot bot)
     {
         super(bot);
         this.loadingEmoji = bot.getConfig().getLoading();
-        this.name = "play";
-        this.arguments = "<title|URL|subcommand>";
+        this.name = "coucou";
+        this.arguments = "<title>";
         this.help = "plays the provided song";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
         this.bePlaying = false;
         this.children = new Command[]{new PlaylistCmd(bot)};
+        this.shortcuts = bot.getConfig().getTransforms();
     }
 
     @Override
@@ -78,16 +84,22 @@ public class PlayCmd extends MusicCommand
             }
             StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" Play Commands:\n");
             builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <song title>` - plays the first result from Youtube");
-            builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <URL>` - plays the provided song, playlist, or stream");
-            for(Command cmd: children)
-                builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" ").append(cmd.getName()).append(" ").append(cmd.getArguments()).append("` - ").append(cmd.getHelp());
             event.reply(builder.toString());
             return;
         }
         String args = event.getArgs().startsWith("<") && event.getArgs().endsWith(">") 
                 ? event.getArgs().substring(1,event.getArgs().length()-1) 
                 : event.getArgs().isEmpty() ? event.getMessage().getAttachments().get(0).getUrl() : event.getArgs();
-        event.reply(loadingEmoji+" Loading... `["+args+"]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m,event,false)));
+
+
+        Optional<ConfigValue> shortcut = Optional.ofNullable(this.shortcuts.getValue(args));
+        if (shortcut.isPresent()) {
+            args = shortcut.get().render().replaceAll("\"", "");
+        }
+        String finalArgs = args;
+
+        event.reply(loadingEmoji+" Loading... `["+args+"]`",
+                m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), finalArgs, new ResultHandler(m,event,false)));
     }
     
     private class ResultHandler implements AudioLoadResultHandler
@@ -140,7 +152,7 @@ public class PlayCmd extends MusicCommand
         private int loadPlaylist(AudioPlaylist playlist, AudioTrack exclude)
         {
             int[] count = {0};
-            playlist.getTracks().stream().forEach((track) -> {
+            playlist.getTracks().forEach((track) -> {
                 if(!bot.getConfig().isTooLong(track) && !track.equals(exclude))
                 {
                     AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
