@@ -31,12 +31,10 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigValue;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -55,14 +53,14 @@ public class CustomPlayCmd extends MusicCommand
     {
         super(bot);
         this.loadingEmoji = bot.getConfig().getLoading();
-        this.name = "coucou";
+        this.name = "custom";
         this.arguments = "<title>";
         this.help = "plays the provided song";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
         this.bePlaying = false;
         this.children = new Command[]{new PlaylistCmd(bot)};
-        this.shortcuts = bot.getConfig().getTransforms();
+        this.shortcuts = bot.getConfig().getAllShortcuts();
     }
 
     @Override
@@ -91,15 +89,10 @@ public class CustomPlayCmd extends MusicCommand
                 ? event.getArgs().substring(1,event.getArgs().length()-1) 
                 : event.getArgs().isEmpty() ? event.getMessage().getAttachments().get(0).getUrl() : event.getArgs();
 
+        String url = shortcuts.getString(args);
 
-        Optional<ConfigValue> shortcut = Optional.ofNullable(this.shortcuts.getValue(args));
-        if (shortcut.isPresent()) {
-            args = shortcut.get().render().replaceAll("\"", "");
-        }
-        String finalArgs = args;
-
-        event.reply(loadingEmoji+" Loading... `["+args+"]`",
-                m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), finalArgs, new ResultHandler(m,event,false)));
+        event.reply(loadingEmoji+" Loading... `["+url+"]`",
+                m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), url, new ResultHandler(m,event,false)));
     }
     
     private class ResultHandler implements AudioLoadResultHandler
