@@ -55,7 +55,7 @@ public class CustomPlayCmd extends MusicCommand
         this.loadingEmoji = bot.getConfig().getLoading();
         this.name = "custom";
         this.arguments = "<shortcut>";
-        this.help = "plays the configured URL matching the shortcut in the configuration. Allowed shortcuts : "  + buildShortcutsList(bot.getConfig().getAllShortcuts());;
+        this.help = "plays the configured URL matching the shortcut in the configuration. "  + buildShortcutsList(bot.getConfig().getAllShortcuts());
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
         this.bePlaying = false;
