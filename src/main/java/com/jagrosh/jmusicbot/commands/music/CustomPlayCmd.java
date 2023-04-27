@@ -55,12 +55,19 @@ public class CustomPlayCmd extends MusicCommand
         this.loadingEmoji = bot.getConfig().getLoading();
         this.name = "custom";
         this.arguments = "<title>";
-        this.help = "plays the provided song";
+        this.help = "plays the provided song." + buildShortcutsList(bot.getConfig().getAllShortcuts());
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
         this.bePlaying = false;
         this.children = new Command[]{new PlaylistCmd(bot)};
         this.shortcuts = bot.getConfig().getAllShortcuts();
+    }
+
+    private String buildShortcutsList(Config allShortcuts) {
+        return " Available shortcuts: " + allShortcuts.root().keySet()
+                .stream()
+                .map(s -> "\"" + s + "\"")
+                .reduce((s, s2) -> s + ", " + s2).orElse("");
     }
 
     @Override
