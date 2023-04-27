@@ -80,8 +80,8 @@ public class CustomPlayCmd extends MusicCommand
                     event.replyError("Only DJs can unpause the player!");
                 return;
             }
-            StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" Play Commands:\n");
-            builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <song title>` - plays the first result from Youtube");
+            StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" Custom Command:\n");
+            builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" shortcut - plays the shortcut URL as defined in the configuration");
             event.reply(builder.toString());
             return;
         }
