@@ -54,8 +54,8 @@ public class CustomPlayCmd extends MusicCommand
         super(bot);
         this.loadingEmoji = bot.getConfig().getLoading();
         this.name = "custom";
-        this.arguments = "<title>";
-        this.help = "plays the provided song." + buildShortcutsList(bot.getConfig().getAllShortcuts());
+        this.arguments = "<shortcut>";
+        this.help = "plays the configured URL matching the shortcut in the configuration. Allowed shortcuts : "  + buildShortcutsList(bot.getConfig().getAllShortcuts());;
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
         this.bePlaying = false;
@@ -64,7 +64,7 @@ public class CustomPlayCmd extends MusicCommand
     }
 
     private String buildShortcutsList(Config allShortcuts) {
-        return " Available shortcuts: " + allShortcuts.root().keySet()
+        return "Available shortcuts: " + allShortcuts.root().keySet()
                 .stream()
                 .map(s -> "\"" + s + "\"")
                 .reduce((s, s2) -> s + ", " + s2).orElse("");
