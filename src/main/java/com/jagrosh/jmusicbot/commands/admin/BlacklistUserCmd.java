@@ -17,14 +17,19 @@ package com.jagrosh.jmusicbot.commands.admin;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
+import com.jagrosh.jdautilities.menu.OrderedMenu;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import com.sun.org.apache.xpath.internal.operations.String;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 
+import java.text.Format;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +42,7 @@ public class BlacklistUserCmd extends AdminCommand
 {
     public BlacklistUserCmd(Bot bot)
     {
-        this.name = "forbid";
+        this.name = "blacklist";
         this.help = "allow/disallow user from issuing commands";
         this.arguments = "<user>";
         this.aliases = bot.getConfig().getAliases(this.name);
@@ -48,7 +53,7 @@ public class BlacklistUserCmd extends AdminCommand
     {
         if(event.getArgs().isEmpty())
         {
-            event.replyError("You need to @mention a user!");
+            event.replyError("You need to mention a user!");
             return;
         }
         Settings s = event.getClient().getSettingsFor(event.getGuild());
@@ -58,30 +63,42 @@ public class BlacklistUserCmd extends AdminCommand
             event.replySuccess("Blacklist cleared; All users can use commands.");
             return;
         }
-        String userId = getUserIdFromArgs(event.getArgs());
-        if (userId == "") {
-            event.replyError("You must @mention a user!");
+
+        User target;
+        List<Member> found = FinderUtil.findMembers(event.getArgs(), event.getGuild());
+        if(found.isEmpty())
+        {
+            event.replyError("Unable to find the user!");
             return;
         }
-        if (s.getBlacklistedUsers().contains(userId))
+        else if(found.size()>1)
         {
-            s.removeBlacklistedUser(userId);
+            StringBuilder builder = new StringBuilder();
+            for(int i=0; i<found.size() && i<4; i++)
+            {
+                Member member = found.get(i);
+                builder.append("\n**"+member.getUser().getName()+"**#"+member.getUser().getDiscriminator());
+            }
+            event.replyWarning("Found multiple users: " + builder.toString());
+            return;
+        }
+        else
+        {
+            target = found.get(0).getUser();
+        }
+        handleBlacklistUser(target, event);
+    }
+
+    private void handleBlacklistUser(User target, CommandEvent event) {
+        Settings s = event.getClient().getSettingsFor(event.getGuild());
+        if (s.getBlacklistedUsers().contains(target.getId()))
+        {
+            s.removeBlacklistedUser(target.getId());
             event.replySuccess("User "+ event.getArgs() + " can now use commands");
         } else
         {
-            s.setBlacklistedUser(userId);
+            s.setBlacklistedUser(target.getId());
             event.replySuccess("User "+ event.getArgs() + " can no longer use commands");
         }
-    }
-
-    private String getUserIdFromArgs(String args) {
-        Pattern pattern = Pattern.compile("^<@(\\d{18})>$");
-        Matcher matcher = pattern.matcher(args);
-        if (!matcher.find()) {
-            return "";
-        }
-        MatchResult match = matcher.toMatchResult();
-        String userId = match.group(1);
-        return userId;
     }
 }
