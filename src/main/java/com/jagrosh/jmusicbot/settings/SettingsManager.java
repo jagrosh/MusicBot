@@ -50,22 +50,17 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                 if (!o.has("repeat_mode") && o.has("repeat") && o.getBoolean("repeat"))
                     o.put("repeat_mode", RepeatMode.ALL);
 
-                JSONArray jsonArray = o.getJSONArray("blacklisted_users");
-                List<String> blacklistedUsers = new ArrayList<String>();
-                for (int i=0; i<jsonArray.length(); i++) {
-                    blacklistedUsers.add(jsonArray.getString(i));
-                }
-
+                List<String> blacklistedUsers = convertJSONArrayToStringList(o.getJSONArray("blacklisted_users"));
                 settings.put(Long.parseLong(id), new Settings(this,
-                        o.has("text_channel_id") ? o.getString("text_channel_id")            : null,
-                        o.has("voice_channel_id")? o.getString("voice_channel_id")           : null,
-                        o.has("dj_role_id")      ? o.getString("dj_role_id")                 : null,
-                        o.has("volume")          ? o.getInt("volume")                        : 100,
-                        o.has("default_playlist")? o.getString("default_playlist")           : null,
-                        o.has("repeat_mode")     ? o.getEnum(RepeatMode.class, "repeat_mode"): RepeatMode.OFF,
-                        o.has("prefix")          ? o.getString("prefix")                     : null,
-                        o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO,
-                        o.has("blacklisted_users")  ? blacklistedUsers : new ArrayList<String>(0))
+                        o.has("text_channel_id")    ? o.getString("text_channel_id")            : null,
+                        o.has("voice_channel_id")   ? o.getString("voice_channel_id")           : null,
+                        o.has("dj_role_id")         ? o.getString("dj_role_id")                 : null,
+                        o.has("volume")             ? o.getInt("volume")                        : 100,
+                        o.has("default_playlist")   ? o.getString("default_playlist")           : null,
+                        o.has("repeat_mode")        ? o.getEnum(RepeatMode.class, "repeat_mode"): RepeatMode.OFF,
+                        o.has("prefix")             ? o.getString("prefix")                     : null,
+                        o.has("skip_ratio")         ? o.getDouble("skip_ratio")                 : SKIP_RATIO,
+                        o.has("blacklisted_users")  ? blacklistedUsers                               : new ArrayList<String>(0))
                 );
             });
         } catch(IOException | JSONException e) {
@@ -125,5 +120,13 @@ public class SettingsManager implements GuildSettingsManager<Settings>
         } catch(IOException ex){
             LoggerFactory.getLogger("Settings").warn("Failed to write to file: "+ex);
         }
+    }
+
+    private List<String> convertJSONArrayToStringList(JSONArray arr) {
+        List<String> list = new ArrayList<String>();
+        for (int i=0; i<arr.length(); i++) {
+            list.add(arr.getString(i));
+        }
+        return list;
     }
 }

@@ -93,10 +93,6 @@ public class Settings implements GuildSettingsProvider
         this.blacklistedUsers = blacklistedUsers;
     }
 
-    private boolean userCanUseCommands() {
-        return true;
-    }
-    
     // Getters
     public TextChannel getTextChannel(Guild guild)
     {
