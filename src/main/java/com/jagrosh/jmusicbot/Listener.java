@@ -79,7 +79,7 @@ public class Listener extends ListenerAdapter
                     if(latestVersion!=null && !currentVersion.equalsIgnoreCase(latestVersion))
                     {
                         String msg = String.format(OtherUtil.NEW_VERSION_AVAILABLE, currentVersion, latestVersion);
-                        owner.openPrivateChannel().queue(pc -> pc.sendMessage(msg).queue());
+                        // owner.openPrivateChannel().queue(pc -> pc.sendMessage(msg).queue());
                     }
                 }
                 catch(Exception ex) {} // ignored

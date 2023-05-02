@@ -127,7 +127,8 @@ public class JMusicBot
                         new SkiptoCmd(bot),
                         new StopCmd(bot),
                         new VolumeCmd(bot),
-                        
+
+                        new BlacklistUserCmd(bot),
                         new PrefixCmd(bot),
                         new SetdjCmd(bot),
                         new SkipratioCmd(bot),

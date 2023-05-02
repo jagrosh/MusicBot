@@ -16,8 +16,12 @@
 package com.jagrosh.jmusicbot.settings;
 
 import com.jagrosh.jdautilities.command.GuildSettingsProvider;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -38,8 +42,9 @@ public class Settings implements GuildSettingsProvider
     private RepeatMode repeatMode;
     private String prefix;
     private double skipRatio;
+    private List<String> blacklistedUsers;
 
-    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio)
+    public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, List<String> blacklistedUsers)
     {
         this.manager = manager;
         try
@@ -71,9 +76,10 @@ public class Settings implements GuildSettingsProvider
         this.repeatMode = repeatMode;
         this.prefix = prefix;
         this.skipRatio = skipRatio;
+        this.blacklistedUsers = blacklistedUsers;
     }
     
-    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio)
+    public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio, List<String> blacklistedUsers)
     {
         this.manager = manager;
         this.textId = textId;
@@ -84,6 +90,11 @@ public class Settings implements GuildSettingsProvider
         this.repeatMode = repeatMode;
         this.prefix = prefix;
         this.skipRatio = skipRatio;
+        this.blacklistedUsers = blacklistedUsers;
+    }
+
+    private boolean userCanUseCommands() {
+        return true;
     }
     
     // Getters
@@ -132,7 +143,12 @@ public class Settings implements GuildSettingsProvider
     {
         return prefix == null ? Collections.emptySet() : Collections.singleton(prefix);
     }
-    
+
+    public List<String> getBlacklistedUsers()
+    {
+        return blacklistedUsers;
+    }
+
     // Setters
     public void setTextChannel(TextChannel tc)
     {
@@ -179,6 +195,21 @@ public class Settings implements GuildSettingsProvider
     public void setSkipRatio(double skipRatio)
     {
         this.skipRatio = skipRatio;
+        this.manager.writeSettings();
+    }
+
+    public void setBlacklistedUser(String user) {
+        this.blacklistedUsers.add(user);
+        this.manager.writeSettings();
+    }
+
+    public void removeBlacklistedUser(String user) {
+        this.blacklistedUsers.remove(user);
+        this.manager.writeSettings();
+    }
+
+    public void clearBlacklistedUsers() {
+        this.blacklistedUsers = new ArrayList<String>(0);
         this.manager.writeSettings();
     }
 }
