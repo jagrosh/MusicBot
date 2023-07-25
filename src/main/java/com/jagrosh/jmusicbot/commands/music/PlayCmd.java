@@ -111,6 +111,12 @@ public class PlayCmd extends MusicCommand
                         +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(bot.getConfig().getMaxSeconds()*1000)+"`")).queue();
                 return;
             }
+            if(bot.getConfig().isTooShort(track))
+            {
+                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is shorter than the allowed minimum: `"
+                        +FormatUtil.formatTime(track.getDuration())+"` < `"+FormatUtil.formatTime(bot.getConfig().getMinSeconds()*1000)+"`")).queue();
+                return;
+            }
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
             int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor()))+1;
             String addMsg = FormatUtil.filter(event.getClient().getSuccess()+" Added **"+track.getInfo().title
@@ -141,7 +147,7 @@ public class PlayCmd extends MusicCommand
         {
             int[] count = {0};
             playlist.getTracks().stream().forEach((track) -> {
-                if(!bot.getConfig().isTooLong(track) && !track.equals(exclude))
+                if(!bot.getConfig().isTooLong(track) && !bot.getConfig().isTooShort(track) && !track.equals(exclude))
                 {
                     AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
                     handler.addTrack(new QueuedTrack(track, event.getAuthor()));

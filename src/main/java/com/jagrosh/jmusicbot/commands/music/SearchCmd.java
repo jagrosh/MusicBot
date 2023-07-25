@@ -91,6 +91,12 @@ public class SearchCmd extends MusicCommand
                         +FormatUtil.formatTime(track.getDuration())+"` > `"+bot.getConfig().getMaxTime()+"`")).queue();
                 return;
             }
+            if(bot.getConfig().isTooShort(track))
+            {
+                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is shorter than the allowed minimum: `"
+                        +FormatUtil.formatTime(track.getDuration())+"` < `"+bot.getConfig().getMinTime()+"`")).queue();
+                return;
+            }
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
             int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor()))+1;
             m.editMessage(FormatUtil.filter(event.getClient().getSuccess()+" Added **"+track.getInfo().title
@@ -111,6 +117,12 @@ public class SearchCmd extends MusicCommand
                         {
                             event.replyWarning("This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
                                     +FormatUtil.formatTime(track.getDuration())+"` > `"+bot.getConfig().getMaxTime()+"`");
+                            return;
+                        }
+                        if(bot.getConfig().isTooShort(track))
+                        {
+                            event.replyWarning("This track (**"+track.getInfo().title+"**) is shorter than the allowed minimum: `"
+                                    +FormatUtil.formatTime(track.getDuration())+"` < `"+bot.getConfig().getMinTime()+"`");
                             return;
                         }
                         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();

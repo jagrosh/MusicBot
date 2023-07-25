@@ -82,6 +82,12 @@ public class PlaynextCmd extends DJCommand
                         +FormatUtil.formatTime(track.getDuration())+"` > `"+FormatUtil.formatTime(bot.getConfig().getMaxSeconds()*1000)+"`")).queue();
                 return;
             }
+            if(bot.getConfig().isTooShort(track))
+            {
+                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is shorter than the allowed minimum: `"
+                        +FormatUtil.formatTime(track.getDuration())+"` < `"+FormatUtil.formatTime(bot.getConfig().getMinSeconds()*1000)+"`")).queue();
+                return;
+            }
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
             int pos = handler.addTrackToFront(new QueuedTrack(track, event.getAuthor()))+1;
             String addMsg = FormatUtil.filter(event.getClient().getSuccess()+" Added **"+track.getInfo().title

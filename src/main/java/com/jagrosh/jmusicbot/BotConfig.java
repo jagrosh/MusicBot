@@ -42,7 +42,7 @@ public class BotConfig
     private String token, prefix, altprefix, helpWord, playlistsFolder,
             successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
     private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
-    private long owner, maxSeconds, aloneTimeUntilStop;
+    private long owner, maxSeconds, minSeconds, aloneTimeUntilStop;
     private OnlineStatus status;
     private Activity game;
     private Config aliases, transforms;
@@ -87,6 +87,7 @@ public class BotConfig
             updatealerts = config.getBoolean("updatealerts");
             useEval = config.getBoolean("eval");
             maxSeconds = config.getLong("maxtime");
+            minSeconds = config.getLong("mintime");
             aloneTimeUntilStop = config.getLong("alonetimeuntilstop");
             playlistsFolder = config.getString("playlistsfolder");
             aliases = config.getConfig("aliases");
@@ -315,10 +316,20 @@ public class BotConfig
     {
         return maxSeconds;
     }
+
+    public long getMinSeconds()
+    {
+        return minSeconds;
+    }
     
     public String getMaxTime()
     {
         return FormatUtil.formatTime(maxSeconds * 1000);
+    }
+
+    public String getMinTime()
+    {
+        return FormatUtil.formatTime(minSeconds * 1000);
     }
 
     public long getAloneTimeUntilStop()
@@ -331,6 +342,13 @@ public class BotConfig
         if(maxSeconds<=0)
             return false;
         return Math.round(track.getDuration()/1000.0) > maxSeconds;
+    }
+
+    public boolean isTooShort(AudioTrack track)
+    {
+        if(minSeconds<=0)
+            return false;
+        return Math.round(track.getDuration()/1000.0) < minSeconds;
     }
 
     public String[] getAliases(String command)
