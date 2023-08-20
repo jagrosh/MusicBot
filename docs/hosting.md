@@ -9,6 +9,14 @@ Well, there are many options available; I've described several of the most-commo
 
 ## 🌐 Online Hosting
 
+### [Github Codespace](https://github.com/codespaces)
+## For tutorial visit : https://github.com/muntasir-dev/JMusicBot-24-7-hosting-tuto
+```diff
++ 24/7 runtime for 1 month
++ No usage limit
++ fast and reliable
+- have to open codespace every month
+```
 ### [OVH](https://www.ovh.com/world/vps/vps-ssd.xml)
 ```diff
 + Best power-to-cost ratio
