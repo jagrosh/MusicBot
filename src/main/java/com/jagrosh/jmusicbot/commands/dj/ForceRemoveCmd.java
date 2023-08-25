@@ -107,13 +107,18 @@ public class ForceRemoveCmd extends DJCommand
     private void removeAllEntries(User target, CommandEvent event)
     {
         int count = ((AudioHandler) event.getGuild().getAudioManager().getSendingHandler()).getQueue().removeAll(target.getIdLong());
+        String discriminator = target.getDiscriminator();
         if (count == 0)
         {
             event.replyWarning("**"+target.getName()+"** doesn't have any songs in the queue!");
         }
         else
         {
-            event.replySuccess("Successfully removed `"+count+"` entries from **"+target.getName()+"**#"+target.getDiscriminator()+".");
+            if ("0000".equals(discriminator)) {
+                event.replySuccess("Successfully removed `" + count + "` entries from **" + target.getName() + ".");
+            } else {
+                event.replySuccess("Successfully removed `" + count + "` entries from **" + target.getName() + "**#" + target.getDiscriminator() + ".");
+            }
         }
     }
 }
