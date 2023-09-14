@@ -2,28 +2,31 @@
 
 # This will have this script check for a new version of JMusicBot every
 # startup (and download it if the latest version isn't currently downloaded)
-DOWNLOAD=true
+DOWNLOAD=${DOWNLOAD:-false}
 
 # This will cause the script to run in a loop so that the bot auto-restarts
 # when you use the shutdown command
-LOOP=true
+LOOP=${LOOP:-false}
+
+# Sleep timer for backing off failures
+SLEEP=${SLEEP:-"30"}
 
 download() {
-    if [ $DOWNLOAD == true ]; then
+    if [ "$DOWNLOAD" = true ]; then
         URL=$(curl -s https://api.github.com/repos/jagrosh/MusicBot/releases/latest \
-           | grep -i browser_download_url.*\.jar \
+           | grep -i "browser_download_url.*\.jar" \
            | sed 's/.*\(http.*\)"/\1/')
-        FILENAME=$(echo $URL | sed 's/.*\/\([^\/]*\)/\1/')
-        if [ -f $FILENAME ]; then
+        FILENAME=$(echo "$URL" | sed 's/.*\/\([^\/]*\)/\1/')
+        if [ -f "$FILENAME" ]; then
             echo "Latest version already downloaded (${FILENAME})"
         else
-            curl -L $URL -o $FILENAME
+            curl -L "$URL" -o "$FILENAME"
         fi
     fi
 }
 
 run() {
-    java -Dnogui=true -jar $(ls -t JMusicBot* | head -1)
+    java -Dnogui=true -jar "$(ls -t JMusicBot* | head -1)"
 }
 
 while
@@ -31,5 +34,6 @@ while
     run
     $LOOP
 do
+    sleep "$SLEEP"
     continue
 done 
