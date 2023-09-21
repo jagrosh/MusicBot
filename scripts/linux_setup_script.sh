@@ -38,16 +38,12 @@ config_file=${config_file:-config.txt}
 
 # Download the latest version of the app
  URL=$(curl -s https://api.github.com/repos/jagrosh/MusicBot/releases/latest \
-           | grep -i browser_download_url.*\.jar \
            | grep -i "browser_download_url.*\.jar" \
            | sed 's/.*\(http.*\)"/\1/')
-        FILENAME=$(echo $URL | sed 's/.*\/\([^\/]*\)/\1/')
-        if [ -f $FILENAME ]; then
         FILENAME=$(echo "$URL" | sed 's/.*\/\([^\/]*\)/\1/')
         if [ -f "$FILENAME" ]; then
             echo "Latest version already downloaded (${FILENAME})"
         else
-            curl -L $URL -o $FILENAME
             curl -L "$URL" -o "$FILENAME"
         fi
     fi
