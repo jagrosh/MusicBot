@@ -24,15 +24,12 @@ import net.dv8tion.jda.api.Permission;
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public abstract class AdminCommand extends Command
-{
-    public AdminCommand()
-    {
-        this.category = new Category("管理者用", event -> 
-        {
-            if(event.getAuthor().getId().equals(event.getClient().getOwnerId()))
+public abstract class AdminCommand extends Command {
+    public AdminCommand() {
+        this.category = new Category("管理者用", event -> {
+            if (event.getAuthor().getId().equals(event.getClient().getOwnerId()))
                 return true;
-            if(event.getGuild()==null)
+            if (event.getGuild() == null)
                 return true;
             return event.getMember().hasPermission(Permission.MANAGE_SERVER);
         });

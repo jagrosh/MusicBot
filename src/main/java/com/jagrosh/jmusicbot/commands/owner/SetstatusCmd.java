@@ -26,10 +26,8 @@ import net.dv8tion.jda.api.OnlineStatus;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SetstatusCmd extends OwnerCommand
-{
-    public SetstatusCmd(Bot bot)
-    {
+public class SetstatusCmd extends OwnerCommand {
+    public SetstatusCmd(Bot bot) {
         this.name = "setstatus";
         this.help = "ボットの表示されているステータスを設定します。";
         this.arguments = "<ステータス>";
@@ -38,21 +36,17 @@ public class SetstatusCmd extends OwnerCommand
     }
 
     @Override
-    protected void execute(CommandEvent event) 
-    {
+    protected void execute(CommandEvent event) {
         try {
             OnlineStatus status = OnlineStatus.fromKey(event.getArgs());
-            if(status==OnlineStatus.UNKNOWN)
-            {
+            if (status == OnlineStatus.UNKNOWN) {
                 event.replyError("次のステータスのいずれかを記入してください。 `ONLINE`, `IDLE`, `DND`, `INVISIBLE`");
-            }
-            else
-            {
+            } else {
                 event.getJDA().getPresence().setStatus(status);
-                event.replySuccess("ステータスを`"+status.getKey().toUpperCase()+"`に変更しました。");
+                event.replySuccess("ステータスを`" + status.getKey().toUpperCase() + "`に変更しました。");
             }
-        } catch(Exception e) {
-            event.reply(event.getClient().getError()+" ステータスの設定に失敗しました。");
+        } catch (Exception e) {
+            event.reply(event.getClient().getError() + " ステータスの設定に失敗しました。");
         }
     }
 }

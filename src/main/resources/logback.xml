@@ -11,7 +11,7 @@
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="Simple"/>
+        <appender-ref ref="Simple" />
     </root>
 
 </configuration>

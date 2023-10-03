@@ -31,15 +31,13 @@ import net.dv8tion.jda.api.entities.ChannelType;
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public class DebugCmd extends OwnerCommand 
-{
-    private final static String[] PROPERTIES = {"java.version", "java.vm.name", "java.vm.specification.version", 
-        "java.runtime.name", "java.runtime.version", "java.specification.version",  "os.arch", "os.name"};
+public class DebugCmd extends OwnerCommand {
+    private final static String[] PROPERTIES = { "java.version", "java.vm.name", "java.vm.specification.version",
+            "java.runtime.name", "java.runtime.version", "java.specification.version", "os.arch", "os.name" };
 
     private final Bot bot;
 
-    public DebugCmd(Bot bot)
-    {
+    public DebugCmd(Bot bot) {
         this.bot = bot;
         this.name = "debug";
         this.help = "デバッグ情報を表示します。";
@@ -48,11 +46,10 @@ public class DebugCmd extends OwnerCommand
     }
 
     @Override
-    protected void execute(CommandEvent event)
-    {
+    protected void execute(CommandEvent event) {
         StringBuilder sb = new StringBuilder();
         sb.append("```\nシステムのプロパティ:");
-        for(String key: PROPERTIES)
+        for (String key : PROPERTIES)
             sb.append("\n  ").append(key).append(" = ").append(System.getProperty(key));
         sb.append("\n\nJMusicBot 情報:")
                 .append("\n  バージョン = ").append(OtherUtil.getCurrentVersion())
@@ -80,7 +77,7 @@ public class DebugCmd extends OwnerCommand
                 .append("\n  ユーザー = ").append(event.getJDA().getUserCache().size());
         sb.append("\n```");
 
-        if(event.isFromType(ChannelType.PRIVATE) 
+        if (event.isFromType(ChannelType.PRIVATE)
                 || event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ATTACH_FILES))
             event.getChannel().sendFile(sb.toString().getBytes(), "debug_information.txt").queue();
         else

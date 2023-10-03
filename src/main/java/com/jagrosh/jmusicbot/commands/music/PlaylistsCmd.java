@@ -26,10 +26,8 @@ import com.jagrosh.jmusicbot.commands.MusicCommand;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class PlaylistsCmd extends MusicCommand 
-{
-    public PlaylistsCmd(Bot bot)
-    {
+public class PlaylistsCmd extends MusicCommand {
+    public PlaylistsCmd(Bot bot) {
         super(bot);
         this.name = "playlists";
         this.help = "利用可能なプレイリストを表示します。";
@@ -40,25 +38,23 @@ public class PlaylistsCmd extends MusicCommand
     }
 
     @Override
-    public void doCommand(CommandEvent event) 
-    {
-        if(!bot.getPlaylistLoader().folderExists())
+    public void doCommand(CommandEvent event) {
+        if (!bot.getPlaylistLoader().folderExists())
             bot.getPlaylistLoader().createFolder();
-        if(!bot.getPlaylistLoader().folderExists())
-        {
-            event.reply(event.getClient().getWarning()+"フォルダー「Playlists」は存在せず、作成することもできませんでした。");
+        if (!bot.getPlaylistLoader().folderExists()) {
+            event.reply(event.getClient().getWarning() + "フォルダー「Playlists」は存在せず、作成することもできませんでした。");
             return;
         }
         List<String> list = bot.getPlaylistLoader().getPlaylistNames();
-        if(list==null)
-            event.reply(event.getClient().getError()+" 利用可能なプレイリストの読み込みに失敗しました。");
-        else if(list.isEmpty())
-            event.reply(event.getClient().getWarning()+" フォルダー「Playlists」にプレイリストがありません。");
-        else
-        {
-            StringBuilder builder = new StringBuilder(event.getClient().getSuccess()+" 利用可能なプレイリスト:\n");
+        if (list == null)
+            event.reply(event.getClient().getError() + " 利用可能なプレイリストの読み込みに失敗しました。");
+        else if (list.isEmpty())
+            event.reply(event.getClient().getWarning() + " フォルダー「Playlists」にプレイリストがありません。");
+        else {
+            StringBuilder builder = new StringBuilder(event.getClient().getSuccess() + " 利用可能なプレイリスト:\n");
             list.forEach(str -> builder.append("`").append(str).append("` "));
-            builder.append("\nプレイリストを再生するには、 `").append(event.getClient().getTextualPrefix()).append("play playlist <名>`を入力してください。");
+            builder.append("\nプレイリストを再生するには、 `").append(event.getClient().getTextualPrefix())
+                    .append("play playlist <名>`を入力してください。");
             event.reply(builder.toString());
         }
     }

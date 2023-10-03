@@ -29,10 +29,8 @@ import net.dv8tion.jda.api.entities.Icon;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SetavatarCmd extends OwnerCommand 
-{
-    public SetavatarCmd(Bot bot)
-    {
+public class SetavatarCmd extends OwnerCommand {
+    public SetavatarCmd(Bot bot) {
         this.name = "setavatar";
         this.help = "ボットのアイコンを設定します。";
         this.arguments = "<url>";
@@ -41,29 +39,25 @@ public class SetavatarCmd extends OwnerCommand
     }
 
     @Override
-    protected void execute(CommandEvent event) 
-    {
+    protected void execute(CommandEvent event) {
         String url;
-        if(event.getArgs().isEmpty())
-            if(!event.getMessage().getAttachments().isEmpty() && event.getMessage().getAttachments().get(0).isImage())
+        if (event.getArgs().isEmpty())
+            if (!event.getMessage().getAttachments().isEmpty() && event.getMessage().getAttachments().get(0).isImage())
                 url = event.getMessage().getAttachments().get(0).getUrl();
             else
                 url = null;
         else
             url = event.getArgs();
         InputStream s = OtherUtil.imageFromUrl(url);
-        if(s==null)
-        {
-            event.reply(event.getClient().getError()+"URLは無効か、見つかりません。");
-        }
-        else
-        {
+        if (s == null) {
+            event.reply(event.getClient().getError() + "URLは無効か、見つかりません。");
+        } else {
             try {
-            event.getSelfUser().getManager().setAvatar(Icon.from(s)).queue(
-                    v -> event.reply(event.getClient().getSuccess()+"アイコンを正常に変更しました。"), 
-                    t -> event.reply(event.getClient().getError()+"アイコンの設定に失敗しました。"));
-            } catch(IOException e) {
-                event.reply(event.getClient().getError()+"指定されたURLからの読み込みに失敗しました。");
+                event.getSelfUser().getManager().setAvatar(Icon.from(s)).queue(
+                        v -> event.reply(event.getClient().getSuccess() + "アイコンを正常に変更しました。"),
+                        t -> event.reply(event.getClient().getError() + "アイコンの設定に失敗しました。"));
+            } catch (IOException e) {
+                event.reply(event.getClient().getError() + "指定されたURLからの読み込みに失敗しました。");
             }
         }
     }

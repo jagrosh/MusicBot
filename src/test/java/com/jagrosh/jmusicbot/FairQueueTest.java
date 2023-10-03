@@ -24,40 +24,34 @@ import static org.junit.Assert.*;
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public class FairQueueTest
-{
+public class FairQueueTest {
     @Test
-    public void differentIdentifierSize()
-    {
+    public void differentIdentifierSize() {
         FairQueue<Q> queue = new FairQueue<>();
         int size = 100;
-        for(int i=0; i<size; i++)
+        for (int i = 0; i < size; i++)
             queue.add(new Q(i));
         assertEquals(queue.size(), size);
     }
-    
+
     @Test
-    public void sameIdentifierSize()
-    {
+    public void sameIdentifierSize() {
         FairQueue<Q> queue = new FairQueue<>();
         int size = 100;
-        for(int i=0; i<size; i++)
+        for (int i = 0; i < size; i++)
             queue.add(new Q(0));
         assertEquals(queue.size(), size);
     }
-    
-    private class Q implements Queueable
-    {
+
+    private class Q implements Queueable {
         private final long identifier;
-        
-        private Q(long identifier)
-        {
+
+        private Q(long identifier) {
             this.identifier = identifier;
         }
-        
+
         @Override
-        public long getIdentifier()
-        {
+        public long getIdentifier() {
             return identifier;
         }
     }

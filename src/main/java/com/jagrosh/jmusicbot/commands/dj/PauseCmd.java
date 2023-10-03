@@ -26,10 +26,8 @@ import com.jagrosh.jmusicbot.commands.DJCommand;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class PauseCmd extends DJCommand 
-{
-    public PauseCmd(Bot bot)
-    {
+public class PauseCmd extends DJCommand {
+    public PauseCmd(Bot bot) {
         super(bot);
         this.name = "pause";
         this.help = "再生中の曲を一時停止します。";
@@ -38,15 +36,14 @@ public class PauseCmd extends DJCommand
     }
 
     @Override
-    public void doCommand(CommandEvent event) 
-    {
-        AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        if(handler.getPlayer().isPaused())
-        {
-            event.replyWarning("プレイヤーはすでに一時停止されています。 解除するには、コマンド`"+event.getClient().getPrefix()+"play` をご使用ください。");
+    public void doCommand(CommandEvent event) {
+        AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+        if (handler.getPlayer().isPaused()) {
+            event.replyWarning("プレイヤーはすでに一時停止されています。 解除するには、コマンド`" + event.getClient().getPrefix() + "play` をご使用ください。");
             return;
         }
         handler.getPlayer().setPaused(true);
-        event.replySuccess("**"+handler.getPlayer().getPlayingTrack().getInfo().title+"**を一時停止しました。 解除するには、コマンド`"+event.getClient().getPrefix()+"play` をご使用ください。");
+        event.replySuccess("**" + handler.getPlayer().getPlayingTrack().getInfo().title + "**を一時停止しました。 解除するには、コマンド`"
+                + event.getClient().getPrefix() + "play` をご使用ください。");
     }
 }

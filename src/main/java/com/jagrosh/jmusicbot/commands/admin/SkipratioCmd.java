@@ -26,10 +26,8 @@ import com.jagrosh.jmusicbot.settings.Settings;
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public class SkipratioCmd extends AdminCommand
-{
-    public SkipratioCmd(Bot bot)
-    {
+public class SkipratioCmd extends AdminCommand {
+    public SkipratioCmd(Bot bot) {
         this.name = "setskip";
         this.help = "サーバー固有の必要スキップ投票割合を指定します。";
         this.arguments = "<0 - 100>";
@@ -37,13 +35,12 @@ public class SkipratioCmd extends AdminCommand
     }
 
     @Override
-    protected void execute(CommandEvent event) 
-    {
-        try
-        {
-            int val = Integer.parseInt(event.getArgs().endsWith("%") ? event.getArgs().substring(0,event.getArgs().length()-1) : event.getArgs());
-            if( val < 0 || val > 100)
-            {
+    protected void execute(CommandEvent event) {
+        try {
+            int val = Integer
+                    .parseInt(event.getArgs().endsWith("%") ? event.getArgs().substring(0, event.getArgs().length() - 1)
+                            : event.getArgs());
+            if (val < 0 || val > 100) {
                 event.replyError("指定する値は0から100の間でなければなりません。");
                 return;
             }
@@ -51,9 +48,7 @@ public class SkipratioCmd extends AdminCommand
             s.setSkipRatio(val / 100.0);
             event.replySuccess("スキップ投票割合は `" + val + "%` of listeners on *" + event.getGuild().getName() + "*");
             event.replySuccess("*" + event.getGuild().getName() + "*" + "のスキップ投票割合は`" + val + "%`になりました。");
-        }
-        catch(NumberFormatException ex)
-        {
+        } catch (NumberFormatException ex) {
             event.replyError("0から100の間の整数を指定してください（既定値は55です）。この数値は、曲をスキップするために投票する必要があるリスナーの割合です。");
         }
     }

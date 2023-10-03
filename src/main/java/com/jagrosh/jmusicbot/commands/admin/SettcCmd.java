@@ -30,10 +30,8 @@ import net.dv8tion.jda.api.entities.TextChannel;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SettcCmd extends AdminCommand 
-{
-    public SettcCmd(Bot bot)
-    {
+public class SettcCmd extends AdminCommand {
+    public SettcCmd(Bot bot) {
         this.name = "settc";
         this.help = "音楽コマンド用テキストチャンネルを指定します。";
         this.arguments = "<チャンネル|NONE>";
@@ -41,30 +39,26 @@ public class SettcCmd extends AdminCommand
     }
 
     @Override
-    protected void execute(CommandEvent event) 
-    {
-        if(event.getArgs().isEmpty())
-        {
-            event.reply(event.getClient().getError()+"「NONE」、またはチャンネルを記入してください。");
+    protected void execute(CommandEvent event) {
+        if (event.getArgs().isEmpty()) {
+            event.reply(event.getClient().getError() + "「NONE」、またはチャンネルを記入してください。");
             return;
         }
         Settings s = event.getClient().getSettingsFor(event.getGuild());
-        if(event.getArgs().equalsIgnoreCase("none"))
-        {
+        if (event.getArgs().equalsIgnoreCase("none")) {
             s.setTextChannel(null);
-            event.reply(event.getClient().getSuccess()+"音楽コマンドはどのチャンネルでも使用可能になりました。");
-        }
-        else
-        {
+            event.reply(event.getClient().getSuccess() + "音楽コマンドはどのチャンネルでも使用可能になりました。");
+        } else {
             List<TextChannel> list = FinderUtil.findTextChannels(event.getArgs(), event.getGuild());
-            if(list.isEmpty())
-                event.reply(event.getClient().getWarning()+"\""+event.getArgs()+"\""+"に一致するテキストチャンネルは見つかりませんでした。");
-            else if (list.size()>1)
-                event.reply(event.getClient().getWarning()+FormatUtil.listOfTChannels(list, event.getArgs()));
-            else
-            {
+            if (list.isEmpty())
+                event.reply(
+                        event.getClient().getWarning() + "\"" + event.getArgs() + "\"" + "に一致するテキストチャンネルは見つかりませんでした。");
+            else if (list.size() > 1)
+                event.reply(event.getClient().getWarning() + FormatUtil.listOfTChannels(list, event.getArgs()));
+            else {
                 s.setTextChannel(list.get(0));
-                event.reply(event.getClient().getSuccess()+"音楽コマンドは<#"+list.get(0).getId()+">"+"でのみ使用可能になりました。");
+                event.reply(
+                        event.getClient().getSuccess() + "音楽コマンドは<#" + list.get(0).getId() + ">" + "でのみ使用可能になりました。");
             }
         }
     }

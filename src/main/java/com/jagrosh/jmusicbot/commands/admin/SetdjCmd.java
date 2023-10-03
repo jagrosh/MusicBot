@@ -30,10 +30,8 @@ import net.dv8tion.jda.api.entities.Role;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SetdjCmd extends AdminCommand
-{
-    public SetdjCmd(Bot bot)
-    {
+public class SetdjCmd extends AdminCommand {
+    public SetdjCmd(Bot bot) {
         this.name = "setdj";
         this.help = "特定のコマンド用のDJロールを指定します。";
         this.arguments = "<ロール名|NONE(無効)>";
@@ -41,30 +39,25 @@ public class SetdjCmd extends AdminCommand
     }
 
     @Override
-    protected void execute(CommandEvent event) 
-    {
-        if(event.getArgs().isEmpty())
-        {
-            event.reply(event.getClient().getError()+" 「NONE」または、ロール名を記入してください。");
+    protected void execute(CommandEvent event) {
+        if (event.getArgs().isEmpty()) {
+            event.reply(event.getClient().getError() + " 「NONE」または、ロール名を記入してください。");
             return;
         }
         Settings s = event.getClient().getSettingsFor(event.getGuild());
-        if(event.getArgs().equalsIgnoreCase("none"))
-        {
+        if (event.getArgs().equalsIgnoreCase("none")) {
             s.setDJRole(null);
-            event.reply(event.getClient().getSuccess()+" DJロールは無効になりました。 DJコマンドは管理者のみが使用できます。");
-        }
-        else
-        {
+            event.reply(event.getClient().getSuccess() + " DJロールは無効になりました。 DJコマンドは管理者のみが使用できます。");
+        } else {
             List<Role> list = FinderUtil.findRoles(event.getArgs(), event.getGuild());
-            if(list.isEmpty())
-                event.reply(event.getClient().getWarning()+"\""+event.getArgs()+"\""+"に一致するロールは見つかりませんでした。");
-            else if (list.size()>1)
-                event.reply(event.getClient().getWarning()+FormatUtil.listOfRoles(list, event.getArgs()));
-            else
-            {
+            if (list.isEmpty())
+                event.reply(event.getClient().getWarning() + "\"" + event.getArgs() + "\"" + "に一致するロールは見つかりませんでした。");
+            else if (list.size() > 1)
+                event.reply(event.getClient().getWarning() + FormatUtil.listOfRoles(list, event.getArgs()));
+            else {
                 s.setDJRole(list.get(0));
-                event.reply(event.getClient().getSuccess()+"ロール「**"+list.get(0).getName()+"**」をお持ちのユーザー全員にDJコマンドが使用可能です。");
+                event.reply(event.getClient().getSuccess() + "ロール「**" + list.get(0).getName()
+                        + "**」をお持ちのユーザー全員にDJコマンドが使用可能です。");
             }
         }
     }

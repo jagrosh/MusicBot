@@ -30,10 +30,8 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SetvcCmd extends AdminCommand 
-{
-    public SetvcCmd(Bot bot)
-    {
+public class SetvcCmd extends AdminCommand {
+    public SetvcCmd(Bot bot) {
         this.name = "setvc";
         this.help = "音楽の再生用のボイスチャンネルを指定します。";
         this.arguments = "<チャンネル|NONE>";
@@ -41,30 +39,25 @@ public class SetvcCmd extends AdminCommand
     }
 
     @Override
-    protected void execute(CommandEvent event) 
-    {
-        if(event.getArgs().isEmpty())
-        {
-            event.reply(event.getClient().getError()+"「NONE」、またはボイスチャンネルを記入してください。");
+    protected void execute(CommandEvent event) {
+        if (event.getArgs().isEmpty()) {
+            event.reply(event.getClient().getError() + "「NONE」、またはボイスチャンネルを記入してください。");
             return;
         }
         Settings s = event.getClient().getSettingsFor(event.getGuild());
-        if(event.getArgs().equalsIgnoreCase("none"))
-        {
+        if (event.getArgs().equalsIgnoreCase("none")) {
             s.setVoiceChannel(null);
-            event.reply(event.getClient().getSuccess()+"音楽はどのボイスチャンネルでも再生可能になりました。");
-        }
-        else
-        {
+            event.reply(event.getClient().getSuccess() + "音楽はどのボイスチャンネルでも再生可能になりました。");
+        } else {
             List<VoiceChannel> list = FinderUtil.findVoiceChannels(event.getArgs(), event.getGuild());
-            if(list.isEmpty())
-                event.reply(event.getClient().getWarning()+"\""+event.getArgs()+"\""+"に一致するボイスチャンネルは見つかりませんでした。");
-            else if (list.size()>1)
-                event.reply(event.getClient().getWarning()+FormatUtil.listOfVChannels(list, event.getArgs()));
-            else
-            {
+            if (list.isEmpty())
+                event.reply(
+                        event.getClient().getWarning() + "\"" + event.getArgs() + "\"" + "に一致するボイスチャンネルは見つかりませんでした。");
+            else if (list.size() > 1)
+                event.reply(event.getClient().getWarning() + FormatUtil.listOfVChannels(list, event.getArgs()));
+            else {
                 s.setVoiceChannel(list.get(0));
-                event.reply(event.getClient().getSuccess()+"音楽は "+list.get(0).getAsMention()+"でのみ再生可能になりました。");
+                event.reply(event.getClient().getSuccess() + "音楽は " + list.get(0).getAsMention() + "でのみ再生可能になりました。");
             }
         }
     }

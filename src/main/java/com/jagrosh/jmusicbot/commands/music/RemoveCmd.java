@@ -30,10 +30,8 @@ import net.dv8tion.jda.api.entities.User;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class RemoveCmd extends MusicCommand 
-{
-    public RemoveCmd(Bot bot)
-    {
+public class RemoveCmd extends MusicCommand {
+    public RemoveCmd(Bot bot) {
         super(bot);
         this.name = "remove";
         this.help = "キューから曲を削除します。";
@@ -44,59 +42,51 @@ public class RemoveCmd extends MusicCommand
     }
 
     @Override
-    public void doCommand(CommandEvent event) 
-    {
-        AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        if(handler.getQueue().isEmpty())
-        {
+    public void doCommand(CommandEvent event) {
+        AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+        if (handler.getQueue().isEmpty()) {
             event.replyError("キューには何も入っていません。");
             return;
         }
-        if(event.getArgs().equalsIgnoreCase("all"))
-        {
+        if (event.getArgs().equalsIgnoreCase("all")) {
             int count = handler.getQueue().removeAll(event.getAuthor().getIdLong());
-            if(count==0)
+            if (count == 0)
                 event.replyWarning("キューには曲がありません。");
             else
-                event.replySuccess("正常に項目を"+count+"件削除しました。");
+                event.replySuccess("正常に項目を" + count + "件削除しました。");
             return;
         }
         int pos;
         try {
             pos = Integer.parseInt(event.getArgs());
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             pos = 0;
         }
-        if(pos<1 || pos>handler.getQueue().size())
-        {
-            event.replyError("位置は1から"+handler.getQueue().size()+"の間の有効な整数でなければなりません。");
+        if (pos < 1 || pos > handler.getQueue().size()) {
+            event.replyError("位置は1から" + handler.getQueue().size() + "の間の有効な整数でなければなりません。");
             return;
         }
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
         boolean isDJ = event.getMember().hasPermission(Permission.MANAGE_SERVER);
-        if(!isDJ)
+        if (!isDJ)
             isDJ = event.getMember().getRoles().contains(settings.getRole(event.getGuild()));
-        QueuedTrack qt = handler.getQueue().get(pos-1);
-        if(qt.getIdentifier()==event.getAuthor().getIdLong())
-        {
-            handler.getQueue().remove(pos-1);
-            event.replySuccess("**"+qt.getTrack().getInfo().title+"**をキューから削除しました。");
-        }
-        else if(isDJ)
-        {
-            handler.getQueue().remove(pos-1);
+        QueuedTrack qt = handler.getQueue().get(pos - 1);
+        if (qt.getIdentifier() == event.getAuthor().getIdLong()) {
+            handler.getQueue().remove(pos - 1);
+            event.replySuccess("**" + qt.getTrack().getInfo().title + "**をキューから削除しました。");
+        } else if (isDJ) {
+            handler.getQueue().remove(pos - 1);
             User u;
             try {
                 u = event.getJDA().getUserById(qt.getIdentifier());
-            } catch(Exception e) {
+            } catch (Exception e) {
                 u = null;
             }
-            event.replySuccess("**"+(u==null ? "誰か" : "**"+u.getName()+"**")+"さんに要求された曲"+qt.getTrack().getInfo().title
-                    +"を削除しました。");
-        }
-        else
-        {
-            event.replyError("あなたが追加していないため、曲**"+qt.getTrack().getInfo().title+"**を削除できません。");
+            event.replySuccess(
+                    "**" + (u == null ? "誰か" : "**" + u.getName() + "**") + "さんに要求された曲" + qt.getTrack().getInfo().title
+                            + "を削除しました。");
+        } else {
+            event.replyError("あなたが追加していないため、曲**" + qt.getTrack().getInfo().title + "**を削除できません。");
         }
     }
 }

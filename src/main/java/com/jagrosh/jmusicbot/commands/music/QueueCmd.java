@@ -38,22 +38,25 @@ import net.dv8tion.jda.api.exceptions.PermissionException;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class QueueCmd extends MusicCommand 
-{
+public class QueueCmd extends MusicCommand {
     private final Paginator.Builder builder;
 
-    public QueueCmd(Bot bot)
-    {
+    public QueueCmd(Bot bot) {
         super(bot);
         this.name = "queue";
         this.help = "現在のキューを表示します。";
         this.arguments = "[ページ番号]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.bePlaying = true;
-        this.botPermissions = new Permission[]{Permission.MESSAGE_ADD_REACTION,Permission.MESSAGE_EMBED_LINKS};
+        this.botPermissions = new Permission[] { Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS };
         builder = new Paginator.Builder()
                 .setColumns(1)
-                .setFinalAction(m -> {try{m.clearReactions().queue();}catch(PermissionException ignore){}})
+                .setFinalAction(m -> {
+                    try {
+                        m.clearReactions().queue();
+                    } catch (PermissionException ignore) {
+                    }
+                })
                 .setItemsPerPage(10)
                 .waitOnSinglePage(false)
                 .useNumberedItems(true)
@@ -64,57 +67,50 @@ public class QueueCmd extends MusicCommand
     }
 
     @Override
-    public void doCommand(CommandEvent event)
-    {
+    public void doCommand(CommandEvent event) {
         int pagenum = 1;
-        try
-        {
+        try {
             pagenum = Integer.parseInt(event.getArgs());
+        } catch (NumberFormatException ignore) {
         }
-        catch(NumberFormatException ignore){}
-        AudioHandler ah = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
+        AudioHandler ah = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
         List<QueuedTrack> list = ah.getQueue().getList();
-        if(list.isEmpty())
-        {
+        if (list.isEmpty()) {
             Message nowp = ah.getNowPlaying(event.getJDA());
             Message nonowp = ah.getNoMusicPlaying(event.getJDA());
             Message built = new MessageBuilder()
                     .setContent(event.getClient().getWarning() + " キューに音楽はありません。")
-                    .setEmbeds((nowp==null ? nonowp : nowp).getEmbeds().get(0)).build();
-            event.reply(built, m -> 
-            {
-                if(nowp!=null)
+                    .setEmbeds((nowp == null ? nonowp : nowp).getEmbeds().get(0)).build();
+            event.reply(built, m -> {
+                if (nowp != null)
                     bot.getNowplayingHandler().setLastNPMessage(m);
             });
             return;
         }
         String[] songs = new String[list.size()];
         long total = 0;
-        for(int i=0; i<list.size(); i++)
-        {
+        for (int i = 0; i < list.size(); i++) {
             total += list.get(i).getTrack().getDuration();
             songs[i] = list.get(i).toString();
         }
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
         long fintotal = total;
-        builder.setText((i1,i2) -> getQueueTitle(ah, event.getClient().getSuccess(), songs.length, fintotal, settings.getRepeatMode()))
+        builder.setText((i1, i2) -> getQueueTitle(ah, event.getClient().getSuccess(), songs.length, fintotal,
+                settings.getRepeatMode()))
                 .setItems(songs)
                 .setUsers(event.getAuthor())
-                .setColor(event.getSelfMember().getColor())
-                ;
+                .setColor(event.getSelfMember().getColor());
         builder.build().paginate(event.getChannel(), pagenum);
     }
 
-    private String getQueueTitle(AudioHandler ah, String success, int songslength, long total, RepeatMode repeatmode)
-    {
+    private String getQueueTitle(AudioHandler ah, String success, int songslength, long total, RepeatMode repeatmode) {
         StringBuilder sb = new StringBuilder();
-        if(ah.getPlayer().getPlayingTrack()!=null)
-        {
+        if (ah.getPlayer().getPlayingTrack() != null) {
             sb.append(ah.getStatusEmoji()).append(" **")
                     .append(ah.getPlayer().getPlayingTrack().getInfo().title).append("**\n");
         }
         return FormatUtil.filter(sb.append(success).append(" 現在のキュー | ").append(songslength)
                 .append(" 項目 | `").append(FormatUtil.formatTime(total)).append("` ")
-                .append(repeatmode.getEmoji() != null ? "| "+repeatmode.getEmoji() : "").toString());
+                .append(repeatmode.getEmoji() != null ? "| " + repeatmode.getEmoji() : "").toString());
     }
 }

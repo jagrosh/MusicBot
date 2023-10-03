@@ -114,16 +114,16 @@ public class BotConfig {
             if (owner <= 0) {
                 try {
                     owner = Long.parseLong(prompt.prompt("オーナーIDが不足しているか、記入されたオーナーIDが無効です。"
-                    + "\nボットのオーナーのユーザーIDを記入してください。"
-                    + "\nユーザーIDを取得するための手順はこちらに記載されています:"
-                    + "\nhttps://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID"
-                    + "\nオーナーのユーザーID: "));
+                            + "\nボットのオーナーのユーザーIDを記入してください。"
+                            + "\nユーザーIDを取得するための手順はこちらに記載されています:"
+                            + "\nhttps://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID"
+                            + "\nオーナーのユーザーID: "));
                 } catch (NumberFormatException | NullPointerException ex) {
                     owner = 0;
                 }
                 if (owner <= 0) {
                     prompt.alert(Prompt.Level.ERROR, CONTEXT,
-                    "ユーザーIDは無効です。 終了します。.\n\nコンフィグファイルの場所: " + path.toAbsolutePath().toString());
+                            "ユーザーIDは無効です。 終了します。.\n\nコンフィグファイルの場所: " + path.toAbsolutePath().toString());
                     return;
                 } else {
                     write = true;
@@ -179,11 +179,11 @@ public class BotConfig {
         byte[] bytes = BotConfig.loadDefaultConfig().getBytes();
         try {
             prompt.alert(Prompt.Level.INFO, "JMusicBot Config",
-                    "\"デフォルトの設定ファイルを" + path.toAbsolutePath().toString()+"に書き込んでいます。");
+                    "\"デフォルトの設定ファイルを" + path.toAbsolutePath().toString() + "に書き込んでいます。");
             Files.write(path, bytes);
         } catch (Exception ex) {
             prompt.alert(Prompt.Level.ERROR, "JMusicBot Config",
-            "デフォルトの設定ファイルを書き込む際にエラーが発生しました： " + ex.getMessage());
+                    "デフォルトの設定ファイルを書き込む際にエラーが発生しました： " + ex.getMessage());
         }
     }
 

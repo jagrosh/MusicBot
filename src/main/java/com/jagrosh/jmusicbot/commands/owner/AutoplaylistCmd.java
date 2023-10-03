@@ -26,12 +26,10 @@ import com.jagrosh.jmusicbot.settings.Settings;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class AutoplaylistCmd extends OwnerCommand
-{
+public class AutoplaylistCmd extends OwnerCommand {
     private final Bot bot;
 
-    public AutoplaylistCmd(Bot bot)
-    {
+    public AutoplaylistCmd(Bot bot) {
         this.bot = bot;
         this.guildOnly = true;
         this.name = "autoplaylist";
@@ -41,30 +39,26 @@ public class AutoplaylistCmd extends OwnerCommand
     }
 
     @Override
-    public void execute(CommandEvent event) 
-    {
-        if(event.getArgs().isEmpty())
-        {
-            event.reply(event.getClient().getError()+" 「NONE」、またはプレイリスト名を記入してください。");
+    public void execute(CommandEvent event) {
+        if (event.getArgs().isEmpty()) {
+            event.reply(event.getClient().getError() + " 「NONE」、またはプレイリスト名を記入してください。");
             return;
         }
-        if(event.getArgs().equalsIgnoreCase("none"))
-        {
+        if (event.getArgs().equalsIgnoreCase("none")) {
             Settings settings = event.getClient().getSettingsFor(event.getGuild());
             settings.setDefaultPlaylist(null);
-            event.reply(event.getClient().getSuccess()+" **"+event.getGuild().getName()+"**固有の既定プレイリストをリセットしました。");
+            event.reply(
+                    event.getClient().getSuccess() + " **" + event.getGuild().getName() + "**固有の既定プレイリストをリセットしました。");
             return;
         }
         String pname = event.getArgs().replaceAll("\\s+", "_");
-        if(bot.getPlaylistLoader().getPlaylist(pname)==null)
-        {
-            event.reply(event.getClient().getError()+"`"+pname+".txt`は見つかりませんでした。");
-        }
-        else
-        {
+        if (bot.getPlaylistLoader().getPlaylist(pname) == null) {
+            event.reply(event.getClient().getError() + "`" + pname + ".txt`は見つかりませんでした。");
+        } else {
             Settings settings = event.getClient().getSettingsFor(event.getGuild());
             settings.setDefaultPlaylist(pname);
-            event.reply(event.getClient().getSuccess()+" **"+event.getGuild().getName()+"**固有の既定プレイリストは`"+pname+"`になりました。");
+            event.reply(event.getClient().getSuccess() + " **" + event.getGuild().getName() + "**固有の既定プレイリストは`" + pname
+                    + "`になりました。");
         }
     }
 }

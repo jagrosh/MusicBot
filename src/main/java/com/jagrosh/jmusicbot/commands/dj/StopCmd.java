@@ -26,10 +26,8 @@ import com.jagrosh.jmusicbot.commands.DJCommand;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class StopCmd extends DJCommand 
-{
-    public StopCmd(Bot bot)
-    {
+public class StopCmd extends DJCommand {
+    public StopCmd(Bot bot) {
         super(bot);
         this.name = "stop";
         this.help = "再生中の曲を停止し、キューをクリアします。";
@@ -38,11 +36,10 @@ public class StopCmd extends DJCommand
     }
 
     @Override
-    public void doCommand(CommandEvent event) 
-    {
-        AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
+    public void doCommand(CommandEvent event) {
+        AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
         handler.stopAndClear();
         event.getGuild().getAudioManager().closeAudioConnection();
-        event.reply(event.getClient().getSuccess()+"プレーヤーが停止し、キューがクリアされた。");
+        event.reply(event.getClient().getSuccess() + "プレーヤーが停止し、キューがクリアされた。");
     }
 }

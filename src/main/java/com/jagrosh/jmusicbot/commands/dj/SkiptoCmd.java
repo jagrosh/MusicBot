@@ -26,10 +26,8 @@ import com.jagrosh.jmusicbot.commands.DJCommand;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SkiptoCmd extends DJCommand 
-{
-    public SkiptoCmd(Bot bot)
-    {
+public class SkiptoCmd extends DJCommand {
+    public SkiptoCmd(Bot bot) {
         super(bot);
         this.name = "skipto";
         this.help = "指定された曲を再生します。";
@@ -39,26 +37,22 @@ public class SkiptoCmd extends DJCommand
     }
 
     @Override
-    public void doCommand(CommandEvent event) 
-    {
+    public void doCommand(CommandEvent event) {
         int index = 0;
-        try
-        {
+        try {
             index = Integer.parseInt(event.getArgs());
-        }
-        catch(NumberFormatException e)
-        {
-            event.reply(event.getClient().getError()+" `"+event.getArgs()+"`は有効な整数ではありません。");
+        } catch (NumberFormatException e) {
+            event.reply(event.getClient().getError() + " `" + event.getArgs() + "`は有効な整数ではありません。");
             return;
         }
-        AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        if(index<1 || index>handler.getQueue().size())
-        {
-            event.reply(event.getClient().getError()+"位置は1から"+handler.getQueue().size()+"までの有効な整数でなければなりません。");
+        AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+        if (index < 1 || index > handler.getQueue().size()) {
+            event.reply(event.getClient().getError() + "位置は1から" + handler.getQueue().size() + "までの有効な整数でなければなりません。");
             return;
         }
-        handler.getQueue().skip(index-1);
-        event.reply(event.getClient().getSuccess()+"**"+handler.getQueue().get(0).getTrack().getInfo().title+"**まで飛ばしました。");
+        handler.getQueue().skip(index - 1);
+        event.reply(event.getClient().getSuccess() + "**" + handler.getQueue().get(0).getTrack().getInfo().title
+                + "**まで飛ばしました。");
         handler.getPlayer().stopTrack();
     }
 }

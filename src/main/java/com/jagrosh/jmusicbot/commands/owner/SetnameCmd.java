@@ -26,10 +26,8 @@ import net.dv8tion.jda.api.exceptions.RateLimitedException;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SetnameCmd extends OwnerCommand
-{
-    public SetnameCmd(Bot bot)
-    {
+public class SetnameCmd extends OwnerCommand {
+    public SetnameCmd(Bot bot) {
         this.name = "setname";
         this.help = "ボットの名前を設定します。";
         this.arguments = "<名前>";
@@ -38,21 +36,15 @@ public class SetnameCmd extends OwnerCommand
     }
 
     @Override
-    protected void execute(CommandEvent event) 
-    {
-        try 
-        {
+    protected void execute(CommandEvent event) {
+        try {
             String oldname = event.getSelfUser().getName();
             event.getSelfUser().getManager().setName(event.getArgs()).complete(false);
-            event.reply(event.getClient().getSuccess()+"名前を`"+oldname+"`から`"+event.getArgs()+"`に変更しました。");
-        } 
-        catch(RateLimitedException e) 
-        {
-            event.reply(event.getClient().getError()+"名前は1時間に2回しか変更できません。");
-        }
-        catch(Exception e) 
-        {
-            event.reply(event.getClient().getError()+"無効な名前です。");
+            event.reply(event.getClient().getSuccess() + "名前を`" + oldname + "`から`" + event.getArgs() + "`に変更しました。");
+        } catch (RateLimitedException e) {
+            event.reply(event.getClient().getError() + "名前は1時間に2回しか変更できません。");
+        } catch (Exception e) {
+            event.reply(event.getClient().getError() + "無効な名前です。");
         }
     }
 }

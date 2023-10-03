@@ -33,12 +33,10 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SettingsCmd extends Command 
-{
+public class SettingsCmd extends Command {
     private final static String EMOJI = "\uD83C\uDFA7"; // 🎧
 
-    public SettingsCmd(Bot bot)
-    {
+    public SettingsCmd(Bot bot) {
         this.name = "settings";
         this.help = "ボットの設定を表示します。";
         this.aliases = bot.getConfig().getAliases(this.name);
@@ -46,8 +44,7 @@ public class SettingsCmd extends Command
     }
 
     @Override
-    protected void execute(CommandEvent event) 
-    {
+    protected void execute(CommandEvent event) {
         Settings s = event.getClient().getSettingsFor(event.getGuild());
         MessageBuilder builder = new MessageBuilder()
                 .append(EMOJI + " **")
@@ -63,12 +60,13 @@ public class SettingsCmd extends Command
                         + "\nDJロール: " + (role == null ? "無効" : "**" + role.getName() + "**")
                         + "\nカスタムプレフィックス: " + (s.getPrefix() == null ? "無効" : "`" + s.getPrefix() + "`")
                         + "\nリピートモード: " + (s.getRepeatMode() == RepeatMode.OFF
-                                                ? s.getRepeatMode().getUserFriendlyName()
-                                                : "**"+s.getRepeatMode().getUserFriendlyName()+"**")
-                        + "\nデフォルトプレイリスト: " + (s.getDefaultPlaylist() == null ? "無効" : "**" + s.getDefaultPlaylist() + "**")
-                        )
+                                ? s.getRepeatMode().getUserFriendlyName()
+                                : "**" + s.getRepeatMode().getUserFriendlyName() + "**")
+                        + "\nデフォルトプレイリスト: "
+                        + (s.getDefaultPlaylist() == null ? "無効" : "**" + s.getDefaultPlaylist() + "**"))
                 .setFooter(event.getJDA().getGuilds().size() + " サーバー | "
-                        + event.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count()
+                        + event.getJDA().getGuilds().stream()
+                                .filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count()
                         + " 通話接続数", null);
         event.getChannel().sendMessage(builder.setEmbeds(ebuilder.build()).build()).queue();
     }

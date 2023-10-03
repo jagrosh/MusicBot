@@ -25,12 +25,10 @@ import com.jagrosh.jmusicbot.commands.OwnerCommand;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class ShutdownCmd extends OwnerCommand
-{
+public class ShutdownCmd extends OwnerCommand {
     private final Bot bot;
 
-    public ShutdownCmd(Bot bot)
-    {
+    public ShutdownCmd(Bot bot) {
         this.bot = bot;
         this.name = "shutdown";
         this.help = "ボットを安全にシャットダウンします。";
@@ -39,8 +37,7 @@ public class ShutdownCmd extends OwnerCommand
     }
 
     @Override
-    protected void execute(CommandEvent event)
-    {
+    protected void execute(CommandEvent event) {
         event.replyWarning("シャットダウンしています…");
         bot.shutdown();
     }

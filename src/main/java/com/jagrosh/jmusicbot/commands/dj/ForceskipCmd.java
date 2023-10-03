@@ -27,10 +27,8 @@ import com.jagrosh.jmusicbot.commands.DJCommand;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class ForceskipCmd extends DJCommand 
-{
-    public ForceskipCmd(Bot bot)
-    {
+public class ForceskipCmd extends DJCommand {
+    public ForceskipCmd(Bot bot) {
         super(bot);
         this.name = "forceskip";
         this.help = "再生中の曲を飛ばします。";
@@ -39,11 +37,12 @@ public class ForceskipCmd extends DJCommand
     }
 
     @Override
-    public void doCommand(CommandEvent event) 
-    {
-        AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
+    public void doCommand(CommandEvent event) {
+        AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
         RequestMetadata rm = handler.getRequestMetadata();
-        event.reply(event.getClient().getSuccess()+(rm.getOwner() == 0L ? "(autoplay)" : "(**" + rm.user.username+"**)"+"さんに要求された曲:"+handler.getPlayer().getPlayingTrack().getInfo().title+"をスキップしました。"));
+        event.reply(event.getClient().getSuccess() + (rm.getOwner() == 0L ? "(autoplay)"
+                : "(**" + rm.user.username + "**)" + "さんに要求された曲:"
+                        + handler.getPlayer().getPlayingTrack().getInfo().title + "をスキップしました。"));
         handler.getPlayer().stopTrack();
     }
 }
