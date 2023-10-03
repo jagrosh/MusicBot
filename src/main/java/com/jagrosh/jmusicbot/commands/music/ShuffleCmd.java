@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +32,7 @@ public class ShuffleCmd extends MusicCommand
     {
         super(bot);
         this.name = "shuffle";
-        this.help = "shuffles songs you have added";
+        this.help = "追加されている曲をシャッフルします。";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
         this.bePlaying = true;
@@ -44,15 +46,15 @@ public class ShuffleCmd extends MusicCommand
         switch (s) 
         {
             case 0:
-                event.replyError("You don't have any music in the queue to shuffle!");
+                event.replyError("キュー内にシャッフルする曲はありません。");
                 break;
             case 1:
-                event.replyWarning("You only have one song in the queue!");
+                event.replyWarning("キュー内には一曲だけがあります。");
                 break;
             default:
-                event.replySuccess("You successfully shuffled your "+s+" entries.");
+                event.replySuccess("正常に曲を"+s+"件シャッフルしました。");
                 break;
         }
     }
-    
+
 }

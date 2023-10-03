@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,12 +31,12 @@ public class SetnameCmd extends OwnerCommand
     public SetnameCmd(Bot bot)
     {
         this.name = "setname";
-        this.help = "sets the name of the bot";
-        this.arguments = "<name>";
+        this.help = "ボットの名前を設定します。";
+        this.arguments = "<名前>";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
     }
-    
+
     @Override
     protected void execute(CommandEvent event) 
     {
@@ -42,15 +44,15 @@ public class SetnameCmd extends OwnerCommand
         {
             String oldname = event.getSelfUser().getName();
             event.getSelfUser().getManager().setName(event.getArgs()).complete(false);
-            event.reply(event.getClient().getSuccess()+" Name changed from `"+oldname+"` to `"+event.getArgs()+"`");
+            event.reply(event.getClient().getSuccess()+"名前を`"+oldname+"`から`"+event.getArgs()+"`に変更しました。");
         } 
         catch(RateLimitedException e) 
         {
-            event.reply(event.getClient().getError()+" Name can only be changed twice per hour!");
+            event.reply(event.getClient().getError()+"名前は1時間に2回しか変更できません。");
         }
         catch(Exception e) 
         {
-            event.reply(event.getClient().getError()+" That name is not valid!");
+            event.reply(event.getClient().getError()+"無効な名前です。");
         }
     }
 }

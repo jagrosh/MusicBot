@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,38 +35,38 @@ public class SetdjCmd extends AdminCommand
     public SetdjCmd(Bot bot)
     {
         this.name = "setdj";
-        this.help = "sets the DJ role for certain music commands";
-        this.arguments = "<rolename|NONE>";
+        this.help = "特定のコマンド用のDJロールを指定します。";
+        this.arguments = "<ロール名|NONE(無効)>";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
-    
+
     @Override
     protected void execute(CommandEvent event) 
     {
         if(event.getArgs().isEmpty())
         {
-            event.reply(event.getClient().getError()+" Please include a role name or NONE");
+            event.reply(event.getClient().getError()+" 「NONE」または、ロール名を記入してください。");
             return;
         }
         Settings s = event.getClient().getSettingsFor(event.getGuild());
         if(event.getArgs().equalsIgnoreCase("none"))
         {
             s.setDJRole(null);
-            event.reply(event.getClient().getSuccess()+" DJ role cleared; Only Admins can use the DJ commands.");
+            event.reply(event.getClient().getSuccess()+" DJロールは無効になりました。 DJコマンドは管理者のみが使用できます。");
         }
         else
         {
             List<Role> list = FinderUtil.findRoles(event.getArgs(), event.getGuild());
             if(list.isEmpty())
-                event.reply(event.getClient().getWarning()+" No Roles found matching \""+event.getArgs()+"\"");
+                event.reply(event.getClient().getWarning()+"\""+event.getArgs()+"\""+"に一致するロールは見つかりませんでした。");
             else if (list.size()>1)
                 event.reply(event.getClient().getWarning()+FormatUtil.listOfRoles(list, event.getArgs()));
             else
             {
                 s.setDJRole(list.get(0));
-                event.reply(event.getClient().getSuccess()+" DJ commands can now be used by users with the **"+list.get(0).getName()+"** role.");
+                event.reply(event.getClient().getSuccess()+"ロール「**"+list.get(0).getName()+"**」をお持ちのユーザー全員にDJコマンドが使用可能です。");
             }
         }
     }
-    
+
 }

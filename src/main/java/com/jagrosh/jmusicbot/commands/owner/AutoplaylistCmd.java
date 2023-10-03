@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2016 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,14 +29,14 @@ import com.jagrosh.jmusicbot.settings.Settings;
 public class AutoplaylistCmd extends OwnerCommand
 {
     private final Bot bot;
-    
+
     public AutoplaylistCmd(Bot bot)
     {
         this.bot = bot;
         this.guildOnly = true;
         this.name = "autoplaylist";
-        this.arguments = "<name|NONE>";
-        this.help = "sets the default playlist for the server";
+        this.arguments = "<名|NONE(無効)>";
+        this.help = "サーバー固有の既定プレイリストを設定します。";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
 
@@ -43,26 +45,26 @@ public class AutoplaylistCmd extends OwnerCommand
     {
         if(event.getArgs().isEmpty())
         {
-            event.reply(event.getClient().getError()+" Please include a playlist name or NONE");
+            event.reply(event.getClient().getError()+" 「NONE」、またはプレイリスト名を記入してください。");
             return;
         }
         if(event.getArgs().equalsIgnoreCase("none"))
         {
             Settings settings = event.getClient().getSettingsFor(event.getGuild());
             settings.setDefaultPlaylist(null);
-            event.reply(event.getClient().getSuccess()+" Cleared the default playlist for **"+event.getGuild().getName()+"**");
+            event.reply(event.getClient().getSuccess()+" **"+event.getGuild().getName()+"**固有の既定プレイリストをリセットしました。");
             return;
         }
         String pname = event.getArgs().replaceAll("\\s+", "_");
         if(bot.getPlaylistLoader().getPlaylist(pname)==null)
         {
-            event.reply(event.getClient().getError()+" Could not find `"+pname+".txt`!");
+            event.reply(event.getClient().getError()+"`"+pname+".txt`は見つかりませんでした。");
         }
         else
         {
             Settings settings = event.getClient().getSettingsFor(event.getGuild());
             settings.setDefaultPlaylist(pname);
-            event.reply(event.getClient().getSuccess()+" The default playlist for **"+event.getGuild().getName()+"** is now `"+pname+"`");
+            event.reply(event.getClient().getSuccess()+" **"+event.getGuild().getName()+"**固有の既定プレイリストは`"+pname+"`になりました。");
         }
     }
 }

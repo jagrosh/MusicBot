@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +41,7 @@ public abstract class MusicCommand extends Command
     {
         this.bot = bot;
         this.guildOnly = true;
-        this.category = new Category("Music");
+        this.category = new Category("音楽");
     }
     
     @Override

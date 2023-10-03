@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,30 +31,30 @@ public class PrefixCmd extends AdminCommand
     public PrefixCmd(Bot bot)
     {
         this.name = "prefix";
-        this.help = "sets a server-specific prefix";
-        this.arguments = "<prefix|NONE>";
+        this.help = "サーバー固有のプレフィックスを設定します。";
+        this.arguments = "<プレフィックス|NONE(無効)>";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
-    
+
     @Override
     protected void execute(CommandEvent event) 
     {
         if(event.getArgs().isEmpty())
         {
-            event.replyError("Please include a prefix or NONE");
+            event.replyError("「NONE」または任意のプレフィックスを記入してください。");
             return;
         }
-        
+
         Settings s = event.getClient().getSettingsFor(event.getGuild());
         if(event.getArgs().equalsIgnoreCase("none"))
         {
             s.setPrefix(null);
-            event.replySuccess("Prefix cleared.");
+            event.replySuccess("プレフィックスはリセットされました。");
         }
         else
         {
             s.setPrefix(event.getArgs());
-            event.replySuccess("Custom prefix set to `" + event.getArgs() + "` on *" + event.getGuild().getName() + "*");
+            event.replySuccess("*"+event.getGuild().getName()+"*の固有プレフィックスを `" +event.getArgs()+"`に変更しました。");
         }
     }
 }

@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2017 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,15 +36,15 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 public class SettingsCmd extends Command 
 {
     private final static String EMOJI = "\uD83C\uDFA7"; // 🎧
-    
+
     public SettingsCmd(Bot bot)
     {
         this.name = "settings";
-        this.help = "shows the bots settings";
+        this.help = "ボットの設定を表示します。";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
     }
-    
+
     @Override
     protected void execute(CommandEvent event) 
     {
@@ -56,19 +58,19 @@ public class SettingsCmd extends Command
         Role role = s.getRole(event.getGuild());
         EmbedBuilder ebuilder = new EmbedBuilder()
                 .setColor(event.getSelfMember().getColor())
-                .setDescription("Text Channel: " + (tchan == null ? "Any" : "**#" + tchan.getName() + "**")
-                        + "\nVoice Channel: " + (vchan == null ? "Any" : vchan.getAsMention())
-                        + "\nDJ Role: " + (role == null ? "None" : "**" + role.getName() + "**")
-                        + "\nCustom Prefix: " + (s.getPrefix() == null ? "None" : "`" + s.getPrefix() + "`")
-                        + "\nRepeat Mode: " + (s.getRepeatMode() == RepeatMode.OFF
+                .setDescription("テキストチャンネル: " + (tchan == null ? "任意" : "**#" + tchan.getName() + "**")
+                        + "\nボイスチャンネル: " + (vchan == null ? "任意" : vchan.getAsMention())
+                        + "\nDJロール: " + (role == null ? "無効" : "**" + role.getName() + "**")
+                        + "\nカスタムプレフィックス: " + (s.getPrefix() == null ? "無効" : "`" + s.getPrefix() + "`")
+                        + "\nリピートモード: " + (s.getRepeatMode() == RepeatMode.OFF
                                                 ? s.getRepeatMode().getUserFriendlyName()
                                                 : "**"+s.getRepeatMode().getUserFriendlyName()+"**")
-                        + "\nDefault Playlist: " + (s.getDefaultPlaylist() == null ? "None" : "**" + s.getDefaultPlaylist() + "**")
+                        + "\nデフォルトプレイリスト: " + (s.getDefaultPlaylist() == null ? "無効" : "**" + s.getDefaultPlaylist() + "**")
                         )
-                .setFooter(event.getJDA().getGuilds().size() + " servers | "
+                .setFooter(event.getJDA().getGuilds().size() + " サーバー | "
                         + event.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count()
-                        + " audio connections", null);
+                        + " 通話接続数", null);
         event.getChannel().sendMessage(builder.setEmbeds(ebuilder.build()).build()).queue();
     }
-    
+
 }

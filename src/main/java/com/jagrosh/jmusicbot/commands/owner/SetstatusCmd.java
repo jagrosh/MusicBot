@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2017 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,12 +31,12 @@ public class SetstatusCmd extends OwnerCommand
     public SetstatusCmd(Bot bot)
     {
         this.name = "setstatus";
-        this.help = "sets the status the bot displays";
-        this.arguments = "<status>";
+        this.help = "ボットの表示されているステータスを設定します。";
+        this.arguments = "<ステータス>";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
     }
-    
+
     @Override
     protected void execute(CommandEvent event) 
     {
@@ -42,15 +44,15 @@ public class SetstatusCmd extends OwnerCommand
             OnlineStatus status = OnlineStatus.fromKey(event.getArgs());
             if(status==OnlineStatus.UNKNOWN)
             {
-                event.replyError("Please include one of the following statuses: `ONLINE`, `IDLE`, `DND`, `INVISIBLE`");
+                event.replyError("次のステータスのいずれかを記入してください。 `ONLINE`, `IDLE`, `DND`, `INVISIBLE`");
             }
             else
             {
                 event.getJDA().getPresence().setStatus(status);
-                event.replySuccess("Set the status to `"+status.getKey().toUpperCase()+"`");
+                event.replySuccess("ステータスを`"+status.getKey().toUpperCase()+"`に変更しました。");
             }
         } catch(Exception e) {
-            event.reply(event.getClient().getError()+" The status could not be set!");
+            event.reply(event.getClient().getError()+" ステータスの設定に失敗しました。");
         }
     }
 }

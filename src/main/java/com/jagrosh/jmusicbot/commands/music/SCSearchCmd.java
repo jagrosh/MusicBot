@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2016 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +30,7 @@ public class SCSearchCmd extends SearchCmd
         super(bot);
         this.searchPrefix = "scsearch:";
         this.name = "scsearch";
-        this.help = "searches Soundcloud for a provided query";
+        this.help = "指定された検索語句でSoundCloudを検索します。";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
 }

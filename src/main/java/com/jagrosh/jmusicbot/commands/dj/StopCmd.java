@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +32,7 @@ public class StopCmd extends DJCommand
     {
         super(bot);
         this.name = "stop";
-        this.help = "stops the current song and clears the queue";
+        this.help = "再生中の曲を停止し、キューをクリアします。";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.bePlaying = false;
     }
@@ -41,6 +43,6 @@ public class StopCmd extends DJCommand
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
         handler.stopAndClear();
         event.getGuild().getAudioManager().closeAudioConnection();
-        event.reply(event.getClient().getSuccess()+" The player has stopped and the queue has been cleared.");
+        event.reply(event.getClient().getSuccess()+"プレーヤーが停止し、キューがクリアされた。");
     }
 }

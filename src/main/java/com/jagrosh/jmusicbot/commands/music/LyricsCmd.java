@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,13 +32,13 @@ import net.dv8tion.jda.api.Permission;
 public class LyricsCmd extends MusicCommand
 {
     private final LyricsClient client = new LyricsClient();
-    
+
     public LyricsCmd(Bot bot)
     {
         super(bot);
         this.name = "lyrics";
-        this.arguments = "[song name]";
-        this.help = "shows the lyrics of a song";
+        this.arguments = "[曲名]";
+        this.help = "曲の歌詞を表示します。";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
     }
@@ -52,7 +54,7 @@ public class LyricsCmd extends MusicCommand
                 title = sendingHandler.getPlayer().getPlayingTrack().getInfo().title;
             else
             {
-                event.replyError("There must be music playing to use that!");
+                event.replyError("このコマンドを使用するには、音楽が再生されている必要があります。");
                 return;
             }
         }
@@ -63,7 +65,7 @@ public class LyricsCmd extends MusicCommand
         {
             if(lyrics == null)
             {
-                event.replyError("Lyrics for `" + title + "` could not be found!" + (event.getArgs().isEmpty() ? " Try entering the song name manually (`lyrics [song name]`)" : ""));
+                event.replyError("`" + title + "`に該当する歌詞は見つかりませんでした。" + (event.getArgs().isEmpty() ? " 曲名を手動で入力してはいかがでしょうか。 (`lyrics [曲名]`)" : ""));
                 return;
             }
 
@@ -73,7 +75,7 @@ public class LyricsCmd extends MusicCommand
                     .setTitle(lyrics.getTitle(), lyrics.getURL());
             if(lyrics.getContent().length()>15000)
             {
-                event.replyWarning("Lyrics for `" + title + "` found but likely not correct: " + lyrics.getURL());
+                event.replyWarning("`" + title + "`の歌詞は見つかりましたが、正しくない可能性があります。 " + lyrics.getURL());
             }
             else if(lyrics.getContent().length()>2000)
             {

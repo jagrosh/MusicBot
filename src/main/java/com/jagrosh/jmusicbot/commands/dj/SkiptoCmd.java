@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2016 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,8 +32,8 @@ public class SkiptoCmd extends DJCommand
     {
         super(bot);
         this.name = "skipto";
-        this.help = "skips to the specified song";
-        this.arguments = "<position>";
+        this.help = "指定された曲を再生します。";
+        this.arguments = "<キュー内位置>";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.bePlaying = true;
     }
@@ -46,17 +48,17 @@ public class SkiptoCmd extends DJCommand
         }
         catch(NumberFormatException e)
         {
-            event.reply(event.getClient().getError()+" `"+event.getArgs()+"` is not a valid integer!");
+            event.reply(event.getClient().getError()+" `"+event.getArgs()+"`は有効な整数ではありません。");
             return;
         }
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
         if(index<1 || index>handler.getQueue().size())
         {
-            event.reply(event.getClient().getError()+" Position must be a valid integer between 1 and "+handler.getQueue().size()+"!");
+            event.reply(event.getClient().getError()+"位置は1から"+handler.getQueue().size()+"までの有効な整数でなければなりません。");
             return;
         }
         handler.getQueue().skip(index-1);
-        event.reply(event.getClient().getSuccess()+" Skipped to **"+handler.getQueue().get(0).getTrack().getInfo().title+"**");
+        event.reply(event.getClient().getSuccess()+"**"+handler.getQueue().get(0).getTrack().getInfo().title+"**まで飛ばしました。");
         handler.getPlayer().stopTrack();
     }
 }

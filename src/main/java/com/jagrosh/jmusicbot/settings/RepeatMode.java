@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2020 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,9 +23,9 @@ package com.jagrosh.jmusicbot.settings;
  */
 public enum RepeatMode
 {
-    OFF(null, "Off"),
-    ALL("\uD83D\uDD01", "All"), // 🔁
-    SINGLE("\uD83D\uDD02", "Single"); // 🔂
+    OFF(null, "オフ"),
+    ALL("\uD83D\uDD01", "すべて"), // 🔁
+    SINGLE("\uD83D\uDD02", "一曲だけ"); // 🔂
 
     private final String emoji;
     private final String userFriendlyName;

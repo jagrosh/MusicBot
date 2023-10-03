@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,11 +31,11 @@ public class SkipratioCmd extends AdminCommand
     public SkipratioCmd(Bot bot)
     {
         this.name = "setskip";
-        this.help = "sets a server-specific skip percentage";
+        this.help = "サーバー固有の必要スキップ投票割合を指定します。";
         this.arguments = "<0 - 100>";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
-    
+
     @Override
     protected void execute(CommandEvent event) 
     {
@@ -42,16 +44,17 @@ public class SkipratioCmd extends AdminCommand
             int val = Integer.parseInt(event.getArgs().endsWith("%") ? event.getArgs().substring(0,event.getArgs().length()-1) : event.getArgs());
             if( val < 0 || val > 100)
             {
-                event.replyError("The provided value must be between 0 and 100!");
+                event.replyError("指定する値は0から100の間でなければなりません。");
                 return;
             }
             Settings s = event.getClient().getSettingsFor(event.getGuild());
             s.setSkipRatio(val / 100.0);
-            event.replySuccess("Skip percentage has been set to `" + val + "%` of listeners on *" + event.getGuild().getName() + "*");
+            event.replySuccess("スキップ投票割合は `" + val + "%` of listeners on *" + event.getGuild().getName() + "*");
+            event.replySuccess("*" + event.getGuild().getName() + "*" + "のスキップ投票割合は`" + val + "%`になりました。");
         }
         catch(NumberFormatException ex)
         {
-            event.replyError("Please include an integer between 0 and 100 (default is 55). This number is the percentage of listening users that must vote to skip a song.");
+            event.replyError("0から100の間の整数を指定してください（既定値は55です）。この数値は、曲をスキップするために投票する必要があるリスナーの割合です。");
         }
     }
 }

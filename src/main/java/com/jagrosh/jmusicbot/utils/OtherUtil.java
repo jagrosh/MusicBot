@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,12 +38,12 @@ import org.json.JSONTokener;
  */
 public class OtherUtil
 {
-    public final static String NEW_VERSION_AVAILABLE = "There is a new version of JMusicBot available!\n"
-                    + "Current version: %s\n"
-                    + "New Version: %s\n\n"
-                    + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
+    public final static String NEW_VERSION_AVAILABLE = "JMusicBotの新しいバージョンが利用可能です。\n"
+                    + "現在のバージョン: %s\n"
+                    + "新しいバージョン: %s\n\n"
+                    + "最新リリースを入手するには、https://github.com/jagrosh/MusicBot/releases/latest にアクセスしてください。";
     private final static String WINDOWS_INVALID_PATH = "c:\\windows\\system32\\";
-    
+
     /**
      * gets a Path from a String
      * also fixes the windows tendency to try to start in system32
@@ -64,7 +66,7 @@ public class OtherUtil
         }
         return result;
     }
-    
+
     /**
      * Loads a resource from the jar as a string
      * 
@@ -85,7 +87,7 @@ public class OtherUtil
             return null;
         }
     }
-    
+
     /**
      * Loads image data from a URL
      * 
@@ -106,7 +108,7 @@ public class OtherUtil
         catch(IOException | IllegalArgumentException ignore) {}
         return null;
     }
-    
+
     /**
      * Parses an activity from a string
      * 
@@ -136,12 +138,12 @@ public class OtherUtil
         }
         return Activity.playing(game);
     }
-   
+
     public static String makeNonEmpty(String str)
     {
         return str == null || str.isEmpty() ? "\u200B" : str;
     }
-    
+
     public static OnlineStatus parseStatus(String status)
     {
         if(status==null || status.trim().isEmpty())
@@ -149,28 +151,28 @@ public class OtherUtil
         OnlineStatus st = OnlineStatus.fromKey(status);
         return st == null ? OnlineStatus.ONLINE : st;
     }
-    
+
     public static void checkJavaVersion(Prompt prompt)
     {
         if(!System.getProperty("java.vm.name").contains("64"))
-            prompt.alert(Prompt.Level.WARNING, "Java Version", 
-                    "It appears that you may not be using a supported Java version. Please use 64-bit java.");
+            prompt.alert(Prompt.Level.WARNING, "Javaバージョン", 
+                    "サポートされているJavaバージョンを使用していない可能性があるようです。64ビットのJavaを使用してください。");
     }
-    
+
     public static void checkVersion(Prompt prompt)
     {
         // Get current version number
         String version = getCurrentVersion();
-        
+
         // Check for new version
         String latestVersion = getLatestVersion();
-        
+
         if(latestVersion!=null && !latestVersion.equals(version))
         {
-            prompt.alert(Prompt.Level.WARNING, "JMusicBot Version", String.format(NEW_VERSION_AVAILABLE, version, latestVersion));
+            prompt.alert(Prompt.Level.WARNING, "JMusicBotバージョン", String.format(NEW_VERSION_AVAILABLE, version, latestVersion));
         }
     }
-    
+
     public static String getCurrentVersion()
     {
         if(JMusicBot.class.getPackage()!=null && JMusicBot.class.getPackage().getImplementationVersion()!=null)
@@ -178,7 +180,7 @@ public class OtherUtil
         else
             return "UNKNOWN";
     }
-    
+
     public static String getLatestVersion()
     {
         try

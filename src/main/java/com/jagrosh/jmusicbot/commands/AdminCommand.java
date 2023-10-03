@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +28,7 @@ public abstract class AdminCommand extends Command
 {
     public AdminCommand()
     {
-        this.category = new Category("Admin", event -> 
+        this.category = new Category("管理者用", event -> 
         {
             if(event.getAuthor().getId().equals(event.getClient().getOwnerId()))
                 return true;

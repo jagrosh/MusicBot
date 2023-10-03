@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ *
  * Copyright 2016 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +33,7 @@ public class SkipCmd extends MusicCommand
     {
         super(bot);
         this.name = "skip";
-        this.help = "votes to skip the current song";
+        this.help = "再生中の曲をスキップするための投票をします。";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
         this.bePlaying = true;
@@ -44,7 +46,7 @@ public class SkipCmd extends MusicCommand
         RequestMetadata rm = handler.getRequestMetadata();
         if(event.getAuthor().getIdLong() == rm.getOwner())
         {
-            event.reply(event.getClient().getSuccess()+" Skipped **"+handler.getPlayer().getPlayingTrack().getInfo().title+"**");
+            event.reply(event.getClient().getSuccess()+" **"+handler.getPlayer().getPlayingTrack().getInfo().title+"**をスキップしました。");
             handler.getPlayer().stopTrack();
         }
         else
@@ -53,24 +55,23 @@ public class SkipCmd extends MusicCommand
                     .filter(m -> !m.getUser().isBot() && !m.getVoiceState().isDeafened()).count();
             String msg;
             if(handler.getVotes().contains(event.getAuthor().getId()))
-                msg = event.getClient().getWarning()+" You already voted to skip this song `[";
+                msg = event.getClient().getWarning()+" あなたはこの曲にすでに投票済みです。 `[";
             else
             {
-                msg = event.getClient().getSuccess()+" You voted to skip the song `[";
+                msg = event.getClient().getSuccess()+" スキップするための票を入れました！ `[";
                 handler.getVotes().add(event.getAuthor().getId());
             }
             int skippers = (int)event.getSelfMember().getVoiceState().getChannel().getMembers().stream()
                     .filter(m -> handler.getVotes().contains(m.getUser().getId())).count();
             int required = (int)Math.ceil(listeners * bot.getSettingsManager().getSettings(event.getGuild()).getSkipRatio());
-            msg += skippers + " votes, " + required + "/" + listeners + " needed]`";
+            msg += skippers + " 投票数, " + required + "/" + listeners + " 要求数]`";
             if(skippers>=required)
             {
-                msg += "\n" + event.getClient().getSuccess() + " Skipped **" + handler.getPlayer().getPlayingTrack().getInfo().title
-                    + "** " + (rm.getOwner() == 0L ? "(autoplay)" : "(requested by **" + rm.user.username + "**)");
-                handler.getPlayer().stopTrack();
+                msg += "\n" + event.getClient().getSuccess()+(rm.getOwner() == 0L ? "(autoplay)" : "(**" + rm.user.username+"**)"+"さんに要求された曲:"+handler.getPlayer().getPlayingTrack().getInfo().title+"をスキップしました。");
+        handler.getPlayer().stopTrack();
             }
             event.reply(msg);
         }
     }
-    
+
 }

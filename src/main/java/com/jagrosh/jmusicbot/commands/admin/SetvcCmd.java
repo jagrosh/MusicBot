@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,36 +35,36 @@ public class SetvcCmd extends AdminCommand
     public SetvcCmd(Bot bot)
     {
         this.name = "setvc";
-        this.help = "sets the voice channel for playing music";
-        this.arguments = "<channel|NONE>";
+        this.help = "音楽の再生用のボイスチャンネルを指定します。";
+        this.arguments = "<チャンネル|NONE>";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
-    
+
     @Override
     protected void execute(CommandEvent event) 
     {
         if(event.getArgs().isEmpty())
         {
-            event.reply(event.getClient().getError()+" Please include a voice channel or NONE");
+            event.reply(event.getClient().getError()+"「NONE」、またはボイスチャンネルを記入してください。");
             return;
         }
         Settings s = event.getClient().getSettingsFor(event.getGuild());
         if(event.getArgs().equalsIgnoreCase("none"))
         {
             s.setVoiceChannel(null);
-            event.reply(event.getClient().getSuccess()+" Music can now be played in any channel");
+            event.reply(event.getClient().getSuccess()+"音楽はどのボイスチャンネルでも再生可能になりました。");
         }
         else
         {
             List<VoiceChannel> list = FinderUtil.findVoiceChannels(event.getArgs(), event.getGuild());
             if(list.isEmpty())
-                event.reply(event.getClient().getWarning()+" No Voice Channels found matching \""+event.getArgs()+"\"");
+                event.reply(event.getClient().getWarning()+"\""+event.getArgs()+"\""+"に一致するボイスチャンネルは見つかりませんでした。");
             else if (list.size()>1)
                 event.reply(event.getClient().getWarning()+FormatUtil.listOfVChannels(list, event.getArgs()));
             else
             {
                 s.setVoiceChannel(list.get(0));
-                event.reply(event.getClient().getSuccess()+" Music can now only be played in "+list.get(0).getAsMention());
+                event.reply(event.getClient().getSuccess()+"音楽は "+list.get(0).getAsMention()+"でのみ再生可能になりました。");
             }
         }
     }

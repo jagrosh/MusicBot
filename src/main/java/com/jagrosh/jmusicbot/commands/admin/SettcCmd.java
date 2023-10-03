@@ -1,6 +1,8 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -33,38 +35,38 @@ public class SettcCmd extends AdminCommand
     public SettcCmd(Bot bot)
     {
         this.name = "settc";
-        this.help = "sets the text channel for music commands";
-        this.arguments = "<channel|NONE>";
+        this.help = "音楽コマンド用テキストチャンネルを指定します。";
+        this.arguments = "<チャンネル|NONE>";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
-    
+
     @Override
     protected void execute(CommandEvent event) 
     {
         if(event.getArgs().isEmpty())
         {
-            event.reply(event.getClient().getError()+" Please include a text channel or NONE");
+            event.reply(event.getClient().getError()+"「NONE」、またはチャンネルを記入してください。");
             return;
         }
         Settings s = event.getClient().getSettingsFor(event.getGuild());
         if(event.getArgs().equalsIgnoreCase("none"))
         {
             s.setTextChannel(null);
-            event.reply(event.getClient().getSuccess()+" Music commands can now be used in any channel");
+            event.reply(event.getClient().getSuccess()+"音楽コマンドはどのチャンネルでも使用可能になりました。");
         }
         else
         {
             List<TextChannel> list = FinderUtil.findTextChannels(event.getArgs(), event.getGuild());
             if(list.isEmpty())
-                event.reply(event.getClient().getWarning()+" No Text Channels found matching \""+event.getArgs()+"\"");
+                event.reply(event.getClient().getWarning()+"\""+event.getArgs()+"\""+"に一致するテキストチャンネルは見つかりませんでした。");
             else if (list.size()>1)
                 event.reply(event.getClient().getWarning()+FormatUtil.listOfTChannels(list, event.getArgs()));
             else
             {
                 s.setTextChannel(list.get(0));
-                event.reply(event.getClient().getSuccess()+" Music commands can now only be used in <#"+list.get(0).getId()+">");
+                event.reply(event.getClient().getSuccess()+"音楽コマンドは<#"+list.get(0).getId()+">"+"でのみ使用可能になりました。");
             }
         }
     }
-    
+
 }

@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ *
  * Copyright 2016 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -206,7 +208,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
             Guild guild = guild(jda);
             AudioTrack track = audioPlayer.getPlayingTrack();
             MessageBuilder mb = new MessageBuilder();
-            mb.append(FormatUtil.filter(manager.getBot().getConfig().getSuccess()+" **Now Playing in "+guild.getSelfMember().getVoiceState().getChannel().getAsMention()+"...**"));
+            mb.append(FormatUtil.filter(manager.getBot().getConfig().getSuccess()+" ** "+guild.getSelfMember().getVoiceState().getChannel().getAsMention()+"で再生中...**"));
             EmbedBuilder eb = new EmbedBuilder();
             eb.setColor(guild.getSelfMember().getColor());
             RequestMetadata rm = getRequestMetadata();
@@ -251,9 +253,9 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
     {
         Guild guild = guild(jda);
         return new MessageBuilder()
-                .setContent(FormatUtil.filter(manager.getBot().getConfig().getSuccess()+" **Now Playing...**"))
+                .setContent(FormatUtil.filter(manager.getBot().getConfig().getSuccess()+" **再生中...**"))
                 .setEmbeds(new EmbedBuilder()
-                .setTitle("No music playing")
+                .setTitle("再生されていません。")
                 .setDescription(STOP_EMOJI+" "+FormatUtil.progressBar(-1)+" "+FormatUtil.volumeIcon(audioPlayer.getVolume()))
                 .setColor(guild.getSelfMember().getColor())
                 .build()).build();
@@ -266,14 +268,14 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
             long userid = getRequestMetadata().getOwner();
             AudioTrack track = audioPlayer.getPlayingTrack();
             String title = track.getInfo().title;
-            if(title==null || title.equals("Unknown Title"))
+            if(title==null || title.equals("不明なタイトル"))
                 title = track.getInfo().uri;
             return "**"+title+"** ["+(userid==0 ? "autoplay" : "<@"+userid+">")+"]"
                     + "\n" + getStatusEmoji() + " "
                     + "[" + FormatUtil.formatTime(track.getDuration()) + "] "
                     + FormatUtil.volumeIcon(audioPlayer.getVolume());
         }
-        else return "No music playing " + STOP_EMOJI + " " + FormatUtil.volumeIcon(audioPlayer.getVolume());
+        else return "再生されていません" + STOP_EMOJI + " " + FormatUtil.volumeIcon(audioPlayer.getVolume());
     }
     
     public String getStatusEmoji()

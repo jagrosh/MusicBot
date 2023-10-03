@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,12 +33,12 @@ public class RepeatCmd extends DJCommand
     {
         super(bot);
         this.name = "repeat";
-        this.help = "re-adds music to the queue when finished";
-        this.arguments = "[off|all|single]";
+        this.help = "曲を終わると、キューに再追加することでループ再生します。";
+        this.arguments = "[off(オフ)|all(すべて)|single(一曲だけ)]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
     }
-    
+
     // override musiccommand's execute because we don't actually care where this is used
     @Override
     protected void execute(CommandEvent event) 
@@ -65,11 +67,11 @@ public class RepeatCmd extends DJCommand
         }
         else
         {
-            event.replyError("Valid options are `off`, `all` or `single` (or leave empty to toggle between `off` and `all`)");
+            event.replyError("有効な選択肢は `off`、`all`または`single`だけです。(また、off(オフ)モードとall(すべて)モードを切り替えるには、空のままにします。");
             return;
         }
         settings.setRepeatMode(value);
-        event.replySuccess("Repeat mode is now `"+value.getUserFriendlyName()+"`");
+        event.replySuccess("現在のリピート状態：`"+value.getUserFriendlyName()+"`");
     }
 
     @Override

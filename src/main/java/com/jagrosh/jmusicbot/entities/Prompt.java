@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh (jagrosh)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,34 +30,34 @@ public class Prompt
 {
     private final String title;
     private final String noguiMessage;
-    
+
     private boolean nogui;
     private boolean noprompt;
     private Scanner scanner;
-    
+
     public Prompt(String title)
     {
         this(title, null);
     }
-    
+
     public Prompt(String title, String noguiMessage)
     {
         this(title, noguiMessage, "true".equalsIgnoreCase(System.getProperty("nogui")), "true".equalsIgnoreCase(System.getProperty("noprompt")));
     }
-    
+
     public Prompt(String title, String noguiMessage, boolean nogui, boolean noprompt)
     {
         this.title = title;
-        this.noguiMessage = noguiMessage == null ? "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag." : noguiMessage;
+        this.noguiMessage = noguiMessage == null ? "noguiモードに切り替えます。-Dnogui=trueフラグを記入することで手動でnoguiモードで起動できます。" : noguiMessage;
         this.nogui = nogui;
         this.noprompt = noprompt;
     }
-    
+
     public boolean isNoGUI()
     {
         return nogui;
     }
-    
+
     public void alert(Level level, String context, String message)
     {
         if(nogui)
@@ -107,7 +109,7 @@ public class Prompt
             }
         }
     }
-    
+
     public String prompt(String content)
     {
         if(noprompt)
@@ -125,7 +127,7 @@ public class Prompt
             }
             catch(Exception e)
             {
-                alert(Level.ERROR, title, "Unable to read input from command line.");
+                alert(Level.ERROR, title, "コマンドラインからの入力が読み込みませんでした。");
                 e.printStackTrace();
                 return null;
             }
@@ -144,7 +146,7 @@ public class Prompt
             }
         }
     }
-    
+
     public static enum Level
     {
         INFO, WARNING, ERROR;

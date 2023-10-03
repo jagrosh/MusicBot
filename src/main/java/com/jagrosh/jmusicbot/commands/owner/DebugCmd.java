@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2017 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,14 +35,14 @@ public class DebugCmd extends OwnerCommand
 {
     private final static String[] PROPERTIES = {"java.version", "java.vm.name", "java.vm.specification.version", 
         "java.runtime.name", "java.runtime.version", "java.specification.version",  "os.arch", "os.name"};
-    
+
     private final Bot bot;
-    
+
     public DebugCmd(Bot bot)
     {
         this.bot = bot;
         this.name = "debug";
-        this.help = "shows debug info";
+        this.help = "デバッグ情報を表示します。";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
     }
@@ -49,39 +51,39 @@ public class DebugCmd extends OwnerCommand
     protected void execute(CommandEvent event)
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("```\nSystem Properties:");
+        sb.append("```\nシステムのプロパティ:");
         for(String key: PROPERTIES)
             sb.append("\n  ").append(key).append(" = ").append(System.getProperty(key));
-        sb.append("\n\nJMusicBot Information:")
-                .append("\n  Version = ").append(OtherUtil.getCurrentVersion())
-                .append("\n  Owner = ").append(bot.getConfig().getOwnerId())
-                .append("\n  Prefix = ").append(bot.getConfig().getPrefix())
-                .append("\n  AltPrefix = ").append(bot.getConfig().getAltPrefix())
-                .append("\n  MaxSeconds = ").append(bot.getConfig().getMaxSeconds())
-                .append("\n  NPImages = ").append(bot.getConfig().useNPImages())
-                .append("\n  SongInStatus = ").append(bot.getConfig().getSongInStatus())
-                .append("\n  StayInChannel = ").append(bot.getConfig().getStay())
-                .append("\n  UseEval = ").append(bot.getConfig().useEval())
-                .append("\n  UpdateAlerts = ").append(bot.getConfig().useUpdateAlerts());
-        sb.append("\n\nDependency Information:")
-                .append("\n  JDA Version = ").append(JDAInfo.VERSION)
-                .append("\n  JDA-Utilities Version = ").append(JDAUtilitiesInfo.VERSION)
-                .append("\n  Lavaplayer Version = ").append(PlayerLibrary.VERSION);
+        sb.append("\n\nJMusicBot 情報:")
+                .append("\n  バージョン = ").append(OtherUtil.getCurrentVersion())
+                .append("\n  オーナー = ").append(bot.getConfig().getOwnerId())
+                .append("\n  プレフィックス = ").append(bot.getConfig().getPrefix())
+                .append("\n  代替プレフィックス = ").append(bot.getConfig().getAltPrefix())
+                .append("\n  最大秒数 = ").append(bot.getConfig().getMaxSeconds())
+                .append("\n  再生中の曲のサムネイルの表示する = ").append(bot.getConfig().useNPImages())
+                .append("\n  再生中の曲をステータスに表示する = ").append(bot.getConfig().getSongInStatus())
+                .append("\n  キュー再生終了後ボイスチャンネルを退出する = ").append(bot.getConfig().getStay())
+                .append("\n  (危険！)ボットアカウントからのすべてのコードの実行を許可する(EvalMode) = ").append(bot.getConfig().useEval())
+                .append("\n  最新プログラム通知 = ").append(bot.getConfig().useUpdateAlerts());
+        sb.append("\n\n依存するライブラリー情報:")
+                .append("\n  JDAバージョン = ").append(JDAInfo.VERSION)
+                .append("\n  JDA-Utilitiesバージョン = ").append(JDAUtilitiesInfo.VERSION)
+                .append("\n  Lavaplayerバージョン = ").append(PlayerLibrary.VERSION);
         long total = Runtime.getRuntime().totalMemory() / 1024 / 1024;
         long used = total - (Runtime.getRuntime().freeMemory() / 1024 / 1024);
-        sb.append("\n\nRuntime Information:")
-                .append("\n  Total Memory = ").append(total)
-                .append("\n  Used Memory = ").append(used);
-        sb.append("\n\nDiscord Information:")
+        sb.append("\n\nランタイム情報:")
+                .append("\n  総メモリ = ").append(total)
+                .append("\n  使用メモリ = ").append(used);
+        sb.append("\n\nDiscord 情報:")
                 .append("\n  ID = ").append(event.getJDA().getSelfUser().getId())
-                .append("\n  Guilds = ").append(event.getJDA().getGuildCache().size())
-                .append("\n  Users = ").append(event.getJDA().getUserCache().size());
+                .append("\n  サーバー = ").append(event.getJDA().getGuildCache().size())
+                .append("\n  ユーザー = ").append(event.getJDA().getUserCache().size());
         sb.append("\n```");
-        
+
         if(event.isFromType(ChannelType.PRIVATE) 
                 || event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ATTACH_FILES))
             event.getChannel().sendFile(sb.toString().getBytes(), "debug_information.txt").queue();
         else
-            event.reply("Debug Information: " + sb.toString());
+            event.reply("デバッグ情報: " + sb.toString());
     }
 }

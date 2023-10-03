@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2016 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,8 +37,8 @@ public class PlaylistCmd extends OwnerCommand
         this.bot = bot;
         this.guildOnly = false;
         this.name = "playlist";
-        this.arguments = "<append|delete|make|setdefault>";
-        this.help = "playlist management";
+        this.arguments = "<append(追加)|delete(削除)|make(作成)|setdefault(デフォルトを設定)>";
+        this.help = "プレイリストの管理";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.children = new OwnerCommand[]{
             new ListCmd(),
@@ -50,20 +52,20 @@ public class PlaylistCmd extends OwnerCommand
     @Override
     public void execute(CommandEvent event) 
     {
-        StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" Playlist Management Commands:\n");
+        StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" プレイリスト管理コマンド:\n");
         for(Command cmd: this.children)
             builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" ").append(cmd.getName())
                     .append(" ").append(cmd.getArguments()==null ? "" : cmd.getArguments()).append("` - ").append(cmd.getHelp());
         event.reply(builder.toString());
     }
-    
+
     public class MakelistCmd extends OwnerCommand 
     {
         public MakelistCmd()
         {
             this.name = "make";
             this.aliases = new String[]{"create"};
-            this.help = "makes a new playlist";
+            this.help = "プレイリストを新しく作成します。";
             this.arguments = "<name>";
             this.guildOnly = false;
         }
@@ -75,32 +77,32 @@ public class PlaylistCmd extends OwnerCommand
             pname = pname.replaceAll("[*?|\\/\":<>]", "");
             if(pname == null || pname.isEmpty()) 
             {
-                event.replyError("Please provide a name for the playlist!");
+                event.replyError("プレイリストの名を指定してください。");
             } 
             else if(bot.getPlaylistLoader().getPlaylist(pname) == null)
             {
                 try
                 {
                     bot.getPlaylistLoader().createPlaylist(pname);
-                    event.reply(event.getClient().getSuccess()+" Successfully created playlist `"+pname+"`!");
+                    event.reply(event.getClient().getSuccess()+" 正常に プレイリスト`"+pname+"`を作りました。");
                 }
                 catch(IOException e)
                 {
-                    event.reply(event.getClient().getError()+" I was unable to create the playlist: "+e.getLocalizedMessage());
+                    event.reply(event.getClient().getError()+"プレイリスト"+e.getLocalizedMessage()+"の作成に失敗しました。");
                 }
             }
             else
-                event.reply(event.getClient().getError()+" Playlist `"+pname+"` already exists!");
+                event.reply(event.getClient().getError()+" プレイリスト `"+pname+"` は既に存在します");
         }
     }
-    
+
     public class DeletelistCmd extends OwnerCommand 
     {
         public DeletelistCmd()
         {
             this.name = "delete";
             this.aliases = new String[]{"remove"};
-            this.help = "deletes an existing playlist";
+            this.help = "既存のプレイリストを削除します。";
             this.arguments = "<name>";
             this.guildOnly = false;
         }
@@ -110,30 +112,30 @@ public class PlaylistCmd extends OwnerCommand
         {
             String pname = event.getArgs().replaceAll("\\s+", "_");
             if(bot.getPlaylistLoader().getPlaylist(pname)==null)
-                event.reply(event.getClient().getError()+" Playlist `"+pname+"` doesn't exist!");
+                event.reply(event.getClient().getError()+" プレイリスト `"+pname+"` は存在しません。");
             else
             {
                 try
                 {
                     bot.getPlaylistLoader().deletePlaylist(pname);
-                    event.reply(event.getClient().getSuccess()+" Successfully deleted playlist `"+pname+"`!");
+                    event.reply(event.getClient().getSuccess()+" プレイリスト `"+pname+"`を正常に削除しました。");
                 }
                 catch(IOException e)
                 {
-                    event.reply(event.getClient().getError()+" I was unable to delete the playlist: "+e.getLocalizedMessage());
+                    event.reply(event.getClient().getError()+"プレイリスト"+e.getLocalizedMessage()+"の削除に失敗しました。");
                 }
             }
         }
     }
-    
+
     public class AppendlistCmd extends OwnerCommand 
     {
         public AppendlistCmd()
         {
             this.name = "append";
             this.aliases = new String[]{"add"};
-            this.help = "appends songs to an existing playlist";
-            this.arguments = "<name> <URL> | <URL> | ...";
+            this.help = "既存のプレイリストに曲を追加します。";
+            this.arguments = "<名> <URL> | <URL> | ...";
             this.guildOnly = false;
         }
 
@@ -143,13 +145,13 @@ public class PlaylistCmd extends OwnerCommand
             String[] parts = event.getArgs().split("\\s+", 2);
             if(parts.length<2)
             {
-                event.reply(event.getClient().getError()+" Please include a playlist name and URLs to add!");
+                event.reply(event.getClient().getError()+" URLまたはプレイリスト名を指定してください。");
                 return;
             }
             String pname = parts[0];
             Playlist playlist = bot.getPlaylistLoader().getPlaylist(pname);
             if(playlist==null)
-                event.reply(event.getClient().getError()+" Playlist `"+pname+"` doesn't exist!");
+                event.reply(event.getClient().getError()+" プレイリスト `"+pname+"` は存在しません。");
             else
             {
                 StringBuilder builder = new StringBuilder();
@@ -165,16 +167,16 @@ public class PlaylistCmd extends OwnerCommand
                 try
                 {
                     bot.getPlaylistLoader().writePlaylist(pname, builder.toString());
-                    event.reply(event.getClient().getSuccess()+" Successfully added "+urls.length+" items to playlist `"+pname+"`!");
+                    event.reply(event.getClient().getSuccess()+"正常にプレイリスト `"+pname+"`に`"+urls.length+"`件の項目を追加しました。");
                 }
                 catch(IOException e)
                 {
-                    event.reply(event.getClient().getError()+" I was unable to append to the playlist: "+e.getLocalizedMessage());
+                    event.reply(event.getClient().getError()+"プレイリスト"+e.getLocalizedMessage()+"に追加することに失敗しました。");
                 }
             }
         }
     }
-    
+
     public class DefaultlistCmd extends AutoplaylistCmd 
     {
         public DefaultlistCmd(Bot bot)
@@ -182,18 +184,18 @@ public class PlaylistCmd extends OwnerCommand
             super(bot);
             this.name = "setdefault";
             this.aliases = new String[]{"default"};
-            this.arguments = "<playlistname|NONE>";
+            this.arguments = "<プレイリスト名|NONE(無効)>";
             this.guildOnly = true;
         }
     }
-    
+
     public class ListCmd extends OwnerCommand 
     {
         public ListCmd()
         {
             this.name = "all";
             this.aliases = new String[]{"available","list"};
-            this.help = "lists all available playlists";
+            this.help = "利用可能なプレイリストをすべて表示します。";
             this.guildOnly = true;
         }
 
@@ -204,17 +206,17 @@ public class PlaylistCmd extends OwnerCommand
                 bot.getPlaylistLoader().createFolder();
             if(!bot.getPlaylistLoader().folderExists())
             {
-                event.reply(event.getClient().getWarning()+" Playlists folder does not exist and could not be created!");
+                event.reply(event.getClient().getWarning()+" フォルダー「Playlists」は存在せず、作成することもできませんでした。");
                 return;
             }
             List<String> list = bot.getPlaylistLoader().getPlaylistNames();
             if(list==null)
-                event.reply(event.getClient().getError()+" Failed to load available playlists!");
+                event.reply(event.getClient().getError()+" 利用可能なプレイリストの読み込みに失敗しました。");
             else if(list.isEmpty())
-                event.reply(event.getClient().getWarning()+" There are no playlists in the Playlists folder!");
+                event.reply(event.getClient().getWarning()+"フォルダー「Playlists」にプレイリストがありません。");
             else
             {
-                StringBuilder builder = new StringBuilder(event.getClient().getSuccess()+" Available playlists:\n");
+                StringBuilder builder = new StringBuilder(event.getClient().getSuccess()+"利用可能なプレイリスト:\n");
                 list.forEach(str -> builder.append("`").append(str).append("` "));
                 event.reply(builder.toString());
             }

@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +34,7 @@ public class NowplayingCmd extends MusicCommand
     {
         super(bot);
         this.name = "nowplaying";
-        this.help = "shows the song that is currently playing";
+        this.help = "再生中の曲を表示します。";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
     }

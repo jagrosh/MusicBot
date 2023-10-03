@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2016 John Grosh (jagrosh).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,16 +30,16 @@ import com.jagrosh.jmusicbot.commands.OwnerCommand;
 public class EvalCmd extends OwnerCommand 
 {
     private final Bot bot;
-    
+
     public EvalCmd(Bot bot)
     {
         this.bot = bot;
         this.name = "eval";
-        this.help = "evaluates nashorn code";
+        this.help = "nashornコードをevalする";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
     }
-    
+
     @Override
     protected void execute(CommandEvent event) 
     {
@@ -49,12 +51,12 @@ public class EvalCmd extends OwnerCommand
         se.put("channel", event.getChannel());
         try
         {
-            event.reply(event.getClient().getSuccess()+" Evaluated Successfully:\n```\n"+se.eval(event.getArgs())+" ```");
+            event.reply(event.getClient().getSuccess()+" 正常に評価しました。:\n```\n"+se.eval(event.getArgs())+" ```");
         } 
         catch(Exception e)
         {
-            event.reply(event.getClient().getError()+" An exception was thrown:\n```\n"+e+" ```");
+            event.reply(event.getClient().getError()+" 例外が発生しました:\n```\n"+e+" ```");
         }
     }
-    
+
 }

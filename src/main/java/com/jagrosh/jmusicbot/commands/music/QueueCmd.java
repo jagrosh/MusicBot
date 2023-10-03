@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,13 +41,13 @@ import net.dv8tion.jda.api.exceptions.PermissionException;
 public class QueueCmd extends MusicCommand 
 {
     private final Paginator.Builder builder;
-    
+
     public QueueCmd(Bot bot)
     {
         super(bot);
         this.name = "queue";
-        this.help = "shows the current queue";
-        this.arguments = "[pagenum]";
+        this.help = "現在のキューを表示します。";
+        this.arguments = "[ページ番号]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.bePlaying = true;
         this.botPermissions = new Permission[]{Permission.MESSAGE_ADD_REACTION,Permission.MESSAGE_EMBED_LINKS};
@@ -77,7 +79,7 @@ public class QueueCmd extends MusicCommand
             Message nowp = ah.getNowPlaying(event.getJDA());
             Message nonowp = ah.getNoMusicPlaying(event.getJDA());
             Message built = new MessageBuilder()
-                    .setContent(event.getClient().getWarning() + " There is no music in the queue!")
+                    .setContent(event.getClient().getWarning() + " キューに音楽はありません。")
                     .setEmbeds((nowp==null ? nonowp : nowp).getEmbeds().get(0)).build();
             event.reply(built, m -> 
             {
@@ -102,7 +104,7 @@ public class QueueCmd extends MusicCommand
                 ;
         builder.build().paginate(event.getChannel(), pagenum);
     }
-    
+
     private String getQueueTitle(AudioHandler ah, String success, int songslength, long total, RepeatMode repeatmode)
     {
         StringBuilder sb = new StringBuilder();
@@ -111,8 +113,8 @@ public class QueueCmd extends MusicCommand
             sb.append(ah.getStatusEmoji()).append(" **")
                     .append(ah.getPlayer().getPlayingTrack().getInfo().title).append("**\n");
         }
-        return FormatUtil.filter(sb.append(success).append(" Current Queue | ").append(songslength)
-                .append(" entries | `").append(FormatUtil.formatTime(total)).append("` ")
+        return FormatUtil.filter(sb.append(success).append(" 現在のキュー | ").append(songslength)
+                .append(" 項目 | `").append(FormatUtil.formatTime(total)).append("` ")
                 .append(repeatmode.getEmoji() != null ? "| "+repeatmode.getEmoji() : "").toString());
     }
 }

@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2017 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,12 +34,12 @@ public class SetavatarCmd extends OwnerCommand
     public SetavatarCmd(Bot bot)
     {
         this.name = "setavatar";
-        this.help = "sets the avatar of the bot";
+        this.help = "ボットのアイコンを設定します。";
         this.arguments = "<url>";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
     }
-    
+
     @Override
     protected void execute(CommandEvent event) 
     {
@@ -52,16 +54,16 @@ public class SetavatarCmd extends OwnerCommand
         InputStream s = OtherUtil.imageFromUrl(url);
         if(s==null)
         {
-            event.reply(event.getClient().getError()+" Invalid or missing URL");
+            event.reply(event.getClient().getError()+"URLは無効か、見つかりません。");
         }
         else
         {
             try {
             event.getSelfUser().getManager().setAvatar(Icon.from(s)).queue(
-                    v -> event.reply(event.getClient().getSuccess()+" Successfully changed avatar."), 
-                    t -> event.reply(event.getClient().getError()+" Failed to set avatar."));
+                    v -> event.reply(event.getClient().getSuccess()+"アイコンを正常に変更しました。"), 
+                    t -> event.reply(event.getClient().getError()+"アイコンの設定に失敗しました。"));
             } catch(IOException e) {
-                event.reply(event.getClient().getError()+" Could not load from provided URL.");
+                event.reply(event.getClient().getError()+"指定されたURLからの読み込みに失敗しました。");
             }
         }
     }

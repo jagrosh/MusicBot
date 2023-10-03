@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +27,7 @@ public abstract class OwnerCommand extends Command
 {
     public OwnerCommand()
     {
-        this.category = new Category("Owner");
+        this.category = new Category("オーナー用");
         this.ownerCommand = true;
     }
 }

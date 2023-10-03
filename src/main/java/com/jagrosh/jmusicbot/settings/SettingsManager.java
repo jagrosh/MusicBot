@@ -1,4 +1,6 @@
 /*
+ * Copyright 2023 まったりにほんご
+ * 
  * Copyright 2018 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,10 +60,10 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                         o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO));
             });
         } catch(IOException | JSONException e) {
-            LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
+            LoggerFactory.getLogger("Settings").warn("サーバー設定の読み込みに失敗しました（これはまだ設定がされていない場合に正常です）: "+e);
         }
     }
-    
+
     /**
      * Gets non-null settings for a Guild
      * 
@@ -73,17 +75,17 @@ public class SettingsManager implements GuildSettingsManager<Settings>
     {
         return getSettings(guild.getIdLong());
     }
-    
+
     public Settings getSettings(long guildId)
     {
         return settings.computeIfAbsent(guildId, id -> createDefaultSettings());
     }
-    
+
     private Settings createDefaultSettings()
     {
         return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO);
     }
-    
+
     protected void writeSettings()
     {
         JSONObject obj = new JSONObject();
@@ -111,7 +113,7 @@ public class SettingsManager implements GuildSettingsManager<Settings>
         try {
             Files.write(OtherUtil.getPath("serversettings.json"), obj.toString(4).getBytes());
         } catch(IOException ex){
-            LoggerFactory.getLogger("Settings").warn("Failed to write to file: "+ex);
+            LoggerFactory.getLogger("Settings").warn("ファイルに書き込みできませんでした: "+ex);
         }
     }
 }
