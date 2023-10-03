@@ -96,15 +96,11 @@ public class SearchCmd extends MusicCommand
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
              int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor()))+1;
 
-              String addedSongMsg;
-                    if(pos==0){
-                        addedSongMsg = "キューの"+pos+"番目に"+"**"+track.getInfo().title
-                                +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+"を追加し、再生を開始します。";
-                    }else {
-                        addedSongMsg = "キューに"+"**"+track.getInfo().title
-                                +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+"を追加しました";
-                    }
-                    String addMsg = FormatUtil.filter(event.getClient().getSuccess()+addedSongMsg);
+            String trackTitle = "**"+track.getInfo().title
+                    +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) ";
+            String addMsg = FormatUtil.filter(event.getClient().getSuccess()+(pos==0?
+                    "キューに"+trackTitle+"を追加し、再生を開始します。":
+                    "キューの"+pos+"番目に"+trackTitle+"を追加しました"));
 
             m.editMessage(addMsg).queue(); 
                 }
@@ -125,9 +121,12 @@ public class SearchCmd extends MusicCommand
                         }
                         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
                         int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor()))+1;
-                        event.replySuccess("Added **" + FormatUtil.filter(track.getInfo().title)
-                                + "** (`" + FormatUtil.formatTime(track.getDuration()) + "`) " + (pos==0 ? "to begin playing" 
-                                    : " to the queue at position "+pos));
+                        String trackTitle = "**"+track.getInfo().title
+                                +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) ";
+                        String addMsg = FormatUtil.filter(event.getClient().getSuccess()+(pos==0?
+                                "キューに"+trackTitle+"を追加し、再生を開始します。":
+                                "キューの"+pos+"番目に"+trackTitle+"を追加しました"));
+                        event.replySuccess(addMsg);
                     })
                     .setCancel((msg) -> {})
                     .setUsers(event.getAuthor())

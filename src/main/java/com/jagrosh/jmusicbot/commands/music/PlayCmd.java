@@ -115,15 +115,11 @@ public class PlayCmd extends MusicCommand
             }
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
             int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor()))+1;
-            String addedSongMsg;
-            if(pos==0){
-                addedSongMsg = "キューの"+pos+"番目に"+"**"+track.getInfo().title
-                        +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+"を追加し、再生を開始します。";
-            }else {
-                addedSongMsg = "キューに"+"**"+track.getInfo().title
-                        +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+"を追加しました";
-            }
-            String addMsg = FormatUtil.filter(event.getClient().getSuccess()+addedSongMsg);
+            String trackTitle = "**"+track.getInfo().title
+                    +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) ";
+            String addMsg = FormatUtil.filter(event.getClient().getSuccess()+(pos==0?
+                    "キューに"+trackTitle+"を追加し、再生を開始します。":
+                    "キューの"+pos+"番目に"+trackTitle+"を追加しました"));
             if(playlist==null || !event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ADD_REACTION))
                 m.editMessage(addMsg).queue();
             else
