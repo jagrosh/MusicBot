@@ -104,7 +104,7 @@ public class PlayCmd extends MusicCommand {
         private void loadSingle(AudioTrack track, AudioPlaylist playlist) {
             if (bot.getConfig().isTooLong(track)) {
                 m.editMessage(FormatUtil.filter(
-                        event.getClient().getWarning() + " 曲 (**" + track.getInfo().title + "**)は長すぎます。最大許容長さを超えています。 `"
+                        event.getClient().getWarning() + " 曲 (**" + track.getInfo().title + "**)は長すぎます。最大許容秒数を超えています。 `"
                                 + FormatUtil.formatTime(track.getDuration()) + "` > `"
                                 + FormatUtil.formatTime(bot.getConfig().getMaxSeconds() * 1000) + "`"))
                         .queue();
@@ -183,7 +183,7 @@ public class PlayCmd extends MusicCommand {
                                     + "プレイリスト" + (playlist.getName() == null ? ""
                                             : "(**" + playlist.getName()
                                                     + "**) ")
-                                    + "にあるすべての項目は" + "最大値(`" + bot.getConfig().getMaxTime() + "`)") + "を超えていました。")
+                                    + "にあるすべての項目は" + "最大秒数(`" + bot.getConfig().getMaxTime() + "`)") + "を超えていました。")
                             .queue();
                 } else {
                     m.editMessage(FormatUtil.filter(event.getClient().getSuccess() + " 成功："
@@ -191,7 +191,7 @@ public class PlayCmd extends MusicCommand {
                             + " は項目数`"
                             + playlist.getTracks().size() + "`で; キューに追加されました。!"
                             + (count < playlist.getTracks().size()
-                                    ? "\n" + event.getClient().getWarning() + " 最大許容長さ (`"
+                                    ? "\n" + event.getClient().getWarning() + " 最大許容秒数 (`"
                                             + bot.getConfig().getMaxTime() + "`) を超えた曲は排除されました。"
                                     : "")))
                             .queue();

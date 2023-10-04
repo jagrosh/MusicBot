@@ -74,7 +74,7 @@ public class PlaynextCmd extends DJCommand {
         private void loadSingle(AudioTrack track) {
             if (bot.getConfig().isTooLong(track)) {
                 m.editMessage(FormatUtil.filter(event.getClient().getWarning() + " 曲 (**" + track.getInfo().title
-                        + "**) は長すぎます。最大許容時間を超えています: `"
+                        + "**) は長すぎます。最大許容秒数を超えています: `"
                         + FormatUtil.formatTime(track.getDuration()) + "` > `"
                         + FormatUtil.formatTime(bot.getConfig().getMaxSeconds() * 1000) + "`")).queue();
                 return;

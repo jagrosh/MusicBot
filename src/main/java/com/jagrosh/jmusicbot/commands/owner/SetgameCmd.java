@@ -47,7 +47,7 @@ public class SetgameCmd extends OwnerCommand {
         try {
             event.getJDA().getPresence().setActivity(title.isEmpty() ? null : Activity.playing(title));
             event.reply(event.getClient().getSuccess() + " **" + event.getSelfUser().getName()
-                    + "** is " + (title.isEmpty() ? "のステータスをクリアしました。" : "のステータスを**`" + title + "`をプレイ中**にしました。"));
+                    + "**" + (title.isEmpty() ? "のステータスをクリアしました。" : "のステータスを**" + title + "をプレイ中**にしました。"));
         } catch (Exception e) {
             event.reply(event.getClient().getError() + " ゲームの設定に失敗しました。");
         }
@@ -72,7 +72,7 @@ public class SetgameCmd extends OwnerCommand {
             try {
                 event.getJDA().getPresence().setActivity(Activity.streaming(parts[1], "https://twitch.tv/" + parts[0]));
                 event.replySuccess("**" + event.getSelfUser().getName()
-                        + "** のステータスを `" + parts[1] + "`を配信中にしました。");
+                        + "**のステータスを `" + parts[1] + "`を配信中にしました。");
             } catch (Exception e) {
                 event.reply(event.getClient().getError() + "ゲームの設定に失敗しました。");
             }

@@ -41,8 +41,8 @@ public class ForceskipCmd extends DJCommand {
         AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
         RequestMetadata rm = handler.getRequestMetadata();
         event.reply(event.getClient().getSuccess() + (rm.getOwner() == 0L ? "(autoplay)"
-                : "(**" + rm.user.username + "**)" + "さんに要求された曲:"
-                        + handler.getPlayer().getPlayingTrack().getInfo().title + "をスキップしました。"));
+                : "**" + rm.user.username + "**" + "さんに要求された曲:**"
+                        + handler.getPlayer().getPlayingTrack().getInfo().title + "**をスキップしました。"));
         handler.getPlayer().stopTrack();
     }
 }

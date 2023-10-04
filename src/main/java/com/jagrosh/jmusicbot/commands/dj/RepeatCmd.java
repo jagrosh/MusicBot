@@ -31,7 +31,7 @@ public class RepeatCmd extends DJCommand {
     public RepeatCmd(Bot bot) {
         super(bot);
         this.name = "repeat";
-        this.help = "曲を終わると、キューに再追加することでループ再生します。";
+        this.help = "曲が終わると、キューに再追加することでループ再生します。";
         this.arguments = "[off(オフ)|all(すべて)|single(一曲だけ)]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
@@ -60,7 +60,7 @@ public class RepeatCmd extends DJCommand {
             return;
         }
         settings.setRepeatMode(value);
-        event.replySuccess("現在のリピート状態：`" + value.getUserFriendlyName() + "`");
+        event.replySuccess("リピート状態を`" + value.getUserFriendlyName() + "`に設定しました。");
     }
 
     @Override

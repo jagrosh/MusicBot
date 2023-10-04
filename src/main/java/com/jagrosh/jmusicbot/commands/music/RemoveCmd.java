@@ -83,8 +83,8 @@ public class RemoveCmd extends MusicCommand {
                 u = null;
             }
             event.replySuccess(
-                    "**" + (u == null ? "誰か" : "**" + u.getName() + "**") + "さんに要求された曲" + qt.getTrack().getInfo().title
-                            + "を削除しました。");
+                    "**" + (u == null ? "誰か" : "**" + u.getName() + "**") + "さんに要求された曲**" + qt.getTrack().getInfo().title
+                            + "**を削除しました。");
         } else {
             event.replyError("あなたが追加していないため、曲**" + qt.getTrack().getInfo().title + "**を削除できません。");
         }

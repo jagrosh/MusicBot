@@ -51,14 +51,14 @@ public abstract class MusicCommand extends Command {
                 event.getMessage().delete().queue();
             } catch (PermissionException ignore) {
             }
-            event.replyInDm(event.getClient().getError() + " You can only use that command in "
-                    + tchannel.getAsMention() + "!");
+            event.replyInDm(event.getClient().getError() + "ご使用されたコマンドは "
+                    + tchannel.getAsMention() + "でのみ使用可能です。");
             return;
         }
         bot.getPlayerManager().setUpHandler(event.getGuild()); // no point constantly checking for this later
         if (bePlaying && !((AudioHandler) event.getGuild().getAudioManager().getSendingHandler())
                 .isMusicPlaying(event.getJDA())) {
-            event.reply(event.getClient().getError() + " There must be music playing to use that!");
+            event.reply(event.getClient().getError() + "ご使用されたコマンドは音楽が再生中の状態でのみご利用いただけます。");
             return;
         }
         if (beListening) {
@@ -68,14 +68,14 @@ public abstract class MusicCommand extends Command {
             GuildVoiceState userState = event.getMember().getVoiceState();
             if (!userState.inVoiceChannel() || userState.isDeafened()
                     || (current != null && !userState.getChannel().equals(current))) {
-                event.replyError("You must be listening in "
-                        + (current == null ? "a voice channel" : current.getAsMention()) + " to use that!");
+                event.replyError("ご使用されたコマンドをご利用するには、 "
+                        + (current == null ? "ボイスチャンネル" : current.getAsMention()) + "に入っている必要があります。");
                 return;
             }
 
             VoiceChannel afkChannel = userState.getGuild().getAfkChannel();
             if (afkChannel != null && afkChannel.equals(userState.getChannel())) {
-                event.replyError("You cannot use that command in an AFK channel!");
+                event.replyError("ご使用されたコマンドは寝落ちチャンネル(休止チャンネル)ではご利用いただけません。");
                 return;
             }
 
@@ -83,8 +83,8 @@ public abstract class MusicCommand extends Command {
                 try {
                     event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
                 } catch (PermissionException ex) {
-                    event.reply(event.getClient().getError() + " I am unable to connect to "
-                            + userState.getChannel().getAsMention() + "!");
+                    event.reply(event.getClient().getError() + ""
+                            + userState.getChannel().getAsMention() + "に接続できませんでした");
                     return;
                 }
             }

@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.menu.Paginator;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
@@ -78,7 +79,7 @@ public class QueueCmd extends MusicCommand {
             Message nowp = ah.getNowPlaying(event.getJDA());
             Message nonowp = ah.getNoMusicPlaying(event.getJDA());
             Message built = new MessageBuilder()
-                    .setContent(event.getClient().getWarning() + " キューに音楽はありません。")
+                    .setContent(event.getClient().getWarning() + " キューには曲がありません。")
                     .setEmbeds((nowp == null ? nonowp : nowp).getEmbeds().get(0)).build();
             event.reply(built, m -> {
                 if (nowp != null)
