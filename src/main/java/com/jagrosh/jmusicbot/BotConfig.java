@@ -113,7 +113,7 @@ public class BotConfig {
             // validate bot owner
             if (owner <= 0) {
                 try {
-                    owner = Long.parseLong(prompt.prompt("オーナーIDが不足しているか、記入されたオーナーIDが無効です。"
+                    owner = Long.parseLong(prompt.prompt("オーナーIDが欠如しているか、記入されたオーナーIDが無効です。"
                             + "\nボットのオーナーのユーザーIDを記入してください。"
                             + "\nユーザーIDを取得するための手順はこちらに記載されています:"
                             + "\nhttps://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID"
@@ -174,15 +174,15 @@ public class BotConfig {
 
     public static void writeDefaultConfig() {
         Prompt prompt = new Prompt(null, null, true, true);
-        prompt.alert(Prompt.Level.INFO, "JMusicBot Config", "Generating default config file");
+        prompt.alert(Prompt.Level.INFO, "JMusicBotコンフィグ", "デフォルトコンフィグファイルを生成中…");
         Path path = BotConfig.getConfigPath();
         byte[] bytes = BotConfig.loadDefaultConfig().getBytes();
         try {
-            prompt.alert(Prompt.Level.INFO, "JMusicBot Config",
+            prompt.alert(Prompt.Level.INFO, "JMusicBotコンフィグ",
                     "\"デフォルトの設定ファイルを" + path.toAbsolutePath().toString() + "に書き込んでいます。");
             Files.write(path, bytes);
         } catch (Exception ex) {
-            prompt.alert(Prompt.Level.ERROR, "JMusicBot Config",
+            prompt.alert(Prompt.Level.ERROR, "JMusicBotコンフィグ",
                     "デフォルトの設定ファイルを書き込む際にエラーが発生しました： " + ex.getMessage());
         }
     }

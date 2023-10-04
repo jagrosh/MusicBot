@@ -17,6 +17,7 @@
  */
 package com.jagrosh.jmusicbot.audio;
 
+import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
@@ -180,7 +181,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
             AudioTrack track = audioPlayer.getPlayingTrack();
             MessageBuilder mb = new MessageBuilder();
             mb.append(FormatUtil.filter(manager.getBot().getConfig().getSuccess() + " ** "
-                    + guild.getSelfMember().getVoiceState().getChannel().getAsMention() + "で再生中...**"));
+                    + guild.getSelfMember().getVoiceState().getChannel().getAsMention() + "で再生中です！**"));
             EmbedBuilder eb = new EmbedBuilder();
             eb.setColor(guild.getSelfMember().getColor());
             RequestMetadata rm = getRequestMetadata();
@@ -203,7 +204,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
             }
 
             if (track.getInfo().author != null && !track.getInfo().author.isEmpty())
-                eb.setFooter("Source: " + track.getInfo().author, null);
+                eb.setFooter("アップ主: " + track.getInfo().author, null);
 
             double progress = (double) audioPlayer.getPlayingTrack().getPosition() / track.getDuration();
             eb.setDescription(getStatusEmoji()
@@ -222,7 +223,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
         return new MessageBuilder()
                 .setContent(FormatUtil.filter(manager.getBot().getConfig().getSuccess() + " **再生中...**"))
                 .setEmbeds(new EmbedBuilder()
-                        .setTitle("再生されていません。")
+                        .setTitle("音楽が再生されていません。")
                         .setDescription(STOP_EMOJI + " " + FormatUtil.progressBar(-1) + " "
                                 + FormatUtil.volumeIcon(audioPlayer.getVolume()))
                         .setColor(guild.getSelfMember().getColor())
@@ -242,7 +243,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler 
                     + "[" + FormatUtil.formatTime(track.getDuration()) + "] "
                     + FormatUtil.volumeIcon(audioPlayer.getVolume());
         } else
-            return "再生されていません" + STOP_EMOJI + " " + FormatUtil.volumeIcon(audioPlayer.getVolume());
+            return "音楽が再生されていません。" + STOP_EMOJI + " " + FormatUtil.volumeIcon(audioPlayer.getVolume());
     }
 
     public String getStatusEmoji() {

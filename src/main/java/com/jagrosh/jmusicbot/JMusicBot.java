@@ -17,6 +17,7 @@ package com.jagrosh.jmusicbot;
 
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.jagrosh.jdautilities.examples.command.*;
 import com.jagrosh.jmusicbot.commands.admin.*;
 import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.general.*;
@@ -85,9 +86,13 @@ public class JMusicBot {
         SettingsManager settings = new SettingsManager();
         Bot bot = new Bot(waiter, config, settings);
 
-        AboutCmd aboutCmd = new AboutCmd(Color.BLUE.brighter(),
-                "にゃんにゃんにゃんこです。",
+        AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(),
+                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v"
+                        + OtherUtil.getCurrentVersion() + ")",
+                new String[] { "High-quality music playback", "FairQueue™ Technology", "Easy to host yourself" },
                 RECOMMENDED_PERMS);
+        aboutCommand.setIsAuthor(false);
+        aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
 
         // set up the command client
         CommandClientBuilder cb = new CommandClientBuilder()
@@ -98,8 +103,8 @@ public class JMusicBot {
                 .setHelpWord(config.getHelp())
                 .setLinkedCacheSize(200)
                 .setGuildSettingsManager(settings)
-                .addCommands(aboutCmd,
-                        new PingCmd(),
+                .addCommands(aboutCommand,
+                        new PingCommand(),
                         new SettingsCmd(bot),
 
                         new LyricsCmd(bot),

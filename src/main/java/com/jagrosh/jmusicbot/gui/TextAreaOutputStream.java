@@ -41,7 +41,7 @@ public class TextAreaOutputStream extends OutputStream {
     public TextAreaOutputStream(JTextArea txtara, int maxlin) {
         if (maxlin < 1) {
             throw new IllegalArgumentException(
-                    "TextAreaOutputStream maximum lines must be positive (value=" + maxlin + ")");
+                    "TextAreaOutputStreamの最大行数は" + maxlin + "行以上でなければなりません。");
         }
         oneByte = new byte[1];
         appender = new Appender(txtara, maxlin);
