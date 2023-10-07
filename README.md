@@ -1,6 +1,6 @@
 <img align="right" src="https://i.imgur.com/zrE80HY.png" height="200" width="200">
 
-# JMusicBot
+# JMusicBot Fork
 
 [![Downloads](https://img.shields.io/github/downloads/jagrosh/MusicBot/total.svg)](https://github.com/jagrosh/MusicBot/releases/latest)
 [![Stars](https://img.shields.io/github/stars/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/stargazers)
@@ -26,6 +26,9 @@ A cross-platform Discord music bot with a clean interface, and that is easy to s
   * Supports many online radio/streams
   * Supports local files
   * Playlist support (both web/youtube, and local)
+
+## Fork Additions
+  * Added servers and leaveserver commands for owners
 
 ## Supported sources and formats
 JMusicBot supports all sources and formats supported by [lavaplayer](https://github.com/sedmelluq/lavaplayer#supported-formats):
