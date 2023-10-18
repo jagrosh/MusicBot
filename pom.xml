@@ -36,9 +36,9 @@
         </dependency>
         <!-- Must be modified when the PullRequest will be accepted. -->
         <dependency>
-            <groupId>com.github.DxsSucuk</groupId>
+            <groupId>com.jagrosh</groupId>
             <artifactId>jda-utilities</artifactId>
-            <version>fdbc298</version>
+            <version>3.0.5</version>
             <type>pom</type>
         </dependency>
 
@@ -50,9 +50,9 @@
             <version>1.3.78</version>
         </dependency -->
         <dependency>
-            <groupId>dev.arbjerg</groupId>
+            <groupId>com.github.jagrosh</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>2.0.2</version>
+            <version>jmusicbot-SNAPSHOT</version>
         </dependency>
         <!-- this is needed, but isn't actually hosted anywhere anymore... uh -->
         <!--dependency>
