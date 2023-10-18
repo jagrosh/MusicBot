@@ -20,8 +20,10 @@ import java.util.Collection;
 import java.util.Collections;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
+import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 
 /**
  *
@@ -92,7 +94,7 @@ public class Settings implements GuildSettingsProvider
         return guild == null ? null : guild.getTextChannelById(textId);
     }
     
-    public VoiceChannel getVoiceChannel(Guild guild)
+    public AudioChannel getVoiceChannel(Guild guild)
     {
         return guild == null ? null : guild.getVoiceChannelById(voiceId);
     }
