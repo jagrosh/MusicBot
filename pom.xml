@@ -32,8 +32,9 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.4.1_353</version>
+            <version>5.0.0-beta.15</version>
         </dependency>
+        <!-- Must be modified when the PullRequest will be accepted. -->
         <dependency>
             <groupId>com.jagrosh</groupId>
             <artifactId>jda-utilities</artifactId>
@@ -49,27 +50,27 @@
             <version>1.3.78</version>
         </dependency -->
         <dependency>
-	    <groupId>com.github.jagrosh</groupId>
-	    <artifactId>lavaplayer</artifactId>
-	    <version>jmusicbot-SNAPSHOT</version>
-	</dependency>
+            <groupId>com.github.jagrosh</groupId>
+            <artifactId>lavaplayer</artifactId>
+            <version>jmusicbot-SNAPSHOT</version>
+        </dependency>
         <!-- this is needed, but isn't actually hosted anywhere anymore... uh -->
         <!--dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer-natives-extra</artifactId>
             <version>1.3.13</version>
         </dependency-->
-	<dependency>
-	    <groupId>com.github.jagrosh</groupId>
-	    <artifactId>JLyrics</artifactId>
-	    <version>master-SNAPSHOT</version>
-	</dependency>
+	    <dependency>
+	        <groupId>com.github.jagrosh</groupId>
+	        <artifactId>JLyrics</artifactId>
+	        <version>master-01cf4ee007-1</version>
+	    </dependency>
 
         <!-- Misc Internal Dependencies -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.9</version>
         </dependency>
         <dependency>
             <groupId>com.typesafe</groupId>
