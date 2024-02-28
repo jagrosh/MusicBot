@@ -19,8 +19,12 @@ import com.jagrosh.jdautilities.command.GuildSettingsManager;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import net.dv8tion.jda.api.entities.Guild;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
@@ -46,16 +50,18 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                 if (!o.has("repeat_mode") && o.has("repeat") && o.getBoolean("repeat"))
                     o.put("repeat_mode", RepeatMode.ALL);
 
-
+                List<String> blacklistedUsers = convertJSONArrayToStringList(o.getJSONArray("blacklisted_users"));
                 settings.put(Long.parseLong(id), new Settings(this,
-                        o.has("text_channel_id") ? o.getString("text_channel_id")            : null,
-                        o.has("voice_channel_id")? o.getString("voice_channel_id")           : null,
-                        o.has("dj_role_id")      ? o.getString("dj_role_id")                 : null,
-                        o.has("volume")          ? o.getInt("volume")                        : 100,
-                        o.has("default_playlist")? o.getString("default_playlist")           : null,
-                        o.has("repeat_mode")     ? o.getEnum(RepeatMode.class, "repeat_mode"): RepeatMode.OFF,
-                        o.has("prefix")          ? o.getString("prefix")                     : null,
-                        o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO));
+                        o.has("text_channel_id")    ? o.getString("text_channel_id")            : null,
+                        o.has("voice_channel_id")   ? o.getString("voice_channel_id")           : null,
+                        o.has("dj_role_id")         ? o.getString("dj_role_id")                 : null,
+                        o.has("volume")             ? o.getInt("volume")                        : 100,
+                        o.has("default_playlist")   ? o.getString("default_playlist")           : null,
+                        o.has("repeat_mode")        ? o.getEnum(RepeatMode.class, "repeat_mode"): RepeatMode.OFF,
+                        o.has("prefix")             ? o.getString("prefix")                     : null,
+                        o.has("skip_ratio")         ? o.getDouble("skip_ratio")                 : SKIP_RATIO,
+                        o.has("blacklisted_users")  ? blacklistedUsers                               : new ArrayList<String>(0))
+                );
             });
         } catch(IOException | JSONException e) {
             LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
@@ -81,7 +87,7 @@ public class SettingsManager implements GuildSettingsManager<Settings>
     
     private Settings createDefaultSettings()
     {
-        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO);
+        return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO, new ArrayList<String>(0));
     }
     
     protected void writeSettings()
@@ -106,6 +112,7 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                 o.put("prefix", s.getPrefix());
             if(s.getSkipRatio() != SKIP_RATIO)
                 o.put("skip_ratio", s.getSkipRatio());
+            o.put("blacklisted_users", s.getBlacklistedUsers());
             obj.put(Long.toString(key), o);
         });
         try {
@@ -113,5 +120,13 @@ public class SettingsManager implements GuildSettingsManager<Settings>
         } catch(IOException ex){
             LoggerFactory.getLogger("Settings").warn("Failed to write to file: "+ex);
         }
+    }
+
+    private List<String> convertJSONArrayToStringList(JSONArray arr) {
+        List<String> list = new ArrayList<String>();
+        for (int i=0; i<arr.length(); i++) {
+            list.add(arr.getString(i));
+        }
+        return list;
     }
 }
