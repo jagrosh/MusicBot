@@ -187,6 +187,14 @@ public class JMusicBot
                     .setBulkDeleteSplittingEnabled(true)
                     .build();
             bot.setJDA(jda);
+
+            String unsupportedReason = OtherUtil.getUnsupportedBotReason(jda);
+            if (unsupportedReason != null)
+            {
+                jda.shutdown();
+                prompt.alert(Prompt.Level.ERROR, "JMusicBot", "JMusicBot cannot be run on this Discord bot: " + unsupportedReason);
+                System.exit(1);
+            }
         }
         catch (LoginException ex)
         {
