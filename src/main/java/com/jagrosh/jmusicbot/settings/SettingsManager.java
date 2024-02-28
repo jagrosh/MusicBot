@@ -57,8 +57,10 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                         o.has("prefix")          ? o.getString("prefix")                     : null,
                         o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO));
             });
+        } catch (NoSuchFileException e) {
+            // ignore, it just means no settings have been saved yet
         } catch(IOException | JSONException e) {
-            LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
+            LoggerFactory.getLogger("Settings").warn("Failed to load server settings: "+e);
         }
     }
     
