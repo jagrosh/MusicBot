@@ -19,7 +19,9 @@ import com.jagrosh.jdautilities.command.GuildSettingsManager;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
+import com.typesafe.config.ConfigFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +40,7 @@ public class SettingsManager implements GuildSettingsManager<Settings>
     {
         this.settings = new HashMap<>();
         try {
-            JSONObject loadedSettings = new JSONObject(new String(Files.readAllBytes(OtherUtil.getPath("serversettings.json"))));
+            JSONObject loadedSettings = new JSONObject(new String(Files.readAllBytes(getServerSettingsPath())));
             loadedSettings.keySet().forEach((id) -> {
                 JSONObject o = loadedSettings.getJSONObject(id);
 
@@ -83,7 +85,19 @@ public class SettingsManager implements GuildSettingsManager<Settings>
     {
         return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null, SKIP_RATIO);
     }
-    
+
+    private static Path getServerSettingsPath()
+    {
+        Path path = OtherUtil.getPath(System.getProperty("serversettings.file", System.getProperty("serversettings", "serversettings.json")));
+        if(path.toFile().exists())
+        {
+            if(System.getProperty("serversettings.file") == null)
+                System.setProperty("serversettings.file", System.getProperty("serversettings", path.toAbsolutePath().toString()));
+            ConfigFactory.invalidateCaches();
+        }
+        return path;
+    }
+
     protected void writeSettings()
     {
         JSONObject obj = new JSONObject();
@@ -109,7 +123,7 @@ public class SettingsManager implements GuildSettingsManager<Settings>
             obj.put(Long.toString(key), o);
         });
         try {
-            Files.write(OtherUtil.getPath("serversettings.json"), obj.toString(4).getBytes());
+            Files.write(getServerSettingsPath(), obj.toString(4).getBytes());
         } catch(IOException ex){
             LoggerFactory.getLogger("Settings").warn("Failed to write to file: "+ex);
         }
