@@ -19,6 +19,7 @@ import com.jagrosh.jdautilities.command.GuildSettingsManager;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.util.HashMap;
 import net.dv8tion.jda.api.entities.Guild;
 import org.json.JSONException;
@@ -58,10 +59,19 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                         o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO));
             });
         } catch (NoSuchFileException e) {
-            // ignore, it just means no settings have been saved yet
+            // create an empty json file
+            try {
+                LoggerFactory.getLogger("Settings").info("serversettings.json will be created in " + OtherUtil.getPath("serversettings.json").toAbsolutePath());
+                Files.write(OtherUtil.getPath("serversettings.json"), new JSONObject().toString(4).getBytes());
+            } catch(IOException ex) {
+                LoggerFactory.getLogger("Settings").warn("Failed to create new settings file: "+ex);
+            }
+            return;
         } catch(IOException | JSONException e) {
             LoggerFactory.getLogger("Settings").warn("Failed to load server settings: "+e);
         }
+
+        LoggerFactory.getLogger("Settings").info("serversettings.json loaded from " + OtherUtil.getPath("serversettings.json").toAbsolutePath());
     }
     
     /**
