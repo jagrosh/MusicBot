@@ -165,8 +165,10 @@ public class JMusicBot
                 GUI gui = new GUI(bot);
                 bot.setGUI(gui);
                 gui.init();
-            } 
-            catch(Exception e) 
+
+                LOG.info("Loaded config from " + config.getConfigLocation());
+            }
+            catch(Exception e)
             {
                 LOG.error("Could not start GUI. If you are "
                         + "running on a server or in a location where you cannot display a "
