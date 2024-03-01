@@ -5,7 +5,7 @@
     <artifactId>JMusicBot</artifactId>
     <version>Snapshot</version>
     <packaging>jar</packaging>
-    
+
     <repositories>
         <repository>
             <id>dv8tion</id>
@@ -31,13 +31,13 @@
             <url>https://m2.duncte123.dev/releases</url>
         </repository>
     </repositories>
-    
+
     <dependencies>
         <!-- Discord Dependencies -->
         <dependency>
-            <groupId>net.dv8tion</groupId> 
-            <artifactId>JDA</artifactId> 
-            <version>4.4.0_352</version>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
+            <version>4.4.1_353</version>
         </dependency>
         <dependency>
             <groupId>com.jagrosh</groupId>
@@ -45,7 +45,7 @@
             <version>3.0.5</version>
             <type>pom</type>
         </dependency>
-        
+
         <!-- Music Dependencies -->
         <!-- using a fork of this to fix some issues faster -->
         <!-- dependency>
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.13</version>
         </dependency>
         <dependency>
             <groupId>com.typesafe</groupId>
@@ -85,7 +85,7 @@
             <artifactId>jsoup</artifactId>
             <version>1.15.3</version>
         </dependency>
-        
+
         <!-- Testing Dependencies -->
         <dependency>
             <groupId>junit</groupId>
@@ -100,7 +100,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
       <plugins>
         <plugin>
@@ -142,7 +142,7 @@
         </plugin>
       </plugins>
     </build>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
