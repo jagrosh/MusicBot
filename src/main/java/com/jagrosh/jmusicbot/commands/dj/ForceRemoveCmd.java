@@ -28,6 +28,8 @@ import net.dv8tion.jda.api.entities.User;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.jagrosh.jmusicbot.utils.FormatUtil.formatUsername;
+
 /**
  *
  * @author Michaili K.
@@ -114,11 +116,7 @@ public class ForceRemoveCmd extends DJCommand
         }
         else
         {
-            if ("0000".equals(discriminator)) {
-                event.replySuccess("Successfully removed `" + count + "` entries from **" + target.getName() + ".");
-            } else {
-                event.replySuccess("Successfully removed `" + count + "` entries from **" + target.getName() + "**#" + target.getDiscriminator() + ".");
-            }
+            event.replySuccess("Successfully removed `"+count+"` entries from "+formatUsername(target.getName(), target.getDiscriminator())+".");
         }
     }
 }

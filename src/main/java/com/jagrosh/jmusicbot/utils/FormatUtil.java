@@ -37,6 +37,14 @@ public class FormatUtil {
         seconds %= 60;
         return (hours>0 ? hours+":" : "") + (minutes<10 ? "0"+minutes : minutes) + ":" + (seconds<10 ? "0"+seconds : seconds);
     }
+
+    public static String formatUsername(String username, String discrim) {
+        if(discrim.equals("0000")) {
+            return username;
+        } else {
+            return username + "#" + discrim;
+        }
+    }
         
     public static String progressBar(double percent)
     {
