@@ -189,6 +189,26 @@ public class JMusicBot
                     .setBulkDeleteSplittingEnabled(true)
                     .build();
             bot.setJDA(jda);
+
+            // check if something about the current startup is not supported
+            String unsupportedReason = OtherUtil.getUnsupportedBotReason(jda);
+            if (unsupportedReason != null)
+            {
+                prompt.alert(Prompt.Level.ERROR, "JMusicBot", "JMusicBot cannot be run on this Discord bot: " + unsupportedReason);
+                try{ Thread.sleep(5000);}catch(InterruptedException ignored){} // this is awful but until we have a better way...
+                jda.shutdown();
+                System.exit(1);
+            }
+            
+            // other check that will just be a warning now but may be required in the future
+            // check if the user has changed the prefix and provide info about the 
+            // message content intent
+            if(!"@mention".equals(config.getPrefix()))
+            {
+                prompt.alert(Prompt.Level.INFO, "JMusicBot", "You currently have a custom prefix set. "
+                        + "If your prefix is not working, make sure that the 'MESSAGE CONTENT INTENT' is Enabled "
+                        + "on https://discord.com/developers/applications/" + jda.getSelfUser().getId() + "/bot");
+            }
         }
         catch (LoginException ex)
         {
