@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jagrosh.jmusicbot.utils;
-
-import com.jagrosh.jmusicbot.queue.AbstractQueue;
-import com.jagrosh.jmusicbot.queue.Queueable;
+package com.jagrosh.jmusicbot.queue;
 
 /**
  *

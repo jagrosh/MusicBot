@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jagrosh.jmusicbot.commands.dj;
+package com.jagrosh.jmusicbot.commands.admin;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
-import com.jagrosh.jmusicbot.commands.DJCommand;
+import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.settings.QueueType;
 import com.jagrosh.jmusicbot.settings.Settings;
 
@@ -26,16 +26,15 @@ import com.jagrosh.jmusicbot.settings.Settings;
  *
  * @author Wolfgang Schwendtbauer
  */
-public class QueueTypeCmd extends DJCommand
+public class QueueTypeCmd extends AdminCommand
 {
     public QueueTypeCmd(Bot bot)
     {
-        super(bot);
+        super();
         this.name = "queuetype";
         this.help = "changes the queue type";
         this.arguments = "[" + String.join("|", QueueType.getNames()) + "]";
         this.aliases = bot.getConfig().getAliases(this.name);
-        this.guildOnly = true;
     }
 
     @Override
@@ -72,12 +71,5 @@ public class QueueTypeCmd extends DJCommand
         }
 
         event.reply(value.getEmoji() + " Queue type was set to `" + value.getUserFriendlyName() + "`.");
-
-    }
-
-    @Override
-    public void doCommand(CommandEvent event)
-    {
-        /* Intentionally Empty */
     }
 }

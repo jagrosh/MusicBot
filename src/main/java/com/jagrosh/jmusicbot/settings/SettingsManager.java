@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 public class SettingsManager implements GuildSettingsManager<Settings>
 {
     private final static String SETTINGS_FILE = "serversettings.json";
-    private final static double SKIP_RATIO = .55;
     private final HashMap<Long,Settings> settings;
 
     public SettingsManager()

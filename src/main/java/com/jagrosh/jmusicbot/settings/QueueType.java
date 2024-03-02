@@ -19,7 +19,7 @@ import com.jagrosh.jmusicbot.queue.AbstractQueue;
 import com.jagrosh.jmusicbot.queue.FairQueue;
 import com.jagrosh.jmusicbot.queue.LinearQueue;
 import com.jagrosh.jmusicbot.queue.Queueable;
-import com.jagrosh.jmusicbot.utils.QueueSupplier;
+import com.jagrosh.jmusicbot.queue.QueueSupplier;
 
 import java.util.Arrays;
 import java.util.List;
