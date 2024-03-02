@@ -15,7 +15,6 @@
  */
 package com.jagrosh.jmusicbot.audio;
 
-import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
@@ -175,7 +174,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         {
             if(!playFromDefault())
             {
-                manager.getBot().getNowplayingHandler().onTrackUpdate(guildId, null, this);
+                manager.getBot().getNowplayingHandler().onTrackUpdate(null);
                 if(!manager.getBot().getConfig().getStay())
                     manager.getBot().closeAudioConnection(guildId);
                 // unpause, in the case when the player was paused and the track has been skipped.
