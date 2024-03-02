@@ -25,7 +25,8 @@ import java.util.Set;
  * @author John Grosh (jagrosh)
  * @param <T>
  */
-public class FairQueue<T extends Queueable> {
+public class FairQueue<T extends Queueable> 
+{
     private final List<T> list = new ArrayList<>();
     private final Set<Long> set = new HashSet<>();
     
@@ -33,7 +34,7 @@ public class FairQueue<T extends Queueable> {
     {
         int lastIndex;
         for(lastIndex=list.size()-1; lastIndex>-1; lastIndex--)
-            if(list.get(lastIndex).getIdentifier()==item.getIdentifier())
+            if(list.get(lastIndex).getIdentifier() == item.getIdentifier())
                 break;
         lastIndex++;
         set.clear();
