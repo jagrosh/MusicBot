@@ -43,6 +43,7 @@ public class BotConfig
             successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
     private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
     private long owner, maxSeconds, aloneTimeUntilStop;
+    private double skipratio;
     private OnlineStatus status;
     private Activity game;
     private Config aliases, transforms;
@@ -91,6 +92,7 @@ public class BotConfig
             playlistsFolder = config.getString("playlistsfolder");
             aliases = config.getConfig("aliases");
             transforms = config.getConfig("transforms");
+            skipratio = config.getDouble("skipratio");
             dbots = owner == 113156185389092864L;
             
             // we may need to write a new config file
@@ -229,6 +231,11 @@ public class BotConfig
     public String getToken()
     {
         return token;
+    }
+    
+    public double getSkipRatio()
+    {
+        return skipratio;
     }
     
     public long getOwnerId()
