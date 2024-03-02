@@ -21,6 +21,8 @@ import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.RequestMetadata;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 
+import static com.jagrosh.jmusicbot.utils.FormatUtil.formatUsername;
+
 /**
  *
  * @author John Grosh <john.a.grosh@gmail.com>
@@ -42,7 +44,7 @@ public class ForceskipCmd extends DJCommand
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
         RequestMetadata rm = handler.getRequestMetadata();
         event.reply(event.getClient().getSuccess()+" Skipped **"+handler.getPlayer().getPlayingTrack().getInfo().title
-                +"** "+(rm.getOwner() == 0L ? "(autoplay)" : "(requested by **" + rm.user.username + "**)"));
+                +"** "+(rm.getOwner() == 0L ? "(autoplay)" : "(requested by **" + formatUsername(rm.user.username, rm.user.discrim) + "**)"));
         handler.getPlayer().stopTrack();
     }
 }
