@@ -37,7 +37,7 @@ public class FairQueue<T extends Queueable> extends AbstractQueue<T>
     {
         int lastIndex;
         for(lastIndex=list.size()-1; lastIndex>-1; lastIndex--)
-            if(list.get(lastIndex).getIdentifier()==item.getIdentifier())
+            if(list.get(lastIndex).getIdentifier() == item.getIdentifier())
                 break;
         lastIndex++;
         set.clear();

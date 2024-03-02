@@ -47,7 +47,7 @@ public class JMusicBot
     public final static Logger LOG = LoggerFactory.getLogger(JMusicBot.class);
     public final static Permission[] RECOMMENDED_PERMS = {Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
                                 Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
-                                Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
+                                Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
     public final static GatewayIntent[] INTENTS = {GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_VOICE_STATES};
     
     /**
@@ -166,8 +166,10 @@ public class JMusicBot
                 GUI gui = new GUI(bot);
                 bot.setGUI(gui);
                 gui.init();
-            } 
-            catch(Exception e) 
+
+                LOG.info("Loaded config from " + config.getConfigLocation());
+            }
+            catch(Exception e)
             {
                 LOG.error("Could not start GUI. If you are "
                         + "running on a server or in a location where you cannot display a "
@@ -188,6 +190,26 @@ public class JMusicBot
                     .setBulkDeleteSplittingEnabled(true)
                     .build();
             bot.setJDA(jda);
+
+            // check if something about the current startup is not supported
+            String unsupportedReason = OtherUtil.getUnsupportedBotReason(jda);
+            if (unsupportedReason != null)
+            {
+                prompt.alert(Prompt.Level.ERROR, "JMusicBot", "JMusicBot cannot be run on this Discord bot: " + unsupportedReason);
+                try{ Thread.sleep(5000);}catch(InterruptedException ignored){} // this is awful but until we have a better way...
+                jda.shutdown();
+                System.exit(1);
+            }
+            
+            // other check that will just be a warning now but may be required in the future
+            // check if the user has changed the prefix and provide info about the 
+            // message content intent
+            if(!"@mention".equals(config.getPrefix()))
+            {
+                prompt.alert(Prompt.Level.INFO, "JMusicBot", "You currently have a custom prefix set. "
+                        + "If your prefix is not working, make sure that the 'MESSAGE CONTENT INTENT' is Enabled "
+                        + "on https://discord.com/developers/applications/" + jda.getSelfUser().getId() + "/bot");
+            }
         }
         catch (LoginException ex)
         {
