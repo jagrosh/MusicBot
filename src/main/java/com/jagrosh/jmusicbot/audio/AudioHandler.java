@@ -40,8 +40,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
-import static com.jagrosh.jmusicbot.utils.FormatUtil.formatUsername;
-
 /**
  *
  * @author John Grosh <john.a.grosh@gmail.com>
@@ -216,9 +214,9 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
             {
                 User u = guild.getJDA().getUserById(rm.user.id);
                 if(u==null)
-                    eb.setAuthor(formatUsername(rm.user.username, rm.user.discrim), null, rm.user.avatar);
+                    eb.setAuthor(FormatUtil.formatUsername(rm.user), null, rm.user.avatar);
                 else
-                    eb.setAuthor(formatUsername(u.getName(), u.getDiscriminator()), null, u.getEffectiveAvatarUrl());
+                    eb.setAuthor(FormatUtil.formatUsername(u), null, u.getEffectiveAvatarUrl());
             }
 
             try 

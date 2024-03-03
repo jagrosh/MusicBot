@@ -20,8 +20,7 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.RequestMetadata;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
-
-import static com.jagrosh.jmusicbot.utils.FormatUtil.formatUsername;
+import com.jagrosh.jmusicbot.utils.FormatUtil;
 
 /**
  *
@@ -68,7 +67,7 @@ public class SkipCmd extends MusicCommand
             if(skippers>=required)
             {
                 msg += "\n" + event.getClient().getSuccess() + " Skipped **" + handler.getPlayer().getPlayingTrack().getInfo().title
-                    + "** " + (rm.getOwner() == 0L ? "(autoplay)" : "(requested by **" + formatUsername(rm.user.username, rm.user.discrim) + "**)");
+                    + "** " + (rm.getOwner() == 0L ? "(autoplay)" : "(requested by **" + FormatUtil.formatUsername(rm.user) + "**)");
                 handler.getPlayer().stopTrack();
             }
             event.reply(msg);

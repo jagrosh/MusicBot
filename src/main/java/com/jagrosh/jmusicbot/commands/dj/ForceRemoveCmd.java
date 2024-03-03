@@ -21,14 +21,13 @@ import com.jagrosh.jdautilities.menu.OrderedMenu;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.DJCommand;
+import com.jagrosh.jmusicbot.utils.FormatUtil;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static com.jagrosh.jmusicbot.utils.FormatUtil.formatUsername;
 
 /**
  *
@@ -109,14 +108,13 @@ public class ForceRemoveCmd extends DJCommand
     private void removeAllEntries(User target, CommandEvent event)
     {
         int count = ((AudioHandler) event.getGuild().getAudioManager().getSendingHandler()).getQueue().removeAll(target.getIdLong());
-        String discriminator = target.getDiscriminator();
         if (count == 0)
         {
             event.replyWarning("**"+target.getName()+"** doesn't have any songs in the queue!");
         }
         else
         {
-            event.replySuccess("Successfully removed `"+count+"` entries from "+formatUsername(target.getName(), target.getDiscriminator())+".");
+            event.replySuccess("Successfully removed `"+count+"` entries from "+FormatUtil.formatUsername(target)+".");
         }
     }
 }
