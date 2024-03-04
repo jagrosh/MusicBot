@@ -129,11 +129,12 @@ public class JMusicBot
                         new VolumeCmd(bot),
                         
                         new PrefixCmd(bot),
+                        new QueueTypeCmd(bot),
                         new SetdjCmd(bot),
                         new SkipratioCmd(bot),
                         new SettcCmd(bot),
                         new SetvcCmd(bot),
-                        
+
                         new AutoplaylistCmd(bot),
                         new DebugCmd(bot),
                         new PlaylistCmd(bot),

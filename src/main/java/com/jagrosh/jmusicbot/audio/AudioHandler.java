@@ -16,6 +16,8 @@
 package com.jagrosh.jmusicbot.audio;
 
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
+import com.jagrosh.jmusicbot.queue.AbstractQueue;
+import com.jagrosh.jmusicbot.settings.QueueType;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
@@ -26,7 +28,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import com.jagrosh.jmusicbot.queue.FairQueue;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
@@ -48,8 +49,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
     public final static String PLAY_EMOJI  = "\u25B6"; // ▶
     public final static String PAUSE_EMOJI = "\u23F8"; // ⏸
     public final static String STOP_EMOJI  = "\u23F9"; // ⏹
-    
-    private final FairQueue<QueuedTrack> queue = new FairQueue<>();
+
     private final List<AudioTrack> defaultQueue = new LinkedList<>();
     private final Set<String> votes = new HashSet<>();
     
@@ -58,12 +58,20 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
     private final long guildId;
     
     private AudioFrame lastFrame;
+    private AbstractQueue<QueuedTrack> queue;
 
     protected AudioHandler(PlayerManager manager, Guild guild, AudioPlayer player)
     {
         this.manager = manager;
         this.audioPlayer = player;
         this.guildId = guild.getIdLong();
+
+        this.setQueueType(manager.getBot().getSettingsManager().getSettings(guildId).getQueueType());
+    }
+
+    public void setQueueType(QueueType type)
+    {
+        queue = type.createInstance(queue);
     }
 
     public int addTrackToFront(QueuedTrack qtrack)
@@ -91,7 +99,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
             return queue.add(qtrack);
     }
     
-    public FairQueue<QueuedTrack> getQueue()
+    public AbstractQueue<QueuedTrack> getQueue()
     {
         return queue;
     }
