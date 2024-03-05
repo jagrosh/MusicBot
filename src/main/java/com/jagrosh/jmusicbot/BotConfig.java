@@ -273,6 +273,11 @@ public class BotConfig
         return game;
     }
     
+    public boolean isGameNone()
+    {
+        return game != null && game.getName().equalsIgnoreCase("none");
+    }
+    
     public OnlineStatus getStatus()
     {
         return status;

@@ -64,7 +64,7 @@ public class OtherUtil
             {
                 result = Paths.get(new File(JMusicBot.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath() + File.separator + path);
             }
-            catch(URISyntaxException ex) {}
+            catch(URISyntaxException ignored) {}
         }
         return result;
     }
@@ -84,7 +84,7 @@ public class OtherUtil
             reader.lines().forEach(line -> sb.append("\r\n").append(line));
             return sb.toString().trim();
         }
-        catch(IOException ex)
+        catch(IOException ignored)
         {
             return null;
         }
