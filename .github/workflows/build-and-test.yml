@@ -1,4 +1,4 @@
-name: Test
+name: Build and Test
 on:
   push:
     branches:
@@ -18,5 +18,5 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           cache: maven
-      - name: Build with Maven
+      - name: Build and Test with Maven
         run: mvn --batch-mode --update-snapshots verify
