@@ -15,9 +15,11 @@
  */
 package com.jagrosh.jmusicbot.utils;
 
+import com.jagrosh.jmusicbot.audio.RequestMetadata.UserInfo;
 import java.util.List;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 
 /**
@@ -36,6 +38,28 @@ public class FormatUtil {
         long minutes = seconds/60;
         seconds %= 60;
         return (hours>0 ? hours+":" : "") + (minutes<10 ? "0"+minutes : minutes) + ":" + (seconds<10 ? "0"+seconds : seconds);
+    }
+
+    public static String formatUsername(String username, String discrim) 
+    {
+        if(discrim == null || discrim.equals("0000")) 
+        {
+            return username;
+        }
+        else 
+        {
+            return username + "#" + discrim;
+        }
+    }
+    
+    public static String formatUsername(UserInfo userinfo)
+    {
+        return formatUsername(userinfo.username, userinfo.discrim);
+    }
+    
+    public static String formatUsername(User user)
+    {
+        return formatUsername(user.getName(), user.getDiscriminator());
     }
         
     public static String progressBar(double percent)
