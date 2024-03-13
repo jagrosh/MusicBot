@@ -25,6 +25,16 @@
                 <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
+        <repository>
+            <id>m2.duncte123.dev</id>
+            <name>m2-duncte123</name>
+            <url>https://m2.duncte123.dev/releases</url>
+        </repository>
+        <repository>
+            <id>arbjergDev-snapshots</id>
+            <name>Lavalink Repository</name>
+            <url>https://maven.lavalink.dev/snapshots</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -42,34 +52,27 @@
         </dependency>
 
         <!-- Music Dependencies -->
-        <!-- using a fork of this to fix some issues faster -->
-        <!-- dependency>
-            <groupId>com.sedmelluq</groupId>
-            <artifactId>lavaplayer</artifactId>
-            <version>1.3.78</version>
-        </dependency -->
         <dependency>
-	    <groupId>com.github.jagrosh</groupId>
-	    <artifactId>lavaplayer</artifactId>
-	    <version>jmusicbot-SNAPSHOT</version>
-	</dependency>
-        <!-- this is needed, but isn't actually hosted anywhere anymore... uh -->
-        <!--dependency>
-            <groupId>com.sedmelluq</groupId>
-            <artifactId>lavaplayer-natives-extra</artifactId>
-            <version>1.3.13</version>
-        </dependency-->
+            <groupId>dev.arbjerg</groupId>
+            <artifactId>lavaplayer</artifactId>
+            <version>727959e9f621fc457b3a5adafcfffb55fdeaa538-SNAPSHOT</version>
+        </dependency>
 	<dependency>
 	    <groupId>com.github.jagrosh</groupId>
 	    <artifactId>JLyrics</artifactId>
 	    <version>master-SNAPSHOT</version>
 	</dependency>
+        <dependency>
+            <groupId>com.dunctebot</groupId>
+            <artifactId>sourcemanagers</artifactId>
+            <version>1.9.0</version>
+        </dependency>
 
         <!-- Misc Internal Dependencies -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.13</version>
         </dependency>
         <dependency>
             <groupId>com.typesafe</groupId>
@@ -141,7 +144,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 </project>

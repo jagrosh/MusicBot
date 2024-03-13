@@ -15,8 +15,9 @@
  */
 package com.jagrosh.jmusicbot.audio;
 
-import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
+import com.jagrosh.jmusicbot.queue.AbstractQueue;
+import com.jagrosh.jmusicbot.settings.QueueType;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
@@ -27,7 +28,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import com.jagrosh.jmusicbot.queue.FairQueue;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
@@ -49,8 +49,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
     public final static String PLAY_EMOJI  = "\u25B6"; // ▶
     public final static String PAUSE_EMOJI = "\u23F8"; // ⏸
     public final static String STOP_EMOJI  = "\u23F9"; // ⏹
-    
-    private final FairQueue<QueuedTrack> queue = new FairQueue<>();
+
     private final List<AudioTrack> defaultQueue = new LinkedList<>();
     private final Set<String> votes = new HashSet<>();
     
@@ -59,12 +58,20 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
     private final long guildId;
     
     private AudioFrame lastFrame;
+    private AbstractQueue<QueuedTrack> queue;
 
     protected AudioHandler(PlayerManager manager, Guild guild, AudioPlayer player)
     {
         this.manager = manager;
         this.audioPlayer = player;
         this.guildId = guild.getIdLong();
+
+        this.setQueueType(manager.getBot().getSettingsManager().getSettings(guildId).getQueueType());
+    }
+
+    public void setQueueType(QueueType type)
+    {
+        queue = type.createInstance(queue);
     }
 
     public int addTrackToFront(QueuedTrack qtrack)
@@ -92,7 +99,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
             return queue.add(qtrack);
     }
     
-    public FairQueue<QueuedTrack> getQueue()
+    public AbstractQueue<QueuedTrack> getQueue()
     {
         return queue;
     }
@@ -175,7 +182,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         {
             if(!playFromDefault())
             {
-                manager.getBot().getNowplayingHandler().onTrackUpdate(guildId, null, this);
+                manager.getBot().getNowplayingHandler().onTrackUpdate(null);
                 if(!manager.getBot().getConfig().getStay())
                     manager.getBot().closeAudioConnection(guildId);
                 // unpause, in the case when the player was paused and the track has been skipped.
@@ -194,7 +201,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
     public void onTrackStart(AudioPlayer player, AudioTrack track) 
     {
         votes.clear();
-        manager.getBot().getNowplayingHandler().onTrackUpdate(guildId, track, this);
+        manager.getBot().getNowplayingHandler().onTrackUpdate(track);
     }
 
     
@@ -214,9 +221,9 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
             {
                 User u = guild.getJDA().getUserById(rm.user.id);
                 if(u==null)
-                    eb.setAuthor(rm.user.username + "#" + rm.user.discrim, null, rm.user.avatar);
+                    eb.setAuthor(FormatUtil.formatUsername(rm.user), null, rm.user.avatar);
                 else
-                    eb.setAuthor(u.getName() + "#" + u.getDiscriminator(), null, u.getEffectiveAvatarUrl());
+                    eb.setAuthor(FormatUtil.formatUsername(u), null, u.getEffectiveAvatarUrl());
             }
 
             try 
@@ -258,24 +265,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
                 .setColor(guild.getSelfMember().getColor())
                 .build()).build();
     }
-    
-    public String getTopicFormat(JDA jda)
-    {
-        if(isMusicPlaying(jda))
-        {
-            long userid = getRequestMetadata().getOwner();
-            AudioTrack track = audioPlayer.getPlayingTrack();
-            String title = track.getInfo().title;
-            if(title==null || title.equals("Unknown Title"))
-                title = track.getInfo().uri;
-            return "**"+title+"** ["+(userid==0 ? "autoplay" : "<@"+userid+">")+"]"
-                    + "\n" + getStatusEmoji() + " "
-                    + "[" + FormatUtil.formatTime(track.getDuration()) + "] "
-                    + FormatUtil.volumeIcon(audioPlayer.getVolume());
-        }
-        else return "No music playing " + STOP_EMOJI + " " + FormatUtil.volumeIcon(audioPlayer.getVolume());
-    }
-    
+
     public String getStatusEmoji()
     {
         return audioPlayer.isPaused() ? PAUSE_EMOJI : PLAY_EMOJI;
