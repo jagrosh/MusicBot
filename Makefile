@@ -1,5 +1,5 @@
 # Define the variables:
-DESTDIR=dist
+DESTDIR=./dist
 JAVA_OPTS=
 MVN_CMD=mvn
 
@@ -11,6 +11,7 @@ build:
 	$(MVN_CMD) install -DskipTests $(JAVA_OPTS)
 	mkdir -p $(DESTDIR)
 	mv ./target/*.jar $(DESTDIR)/
+	echo "Binary built to $(DESTDIR)"
 
 # Build and test the application
 test: build
