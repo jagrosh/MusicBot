@@ -2,7 +2,7 @@
 
 # This will have this script check for a new version of JMusicBot every
 # startup (and download it if the latest version isn't currently downloaded)
-DOWNLOAD=${DOWNLOAD:-false}
+DOWNLOAD=${DOWNLOAD:-true}
 
 # This will cause the script to run in a loop so that the bot auto-restarts
 # when you use the shutdown command
