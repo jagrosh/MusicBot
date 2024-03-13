@@ -1,20 +1,26 @@
 # Define the variables:
-DESTDIR=./dist
+DESTDIR=dist
 JAVA_OPTS=
 MVN_CMD=mvn
 
-# Define the targets:
 all: build test clean
 
-# define the rules for each target:
+# Build the application to the $DESTDIR folder
 build: 
 	@echo "Building project..."
-	$(MVN_CMD) package -DskipTests $(JAVA_OPTS)
+	$(MVN_CMD) install -DskipTests $(JAVA_OPTS)
+	mkdir -p $(DESTDIR)
+	mv ./target/*.jar $(DESTDIR)/
 
+# Build and test the application
 test: build
 	@echo "Running tests..."
 	$(MVN_CMD) test $(JAVA_OPTS)
 
+# Clean the project folder, removing built binaries
 clean:
 	@echo "Cleaning project..."
-	rm -rf target/*.jar
+	$(MVN_CMD) clean
+
+help:
+	@awk '/^#/{c=substr($$0,3);next}c&&/^[[:alpha:]][[:alnum:]_-]+:/{print substr($$1,1,index($$1,":")),c}1{c=0}' $(MAKEFILE_LIST) | column -s: -t
