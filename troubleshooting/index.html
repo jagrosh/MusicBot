@@ -14,7 +14,7 @@
         <link rel="canonical" href="https://jmusicbot.com/troubleshooting/">
       
       <link rel="icon" href="../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-7.3.6">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-7.3.6">
     
     
       
@@ -730,6 +730,12 @@
 <p>There may be bugs or temporary issues with MusicBot, such as tracks not loading from specific sources, like YouTube or SoundCloud. See the <a href="https://github.com/jagrosh/MusicBot/issues">Issues</a> page and check if your issue is known.</p>
 <h2 id="problems-starting-the-bot">Problems starting the bot<a class="headerlink" href="#problems-starting-the-bot" title="Permanent link">#</a></h2>
 <div class="admonition warning">
+<p class="admonition-title">A message stating 'A Java Exception has occurred' when I try to run the bot!</p>
+</div>
+<ul>
+<li><strong>Check your Java version</strong> - You might be running a version of Java that is too old. JMusicBot reqires Java 11.</li>
+</ul>
+<div class="admonition warning">
 <p class="admonition-title">The .jar file is opening in WinRAR or is acting like a zipped file!</p>
 </div>
 <ul>
@@ -739,28 +745,25 @@
 <div class="admonition warning">
 <p class="admonition-title">The bot is looking for the config file in an unexpected location!</p>
 </div>
-<p>This can sometimes happen on Windows. Make sure:</p>
-<ul>
-<li><strong>Run the bot from a writable folder</strong> - Use a folder in your 'Documents', not from your Desktop.</li>
-<li><strong>Double-Click</strong>, don't use 'Open With'</li>
-<li><strong>Use Command Prompt or Powershell</strong> in the folder with the jar and use <code>java -jar JMusicBot-VERSION_HERE.jar</code> (replacing the version correctly)</li>
-</ul>
+<p>This can sometimes happen on Windows. Make sure:
+* <strong>Run the bot from a writable folder</strong> - Use a folder in your 'Documents', not from your Desktop.
+* <strong>Double-Click</strong>, don't use 'Open With'
+* <strong>Use Command Prompt or Powershell</strong> in the folder with the jar and use <code>java -jar JMusicBot-VERSION_HERE.jar</code> (replacing the version correctly)</p>
 <h2 id="problems-using-commands">Problems using commands<a class="headerlink" href="#problems-using-commands" title="Permanent link">#</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">The bot doesn't respond to commands!</p>
 </div>
 <ul>
 <li><strong>Check the bot's prefix</strong> - Look in your config file to see what you set the prefix to. The default prefix is a ping of the bot (ex: <code>@yourbot'sname ping</code> would run the ping command with the default prefix).</li>
+<li><strong>Check the bot's configured intents</strong> - On the Discord Developer page, make sure that the 'Message Content Intent' is enabled. A message with a URL to your bot's specific developer page should be printed in console when starting up the bot.</li>
 <li><strong>Check the bot's permissions in Discord</strong> - If the bot responds to the <code>help</code> command, but no other commands, the bot is likely missing Send Messages permissions in the text channel. If the bot can respond to <code>ping</code>, it has sufficient permissions to at least provide other error messages.</li>
 </ul>
 <h2 id="problems-playing-music">Problems playing music<a class="headerlink" href="#problems-playing-music" title="Permanent link">#</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Music doesn't play if I set the volume to something other than 100!</p>
 </div>
-<p>If music stops playing when you change the volume, this means that an internal library could not be loaded. This means you are either using an unsupported java version or the wrong jar file.</p>
-<ul>
-<li><strong>Check your Java version</strong> - You might be running an unsupported version. Try re-installing the latest 64-bit version of java.</li>
-</ul>
+<p>If music stops playing when you change the volume, this means that an internal library could not be loaded. This means you are either using an unsupported java version or the wrong jar file.
+* <strong>Check your Java version</strong> - You might be running an unsupported version. Try re-installing the latest 64-bit version of java.</p>
 <div class="admonition warning">
 <p class="admonition-title">It seems like music is playing, but I don't hear anything!</p>
 </div>
@@ -771,21 +774,17 @@
 <div class="admonition warning">
 <p class="admonition-title">Music never starts playing!</p>
 </div>
-<p>If the bot runs, but when you start to play music it never starts and is stuck at <code>0:00</code>, try some of these potential fixes:</p>
-<ul>
-<li><strong>Check your Java version</strong> - You can run <code>java -version</code> at the command line to check your Java version. This bot requires JDK 1.8 or higher. OpenJDK <em>may</em> work but is not guaranteed to provide full functionality. Also, for Windows user, make sure you are running 64-bit Java.</li>
-<li><strong>Check your hosting</strong> - If you are hosting the bot on a VPS (Virtual Private Server), check which company is hosting it.</li>
-<li><strong>Check the logs</strong> - There are a few things you can look for in the logs, but generally something like <code>Request Timed Out</code> means that the network connection that the bot has may be struggling and possibly unable to support streaming music.</li>
-<li><strong>Change your Discord voice region</strong> - Discord frequently makes changes on their end which can cause issues and/or disconnects for JMusicBot. Try changing the region to see if that helps.</li>
-</ul>
+<p>If the bot runs, but when you start to play music it never starts and is stuck at <code>0:00</code>, try some of these potential fixes:
+* <strong>Check your Java version</strong> - You can run <code>java -version</code> at the command line to check your Java version. This bot requires JDK 1.8 or higher. OpenJDK <em>may</em> work but is not guaranteed to provide full functionality. Also, for Windows user, make sure you are running 64-bit Java.
+* <strong>Check your hosting</strong> - If you are hosting the bot on a VPS (Virtual Private Server), check which company is hosting it.
+* <strong>Check the logs</strong> - There are a few things you can look for in the logs, but generally something like <code>Request Timed Out</code> means that the network connection that the bot has may be struggling and possibly unable to support streaming music.
+* <strong>Change your Discord voice region</strong> - Discord frequently makes changes on their end which can cause issues and/or disconnects for JMusicBot. Try changing the region to see if that helps.</p>
 <div class="admonition warning">
 <p class="admonition-title">Error when loading from YouTube (429)</p>
 </div>
-<p>If you see an error similar to "Error when loading from YouTube 429" when attempting to play songs from YouTube, it means that YouTube has blocked your bot's IP. Try one of these potential solutions, and see <a href="https://github.com/jagrosh/MusicBot/issues/305">here</a> for more information:</p>
-<ul>
-<li><strong>Change IP addresses</strong> - If you're hosting at home, you may be able to simply turn your router off and back on again. Some online hosts may offer the option to change your IP or to route through a different one.</li>
-<li><strong>Turn the bot off for several days</strong> - Keeping the bot offline (or only playing songs from non-youtube sources) for several days will allow YouTube to eventually remove your IP ban.</li>
-</ul>
+<p>If you see an error similar to "Error when loading from YouTube 429" when attempting to play songs from YouTube, it means that YouTube has blocked your bot's IP. Try one of these potential solutions, and see <a href="https://github.com/jagrosh/MusicBot/issues/305">here</a> for more information:
+* <strong>Change IP addresses</strong> - If you're hosting at home, you may be able to simply turn your router off and back on again. Some online hosts may offer the option to change your IP or to route through a different one.
+* <strong>Turn the bot off for several days</strong> - Keeping the bot offline (or only playing songs from non-youtube sources) for several days will allow YouTube to eventually remove your IP ban.</p>
                 
                   
                 

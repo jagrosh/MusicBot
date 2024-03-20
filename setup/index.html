@@ -14,7 +14,7 @@
         <link rel="canonical" href="https://jmusicbot.com/setup/">
       
       <link rel="icon" href="../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-7.3.6">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-7.3.6">
     
     
       
@@ -380,8 +380,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-edit-the-config-file" class="md-nav__link">
-    3️⃣ Edit the config file
+  <a href="#3-configure-the-bot" class="md-nav__link">
+    3️⃣ Configure the bot
   </a>
   
 </li>
@@ -701,8 +701,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-edit-the-config-file" class="md-nav__link">
-    3️⃣ Edit the config file
+  <a href="#3-configure-the-bot" class="md-nav__link">
+    3️⃣ Configure the bot
   </a>
   
 </li>
@@ -742,6 +742,7 @@
                 
                 <h2 id="1-install-java">1️⃣ Install Java<a class="headerlink" href="#1-install-java" title="Permanent link">#</a></h2>
 <ul>
+<li>JMusicBot requires Java 11</li>
 <li>Instructions on how to install Java on your system: <a href="../installing-java/">Installing Java</a></li>
 </ul>
 <h2 id="2-download-jmusicbot">2️⃣ Download JMusicBot<a class="headerlink" href="#2-download-jmusicbot" title="Permanent link">#</a></h2>
@@ -758,17 +759,19 @@
 <p class="admonition-title">Warning</p>
 <p>Do not put this in the <em>Downloads</em> or <em>Desktop</em>. Use a folder within <em>Documents</em></p>
 </div>
-<h2 id="3-edit-the-config-file">3️⃣ Edit the config file<a class="headerlink" href="#3-edit-the-config-file" title="Permanent link">#</a></h2>
+<h2 id="3-configure-the-bot">3️⃣ Configure the bot<a class="headerlink" href="#3-configure-the-bot" title="Permanent link">#</a></h2>
 <ul>
-<li>Fill in the config file (if you downloaded it). If you didn't download it, you will be prompted when you run for the first time. An example <code>config.txt</code> is provided below (See <a href="../getting-a-bot-token/">Getting a Bot Token</a> and <a href="../finding-your-user-id/">Finding Your User ID</a> if you need help with the config).<br />
-<div class="highlight"><pre><span></span><code>token = MJHJkljflksdjfCoolTokenDudeILikeItkasdk
-owner = 113156185389092864
-prefix = &quot;!&quot;
-</code></pre></div></li>
+<li>Create a bot account and configure it on the Discord Developer page</li>
+<li>See <a href="../getting-a-bot-token/">Getting a Bot Token</a> for step-by-step instructions</li>
+<li>Make sure that 'Public Bot' is unchecked, and 'Message Content Intent' and 'Server Members Intent' are checked</li>
+<li>Create the config file</li>
+<li>Running the bot without a config file will prompt you for a bot token and a user ID. After you provide these, it will generate a config file for you.</li>
+<li>An example <code>config.txt</code> file can be found on <a href="../config/">Example Config</a>. You can create a <code>config.txt</code> file in the same folder as the bot, paste the contents of the example config file, and modify the values in it.</li>
+<li>See <a href="../getting-a-bot-token/">Getting a Bot Token</a> and <a href="../finding-your-user-id/">Finding Your User ID</a> if you need help with finding some values for the config.</li>
 </ul>
-<div class="admonition example">
-<p class="admonition-title">Example</p>
-<p>You can also copy &amp; paste a template from the <a href="../config/">Example Config</a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You must restart the bot every time you edit <code>config.txt</code>. It is recommended to fully shut down the bot before editing the file.</p>
 </div>
 <h2 id="4-run-jmusicbot">4️⃣ Run JMusicBot<a class="headerlink" href="#4-run-jmusicbot" title="Permanent link">#</a></h2>
 <ul>
@@ -787,6 +790,10 @@ prefix = &quot;!&quot;
 <li>When the bot starts, if it hasn't been added to any servers yet, it will provide you with a link in the console.</li>
 <li>Alternatively, follow these instructions (with images): <a href="../adding-your-bot/">Adding Your Bot To Your Server</a></li>
 </ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you run into problems, make sure to check out the <a href="../troubleshooting/">Troubleshooting</a> page!</p>
+</div>
                 
                   
                 
