@@ -223,7 +223,8 @@ public class OtherUtil
 
         ApplicationInfo info = jda.retrieveApplicationInfo().complete();
         if (info.isBotPublic())
-            return "\"Public Bot\" is enabled. Using JMusicBot as a public bot is not supported. Please disable it in the Developer Dashboard.";
+            return "\"Public Bot\" is enabled. Using JMusicBot as a public bot is not supported. Please disable it in the "
+                    + "Developer Dashboard at https://discord.com/developers/applications/" + jda.getSelfUser().getId() + "/bot.";
 
         return null;
     }
