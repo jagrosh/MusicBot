@@ -4,6 +4,7 @@ description: "Setup JMusicBot"
 ---
 
 ## 1️⃣ Install Java
+* JMusicBot requires Java 11
 * Instructions on how to install Java on your system: [Installing Java](installing-java.md)
 
 ## 2️⃣ Download JMusicBot
@@ -15,15 +16,17 @@ description: "Setup JMusicBot"
 !!! warning
     Do not put this in the *Downloads* or *Desktop*. Use a folder within *Documents*
 
-## 3️⃣ Edit the config file
-* Fill in the config file (if you downloaded it). If you didn't download it, you will be prompted when you run for the first time. An example `config.txt` is provided below (See [Getting a Bot Token](getting-a-bot-token.md) and [Finding Your User ID](finding-your-user-id.md) if you need help with the config).  
-```
-token = MJHJkljflksdjfCoolTokenDudeILikeItkasdk
-owner = 113156185389092864
-prefix = "!"
-```
-!!! example
-    You can also copy & paste a template from the [Example Config](config.md)
+## 3️⃣ Configure the bot
+* Create a bot account and configure it on the Discord Developer page
+  * See [Getting a Bot Token](getting-a-bot-token.md) for step-by-step instructions
+  * Make sure that 'Public Bot' is unchecked, and 'Message Content Intent' and 'Server Members Intent' are checked
+* Create the config file
+  * Running the bot without a config file will prompt you for a bot token and a user ID. After you provide these, it will generate a config file for you.
+  * An example `config.txt` file can be found on [Example Config](config.md). You can create a `config.txt` file in the same folder as the bot, paste the contents of the example config file, and modify the values in it.
+  * See [Getting a Bot Token](getting-a-bot-token.md) and [Finding Your User ID](finding-your-user-id.md) if you need help with finding some values for the config.
+
+!!! warning
+    You must restart the bot every time you edit `config.txt`. It is recommended to fully shut down the bot before editing the file.
 
 ## 4️⃣ Run JMusicBot
 * Run the jar file (choose one of these options):
@@ -38,3 +41,6 @@ prefix = "!"
 ## 5️⃣ Add your bot to your server
 * When the bot starts, if it hasn't been added to any servers yet, it will provide you with a link in the console.
 * Alternatively, follow these instructions (with images): [Adding Your Bot To Your Server](adding-your-bot.md)
+
+!!! tip
+    If you run into problems, make sure to check out the [Troubleshooting](troubleshooting.md) page!
