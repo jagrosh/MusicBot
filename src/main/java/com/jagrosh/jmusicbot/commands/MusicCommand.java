@@ -47,13 +47,8 @@ public abstract class MusicCommand extends Command
     {
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
         TextChannel tchannel = settings.getTextChannel(event.getGuild());
-        if(tchannel!=null && !event.getTextChannel().equals(tchannel))
-        {
-            try 
-            {
-                event.getMessage().delete().queue();
-            } catch(PermissionException ignore){}
-            event.replyInDm(event.getClient().getError()+" You can only use that command in "+tchannel.getAsMention()+"!");
+
+        if (!isCommandAllowedInTextChannel(event, tchannel)) {
             return;
         }
         bot.getPlayerManager().setUpHandler(event.getGuild()); // no point constantly checking for this later
@@ -64,40 +59,65 @@ public abstract class MusicCommand extends Command
         }
         if(beListening)
         {
-            VoiceChannel current = event.getGuild().getSelfMember().getVoiceState().getChannel();
-            if(current==null)
-                current = settings.getVoiceChannel(event.getGuild());
-            GuildVoiceState userState = event.getMember().getVoiceState();
-            if(!userState.inVoiceChannel() || userState.isDeafened() || (current!=null && !userState.getChannel().equals(current)))
-            {
-                event.replyError("You must be listening in "+(current==null ? "a voice channel" : current.getAsMention())+" to use that!");
+            if (!isUserListening(event, settings)) {
                 return;
-            }
-
-            VoiceChannel afkChannel = userState.getGuild().getAfkChannel();
-            if(afkChannel != null && afkChannel.equals(userState.getChannel()))
-            {
-                event.replyError("You cannot use that command in an AFK channel!");
-                return;
-            }
-
-            if(!event.getGuild().getSelfMember().getVoiceState().inVoiceChannel())
-            {
-                try 
-                {
-                    event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
-                    event.getGuild().getAudioManager().setSelfDeafened(true);
-                }
-                catch(PermissionException ex) 
-                {
-                    event.reply(event.getClient().getError()+" I am unable to connect to "+userState.getChannel().getAsMention()+"!");
-                    return;
-                }
             }
         }
         
         doCommand(event);
     }
-    
+
+    protected boolean isCommandAllowedInTextChannel(CommandEvent event, TextChannel tchannel) {
+        if (tchannel != null && !event.getTextChannel().equals(tchannel)) {
+            try {
+                event.getMessage().delete().queue();
+            } catch (PermissionException ignore) {}
+            event.replyInDm(event.getClient().getError() + " You can only use that command in " + tchannel.getAsMention() + "!");
+            return false;
+        }
+        return true;
+    }
+    protected boolean isUserListening(CommandEvent event, Settings settings) {
+        VoiceChannel current = event.getGuild().getSelfMember().getVoiceState().getChannel();
+        if (current == null) {
+            current = settings.getVoiceChannel(event.getGuild());
+        }
+        GuildVoiceState userState = event.getMember().getVoiceState();
+
+        boolean notInVoiceChannel = !userState.inVoiceChannel();
+        boolean isDeafened = userState.isDeafened();
+        boolean isListeningToDifferentChannel = current != null && !userState.getChannel().equals(current);
+
+        if (notInVoiceChannel || isDeafened || isListeningToDifferentChannel) {
+            String errorMessage = "You must be ";
+            if (notInVoiceChannel) {
+                errorMessage += "in a voice channel";
+            } else if (isDeafened) {
+                errorMessage += "not deafened";
+            } else {
+                errorMessage += "listening in " + (current == null ? "a voice channel" : current.getAsMention());
+            }
+            event.replyError(errorMessage + " to use that!");
+            return false;
+        }
+
+        VoiceChannel afkChannel = userState.getGuild().getAfkChannel();
+        if (afkChannel != null && afkChannel.equals(userState.getChannel())) {
+            event.replyError("You cannot use that command in an AFK channel!");
+            return false;
+        }
+
+        if (!event.getGuild().getSelfMember().getVoiceState().inVoiceChannel()) {
+            try {
+                event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
+                event.getGuild().getAudioManager().setSelfDeafened(true);
+            } catch (PermissionException ex) {
+                event.reply(event.getClient().getError() + " I am unable to connect to " + userState.getChannel().getAsMention() + "!");
+                return false;
+            }
+        }
+
+        return true;
+    }
     public abstract void doCommand(CommandEvent event);
 }

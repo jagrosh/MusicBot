@@ -26,6 +26,8 @@ import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
 import java.util.Objects;
+
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
@@ -157,4 +159,17 @@ public class Bot
     {
         this.gui = gui;
     }
+
+    public void onTrackUpdate(AudioTrack track)
+    {
+        // update bot status if applicable
+        if(config.getSongInStatus())
+        {
+            if(track != null && jda.getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count() <= 1)
+                jda.getPresence().setActivity(Activity.listening(track.getInfo().title));
+            else
+                resetGame();
+        }
+    }
+
 }

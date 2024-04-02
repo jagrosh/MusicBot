@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.Permission;
 
 /**
@@ -36,4 +37,7 @@ public abstract class AdminCommand extends Command
         });
         this.guildOnly = true;
     }
+    // Add this method signature to satisfy the hierarchy
+    protected abstract void execute(CommandEvent event);
+
 }

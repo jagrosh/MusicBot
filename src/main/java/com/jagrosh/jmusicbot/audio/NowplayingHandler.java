@@ -98,19 +98,6 @@ public class NowplayingHandler
         }
         toRemove.forEach(id -> lastNP.remove(id));
     }
-
-    // "event"-based methods
-    public void onTrackUpdate(AudioTrack track)
-    {
-        // update bot status if applicable
-        if(bot.getConfig().getSongInStatus())
-        {
-            if(track!=null && bot.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count()<=1)
-                bot.getJDA().getPresence().setActivity(Activity.listening(track.getInfo().title));
-            else
-                bot.resetGame();
-        }
-    }
     
     public void onMessageDelete(Guild guild, long messageId)
     {
