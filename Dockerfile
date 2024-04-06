@@ -1,4 +1,4 @@
-FROM openjdk:11-jre
+FROM amazoncorretto:11-al2023
 
 ARG MUSICBOT_VERSION
 
