@@ -42,7 +42,7 @@ public class PlayerManager extends DefaultAudioPlayerManager
         AudioSourceManagers.registerRemoteSources(this);
         AudioSourceManagers.registerLocalSource(this);
         DuncteBotSources.registerAll(this, "en-US");
-        source(YoutubeAudioSourceManager.class).setPlaylistPageCount(10);
+        source(YoutubeAudioSourceManager.class).setPlaylistPageCount(50);
     }
     
     public Bot getBot()
