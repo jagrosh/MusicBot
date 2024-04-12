@@ -87,11 +87,22 @@ public abstract class MusicCommand extends Command {
             }
 
             if (!event.getGuild().getSelfMember().getVoiceState().inVoiceChannel()) {
+                VoiceChannel vc = null;
+                if (userState != null)
+                    vc = userState.getChannel();
+                else {
+                    Optional<VoiceChannel> o = event.getGuild().getVoiceChannels().stream()
+                            .filter(c -> c.getMembers().size() > 0).findFirst();
+                    vc = o.orElse(null);
+                }
                 try {
-                    event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
+                    event.getGuild().getAudioManager().openAudioConnection(vc);
                 } catch (PermissionException ex) {
-                    event.reply(event.getClient().getError() + " I am unable to connect to "
-                            + userState.getChannel().getAsMention() + "!");
+                    if (vc == null)
+                        event.reply(event.getClient().getError() + " I am unable to find a VC with people in it!");
+                    else
+                        event.reply(
+                                event.getClient().getError() + " I am unable to connect to **" + vc.getName() + "**!");
                     return;
                 }
             }
