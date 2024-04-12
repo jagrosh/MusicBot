@@ -30,6 +30,12 @@ public class TimeUtil
         return (hours>0 ? hours+":" : "") + (minutes<10 ? "0"+minutes : minutes) + ":" + (seconds<10 ? "0"+seconds : seconds);
     }
 
+    /**
+     * Parses a seek time string into milliseconds and determines if it's relative.
+     * Supports "colon time" (HH:MM:SS) or "unit time" (1h20m)
+     * @param args time string
+     * @return SeekTime object, or null if the string could not be parsed
+     */
     public static SeekTime parseTime(String args)
     {
         if (args.length() == 0) return null;
@@ -80,6 +86,11 @@ public class TimeUtil
         return Math.round(timeUnitArray[0] * 3600000 + timeUnitArray[1] * 60000 + timeUnitArray[2] * 1000);
     }
 
+    /**
+     *
+     * @param timestr time string formatted as a unit time, e.g. 20m10, 1d5h20m14s or 1h and 20m
+     * @return Time in milliseconds
+     */
     public static long parseUnitTime(String timestr)
     {
         timestr = timestr.replaceAll("(?i)(\\s|,|and)","")
