@@ -55,7 +55,7 @@
         <dependency>
             <groupId>dev.arbjerg</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>727959e9f621fc457b3a5adafcfffb55fdeaa538-SNAPSHOT</version>
+            <version>afec211f05c9dcf0b6ee44276a02f0316ea2458a-SNAPSHOT</version>
         </dependency>
 	<dependency>
 	    <groupId>com.github.jagrosh</groupId>
