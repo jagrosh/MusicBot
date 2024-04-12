@@ -30,6 +30,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 /**
  *
@@ -39,11 +41,13 @@ public class NowplayingHandler
 {
     private final Bot bot;
     private final HashMap<Long,Pair<Long,Long>> lastNP; // guild -> channel,message
+    private JedisPool pool;
     
     public NowplayingHandler(Bot bot)
     {
         this.bot = bot;
         this.lastNP = new HashMap<>();
+        this.pool = new JedisPool("redis", 6379);
     }
     
     public void init()
@@ -105,10 +109,15 @@ public class NowplayingHandler
         // update bot status if applicable
         if(bot.getConfig().getSongInStatus())
         {
-            if(track!=null && bot.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count()<=1)
+            if(track!=null && bot.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count()<=1) {
                 bot.getJDA().getPresence().setActivity(Activity.listening(track.getInfo().title));
-            else
+
+                try (Jedis jedis = this.pool.getResource()) {
+                    jedis.zincrby("mm-discord-stats:music", 1, track.getInfo().uri);
+                }
+            } else {
                 bot.resetGame();
+            }
         }
     }
     
