@@ -41,7 +41,7 @@ public class BotConfig
     private Path path = null;
     private String token, prefix, altprefix, helpWord, playlistsFolder, logLevel,
             successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
-    private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
+    private boolean stayInChannel, deafen, songInGame, npImages, updatealerts, useEval, dbots;
     private long owner, maxSeconds, aloneTimeUntilStop;
     private double skipratio;
     private OnlineStatus status;
@@ -83,6 +83,7 @@ public class BotConfig
             game = OtherUtil.parseGame(config.getString("game"));
             status = OtherUtil.parseStatus(config.getString("status"));
             stayInChannel = config.getBoolean("stayinchannel");
+            deafen = config.getBoolean("deafen");
             songInGame = config.getBoolean("songinstatus");
             npImages = config.getBoolean("npimages");
             updatealerts = config.getBoolean("updatealerts");
@@ -293,7 +294,12 @@ public class BotConfig
     {
         return stayInChannel;
     }
-    
+
+    public boolean getDeafen()
+    {
+        return deafen;
+    }
+
     public boolean getSongInStatus()
     {
         return songInGame;
