@@ -32,8 +32,6 @@ import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import net.dv8tion.jda.api.entities.Guild;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author John Grosh (john.a.grosh@gmail.com)
