@@ -60,7 +60,7 @@
         <dependency>
             <groupId>com.github.lavalink-devs</groupId>
             <artifactId>lavaplayer-youtube-source</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
         </dependency>
 	<dependency>
 	    <groupId>com.github.jagrosh</groupId>
