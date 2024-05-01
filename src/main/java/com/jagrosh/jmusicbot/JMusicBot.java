@@ -179,7 +179,6 @@ public class JMusicBot
         aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
 
         // set up the command client
-        //TODO: Add piped command
         CommandClientBuilder cb = new CommandClientBuilder()
                 .setPrefix(config.getPrefix())
                 .setAlternativePrefix(config.getAltPrefix())

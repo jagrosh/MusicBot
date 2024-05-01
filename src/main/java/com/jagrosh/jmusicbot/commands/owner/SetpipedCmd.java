@@ -46,7 +46,6 @@ public class Setpipedcmd extends OwnerCommand
             url = null;
         else
             url = event.getArgs();
-        //TODO: Add util to fetch Piped URL
         boolean isPiped = OtherUtil.isPipedInstance(url);
         if(!isPiped)
         {
