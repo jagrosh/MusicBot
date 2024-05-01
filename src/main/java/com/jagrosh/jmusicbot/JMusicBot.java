@@ -177,11 +177,12 @@ public class JMusicBot
                                 RECOMMENDED_PERMS);
         aboutCommand.setIsAuthor(false);
         aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
-        
+
         // set up the command client
         CommandClientBuilder cb = new CommandClientBuilder()
                 .setPrefix(config.getPrefix())
                 .setAlternativePrefix(config.getAltPrefix())
+                // .setPipedURL(config.getPiped())
                 .setOwnerId(Long.toString(config.getOwnerId()))
                 .setEmojis(config.getSuccess(), config.getWarning(), config.getError())
                 .setHelpWord(config.getHelp())
