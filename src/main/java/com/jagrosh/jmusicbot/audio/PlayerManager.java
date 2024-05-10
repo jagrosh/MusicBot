@@ -63,7 +63,7 @@ public class PlayerManager extends DefaultAudioPlayerManager
         AudioSourceManagers.registerLocalSource(this);
 
         DuncteBotSources.registerAll(this, "en-US");
-        source(YoutubeAudioSourceManager.class).setPlaylistPageCount(50);
+        source(YoutubeAudioSourceManager.class).setPlaylistPageCount((int)bot.getConfig().getMaxYTPlaylistPages());
     }
     
     public Bot getBot()
