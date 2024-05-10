@@ -16,8 +16,8 @@
 package com.jagrosh.jmusicbot;
 
 import com.jagrosh.jmusicbot.entities.Prompt;
-import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
+import com.jagrosh.jmusicbot.utils.TimeUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.typesafe.config.*;
 import java.io.IOException;
@@ -336,7 +336,7 @@ public class BotConfig
     
     public String getMaxTime()
     {
-        return FormatUtil.formatTime(maxSeconds * 1000);
+        return TimeUtil.formatTime(maxSeconds * 1000);
     }
 
     public long getAloneTimeUntilStop()
