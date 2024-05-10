@@ -55,7 +55,12 @@
         <dependency>
             <groupId>dev.arbjerg</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>727959e9f621fc457b3a5adafcfffb55fdeaa538-SNAPSHOT</version>
+            <version>2.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.lavalink-devs</groupId>
+            <artifactId>lavaplayer-youtube-source</artifactId>
+            <version>1.0.4</version>
         </dependency>
 	<dependency>
 	    <groupId>com.github.jagrosh</groupId>
