@@ -49,7 +49,9 @@ public class PlayerManager extends DefaultAudioPlayerManager
     {
         TransformativeAudioSourceManager.createTransforms(bot.getConfig().getTransforms()).forEach(t -> registerSourceManager(t));
 
-        registerSourceManager(new YoutubeAudioSourceManager(true));
+        YoutubeAudioSourceManager yt = new YoutubeAudioSourceManager(true);
+        yt.setPlaylistPageCount(bot.getConfig().getMaxYTPlaylistPages());
+        registerSourceManager(yt);
 
         registerSourceManager(SoundCloudAudioSourceManager.createDefault());
         registerSourceManager(new BandcampAudioSourceManager());
@@ -63,7 +65,6 @@ public class PlayerManager extends DefaultAudioPlayerManager
         AudioSourceManagers.registerLocalSource(this);
 
         DuncteBotSources.registerAll(this, "en-US");
-        source(YoutubeAudioSourceManager.class).setPlaylistPageCount((int)bot.getConfig().getMaxYTPlaylistPages());
     }
     
     public Bot getBot()

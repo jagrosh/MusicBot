@@ -43,7 +43,8 @@ public class BotConfig
             successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji,
             evalEngine;
     private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
-    private long owner, maxSeconds, aloneTimeUntilStop, maxYTPlaylistPages;
+    private long owner, maxSeconds, aloneTimeUntilStop;
+    private int maxYTPlaylistPages;
     private double skipratio;
     private OnlineStatus status;
     private Activity game;
@@ -91,7 +92,7 @@ public class BotConfig
             useEval = config.getBoolean("eval");
             evalEngine = config.getString("evalengine");
             maxSeconds = config.getLong("maxtime");
-            maxYTPlaylistPages = config.getLong("maxytplaylistpages");
+            maxYTPlaylistPages = config.getInt("maxytplaylistpages");
             aloneTimeUntilStop = config.getLong("alonetimeuntilstop");
             playlistsFolder = config.getString("playlistsfolder");
             aliases = config.getConfig("aliases");
@@ -342,7 +343,7 @@ public class BotConfig
         return maxSeconds;
     }
     
-    public long getMaxYTPlaylistPages()
+    public int getMaxYTPlaylistPages()
     {
         return maxYTPlaylistPages;
     }
