@@ -40,7 +40,8 @@ public class BotConfig
     
     private Path path = null;
     private String token, prefix, altprefix, helpWord, playlistsFolder, logLevel,
-            successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
+            successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji,
+            evalEngine;
     private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
     private long owner, maxSeconds, aloneTimeUntilStop;
     private double skipratio;
@@ -88,6 +89,7 @@ public class BotConfig
             updatealerts = config.getBoolean("updatealerts");
             logLevel = config.getString("loglevel");
             useEval = config.getBoolean("eval");
+            evalEngine = config.getString("evalengine");
             maxSeconds = config.getLong("maxtime");
             aloneTimeUntilStop = config.getLong("alonetimeuntilstop");
             playlistsFolder = config.getString("playlistsfolder");
@@ -322,6 +324,11 @@ public class BotConfig
     public boolean useEval()
     {
         return useEval;
+    }
+    
+    public String getEvalEngine()
+    {
+        return evalEngine;
     }
     
     public boolean useNPImages()
