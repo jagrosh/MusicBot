@@ -14,7 +14,7 @@
         <link rel="canonical" href="https://jmusicbot.com/commands/">
       
       <link rel="icon" href="../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-7.3.6">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-7.3.6">
     
     
       
@@ -668,6 +668,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#seek-hhmmss-mmss-ss0h0m0s-0m0s-0s" class="md-nav__link">
+    seek [+ | -] &lt;HH:MM:SS | MM:SS | SS&gt;|&lt;0h0m0s | 0m0s | 0s&gt;
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#shuffle" class="md-nav__link">
     shuffle
   </a>
@@ -785,6 +792,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#queuetype-linear-fair" class="md-nav__link">
+    queuetype [linear | fair]
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#setdj-rolename" class="md-nav__link">
     setdj &lt;rolename&gt;
   </a>
@@ -794,6 +808,13 @@
           <li class="md-nav__item">
   <a href="#setdj-none" class="md-nav__link">
     setdj none
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setskip-0-100" class="md-nav__link">
+    setskip &lt;0 - 100&gt;
   </a>
   
 </li>
@@ -1172,6 +1193,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#seek-hhmmss-mmss-ss0h0m0s-0m0s-0s" class="md-nav__link">
+    seek [+ | -] &lt;HH:MM:SS | MM:SS | SS&gt;|&lt;0h0m0s | 0m0s | 0s&gt;
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#shuffle" class="md-nav__link">
     shuffle
   </a>
@@ -1289,6 +1317,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#queuetype-linear-fair" class="md-nav__link">
+    queuetype [linear | fair]
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#setdj-rolename" class="md-nav__link">
     setdj &lt;rolename&gt;
   </a>
@@ -1298,6 +1333,13 @@
           <li class="md-nav__item">
   <a href="#setdj-none" class="md-nav__link">
     setdj none
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setskip-0-100" class="md-nav__link">
+    setskip &lt;0 - 100&gt;
   </a>
   
 </li>
@@ -1497,6 +1539,8 @@
 <p>Shows the top YouTube results for a search and allows you to select one to add to the queue</p>
 <h3 id="scsearch-query"><code>scsearch &lt;query&gt;</code><a class="headerlink" href="#scsearch-query" title="Permanent link">#</a></h3>
 <p>Shows the top SoundCloud results for a search and allows you to select one to add to the queue</p>
+<h3 id="seek-hhmmss-mmss-ss0h0m0s-0m0s-0s"><code>seek [+ | -] &lt;HH:MM:SS | MM:SS | SS&gt;|&lt;0h0m0s | 0m0s | 0s&gt;</code><a class="headerlink" href="#seek-hhmmss-mmss-ss0h0m0s-0m0s-0s" title="Permanent link">#</a></h3>
+<p>Seeks within the current song. Use <code>+</code> and <code>-</code> to seek forward or backward, or an exact timestamp can be used.</p>
 <h3 id="shuffle"><code>shuffle</code><a class="headerlink" href="#shuffle" title="Permanent link">#</a></h3>
 <p>Shuffles (changes the order, randomly) of songs that you have added to the queue</p>
 <h3 id="skip-or-voteskip"><code>skip</code> (or <code>voteskip</code>)<a class="headerlink" href="#skip-or-voteskip" title="Permanent link">#</a></h3>
@@ -1527,10 +1571,14 @@
 <p>Sets the server-specific prefix</p>
 <h3 id="prefix-none"><code>prefix none</code><a class="headerlink" href="#prefix-none" title="Permanent link">#</a></h3>
 <p>Clears the server-specific prefix</p>
+<h3 id="queuetype-linear-fair"><code>queuetype [linear | fair]</code><a class="headerlink" href="#queuetype-linear-fair" title="Permanent link">#</a></h3>
+<p>Sets the type of queue</p>
 <h3 id="setdj-rolename"><code>setdj &lt;rolename&gt;</code><a class="headerlink" href="#setdj-rolename" title="Permanent link">#</a></h3>
 <p>Sets the DJ role. Users with this role will be able to use DJ commands.</p>
 <h3 id="setdj-none"><code>setdj none</code><a class="headerlink" href="#setdj-none" title="Permanent link">#</a></h3>
 <p>Clears the DJ role. Only Admins will be able to use the DJ commands.</p>
+<h3 id="setskip-0-100"><code>setskip &lt;0 - 100&gt;</code><a class="headerlink" href="#setskip-0-100" title="Permanent link">#</a></h3>
+<p>Sets the server-specific skip ratio (the percentage of listeners that must vote to skip a song)</p>
 <h3 id="settc-channel"><code>settc &lt;channel&gt;</code><a class="headerlink" href="#settc-channel" title="Permanent link">#</a></h3>
 <p>Sets the text channel for music commands. Using music commands in other channels will result in them being deleted (if possible), and a warning sent via DMs to use the correct channel. Additionally, if the bot has the Manage Channel permission in the set channel, it will adjust the topic to show the current track.</p>
 <h3 id="settc-none"><code>settc none</code><a class="headerlink" href="#settc-none" title="Permanent link">#</a></h3>
