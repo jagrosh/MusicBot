@@ -74,19 +74,18 @@ public class SeekCmd extends MusicCommand
         if (seekMilliseconds > trackDuration)
         {
             event.replyError("Cannot seek to `" + TimeUtil.formatTime(seekMilliseconds) + "` because the current track is `" + TimeUtil.formatTime(trackDuration) + "` long!");
+            return;
         }
-        else
+        
+        try
         {
-            try
-            {
-                playingTrack.setPosition(seekMilliseconds);
-            }
-            catch (Exception e)
-            {
-                event.replyError("An error occurred while trying to seek!");
-                e.printStackTrace();
-                return;
-            }
+            playingTrack.setPosition(seekMilliseconds);
+        }
+        catch (Exception e)
+        {
+            event.replyError("An error occurred while trying to seek!");
+            e.printStackTrace(); // TODO: remove this
+            return;
         }
         event.replySuccess("Successfully seeked to `" + TimeUtil.formatTime(playingTrack.getPosition()) + "/" + TimeUtil.formatTime(playingTrack.getDuration()) + "`!");
     }
