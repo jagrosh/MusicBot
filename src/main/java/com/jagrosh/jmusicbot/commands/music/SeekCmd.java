@@ -18,6 +18,7 @@ package com.jagrosh.jmusicbot.commands.music;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
+import com.jagrosh.jmusicbot.audio.RequestMetadata;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.utils.TimeUtil;
@@ -52,7 +53,7 @@ public class SeekCmd extends MusicCommand
         }
 
 
-        if (!DJCommand.checkDJPermission(event) && playingTrack.getUserData(Long.class) != event.getAuthor().getIdLong())
+        if (!DJCommand.checkDJPermission(event) && playingTrack.getUserData(RequestMetadata.class).getOwner() != event.getAuthor().getIdLong())
         {
             event.replyError("You cannot seek **" + playingTrack.getInfo().title + "** because you didn't add it!");
             return;
