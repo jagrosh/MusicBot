@@ -61,6 +61,9 @@ Shows the top YouTube results for a search and allows you to select one to add t
 ### `scsearch <query>`
 Shows the top SoundCloud results for a search and allows you to select one to add to the queue
 
+### `seek [+ | -] <HH:MM:SS | MM:SS | SS>|<0h0m0s | 0m0s | 0s>`
+Seeks within the current song. Use `+` and `-` to seek forward or backward, or an exact timestamp can be used.
+
 ### `shuffle`
 Shuffles (changes the order, randomly) of songs that you have added to the queue
 
@@ -107,11 +110,17 @@ Sets the server-specific prefix
 ### `prefix none`
 Clears the server-specific prefix
 
+### `queuetype [linear | fair]`
+Sets the type of queue
+
 ### `setdj <rolename>`
 Sets the DJ role. Users with this role will be able to use DJ commands.
 
 ### `setdj none`
 Clears the DJ role. Only Admins will be able to use the DJ commands.
+
+### `setskip <0 - 100>`
+Sets the server-specific skip ratio (the percentage of listeners that must vote to skip a song)
 
 ### `settc <channel>`
 Sets the text channel for music commands. Using music commands in other channels will result in them being deleted (if possible), and a warning sent via DMs to use the correct channel. Additionally, if the bot has the Manage Channel permission in the set channel, it will adjust the topic to show the current track.

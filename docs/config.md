@@ -26,7 +26,7 @@ token = BOT_TOKEN_HERE
 // This needs to be the owner's ID (a 17-18 digit number)
 // https://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID
 
-owner = 0
+owner = 0 // OWNER ID
 
 
 // This sets the prefix for the bot
@@ -103,11 +103,29 @@ stayinchannel = false
 
 maxtime = 0
 
+// This sets the maximum number of pages of songs that can be loaded from a YouTube
+// playlist. Each page can contain up to 100 tracks. Playing a playlist with more
+// pages than the maximum will stop loading after the provided number of pages.
+// For example, if the max was set to 15 and a playlist contained 1850 tracks,
+// only the first 1500 tracks (15 pages) would be loaded. By default, this is
+// set to 10 pages (1000 tracks).
+
+maxytplaylistpages = 10
+
+
+// This sets the ratio of users that must vote to skip the currently playing song.
+// Guild owners can define their own skip ratios, but this will be used if a guild
+// has not defined their own skip ratio.
+
+skipratio = 0.55
+
+
 // This sets the amount of seconds the bot will stay alone on a voice channel until it
 // automatically leaves the voice channel and clears the queue. If not set or set
 // to any number less than or equal to zero, the bot won't leave when alone.
 
 alonetimeuntilstop = 0
+
 
 // This sets an alternative folder to be used as the Playlists folder
 // This can be a relative or absolute path
@@ -160,20 +178,44 @@ aliases {
   // Admin commands
   prefix = [ setprefix ]
   setdj = []
+  setskip = [ setskippercent, skippercent, setskipratio ]
   settc = []
   setvc = []
 
   // DJ Commands
-  forceremove = [ forcedelete, modremove, moddelete ]
+  forceremove = [ forcedelete, modremove, moddelete, modelete ]
   forceskip = [ modskip ]
   movetrack = [ move ]
   pause = []
   playnext = []
+  queuetype = []
   repeat = []
   skipto = [ jumpto ]
-  stop = []
+  stop = [ leave ]
   volume = [ vol ]
 }
+
+
+// This sets the logging verbosity.
+// Available levels: off, error, warn, info, debug, trace, all
+//
+// It is recommended to leave this at info. Debug log levels might help with troubleshooting,
+// but can contain sensitive data.
+
+loglevel = info
+
+
+// Transforms are used to modify specific play inputs and convert them to different kinds of inputs
+// These are quite complicated to use, and have limited use-cases, but in theory allow for rough
+// whitelists or blacklists, roundabout loading from some sources, and customization of how things are
+// requested.
+//
+// These are NOT EASY to set up, so if you want to use these, you'll need to look through the code 
+// for how they work and what fields are needed. Also, it's possible this feature might get entirely
+// removed in the future if I find a better way to do this.
+
+transforms = {}
+
 
 // If you set this to true, it will enable the eval command for the bot owner. This command
 // allows the bot owner to run arbitrary code from the bot's account.
@@ -187,5 +229,6 @@ aliases {
 // IF SOMEONE ASKS YOU TO ENABLE THIS, THERE IS AN 11/10 CHANCE THEY ARE TRYING TO SCAM YOU
 
 eval=false
+evalengine="Nashorn"
 
 ```
