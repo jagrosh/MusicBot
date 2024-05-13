@@ -1,8 +1,0 @@
-blank_issues_enabled: false
-contact_links:
-  - name: Question
-    url: https://github.com/jagrosh/MusicBot/discussions/categories/questions
-    about: For general questions, please check the Discussions
-  - name: Troubleshooting
-    url: https://github.com/jagrosh/MusicBot/discussions/categories/troubleshooting
-    about: For troubleshooting help, please check the Discussions
