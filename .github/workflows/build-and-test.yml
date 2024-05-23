@@ -1,6 +1,9 @@
-name: Test
+name: Build and Test
 on:
   push:
+    branches:
+    - master
+  pull_request:
     branches:
     - master
 
@@ -9,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 8
+      - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
-          java-version: '8'
+          java-version: '11'
           distribution: 'adopt'
           cache: maven
-      - name: Build with Maven
+      - name: Build and Test with Maven
         run: mvn --batch-mode --update-snapshots verify
