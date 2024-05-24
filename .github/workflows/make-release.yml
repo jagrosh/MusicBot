@@ -46,7 +46,7 @@ jobs:
           name: Version ${{ github.event.inputs.version_number }}
           draft: true
           prerelease: false
-          files: ./*.jar
+          files: JMusicBot-${{ github.event.inputs.version_number }}.jar
           body: |
             ${{ github.event.inputs.info }}
             
@@ -54,4 +54,4 @@ jobs:
             ### Setup
             https://jmusicbot.com/setup  
             https://jmusicbot.com/config  
-            # Download: [**JMusicBot-${{ github.event.inputs.version_number }}**.jar](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.version_number }}/JMusicBot-${{ github.event.inputs.version_number }}.jar)
+            # Download: [JMusicBot-${{ github.event.inputs.version_number }}.jar](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.version_number }}/JMusicBot-${{ github.event.inputs.version_number }}.jar)
