@@ -1,6 +1,15 @@
 name: Build and Test
 on:
   push:
+    paths-ignore:
+      - '.github/workflows/make-release.yml'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/*.md'
+      - '.github/FUNDING.yml'
+      - '.circleci/**'
+      - 'LICENSE'
+      - 'CNAME'
+      - 'README.md'
     branches: [ master ]
   pull_request:
     branches: [ master ]
