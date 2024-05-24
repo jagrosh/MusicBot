@@ -37,29 +37,7 @@ jobs:
         run: echo "repo=$(echo ${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/})" >> $GITHUB_ENV
 
       - name: Rename JAR
-        run: mv target/*-All.jar JMusicBot-${{ github.event.inputs.version_number }}.jar
-
-      - name: Upload JAR
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.repo }}-${{ github.event.inputs.version_number }}
-          path: JMusicBot-${{ github.event.inputs.version_number }}.jar
-          if-no-files-found: error
-
-  release:
-    name: Create Release
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-
-      - name: Download Built Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.repo }}-${{ github.event.inputs.version_number }}
-          path: .
-
-      - name: Show Artifacts
-        run: ls -lAR
+        run: mv target/JMusicBot-Snapshot-All.jar JMusicBot-${{ github.event.inputs.version_number }}.jar
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
