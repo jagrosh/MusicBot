@@ -1,6 +1,6 @@
 <img align="right" src="https://i.imgur.com/zrE80HY.png" height="200" width="200">
 
-# JMusicBot
+# JMusicBot_UA
 
 [![Downloads](https://img.shields.io/github/downloads/jagrosh/MusicBot/total.svg)](https://github.com/MaximBayer/MusicBot_UA/releases)
 [![Stars](https://img.shields.io/github/stars/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/stargazers)
@@ -11,50 +11,50 @@
 [![Build and Test](https://github.com/jagrosh/MusicBot/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/jagrosh/MusicBot/actions/workflows/build-and-test.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/jagrosh/musicbot/badge)](https://www.codefactor.io/repository/github/jagrosh/musicbot)
 
-A cross-platform Discord music bot with a clean interface, and that is easy to set up and run yourself!
+Кросплатформенний музичний бот для Discord з чистим інтерфейсом, який легко налаштувати та запустити самостійно!
 
 [![Setup](http://i.imgur.com/VvXYp5j.png)](https://jmusicbot.com/setup)
 
-## Features
-  * Easy to run (just make sure Java is installed, and run!)
-  * Fast loading of songs
-  * No external keys needed (besides a Discord Bot token)
-  * Smooth playback
-  * Server-specific setup for the "DJ" role that can moderate the music
-  * Clean and beautiful menus
-  * Supports many sites, including Youtube, Soundcloud, and more
-  * Supports many online radio/streams
-  * Supports local files
-  * Playlist support (both web/youtube, and local)
+## Особливості
+  * Легко запустити (просто переконайтеся, що Java встановлено, і запустіть!)
+  * Швидке завантаження пісень
+  * Не потрібні зовнішні ключі (окрім токена Discord бота)
+  * Плавне відтворення
+  * Налаштування ролі "DJ" для кожного серверу, яка може модератувати музику
+  * Чисті та красиві меню
+  * Підтримка багатьох сайтів, включаючи Youtube, Soundcloud тощо
+  * Підтримка багатьох онлайн радіо/стрімів
+  * Підтримка локальних файлів
+  * Підтримка плейлистів (як веб/Youtube, так і локальних)
 
-## Supported sources and formats
-JMusicBot supports all sources and formats supported by [lavaplayer](https://github.com/sedmelluq/lavaplayer#supported-formats):
-### Sources
+## Підтримувані джерела та формати
+JMusicBot підтримує всі джерела та формати, підтримувані [lavaplayer](https://github.com/sedmelluq/lavaplayer#supported-formats):
+### Джерела
   * YouTube
   * SoundCloud
   * Bandcamp
   * Vimeo
-  * Twitch streams
-  * Local files
+  * Twitch стріми
+  * Локальні файли
   * HTTP URLs
-### Formats
+### Формати
   * MP3
   * FLAC
   * WAV
-  * Matroska/WebM (AAC, Opus or Vorbis codecs)
-  * MP4/M4A (AAC codec)
-  * OGG streams (Opus, Vorbis and FLAC codecs)
-  * AAC streams
-  * Stream playlists (M3U and PLS)
+  * Matroska/WebM (кодеки AAC, Opus або Vorbis)
+  * MP4/M4A (кодек AAC)
+  * OGG стріми (кодеки Opus, Vorbis і FLAC)
+  * AAC стріми
+  * Стрім плейлисти (M3U та PLS)
 
-## Example
+## Приклад
 ![Loading Example...](https://i.imgur.com/kVtTKvS.gif)
 
-## Setup
-Please see the [Setup Page](https://jmusicbot.com/setup) to run this bot yourself!
+## Налаштування
+Будь ласка, перегляньте [Setup Page](https://jmusicbot.com/setup) щоб запустити цього бота самостійно!
 
-## Questions/Suggestions/Bug Reports
-**Please read the [Issues List](https://github.com/jagrosh/MusicBot/issues) before suggesting a feature**. If you have a question, need troubleshooting help, or want to brainstorm a new feature, please start a [Discussion](https://github.com/jagrosh/MusicBot/discussions). If you'd like to suggest a feature or report a reproducible bug, please open an [Issue](https://github.com/jagrosh/MusicBot/issues) on this repository. If you like this bot, be sure to add a star to the libraries that make this possible: [**JDA**](https://github.com/DV8FromTheWorld/JDA) and [**lavaplayer**](https://github.com/sedmelluq/lavaplayer)!
+## Питання/Пропозиції/Звіти про помилки
+**Будь ласка, прочитайте [Issues List](https://github.com/jagrosh/MusicBot/issues) перед тим, як пропонувати нову функцію. Якщо у вас є питання, потрібна допомога з усунення несправностей або ви хочете обговорити нову функцію, почніть [Discussion](https://github.com/jagrosh/MusicBot/discussions). Якщо ви хочете запропонувати нову функцію або повідомити про відтворювану помилку, будь ласка, відкрийте [Issue](https://github.com/jagrosh/MusicBot/issues) у цьому репозиторії. Якщо вам подобається цей бот, обов’язково додайте зірку бібліотекам, які роблять це можливим: [**JDA**](https://github.com/DV8FromTheWorld/JDA) і [**lavaplayer**](https://github.com/sedmelluq/lavaplayer)!
 
-## Editing
-This bot (and the source code here) might not be easy to edit for inexperienced programmers. The main purpose of having the source public is to show the capabilities of the libraries, to allow others to understand how the bot works, and to allow those knowledgeable about java, JDA, and Discord bot development to contribute. There are many requirements and dependencies required to edit and compile it, and there will not be support provided for people looking to make changes on their own. Instead, consider making a feature request (see the above section). If you choose to make edits, please do so in accordance with the Apache 2.0 License.
+## Редагування
+Цей бот (і вихідний код тут) може бути складним для редагування недосвідченими програмістами. Основна мета відкриття коду - показати можливості бібліотек, дозволити іншим зрозуміти, як працює бот, і дозволити тим, хто знає Java, JDA та розробку ботів для Discord, зробити свій внесок. Існує багато вимог і залежностей для редагування та компіляції, і не буде надано підтримки для тих, хто бажає вносити зміни самостійно. Замість цього, розгляньте можливість подати запит на нову функцію (див. розділ вище). Якщо ви вирішили вносити зміни, будь ласка, робіть це відповідно до ліцензії Apache 2.0.
