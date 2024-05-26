@@ -2,7 +2,7 @@
 
 # JMusicBot
 
-[![Downloads](https://img.shields.io/github/downloads/jagrosh/MusicBot/total.svg)](https://github.com/jagrosh/MusicBot/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/jagrosh/MusicBot/total.svg)]([https://github.com/jagrosh/MusicBot/releases/latest](https://github.com/MaximBayer/MusicBot_UA/releases))
 [![Stars](https://img.shields.io/github/stars/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/stargazers)
 [![Release](https://img.shields.io/github/release/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/releases/latest)
 [![License](https://img.shields.io/github/license/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/blob/master/LICENSE)
