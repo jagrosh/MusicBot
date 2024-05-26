@@ -50,7 +50,7 @@ public class SearchCmd extends MusicCommand
         this.name = "search";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.arguments = "<query>";
-        this.help = "searches Youtube for a provided query";
+        this.help = "шукає на YouTube за вказаним запитом";
         this.beListening = true;
         this.bePlaying = false;
         this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
@@ -89,37 +89,37 @@ public class SearchCmd extends MusicCommand
         {
             if(bot.getConfig().isTooLong(track))
             {
-                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
+                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" Цей трек (**"+track.getInfo().title+"**) триває довше, ніж дозволений максимум: `"
                         + TimeUtil.formatTime(track.getDuration())+"` > `"+bot.getConfig().getMaxTime()+"`")).queue();
                 return;
             }
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
             int pos = handler.addTrack(new QueuedTrack(track, RequestMetadata.fromResultHandler(track, event)))+1;
-            m.editMessage(FormatUtil.filter(event.getClient().getSuccess()+" Added **"+track.getInfo().title
-                    +"** (`"+ TimeUtil.formatTime(track.getDuration())+"`) "+(pos==0 ? "to begin playing"
-                        : " to the queue at position "+pos))).queue();
+            m.editMessage(FormatUtil.filter(event.getClient().getSuccess()+" Додано **"+track.getInfo().title
+                    +"** (`"+ TimeUtil.formatTime(track.getDuration())+"`) "+(pos==0 ? "для початку відтворення"
+                        : " до черги на позицію "+pos))).queue();
         }
 
         @Override
         public void playlistLoaded(AudioPlaylist playlist)
         {
             builder.setColor(event.getSelfMember().getColor())
-                    .setText(FormatUtil.filter(event.getClient().getSuccess()+" Search results for `"+event.getArgs()+"`:"))
+                    .setText(FormatUtil.filter(event.getClient().getSuccess()+" Результати пошуку для `"+event.getArgs()+"`:"))
                     .setChoices(new String[0])
                     .setSelection((msg,i) -> 
                     {
                         AudioTrack track = playlist.getTracks().get(i-1);
                         if(bot.getConfig().isTooLong(track))
                         {
-                            event.replyWarning("This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
+                            event.replyWarning("Цей трек (**"+track.getInfo().title+"**) триває довше, ніж дозволений максимум: `"
                                     + TimeUtil.formatTime(track.getDuration())+"` > `"+bot.getConfig().getMaxTime()+"`");
                             return;
                         }
                         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
                         int pos = handler.addTrack(new QueuedTrack(track, RequestMetadata.fromResultHandler(track, event)))+1;
-                        event.replySuccess("Added **" + FormatUtil.filter(track.getInfo().title)
-                                + "** (`" + TimeUtil.formatTime(track.getDuration()) + "`) " + (pos==0 ? "to begin playing" 
-                                    : " to the queue at position "+pos));
+                        event.replySuccess("Додано **" + FormatUtil.filter(track.getInfo().title)
+                                + "** (`" + TimeUtil.formatTime(track.getDuration()) + "`) " + (pos==0 ? "для початку відтворення" 
+                                    : " до черги на позицію "+pos));
                     })
                     .setCancel((msg) -> {})
                     .setUsers(event.getAuthor())
@@ -135,16 +135,16 @@ public class SearchCmd extends MusicCommand
         @Override
         public void noMatches() 
         {
-            m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" No results found for `"+event.getArgs()+"`.")).queue();
+            m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" Не знайдено результатів для `"+event.getArgs()+"`.")).queue();
         }
 
         @Override
         public void loadFailed(FriendlyException throwable) 
         {
             if(throwable.severity==Severity.COMMON)
-                m.editMessage(event.getClient().getError()+" Error loading: "+throwable.getMessage()).queue();
+                m.editMessage(event.getClient().getError()+" Помилка завантаження: "+throwable.getMessage()).queue();
             else
-                m.editMessage(event.getClient().getError()+" Error loading track.").queue();
+                m.editMessage(event.getClient().getError()+" Помилка завантаження треку.").queue();
         }
     }
 }

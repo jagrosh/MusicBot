@@ -54,7 +54,7 @@ public class PlayCmd extends MusicCommand
         this.loadingEmoji = bot.getConfig().getLoading();
         this.name = "play";
         this.arguments = "<title|URL|subcommand>";
-        this.help = "plays the provided song";
+        this.help = "відтворює вказану пісню";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
         this.bePlaying = false;
@@ -78,9 +78,9 @@ public class PlayCmd extends MusicCommand
                     event.replyError("Only DJs can unpause the player!");
                 return;
             }
-            StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" Play Commands:\n");
-            builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <song title>` - plays the first result from Youtube");
-            builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <URL>` - plays the provided song, playlist, or stream");
+            StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" Команди відтворення:\n");
+            builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <song title>` - відтворює перший результат з YouTube");
+            builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <URL>` - відтворює вказану пісню, плейлист або стрім");
             for(Command cmd: children)
                 builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" ").append(cmd.getName()).append(" ").append(cmd.getArguments()).append("` - ").append(cmd.getHelp());
             event.reply(builder.toString());
@@ -109,27 +109,27 @@ public class PlayCmd extends MusicCommand
         {
             if(bot.getConfig().isTooLong(track))
             {
-                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
+                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" Цей трек (**"+track.getInfo().title+"**) триває довше, ніж дозволений максимум: `"
                         + TimeUtil.formatTime(track.getDuration())+"` > `"+ TimeUtil.formatTime(bot.getConfig().getMaxSeconds()*1000)+"`")).queue();
                 return;
             }
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
             int pos = handler.addTrack(new QueuedTrack(track, RequestMetadata.fromResultHandler(track, event)))+1;
-            String addMsg = FormatUtil.filter(event.getClient().getSuccess()+" Added **"+track.getInfo().title
-                    +"** (`"+ TimeUtil.formatTime(track.getDuration())+"`) "+(pos==0?"to begin playing":" to the queue at position "+pos));
+            String addMsg = FormatUtil.filter(event.getClient().getSuccess()+" Додано **"+track.getInfo().title
+                    +"** (`"+ TimeUtil.formatTime(track.getDuration())+"`) "+(pos==0?"для початку відтворення":" до черги на позицію "+pos));
             if(playlist==null || !event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ADD_REACTION))
                 m.editMessage(addMsg).queue();
             else
             {
                 new ButtonMenu.Builder()
-                        .setText(addMsg+"\n"+event.getClient().getWarning()+" This track has a playlist of **"+playlist.getTracks().size()+"** tracks attached. Select "+LOAD+" to load playlist.")
+                        .setText(addMsg+"\n"+event.getClient().getWarning()+" Цей трек має плейлист **"+playlist.getTracks().size()+"** треки додані. Виберіть "+LOAD+" завантажити плейлист.")
                         .setChoices(LOAD, CANCEL)
                         .setEventWaiter(bot.getWaiter())
                         .setTimeout(30, TimeUnit.SECONDS)
                         .setAction(re ->
                         {
                             if(re.getName().equals(LOAD))
-                                m.editMessage(addMsg+"\n"+event.getClient().getSuccess()+" Loaded **"+loadPlaylist(playlist, track)+"** additional tracks!").queue();
+                                m.editMessage(addMsg+"\n"+event.getClient().getSuccess()+" Завантажено **"+loadPlaylist(playlist, track)+"** додаткові треки!").queue();
                             else
                                 m.editMessage(addMsg).queue();
                         }).setFinalAction(m ->
@@ -177,20 +177,20 @@ public class PlayCmd extends MusicCommand
                 int count = loadPlaylist(playlist, null);
                 if(playlist.getTracks().size() == 0)
                 {
-                    m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" The playlist "+(playlist.getName()==null ? "" : "(**"+playlist.getName()
+                    m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" Список відтворення "+(playlist.getName()==null ? "" : "(**"+playlist.getName()
                             +"**) ")+" could not be loaded or contained 0 entries")).queue();
                 }
                 else if(count==0)
                 {
-                    m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" All entries in this playlist "+(playlist.getName()==null ? "" : "(**"+playlist.getName()
+                    m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" Усі записи у цьому списку відтворення "+(playlist.getName()==null ? "" : "(**"+playlist.getName()
                             +"**) ")+"were longer than the allowed maximum (`"+bot.getConfig().getMaxTime()+"`)")).queue();
                 }
                 else
                 {
-                    m.editMessage(FormatUtil.filter(event.getClient().getSuccess()+" Found "
+                    m.editMessage(FormatUtil.filter(event.getClient().getSuccess()+" Знайдено "
                             +(playlist.getName()==null?"a playlist":"playlist **"+playlist.getName()+"**")+" with `"
                             + playlist.getTracks().size()+"` entries; added to the queue!"
-                            + (count<playlist.getTracks().size() ? "\n"+event.getClient().getWarning()+" Tracks longer than the allowed maximum (`"
+                            + (count<playlist.getTracks().size() ? "\n"+event.getClient().getWarning()+" Треки, що перевищують максимально допустиму тривалість (`"
                             + bot.getConfig().getMaxTime()+"`) have been omitted." : ""))).queue();
                 }
             }
@@ -200,7 +200,7 @@ public class PlayCmd extends MusicCommand
         public void noMatches()
         {
             if(ytsearch)
-                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" No results found for `"+event.getArgs()+"`.")).queue();
+                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" Не знайдено результатів для `"+event.getArgs()+"`.")).queue();
             else
                 bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:"+event.getArgs(), new ResultHandler(m,event,true));
         }
@@ -209,9 +209,9 @@ public class PlayCmd extends MusicCommand
         public void loadFailed(FriendlyException throwable)
         {
             if(throwable.severity==Severity.COMMON)
-                m.editMessage(event.getClient().getError()+" Error loading: "+throwable.getMessage()).queue();
+                m.editMessage(event.getClient().getError()+" Помилка завантаження: "+throwable.getMessage()).queue();
             else
-                m.editMessage(event.getClient().getError()+" Error loading track.").queue();
+                m.editMessage(event.getClient().getError()+" Помилка завантаження треку.").queue();
         }
     }
     
@@ -223,7 +223,7 @@ public class PlayCmd extends MusicCommand
             this.name = "playlist";
             this.aliases = new String[]{"pl"};
             this.arguments = "<name>";
-            this.help = "plays the provided playlist";
+            this.help = "відтворює наданий плейлист";
             this.beListening = true;
             this.bePlaying = false;
         }
@@ -233,7 +233,7 @@ public class PlayCmd extends MusicCommand
         {
             if(event.getArgs().isEmpty())
             {
-                event.reply(event.getClient().getError()+" Please include a playlist name.");
+                event.reply(event.getClient().getError()+" Будь ласка, вкажіть назву плейлиста.");
                 return;
             }
             Playlist playlist = bot.getPlaylistLoader().getPlaylist(event.getArgs());
@@ -247,10 +247,10 @@ public class PlayCmd extends MusicCommand
                 AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
                 playlist.loadTracks(bot.getPlayerManager(), (at)->handler.addTrack(new QueuedTrack(at, RequestMetadata.fromResultHandler(at, event))), () -> {
                     StringBuilder builder = new StringBuilder(playlist.getTracks().isEmpty() 
-                            ? event.getClient().getWarning()+" No tracks were loaded!" 
-                            : event.getClient().getSuccess()+" Loaded **"+playlist.getTracks().size()+"** tracks!");
+                            ? event.getClient().getWarning()+" Жодний трек не був завантажений!" 
+                            : event.getClient().getSuccess()+" Завантажено **"+playlist.getTracks().size()+"** tracks!");
                     if(!playlist.getErrors().isEmpty())
-                        builder.append("\nThe following tracks failed to load:");
+                        builder.append("\nНаступні треки не вдалося завантажити:");
                     playlist.getErrors().forEach(err -> builder.append("\n`[").append(err.getIndex()+1).append("]` **").append(err.getItem()).append("**: ").append(err.getReason()));
                     String str = builder.toString();
                     if(str.length()>2000)

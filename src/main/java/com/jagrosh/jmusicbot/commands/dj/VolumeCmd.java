@@ -33,7 +33,7 @@ public class VolumeCmd extends DJCommand
         super(bot);
         this.name = "volume";
         this.aliases = bot.getConfig().getAliases(this.name);
-        this.help = "sets or shows volume";
+        this.help = "встановлює або показує гучність";
         this.arguments = "[0-150]";
     }
 
@@ -45,7 +45,7 @@ public class VolumeCmd extends DJCommand
         int volume = handler.getPlayer().getVolume();
         if(event.getArgs().isEmpty())
         {
-            event.reply(FormatUtil.volumeIcon(volume)+" Current volume is `"+volume+"`");
+            event.reply(FormatUtil.volumeIcon(volume)+" Поточна гучність `"+volume+"`");
         }
         else
         {
@@ -56,12 +56,12 @@ public class VolumeCmd extends DJCommand
                 nvolume = -1;
             }
             if(nvolume<0 || nvolume>150)
-                event.reply(event.getClient().getError()+" Volume must be a valid integer between 0 and 150!");
+                event.reply(event.getClient().getError()+" Гучність повинна бути дійсним цілим числом від 0 до 150!");
             else
             {
                 handler.getPlayer().setVolume(nvolume);
                 settings.setVolume(nvolume);
-                event.reply(FormatUtil.volumeIcon(nvolume)+" Volume changed from `"+volume+"` to `"+nvolume+"`");
+                event.reply(FormatUtil.volumeIcon(nvolume)+" Гучність змінена з `"+volume+"` до `"+nvolume+"`");
             }
         }
     }

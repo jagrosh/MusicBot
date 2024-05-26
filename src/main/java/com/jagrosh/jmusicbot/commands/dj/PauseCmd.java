@@ -30,7 +30,7 @@ public class PauseCmd extends DJCommand
     {
         super(bot);
         this.name = "pause";
-        this.help = "pauses the current song";
+        this.help = "призупиняє поточну пісню";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.bePlaying = true;
     }

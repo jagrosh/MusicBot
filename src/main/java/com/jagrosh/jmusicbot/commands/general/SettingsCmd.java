@@ -39,7 +39,7 @@ public class SettingsCmd extends Command
     public SettingsCmd(Bot bot)
     {
         this.name = "settings";
-        this.help = "shows the bots settings";
+        this.help = "показує налаштування бота";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
     }

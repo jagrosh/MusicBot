@@ -32,7 +32,7 @@ public class QueueTypeCmd extends AdminCommand
     {
         super();
         this.name = "queuetype";
-        this.help = "changes the queue type";
+        this.help = "змінює тип черги";
         this.arguments = "[" + String.join("|", QueueType.getNames()) + "]";
         this.aliases = bot.getConfig().getAliases(this.name);
     }

@@ -45,7 +45,7 @@ public class QueueCmd extends MusicCommand
     {
         super(bot);
         this.name = "queue";
-        this.help = "shows the current queue";
+        this.help = "показує поточну чергу";
         this.arguments = "[pagenum]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.bePlaying = true;

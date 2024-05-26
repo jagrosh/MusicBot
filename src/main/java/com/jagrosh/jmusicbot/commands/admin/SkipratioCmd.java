@@ -29,7 +29,7 @@ public class SkipratioCmd extends AdminCommand
     public SkipratioCmd(Bot bot)
     {
         this.name = "setskip";
-        this.help = "sets a server-specific skip percentage";
+        this.help = "встановлює специфічний для сервера відсоток пропуску";
         this.arguments = "<0 - 100>";
         this.aliases = bot.getConfig().getAliases(this.name);
     }

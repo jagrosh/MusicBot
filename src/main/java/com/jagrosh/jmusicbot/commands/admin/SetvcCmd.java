@@ -33,7 +33,7 @@ public class SetvcCmd extends AdminCommand
     public SetvcCmd(Bot bot)
     {
         this.name = "setvc";
-        this.help = "sets the voice channel for playing music";
+        this.help = "встановлює голосовий канал для відтворення музики";
         this.arguments = "<channel|NONE>";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
@@ -43,26 +43,26 @@ public class SetvcCmd extends AdminCommand
     {
         if(event.getArgs().isEmpty())
         {
-            event.reply(event.getClient().getError()+" Please include a voice channel or NONE");
+            event.reply(event.getClient().getError()+" Будь ласка, вкажіть голосовий канал або NONE");
             return;
         }
         Settings s = event.getClient().getSettingsFor(event.getGuild());
         if(event.getArgs().equalsIgnoreCase("none"))
         {
             s.setVoiceChannel(null);
-            event.reply(event.getClient().getSuccess()+" Music can now be played in any channel");
+            event.reply(event.getClient().getSuccess()+" Музику тепер можна відтворювати в будь-якому каналі");
         }
         else
         {
             List<VoiceChannel> list = FinderUtil.findVoiceChannels(event.getArgs(), event.getGuild());
             if(list.isEmpty())
-                event.reply(event.getClient().getWarning()+" No Voice Channels found matching \""+event.getArgs()+"\"");
+                event.reply(event.getClient().getWarning()+" Голосові канали, що відповідають запиту, не знайдено \""+event.getArgs()+"\"");
             else if (list.size()>1)
                 event.reply(event.getClient().getWarning()+FormatUtil.listOfVChannels(list, event.getArgs()));
             else
             {
                 s.setVoiceChannel(list.get(0));
-                event.reply(event.getClient().getSuccess()+" Music can now only be played in "+list.get(0).getAsMention());
+                event.reply(event.getClient().getSuccess()+" Музику тепер можна відтворювати лише в "+list.get(0).getAsMention());
             }
         }
     }

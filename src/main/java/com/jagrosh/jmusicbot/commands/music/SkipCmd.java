@@ -32,7 +32,7 @@ public class SkipCmd extends MusicCommand
     {
         super(bot);
         this.name = "skip";
-        this.help = "votes to skip the current song";
+        this.help = "голосує за пропуск поточної пісні";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = true;
         this.bePlaying = true;
@@ -49,7 +49,7 @@ public class SkipCmd extends MusicCommand
         }
         if(event.getAuthor().getIdLong() == rm.getOwner() || skipRatio == 0)
         {
-            event.reply(event.getClient().getSuccess()+" Skipped **"+handler.getPlayer().getPlayingTrack().getInfo().title+"**");
+            event.reply(event.getClient().getSuccess()+" Пропущено **"+handler.getPlayer().getPlayingTrack().getInfo().title+"**");
             handler.getPlayer().stopTrack();
         }
         else
@@ -58,10 +58,10 @@ public class SkipCmd extends MusicCommand
                     .filter(m -> !m.getUser().isBot() && !m.getVoiceState().isDeafened()).count();
             String msg;
             if(handler.getVotes().contains(event.getAuthor().getId()))
-                msg = event.getClient().getWarning()+" You already voted to skip this song `[";
+                msg = event.getClient().getWarning()+" Ви вже проголосували за пропуск цієї пісні `[";
             else
             {
-                msg = event.getClient().getSuccess()+" You voted to skip the song `[";
+                msg = event.getClient().getSuccess()+" Ви проголосували за пропуск цієї пісні `[";
                 handler.getVotes().add(event.getAuthor().getId());
             }
             int skippers = (int)event.getSelfMember().getVoiceState().getChannel().getMembers().stream()

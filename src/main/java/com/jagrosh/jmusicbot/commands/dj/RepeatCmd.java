@@ -31,7 +31,7 @@ public class RepeatCmd extends DJCommand
     {
         super(bot);
         this.name = "repeat";
-        this.help = "re-adds music to the queue when finished";
+        this.help = "повторно додає музику до черги після завершення";
         this.arguments = "[off|all|single]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
