@@ -1,76 +1,47 @@
-# Contributor Covenant Code of Conduct
+# Кодекс поведінки Contributor Covenant
 
-## Our Pledge
+## Наша обіцянка
 
-In the interest of fostering an open and welcoming environment, we as
-contributors and maintainers pledge to making participation in our project and
-our community a harassment-free experience for everyone, regardless of age, body
-size, disability, ethnicity, sex characteristics, gender identity and expression,
-level of experience, education, socio-economic status, nationality, personal
-appearance, race, religion, or sexual identity and orientation.
+З метою сприяння відкритому та привітному середовищу ми, як учасники та підтримувачі, обіцяємо зробити участь у нашому проекті та нашій спільноті вільною від переслідувань для всіх, незалежно від віку, розміру тіла, інвалідності, етнічної приналежності, статевих характеристик, гендерної ідентичності та вираження, рівня досвіду, освіти, соціально-економічного статусу, національності, зовнішнього вигляду, раси, релігії або сексуальної ідентичності та орієнтації.
 
-## Our Standards
+## Наші стандарти
 
-Examples of behavior that contributes to creating a positive environment
-include:
+Приклади поведінки, що сприяє створенню позитивного середовища, включають:
 
-* Using welcoming and inclusive language
-* Being respectful of differing viewpoints and experiences
-* Gracefully accepting constructive criticism
-* Focusing on what is best for the community
-* Showing empathy towards other community members
+* Використання привітної та інклюзивної мови
+* Повагу до різних точок зору та досвіду
+* Готовність приймати конструктивну критику
+* Орієнтацію на те, що є найкращим для спільноти
+* Виявлення емпатії до інших членів спільноти
 
-Examples of unacceptable behavior by participants include:
+Приклади неприйнятної поведінки учасників включають:
 
-* The use of sexualized language or imagery and unwelcome sexual attention or
- advances
-* Trolling, insulting/derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or electronic
- address, without explicit permission
-* Other conduct which could reasonably be considered inappropriate in a
- professional setting
+* Використання сексуалізованої мови або зображень та небажана сексуальна увага чи домагання
+* Тролінг, образливі/зневажливі коментарі та особисті або політичні атаки
+* Публічне або приватне переслідування
+* Публікація приватної інформації інших осіб, такої як фізична або електронна адреса, без явного дозволу
+* Інша поведінка, яка може бути обґрунтовано визнана недоречною в професійному середовищі
 
-## Our Responsibilities
+## Наші обов'язки
 
-Project maintainers are responsible for clarifying the standards of acceptable
-behavior and are expected to take appropriate and fair corrective action in
-response to any instances of unacceptable behavior.
+Підтримувачі проекту несуть відповідальність за уточнення стандартів прийнятної поведінки та очікується, що вони вживатимуть відповідних і справедливих заходів у відповідь на будь-які випадки неприйнятної поведінки.
 
-Project maintainers have the right and responsibility to remove, edit, or
-reject comments, commits, code, wiki edits, issues, and other contributions
-that are not aligned to this Code of Conduct, or to ban temporarily or
-permanently any contributor for other behaviors that they deem inappropriate,
-threatening, offensive, or harmful.
+Підтримувачі проекту мають право та обов'язок видаляти, редагувати або відхиляти коментарі, коміти, код, правки вікі, питання та інші внески, що не відповідають цьому Кодексу поведінки, або тимчасово чи постійно блокувати будь-якого учасника за іншу поведінку, яку вони вважають недоречною, загрозливою, образливою або шкідливою.
 
-## Scope
+## Область застосування
 
-This Code of Conduct applies both within project spaces and in public spaces
-when an individual is representing the project or its community. Examples of
-representing a project or community include using an official project e-mail
-address, posting via an official social media account, or acting as an appointed
-representative at an online or offline event. Representation of a project may be
-further defined and clarified by project maintainers.
+Цей Кодекс поведінки застосовується як в рамках проектних просторів, так і в публічних просторах, коли особа представляє проект або його спільноту. Приклади представлення проекту або спільноти включають використання офіційної електронної адреси проекту, публікацію через офіційний обліковий запис у соціальних мережах або виступ як призначений представник на онлайн або офлайн заході. Представлення проекту може бути додатково визначено та уточнено підтримувачами проекту.
 
-## Enforcement
+## Забезпечення дотримання
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported by contacting the project team at j@gro.sh. All
-complaints will be reviewed and investigated and will result in a response that
-is deemed necessary and appropriate to the circumstances. The project team is
-obligated to maintain confidentiality with regard to the reporter of an incident.
-Further details of specific enforcement policies may be posted separately.
+Випадки образливої, переслідуючої або іншої неприйнятної поведінки можуть бути повідомлені, зв'язавшись з командою проекту за адресою j@gro.sh. Всі скарги будуть переглянуті та розслідувані і призведуть до відповіді, яка вважається необхідною та відповідною до обставин. Команда проекту зобов'язується зберігати конфіденційність щодо особи, яка повідомляє про інцидент. Додаткові деталі конкретних політик забезпечення можуть бути опубліковані окремо.
 
-Project maintainers who do not follow or enforce the Code of Conduct in good
-faith may face temporary or permanent repercussions as determined by other
-members of the project's leadership.
+Підтримувачі проекту, які не дотримуються або не забезпечують дотримання Кодексу поведінки добросовісно, можуть зіткнутися з тимчасовими або постійними наслідками, визначеними іншими членами керівництва проекту.
 
-## Attribution
+## Атрибуція
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4,
-available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
+Цей Кодекс поведінки адаптований з [Contributor Covenant][homepage], версія 1.4, доступної за адресою https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
 
 [homepage]: https://www.contributor-covenant.org
 
-For answers to common questions about this code of conduct, see
-https://www.contributor-covenant.org/faq
+Відповіді на поширені запитання щодо цього кодексу поведінки дивіться на https://www.contributor-covenant.org/faq
