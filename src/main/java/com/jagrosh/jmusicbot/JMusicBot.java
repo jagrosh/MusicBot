@@ -38,6 +38,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.Level;
 
 /**
  *
@@ -82,6 +83,10 @@ public class JMusicBot
         if(!config.isValid())
             return;
         LOG.info("Loaded config from " + config.getConfigLocation());
+
+        // set log level from config
+        ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)).setLevel(
+                Level.toLevel(config.getLogLevel(), Level.INFO));
         
         // set up the listener
         EventWaiter waiter = new EventWaiter();
@@ -137,7 +142,7 @@ public class JMusicBot
             // message content intent
             if(!"@mention".equals(config.getPrefix()))
             {
-                prompt.alert(Prompt.Level.INFO, "JMusicBot", "You currently have a custom prefix set. "
+                LOG.info("JMusicBot", "You currently have a custom prefix set. "
                         + "If your prefix is not working, make sure that the 'MESSAGE CONTENT INTENT' is Enabled "
                         + "on https://discord.com/developers/applications/" + jda.getSelfUser().getId() + "/bot");
             }
@@ -194,6 +199,7 @@ public class JMusicBot
                         new RemoveCmd(bot),
                         new SearchCmd(bot),
                         new SCSearchCmd(bot),
+                        new SeekCmd(bot),
                         new ShuffleCmd(bot),
                         new SkipCmd(bot),
 

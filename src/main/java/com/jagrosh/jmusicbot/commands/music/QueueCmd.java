@@ -27,6 +27,7 @@ import com.jagrosh.jmusicbot.settings.QueueType;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import com.jagrosh.jmusicbot.utils.TimeUtil;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
@@ -112,7 +113,7 @@ public class QueueCmd extends MusicCommand
                     .append(ah.getPlayer().getPlayingTrack().getInfo().title).append("**\n");
         }
         return FormatUtil.filter(sb.append(success).append(" Current Queue | ").append(songslength)
-                .append(" entries | `").append(FormatUtil.formatTime(total)).append("` ")
+                .append(" entries | `").append(TimeUtil.formatTime(total)).append("` ")
                 .append("| ").append(queueType.getEmoji()).append(" `").append(queueType.getUserFriendlyName()).append('`')
                 .append(repeatmode.getEmoji() != null ? " | "+repeatmode.getEmoji() : "").toString());
     }

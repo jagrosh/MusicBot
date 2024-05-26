@@ -29,6 +29,7 @@ import net.dv8tion.jda.api.entities.ChannelType;
 public class EvalCmd extends OwnerCommand 
 {
     private final Bot bot;
+    private final String engine;
     
     public EvalCmd(Bot bot)
     {
@@ -36,13 +37,20 @@ public class EvalCmd extends OwnerCommand
         this.name = "eval";
         this.help = "evaluates nashorn code";
         this.aliases = bot.getConfig().getAliases(this.name);
+        this.engine = bot.getConfig().getEvalEngine();
         this.guildOnly = false;
     }
     
     @Override
     protected void execute(CommandEvent event) 
     {
-        ScriptEngine se = new ScriptEngineManager().getEngineByName("Nashorn");
+        ScriptEngine se = new ScriptEngineManager().getEngineByName(engine);
+        if(se == null)
+        {
+            event.replyError("The eval engine provided in the config (`"+engine+"`) doesn't exist. This could be due to an invalid "
+                    + "engine name, or the engine not existing in your version of java (`"+System.getProperty("java.version")+"`).");
+            return;
+        }
         se.put("bot", bot);
         se.put("event", event);
         se.put("jda", event.getJDA());
