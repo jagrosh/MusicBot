@@ -82,7 +82,7 @@ public class JMusicBot
         config.load();
         if(!config.isValid())
             return;
-        LOG.info("Loaded config from " + config.getConfigLocation());
+        LOG.info("Конфігурація завантажена з " + config.getConfigLocation());
 
         // set log level from config
         ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)).setLevel(
@@ -103,7 +103,7 @@ public class JMusicBot
                 bot.setGUI(gui);
                 gui.init();
 
-                LOG.info("Loaded config from " + config.getConfigLocation());
+                LOG.info("Конфігурація завантажена з " + config.getConfigLocation());
             }
             catch(Exception e)
             {

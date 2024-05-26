@@ -40,10 +40,10 @@ import org.json.JSONTokener;
  */
 public class OtherUtil
 {
-    public final static String NEW_VERSION_AVAILABLE = "There is a new version of JMusicBot available!\n"
-                    + "Current version: %s\n"
-                    + "New Version: %s\n\n"
-                    + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
+    public final static String NEW_VERSION_AVAILABLE = "Доступна нова версія JMusicBot.!\n"
+                    + "Поточна версія: %s\n"
+                    + "Нова версія: %s\n\n"
+                    + "Будь ласка, відвідайте https://github.com/jagrosh/MusicBot/releases/latest щоб отримати останню версію.";
     private final static String WINDOWS_INVALID_PATH = "c:\\windows\\system32\\";
     
     /**

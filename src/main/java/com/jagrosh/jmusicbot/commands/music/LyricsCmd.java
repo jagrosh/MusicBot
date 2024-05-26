@@ -52,7 +52,7 @@ public class LyricsCmd extends MusicCommand
                 title = sendingHandler.getPlayer().getPlayingTrack().getInfo().title;
             else
             {
-                event.replyError("There must be music playing to use that!");
+                event.replyError("Потрібно мати відтворювану музику, щоб скористатися цим!");
                 return;
             }
         }
@@ -63,7 +63,7 @@ public class LyricsCmd extends MusicCommand
         {
             if(lyrics == null)
             {
-                event.replyError("Lyrics for `" + title + "` could not be found!" + (event.getArgs().isEmpty() ? " Try entering the song name manually (`lyrics [song name]`)" : ""));
+                event.replyError("Текст пісні `" + title + "` не знайдено!" + (event.getArgs().isEmpty() ? " Спробуйте ввести назву пісні вручну (`lyrics [song name]`)" : ""));
                 return;
             }
 
@@ -73,7 +73,7 @@ public class LyricsCmd extends MusicCommand
                     .setTitle(lyrics.getTitle(), lyrics.getURL());
             if(lyrics.getContent().length()>15000)
             {
-                event.replyWarning("Lyrics for `" + title + "` found but likely not correct: " + lyrics.getURL());
+                event.replyWarning("Знайдено тексти `" + title + "` але ймовірно, що вони не вірні: " + lyrics.getURL());
             }
             else if(lyrics.getContent().length()>2000)
             {
