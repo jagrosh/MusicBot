@@ -8,7 +8,7 @@ on:
         type: string
       info:
         description: 'Description of this Release'
-        required: true
+        required: false
         type: string
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
-      - name: Set up JDK 11
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: '11'
