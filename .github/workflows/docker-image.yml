@@ -27,7 +27,7 @@ jobs:
         uses: docker/build-push-action@v5
         working-directory: Docker/
         with:
-          context: .
+          context: /Docker
           file: ./Dockerfile
           push: true
           provenance: mode=max
