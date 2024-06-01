@@ -30,4 +30,4 @@ jobs:
           push: true
           provenance: mode=max
           sbom: true
-          tags: clifford64/MusicBot:latest
+          tags: clifford64/musicbot:latest
