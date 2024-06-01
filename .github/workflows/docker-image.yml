@@ -33,4 +33,4 @@ jobs:
           push: true
           provenance: mode=max
           sbom: true
-          tags: clifford64/musicbot:latest
+          tags: clifford64/musicbot:latest , clifford64/musicbot:${{ env.JMB_VERSION }}
