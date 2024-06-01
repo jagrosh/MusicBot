@@ -29,7 +29,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: /Docker
+          context: ./Docker
           push: true
           provenance: mode=max
           sbom: true
