@@ -14,6 +14,13 @@ jobs:
         name: Checkout
         uses: actions/checkout@v4
       -
+        name: Extract JMB_VERSION from Dockerfile
+        id: extract_version
+        shell: bash
+        run: |
+          JMB_VERSION=$(grep -E '^ENV JMB_VERSION' Docker/Dockerfile | awk '{print $3}')
+          echo "JMB_VERSION=$JMB_VERSION" >> $GITHUB_ENV
+      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       -
@@ -33,4 +40,6 @@ jobs:
           push: true
           provenance: mode=max
           sbom: true
-          tags: clifford64/musicbot:latest , clifford64/musicbot:${{ env.JMB_VERSION }}
+          tags: |
+            clifford64/musicbot:latest
+            clifford64/musicbot:${{ env.JMB_VERSION }}
