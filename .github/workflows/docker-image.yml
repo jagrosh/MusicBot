@@ -25,7 +25,6 @@ jobs:
       -
         name: Build and push
         uses: docker/build-push-action@v5
-        working-directory: Docker/
         with:
           context: /Docker
           file: ./Dockerfile
