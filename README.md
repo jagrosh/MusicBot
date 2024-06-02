@@ -9,4 +9,8 @@
 
 ##### I have no idea what I am doing, so use at your own risk.
 
-`docker pull clifford64/musicbot:latest`
+### Specify User
+
+##### Docker image has been updated to allow for specifying the UID and GID of the account running the container. Simply specify the environment variable PUID and PGID of the account in the run command. If no variable is specified, the bot runs 1000.
+
+`docker run -e PUID=3002 -e PGID=3002 -v /path/to/config:/jmb/config clifford64/musicbot:latest`

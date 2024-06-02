@@ -14,10 +14,12 @@ RUN chmod 770 /jmb/JMusicBot.jar
 
 VOLUME /jmb/config
 
-RUN useradd -Ms /bin/bash -u 3002 -U musicbot
+# Install gosu
+RUN microdnf install -y shadow-utils && \
+    curl -o /usr/local/bin/gosu -fsSL "https://github.com/tianon/gosu/releases/download/1.14/gosu-amd64" && \
+    chmod +x /usr/local/bin/gosu
 
-RUN chgrp -R musicbot /jmb
-
-USER musicbot
+ENV DEFAULT_UID=1000
+ENV DEFAULT_GID=1000
 
 ENTRYPOINT ["/jmb/docker-entrypoint.sh"]
