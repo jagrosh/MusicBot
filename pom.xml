@@ -58,9 +58,9 @@
             <version>2.1.1</version>
         </dependency>
         <dependency>
-            <groupId>com.github.lavalink-devs</groupId>
-            <artifactId>lavaplayer-youtube-source</artifactId>
-            <version>1.0.4</version>
+            <groupId>dev.lavalink.youtube</groupId>
+            <artifactId>v2</artifactId>
+            <version>b2c8c070cdc4caa1fa93d0d7ac3f9d468bfa27a8-SNAPSHOT</version>
         </dependency>
 	<dependency>
 	    <groupId>com.github.jagrosh</groupId>
