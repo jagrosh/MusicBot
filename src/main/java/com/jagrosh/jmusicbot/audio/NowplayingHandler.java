@@ -132,11 +132,6 @@ public class NowplayingHandler
             else
                 bot.resetGame();
         }
-        // update channel topic if applicable
-        updateTopic(guildId, handler, false);
-
-        if(bot.getConfig().getAutoNowPlaying())
-            sendNowPlayingMessageForNewTrack(guildId);
     }
     
 
