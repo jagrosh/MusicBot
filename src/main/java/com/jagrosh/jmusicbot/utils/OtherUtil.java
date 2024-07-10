@@ -213,19 +213,14 @@ public class OtherUtil
     }
 
     /**
-     * Checks if the bot JMusicBot is being run on is supported & returns the reason if it is not.
-     * @return A string with the reason, or null if it is supported.
+     * Disabling the check to see if the bot is marked as public. 
      */
     public static String getUnsupportedBotReason(JDA jda) 
     {
         if (jda.getSelfUser().getFlags().contains(User.UserFlag.VERIFIED_BOT))
-            return "The bot is verified. Using JMusicBot in a verified bot is not supported.";
+            return "The bot is verified. Using ShiverFork in a verified bot is not supported.";
 
         ApplicationInfo info = jda.retrieveApplicationInfo().complete();
-        if (info.isBotPublic())
-            return "\"Public Bot\" is enabled. Using JMusicBot as a public bot is not supported. Please disable it in the "
-                    + "Developer Dashboard at https://discord.com/developers/applications/" + jda.getSelfUser().getId() + "/bot.";
-
         return null;
     }
 }
