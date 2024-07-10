@@ -262,7 +262,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
             }
         }
         else return null;
-    }
+    return}
     
      public Message getNowPlaying(JDA jda)
     {
