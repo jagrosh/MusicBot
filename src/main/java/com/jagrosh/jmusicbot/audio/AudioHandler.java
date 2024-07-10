@@ -261,8 +261,8 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
                         + FormatUtil.volumeIcon(audioPlayer.getVolume()));
             }
         }
-        else return null;
-    return}
+        return;
+    }
     
      public Message getNowPlaying(JDA jda)
     {
