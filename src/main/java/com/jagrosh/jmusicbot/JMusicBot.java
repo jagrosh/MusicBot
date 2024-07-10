@@ -172,7 +172,7 @@ public class JMusicBot
     {
         // instantiate about command
         AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v" + OtherUtil.getCurrentVersion() + ")",
+                                "~~bigman bot dev fork~~ just the only version now. (v" + OtherUtil.getCurrentVersion() + ")",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
                                 RECOMMENDED_PERMS);
         aboutCommand.setIsAuthor(false);
@@ -202,6 +202,7 @@ public class JMusicBot
                         new SeekCmd(bot),
                         new ShuffleCmd(bot),
                         new SkipCmd(bot),
+                        new skipSegCmd(bot),
 
                         new ForceRemoveCmd(bot),
                         new ForceskipCmd(bot),

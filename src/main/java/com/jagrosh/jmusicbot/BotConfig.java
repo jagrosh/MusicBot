@@ -42,7 +42,7 @@ public class BotConfig
     private String token, prefix, altprefix, helpWord, playlistsFolder, logLevel,
             successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji,
             evalEngine;
-    private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
+    private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots, autoNowPlaying;
     private long owner, maxSeconds, aloneTimeUntilStop;
     private int maxYTPlaylistPages;
     private double skipratio;
@@ -86,6 +86,7 @@ public class BotConfig
             status = OtherUtil.parseStatus(config.getString("status"));
             stayInChannel = config.getBoolean("stayinchannel");
             songInGame = config.getBoolean("songinstatus");
+            autoNowPlaying = config.getBoolean("autonowplaying");
             npImages = config.getBoolean("npimages");
             updatealerts = config.getBoolean("updatealerts");
             logLevel = config.getString("loglevel");
@@ -303,6 +304,11 @@ public class BotConfig
         return songInGame;
     }
     
+    public boolean getAutoNowPlaying()
+    {
+        return autoNowPlaying;
+    }
+
     public String getPlaylistsFolder()
     {
         return playlistsFolder;

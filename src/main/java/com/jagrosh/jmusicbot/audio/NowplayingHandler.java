@@ -99,6 +99,28 @@ public class NowplayingHandler
         toRemove.forEach(id -> lastNP.remove(id));
     }
 
+    public void sendNowPlayingMessageForNewTrack(long guildId)
+    {
+        Guild guild = bot.getJDA().getGuildById(guildId);
+        if(guild==null)
+            return;
+
+        Settings settings = bot.getSettingsManager().getSettings(guildId);
+        TextChannel tchan = settings.getTextChannel(guild);
+        if (tchan == null)
+            return;
+
+        AudioHandler handler = (AudioHandler)guild.getAudioManager().getSendingHandler();
+        // Because useNPImages prevents now playing messages from automatically updating,
+        // there's no point in including the track progress because it will always be
+        // right at the beginning. Instead show a message just containing the track length:
+        Message msg = handler.getNowPlaying(bot.getJDA(), !bot.getConfig().useNPImages());
+        if(msg==null)
+            return;
+
+        tchan.sendMessage(msg).queue((m) -> setLastNPMessage(m));
+    }
+
     // "event"-based methods
     public void onTrackUpdate(AudioTrack track)
     {
@@ -110,8 +132,14 @@ public class NowplayingHandler
             else
                 bot.resetGame();
         }
+        // update channel topic if applicable
+        updateTopic(guildId, handler, false);
+
+        if(bot.getConfig().getAutoNowPlaying())
+            sendNowPlayingMessageForNewTrack(guildId);
     }
     
+
     public void onMessageDelete(Guild guild, long messageId)
     {
         Pair<Long,Long> pair = lastNP.get(guild.getIdLong());
