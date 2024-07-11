@@ -39,6 +39,9 @@ jobs:
             echo "repo=$(echo ${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/})"
           } >> $GITHUB_ENV
 
+      - name: Rename JAR
+        run: mv target/JMusicBot-Snapshot-All.jar ShiverFork-Snapshot-All.jar
+
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
