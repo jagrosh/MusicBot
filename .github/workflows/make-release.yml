@@ -37,7 +37,7 @@ jobs:
         run: echo "repo=$(echo ${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/})" >> $GITHUB_ENV
 
       - name: Rename JAR
-        run: mv target/JMusicBot-${{ github.event.inputs.version_number }}-All.jar JMusicBot-${{ github.event.inputs.version_number }}.jar
+        run: mv target/ShiverFork-${{ github.event.inputs.version_number }}-All.jar ShiverFork-${{ github.event.inputs.version_number }}.jar
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -46,7 +46,7 @@ jobs:
           name: Version ${{ github.event.inputs.version_number }}
           draft: true
           prerelease: false
-          files: JMusicBot-${{ github.event.inputs.version_number }}.jar
+          files: ShiverFork-${{ github.event.inputs.version_number }}.jar
           body: |
             ${{ github.event.inputs.info }}
             
@@ -54,4 +54,4 @@ jobs:
             ### Setup
             https://jmusicbot.com/setup  
             https://jmusicbot.com/config  
-            # Download: [JMusicBot-${{ github.event.inputs.version_number }}.jar](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.version_number }}/JMusicBot-${{ github.event.inputs.version_number }}.jar)
+            # Download: [ShiverFork-${{ github.event.inputs.version_number }}.jar](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.version_number }}/ShiverFork-${{ github.event.inputs.version_number }}.jar)
