@@ -188,7 +188,7 @@ public class OtherUtil
         try
         {
             Response response = new OkHttpClient.Builder().build()
-                    .newCall(new Request.Builder().get().url("https://api.github.com/repos/lilliepad1/MusicBot/MusicBotShiverFork/latest").build())
+                    .newCall(new Request.Builder().get().url("https://api.github.com/repos/lilliepad1/MusicBotShiverFork/releases/latest").build())
                     .execute();
             ResponseBody body = response.body();
             if(body != null)
