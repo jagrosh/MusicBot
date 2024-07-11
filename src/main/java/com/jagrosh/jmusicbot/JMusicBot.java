@@ -182,7 +182,6 @@ public class JMusicBot
         CommandClientBuilder cb = new CommandClientBuilder()
                 .setPrefix(config.getPrefix())
                 .setAlternativePrefix(config.getAltPrefix())
-                // .setPipedURL(config.getPiped())
                 .setOwnerId(Long.toString(config.getOwnerId()))
                 .setEmojis(config.getSuccess(), config.getWarning(), config.getError())
                 .setHelpWord(config.getHelp())
