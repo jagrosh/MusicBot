@@ -277,7 +277,7 @@ public class BotConfig
     
     public String getPiped()
     {
-        return "NONE".equalsIgnoreCase(pipedURL) ? null : pipedURL;
+        return "NONE";
     }
 
     public Activity getGame()
