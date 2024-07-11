@@ -43,5 +43,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.repo }}@${{ env.commit }}
-          path: target/ShiverFork-Snapshot-All.jar
+          path: target/JMusicBot-Snapshot-All.jar
           if-no-files-found: error

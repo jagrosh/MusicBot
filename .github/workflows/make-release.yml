@@ -37,7 +37,7 @@ jobs:
         run: echo "repo=$(echo ${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/})" >> $GITHUB_ENV
 
       - name: Rename JAR
-        run: mv target/ShiverFork-${{ github.event.inputs.version_number }}-All.jar ShiverFork-${{ github.event.inputs.version_number }}.jar
+        run: mv target/JMusicBot-${{ github.event.inputs.version_number }}-All.jar ShiverFork-${{ github.event.inputs.version_number }}.jar
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
