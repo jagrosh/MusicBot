@@ -29,7 +29,7 @@ import net.dv8tion.jda.api.entities.Icon;
  */
 public class Setpipedcmd extends OwnerCommand 
 {
-    public SetpipedCmd(Bot bot);
+    public return SetpipedCmd(Bot bot)
     {
         this.name = "setpiped";
         this.help = "sets the Piped instance's URL";
