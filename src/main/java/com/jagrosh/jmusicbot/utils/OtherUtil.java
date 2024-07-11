@@ -223,41 +223,4 @@ public class OtherUtil
         ApplicationInfo info = jda.retrieveApplicationInfo().complete();
         return null;
     }
-
-    public static boolean isPipedInstance(String url)
-    {
-        try
-        {
-            Response response = new OkHttpClient.Builder().build()
-                    .newCall(new Request.Builder().get().url(url + "/trending").build())
-                    .execute();
-            ResponseBody body = response.body();
-            if(body != null)
-            {
-                try(Reader reader = body.charStream())
-                {
-                    JSONObject obj = new JSONObject(new JSONTokener(reader));
-                    try {
-                        if (obj.getString("error") == "region is a required parameter") {
-                            return true;
-                        }
-                        return false;
-                    }
-                    catch (Exception e) {
-                        return false;
-                    }
-                }
-                finally
-                {
-                    response.close();
-                }
-            }
-            else
-                return false;
-        }
-        catch(IOException | JSONException | NullPointerException ex)
-        {
-            return false;
-        }
-    }
 }

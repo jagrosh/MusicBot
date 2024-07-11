@@ -57,7 +57,6 @@ public class DebugCmd extends OwnerCommand
                 .append("\n  Owner = ").append(bot.getConfig().getOwnerId())
                 .append("\n  Prefix = ").append(bot.getConfig().getPrefix())
                 .append("\n  AltPrefix = ").append(bot.getConfig().getAltPrefix())
-                .append("\n  PipedURL = ").append(bot.getConfig().getPiped())
                 .append("\n  MaxSeconds = ").append(bot.getConfig().getMaxSeconds())
                 .append("\n  NPImages = ").append(bot.getConfig().useNPImages())
                 .append("\n  SongInStatus = ").append(bot.getConfig().getSongInStatus())
