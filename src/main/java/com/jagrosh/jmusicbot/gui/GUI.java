@@ -43,7 +43,7 @@ public class GUI extends JFrame
     public void init()
     {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setTitle("JMusicBot");
+        setTitle("ShiverFork");
         JTabbedPane tabs = new JTabbedPane();
         tabs.add("Console", console);
         tabs.add("Options", optionsPanel);
@@ -78,7 +78,7 @@ public class GUI extends JFrame
         MenuItem exit = new MenuItem("Exit");
         exit.addActionListener(e -> shutdown());
 
-        MenuItem nameLabel = new MenuItem("JMusicBot");
+        MenuItem nameLabel = new MenuItem("ShiverFork");
         nameLabel.setEnabled(false);
 
         PopupMenu menu = new PopupMenu();
@@ -87,7 +87,7 @@ public class GUI extends JFrame
         menu.add(exit);
 
         SystemTray tray = SystemTray.getSystemTray();
-        TrayIcon trayIcon = new TrayIcon(icon, "JMusicBot", menu);
+        TrayIcon trayIcon = new TrayIcon(icon, "ShiverFork", menu);
 
         // Restore the window when the user clicks the tray icon
         trayIcon.addMouseListener(new MouseAdapter()
