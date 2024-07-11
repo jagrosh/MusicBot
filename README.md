@@ -1,6 +1,6 @@
 <img align="right" src="https://i.imgur.com/3oUs5z4.png" height="200" width="200">
 
-# ShiverFork
+# ShiverFork - The Anarchist's music bot!
 
 [![Downloads](https://img.shields.io/github/downloads/lilliepad1/MusicBotShiverFork/total.svg)](https://github.com/jagrosh/lilliepad1/MusicBotShiverFork/latest)
 [![Stars](https://img.shields.io/github/stars/lilliepad1/MusicBotShiverFork.svg)](https://github.com/lilliepad1/MusicBotShiverFork/stargazers)
@@ -8,8 +8,8 @@
 [![License](https://img.shields.io/github/license/lilliepad1/MusicBotShiverFork.svg)](https://github.com/lilliepad1/MusicBotShiverFork/blob/master/LICENSE)
 [![Build and Test](https://github.com/lilliepad1/MusicBotShiverFork/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/lilliepad1/MusicBotShiverFork/actions/workflows/build-and-test.yml)
 
-ShiverFork is a fork of JMusicBot that implements changes that I wish to see in the bot, including ones that have been removed from the original project.
-
+ShiverFork is a fork of JMusicBot that implements changes that I wish to see in the bot, including ones that have been removed from the original project.<br>
+If you don't want to host your own instance of ShiverFork, you can [invite a public instance to your Discord server!](https://github.com/lilliepad1/MusicBotShiverFork/blob/master/.github/PUBLIC_SHIVERFORK_INVITE.md)
 ## Features
   * Easy to run (just make sure Java is installed, and run!)
   * Fast loading of songs
@@ -23,7 +23,7 @@ ShiverFork is a fork of JMusicBot that implements changes that I wish to see in 
   * Playlist support (both web/youtube, and local)
 
 ## Supported sources and formats
-JMusicBot supports all sources and formats supported by [lavaplayer](https://github.com/sedmelluq/lavaplayer#supported-formats):
+ShiverFork supports all sources and formats supported by [lavaplayer](https://github.com/sedmelluq/lavaplayer#supported-formats):
 ### Sources
   * YouTube
   * SoundCloud
@@ -43,7 +43,7 @@ JMusicBot supports all sources and formats supported by [lavaplayer](https://git
   * Stream playlists (M3U and PLS)
 
 ## Setup
-Please see JMusicBot's original [Setup Page](https://jmusicbot.com/setup) to run this bot yourself!
+Please see JMusicBot's original [Setup Page](https://jmusicbot.com/setup) for information on how to run this bot yourself!
 
 ## Questions/Suggestions/Bug Reports
 **Please read the [Issues List](https://github.com/lilliepad1/MusicBotShiverFork/issues) before suggesting a feature**. If you have a question, need troubleshooting help, or want to brainstorm a new feature, please start a [Discussion](https://github.com/lilliepad1/MusicBotShiverFork/discussions). If you'd like to suggest a feature or report a reproducible bug, please open an [Issue](https://github.com/lilliepad1/MusicBotShiverFork/issues) on this repository. If you like this bot, be sure to add a star to the libraries that make this possible, and the original project: [**JDA**](https://github.com/DV8FromTheWorld/JDA),[**lavaplayer**](https://github.com/sedmelluq/lavaplayer), and [**JMusicBot**](https://github.com/jagrosh/MusicBot)!

@@ -172,8 +172,8 @@ public class JMusicBot
     {
         // instantiate about command
         AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(),
-                                "~~bigman bot dev fork~~ just the only version now. (v" + OtherUtil.getCurrentVersion() + ")",
-                                new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
+                                "[ShiverFork - The Anarchist's music bot!](https://github.com/lilliepad1/MusicBotShiverFork) (v" + OtherUtil.getCurrentVersion() + ")",
+                                new String[]{"Amazing Performance!", "Supports a ton of sites!", "Easy to host yourself!"},
                                 RECOMMENDED_PERMS);
         aboutCommand.setIsAuthor(false);
         aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
