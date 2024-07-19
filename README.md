@@ -9,7 +9,8 @@
 [![Build and Test](https://github.com/lilliepad1/MusicBotShiverFork/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/lilliepad1/MusicBotShiverFork/actions/workflows/build-and-test.yml)
 
 ShiverFork is a fork of JMusicBot that implements changes that I wish to see in the bot, including ones that have been removed from the original project.<br>
-<b>If you don't want to host your own instance of ShiverFork, you can [invite a public instance to your Discord server!](https://github.com/lilliepad1/MusicBotShiverFork/blob/master/.github/PUBLIC_SHIVERFORK_INVITE.md)</b>
+<b>If you don't want to host your own instance of ShiverFork, you can [invite a public instance to your Discord server!](https://github.com/lilliepad1/MusicBotShiverFork/blob/master/.github/PUBLIC_SHIVERFORK_INVITE.md)<br>
+The original code is copyright to jagrosh and the JMusicBot contributors, as per the Apache License.</b>
 ## Features
   * Easy to run (just make sure Java is installed, and run!)
   * Fast loading of songs
