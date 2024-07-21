@@ -9,8 +9,8 @@
 [![Build and Test](https://github.com/lilliepad1/MusicBotShiverFork/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/lilliepad1/MusicBotShiverFork/actions/workflows/build-and-test.yml)
 
 ShiverFork is a fork of JMusicBot that implements changes that I wish to see in the bot, including ones that have been removed from the original project.<br>
-<b>If you don't want to host your own instance of ShiverFork, you can [invite a public instance to your Discord server!](https://github.com/lilliepad1/MusicBotShiverFork/blob/master/.github/PUBLIC_SHIVERFORK_INVITE.md)<br>
-The original code is copyright to jagrosh and the JMusicBot contributors, as per the Apache License.</b>
+The original code is copyright to jagrosh and the JMusicBot contributors, as per the Apache License.<br>
+<b>If you don't want to host your own instance of ShiverFork, you can [invite a public instance to your Discord server!](https://github.com/lilliepad1/MusicBotShiverFork/blob/master/.github/PUBLIC_SHIVERFORK_INVITE.md)</b><br>
 ## Features
   * Easy to run (just make sure Java is installed, and run!)
   * Fast loading of songs
@@ -50,4 +50,4 @@ Please see JMusicBot's original [Setup Page](https://jmusicbot.com/setup) for in
 **Please read the [Issues List](https://github.com/lilliepad1/MusicBotShiverFork/issues) before suggesting a feature**. If you have a question, need troubleshooting help, or want to brainstorm a new feature, please start a [Discussion](https://github.com/lilliepad1/MusicBotShiverFork/discussions). If you'd like to suggest a feature or report a reproducible bug, please open an [Issue](https://github.com/lilliepad1/MusicBotShiverFork/issues) on this repository. If you like this bot, be sure to add a star to the libraries that make this possible, and the original project: [**JDA**](https://github.com/DV8FromTheWorld/JDA),[**lavaplayer**](https://github.com/sedmelluq/lavaplayer), and [**JMusicBot**](https://github.com/jagrosh/MusicBot)!
 
 ## Editing
-This bot (and the source code here) might not be easy to edit for inexperienced programmers. The main purpose of having the source public is to show the capabilities of the libraries, to allow others to understand how the bot works, and to allow those knowledgeable about java, JDA, and Discord bot development to contribute. There are many requirements and dependencies required to edit and compile it, and there will not be support provided for people looking to make changes on their own. Instead, consider making a feature request (see the above section). If you choose to make edits, please do so in accordance with the Apache 2.0 License.
+This bot (and the source code here) might not be easy to edit for inexperienced programmers. If you choose to make edits, please do so in accordance with the Apache 2.0 License.
