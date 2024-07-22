@@ -16,6 +16,10 @@
 package com.jagrosh.jmusicbot.utils;
 
 public class TimeUtil {
+    private static final int MILLISECONDS_IN_SECONDS = 1000;
+    private static final int SECONDS_IN_MINUTE = 60;
+    private static final int SECONDS_IN_HOUR = SECONDS_IN_MINUTE * 60;
+    private static final int SECONDS_IN_DAY = SECONDS_IN_HOUR * 24;
 
     private TimeUtil() {}
 
@@ -23,11 +27,11 @@ public class TimeUtil {
         if(duration == Long.MAX_VALUE) {
             return "LIVE";
         }
-        long seconds = Math.round(duration / 1000.0);
-        long hours = seconds / (60 * 60);
-        seconds %= 60 * 60;
-        long minutes = seconds / 60;
-        seconds %= 60;
+        long seconds = Math.round(duration / (double) MILLISECONDS_IN_SECONDS);
+        long hours = seconds / SECONDS_IN_HOUR;
+        seconds %= SECONDS_IN_HOUR;
+        long minutes = seconds / SECONDS_IN_MINUTE;
+        seconds %= SECONDS_IN_MINUTE;
         return (hours > 0 ? hours + ":" : "")
             + (minutes < 10 ? "0" + minutes : minutes) + ":"
             + (seconds < 10 ? "0" + seconds : seconds);
@@ -90,7 +94,13 @@ public class TimeUtil {
                 return -1;
             }
         }
-        return Math.round(timeUnitArray[0] * 3600000 + timeUnitArray[1] * 60000 + timeUnitArray[2] * 1000);
+        return Math.round(
+            MILLISECONDS_IN_SECONDS * (
+                timeUnitArray[0] * SECONDS_IN_HOUR
+                    + timeUnitArray[1] * SECONDS_IN_MINUTE
+                    + timeUnitArray[2]
+            )
+        );
     }
 
     /**
@@ -109,17 +119,17 @@ public class TimeUtil {
 
                 if(vals.length > j + 1) {
                     if(vals[j + 1].toLowerCase().startsWith("m")) {
-                        num *= 60;
+                        num *= SECONDS_IN_MINUTE;
                     }
                     else if(vals[j + 1].toLowerCase().startsWith("h")) {
-                        num *= 60 * 60;
+                        num *= SECONDS_IN_HOUR;
                     }
                     else if(vals[j + 1].toLowerCase().startsWith("d")) {
-                        num *= 24 * 60 * 60;
+                        num *= SECONDS_IN_DAY;
                     }
                 }
 
-                time += num * 1000;
+                time += num * MILLISECONDS_IN_SECONDS;
             }
             catch(NumberFormatException ex) {
                 return -1;
