@@ -120,17 +120,9 @@ public class PlaylistLoader {
             return null;
         }
     }
-    
-    
-    private static <T> void shuffle(List<T> list)
-    {
-        for(int first =0; first<list.size(); first++)
-        {
-            int second = (int)(Math.random()*list.size());
-            T tmp = list.get(first);
-            list.set(first, list.get(second));
-            list.set(second, tmp);
-        }
+
+    private static <T> void shuffle(List<T> list) {
+        Collections.shuffle(list);
     }
 
     public class Playlist {
@@ -190,21 +182,17 @@ public class PlaylistLoader {
                         else if(ap.getSelectedTrack() != null) {
                             trackLoaded(ap.getSelectedTrack());
                         }
-                        else
-                        {
-                            List<AudioTrack> loaded = new ArrayList<>(ap.getTracks());
-                            if(shuffle)
-                                for(int first =0; first<loaded.size(); first++)
-                                {
-                                    int second = (int)(Math.random()*loaded.size());
-                                    AudioTrack tmp = loaded.get(first);
-                                    loaded.set(first, loaded.get(second));
-                                    loaded.set(second, tmp);
-                                }
-                            loaded.removeIf(track -> config.isTooLong(track));
-                            loaded.forEach(at -> at.setUserData(0L));
-                            tracks.addAll(loaded);
-                            loaded.forEach(at -> consumer.accept(at));
+                        else {
+                            List<AudioTrack> loadedTracks = new ArrayList<>(ap.getTracks());
+                            loadedTracks.removeIf(config::isTooLong);
+                            if(shuffle) {
+                                shuffle(loadedTracks);
+                            }
+                            loadedTracks.forEach(audioTrack -> {
+                                audioTrack.setUserData(0L);
+                                tracks.add(audioTrack);
+                                consumer.accept(audioTrack);
+                            });
                         }
                         done();
                     }

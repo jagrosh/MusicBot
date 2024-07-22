@@ -87,9 +87,9 @@ public abstract class AbstractQueue<T extends Queueable> {
                 identifierSet.add(i);
             }
         }
-        for(int j = 0; j < identifierSet.size(); j++) {
+        for(int j = identifierSet.size() - 1; j >= 0; j--) {
             int elementIndex = identifierSet.get(j);
-            int newIndex = (int) (Math.random() * identifierSet.size());
+            int newIndex = (int) (Math.random() * j);
             T temp = list.get(elementIndex);
             list.set(elementIndex, list.get(newIndex));
             list.set(newIndex, temp);
