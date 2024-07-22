@@ -23,13 +23,10 @@ import com.jagrosh.jmusicbot.settings.QueueType;
 import com.jagrosh.jmusicbot.settings.Settings;
 
 /**
- *
  * @author Wolfgang Schwendtbauer
  */
-public class QueueTypeCmd extends AdminCommand
-{
-    public QueueTypeCmd(Bot bot)
-    {
+public class QueueTypeCmd extends AdminCommand {
+    public QueueTypeCmd(Bot bot) {
         super();
         this.name = "queuetype";
         this.help = "changes the queue type";
@@ -38,36 +35,33 @@ public class QueueTypeCmd extends AdminCommand
     }
 
     @Override
-    protected void execute(CommandEvent event)
-    {
+    protected void execute(CommandEvent event) {
         String args = event.getArgs();
         QueueType value;
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
 
-        if (args.isEmpty())
-        {
+        if(args.isEmpty()) {
             QueueType currentType = settings.getQueueType();
-            event.reply(currentType.getEmoji() + " Current queue type is: `" + currentType.getUserFriendlyName() + "`.");
+            event.reply(
+                currentType.getEmoji() + " Current queue type is: `" + currentType.getUserFriendlyName() + "`.");
             return;
         }
 
-        try
-        {
+        try {
             value = QueueType.valueOf(args.toUpperCase());
         }
-        catch (IllegalArgumentException e)
-        {
+        catch(IllegalArgumentException e) {
             event.replyError("Invalid queue type. Valid types are: [" + String.join("|", QueueType.getNames()) + "]");
             return;
         }
 
-        if (settings.getQueueType() != value)
-        {
+        if(settings.getQueueType() != value) {
             settings.setQueueType(value);
 
             AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
-            if (handler != null)
+            if(handler != null) {
                 handler.setQueueType(value);
+            }
         }
 
         event.reply(value.getEmoji() + " Queue type was set to `" + value.getUserFriendlyName() + "`.");

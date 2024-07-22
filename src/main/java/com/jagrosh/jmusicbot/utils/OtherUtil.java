@@ -17,214 +17,230 @@ package com.jagrosh.jmusicbot.utils;
 
 import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.entities.Prompt;
-import java.io.*;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.ApplicationInfo;
+import net.dv8tion.jda.api.entities.User;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.ApplicationInfo;
-import net.dv8tion.jda.api.entities.User;
-import okhttp3.*;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class OtherUtil
-{
+public class OtherUtil {
     public final static String NEW_VERSION_AVAILABLE = "There is a new version of JMusicBot available!\n"
-                    + "Current version: %s\n"
-                    + "New Version: %s\n\n"
-                    + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
+        + "Current version: %s\n"
+        + "New Version: %s\n\n"
+        + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
     private final static String WINDOWS_INVALID_PATH = "c:\\windows\\system32\\";
+
+    private OtherUtil() {}
     
     /**
      * gets a Path from a String
      * also fixes the windows tendency to try to start in system32
      * any time the bot tries to access this path, it will instead start in the location of the jar file
-     * 
+     *
      * @param path the string path
      * @return the Path object
      */
-    public static Path getPath(String path)
-    {
+    public static Path getPath(String path) {
         Path result = Paths.get(path);
         // special logic to prevent trying to access system32
-        if(result.toAbsolutePath().toString().toLowerCase().startsWith(WINDOWS_INVALID_PATH))
-        {
-            try
-            {
-                result = Paths.get(new File(JMusicBot.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath() + File.separator + path);
+        if(result.toAbsolutePath().toString().toLowerCase().startsWith(WINDOWS_INVALID_PATH)) {
+            try {
+                result = Paths.get(new File(
+                    JMusicBot.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile()
+                    .getPath() + File.separator + path);
             }
             catch(URISyntaxException ignored) {}
         }
         return result;
     }
-    
+
     /**
      * Loads a resource from the jar as a string
-     * 
+     *
      * @param clazz class base object
-     * @param name name of resource
+     * @param name  name of resource
      * @return string containing the contents of the resource
      */
-    public static String loadResource(Object clazz, String name)
-    {
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(clazz.getClass().getResourceAsStream(name))))
-        {
+    public static String loadResource(Class<?> clazz, String name) {
+        try(BufferedReader reader = new BufferedReader(
+            new InputStreamReader(clazz.getResourceAsStream(name)))) {
             StringBuilder sb = new StringBuilder();
             reader.lines().forEach(line -> sb.append("\r\n").append(line));
             return sb.toString().trim();
         }
-        catch(IOException ignored)
-        {
+        catch(IOException ignored) {
             return null;
         }
     }
-    
+
     /**
      * Loads image data from a URL
-     * 
+     *
      * @param url url of image
      * @return inputstream of url
      */
-    public static InputStream imageFromUrl(String url)
-    {
-        if(url==null)
+    public static InputStream imageFromUrl(String url) {
+        if(url == null) {
             return null;
-        try 
-        {
+        }
+        try {
             URL u = new URL(url);
             URLConnection urlConnection = u.openConnection();
-            urlConnection.setRequestProperty("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36");
+            urlConnection.setRequestProperty(
+                "user-agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623" 
+                    + ".112 Safari/537.36"
+            );
             return urlConnection.getInputStream();
         }
         catch(IOException | IllegalArgumentException ignore) {}
         return null;
     }
-    
+
     /**
      * Parses an activity from a string
-     * 
+     *
      * @param game the game, including the action such as 'playing' or 'watching'
      * @return the parsed activity
      */
-    public static Activity parseGame(String game)
-    {
-        if(game==null || game.trim().isEmpty() || game.trim().equalsIgnoreCase("default"))
+    public static Activity parseGame(String game) {
+        if(game == null || game.trim().isEmpty() || game.trim().equalsIgnoreCase("default")) {
             return null;
+        }
         String lower = game.toLowerCase();
-        if(lower.startsWith("playing"))
+        if(lower.startsWith("playing")) {
             return Activity.playing(makeNonEmpty(game.substring(7).trim()));
-        if(lower.startsWith("listening to"))
+        }
+        if(lower.startsWith("listening to")) {
             return Activity.listening(makeNonEmpty(game.substring(12).trim()));
-        if(lower.startsWith("listening"))
+        }
+        if(lower.startsWith("listening")) {
             return Activity.listening(makeNonEmpty(game.substring(9).trim()));
-        if(lower.startsWith("watching"))
+        }
+        if(lower.startsWith("watching")) {
             return Activity.watching(makeNonEmpty(game.substring(8).trim()));
-        if(lower.startsWith("streaming"))
-        {
+        }
+        if(lower.startsWith("streaming")) {
             String[] parts = game.substring(9).trim().split("\\s+", 2);
-            if(parts.length == 2)
-            {
-                return Activity.streaming(makeNonEmpty(parts[1]), "https://twitch.tv/"+parts[0]);
+            if(parts.length == 2) {
+                return Activity.streaming(makeNonEmpty(parts[1]), "https://twitch.tv/" + parts[0]);
             }
         }
         return Activity.playing(game);
     }
-   
-    public static String makeNonEmpty(String str)
-    {
+
+    public static String makeNonEmpty(String str) {
         return str == null || str.isEmpty() ? "\u200B" : str;
     }
-    
-    public static OnlineStatus parseStatus(String status)
-    {
-        if(status==null || status.trim().isEmpty())
+
+    public static OnlineStatus parseStatus(String status) {
+        if(status == null || status.trim().isEmpty()) {
             return OnlineStatus.ONLINE;
+        }
         OnlineStatus st = OnlineStatus.fromKey(status);
         return st == null ? OnlineStatus.ONLINE : st;
     }
-    
-    public static void checkJavaVersion(Prompt prompt)
-    {
-        if(!System.getProperty("java.vm.name").contains("64"))
-            prompt.alert(Prompt.Level.WARNING, "Java Version", 
-                    "It appears that you may not be using a supported Java version. Please use 64-bit java.");
-    }
-    
-    public static void checkVersion(Prompt prompt)
-    {
-        // Get current version number
-        String version = getCurrentVersion();
-        
-        // Check for new version
-        String latestVersion = getLatestVersion();
-        
-        if(latestVersion!=null && !latestVersion.equals(version))
-        {
-            prompt.alert(Prompt.Level.WARNING, "JMusicBot Version", String.format(NEW_VERSION_AVAILABLE, version, latestVersion));
+
+    public static void checkJavaVersion(Prompt prompt) {
+        if(!System.getProperty("java.vm.name").contains("64")) {
+            prompt.alert(Prompt.Level.WARNING, "Java Version",
+                "It appears that you may not be using a supported Java version. Please use 64-bit java."
+            );
         }
     }
-    
-    public static String getCurrentVersion()
-    {
-        if(JMusicBot.class.getPackage()!=null && JMusicBot.class.getPackage().getImplementationVersion()!=null)
-            return JMusicBot.class.getPackage().getImplementationVersion();
-        else
-            return "UNKNOWN";
+
+    public static void checkVersion(Prompt prompt) {
+        // Get current version number
+        String version = getCurrentVersion();
+
+        // Check for new version
+        String latestVersion = getLatestVersion();
+
+        if(latestVersion != null && !latestVersion.equals(version)) {
+            prompt.alert(
+                Prompt.Level.WARNING, "JMusicBot Version",
+                String.format(NEW_VERSION_AVAILABLE, version, latestVersion)
+            );
+        }
     }
-    
-    public static String getLatestVersion()
-    {
-        try
-        {
+
+    public static String getCurrentVersion() {
+        if(JMusicBot.class.getPackage() != null && JMusicBot.class.getPackage().getImplementationVersion() != null) {
+            return JMusicBot.class.getPackage().getImplementationVersion();
+        }
+        else {
+            return "UNKNOWN";
+        }
+    }
+
+    public static String getLatestVersion() {
+        try {
             Response response = new OkHttpClient.Builder().build()
-                    .newCall(new Request.Builder().get().url("https://api.github.com/repos/jagrosh/MusicBot/releases/latest").build())
-                    .execute();
+                .newCall(
+                    new Request.Builder()
+                        .get()
+                        .url("https://api.github.com/repos/jagrosh/MusicBot/releases/latest")
+                        .build()
+                )
+                .execute();
             ResponseBody body = response.body();
-            if(body != null)
-            {
-                try(Reader reader = body.charStream())
-                {
+            if(body != null) {
+                try(Reader reader = body.charStream()) {
                     JSONObject obj = new JSONObject(new JSONTokener(reader));
                     return obj.getString("tag_name");
                 }
-                finally
-                {
+                finally {
                     response.close();
                 }
             }
-            else
+            else {
                 return null;
+            }
         }
-        catch(IOException | JSONException | NullPointerException ex)
-        {
+        catch(IOException | JSONException | NullPointerException ex) {
             return null;
         }
     }
 
     /**
      * Checks if the bot JMusicBot is being run on is supported & returns the reason if it is not.
+     *
      * @return A string with the reason, or null if it is supported.
      */
-    public static String getUnsupportedBotReason(JDA jda) 
-    {
-        if (jda.getSelfUser().getFlags().contains(User.UserFlag.VERIFIED_BOT))
+    public static String getUnsupportedBotReason(JDA jda) {
+        if(jda.getSelfUser().getFlags().contains(User.UserFlag.VERIFIED_BOT)) {
             return "The bot is verified. Using JMusicBot in a verified bot is not supported.";
+        }
 
         ApplicationInfo info = jda.retrieveApplicationInfo().complete();
-        if (info.isBotPublic())
-            return "\"Public Bot\" is enabled. Using JMusicBot as a public bot is not supported. Please disable it in the "
-                    + "Developer Dashboard at https://discord.com/developers/applications/" + jda.getSelfUser().getId() + "/bot.";
+        if(info.isBotPublic()) {
+            return
+                "\"Public Bot\" is enabled. Using JMusicBot as a public bot is not supported. Please disable it in the "
+                    + "Developer Dashboard at https://discord.com/developers/applications/" + jda.getSelfUser().getId()
+                    + "/bot.";
+        }
 
         return null;
     }

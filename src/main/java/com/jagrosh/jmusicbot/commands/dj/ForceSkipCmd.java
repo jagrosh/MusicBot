@@ -23,13 +23,10 @@ import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class ForceskipCmd extends DJCommand 
-{
-    public ForceskipCmd(Bot bot)
-    {
+public class ForceSkipCmd extends DJCommand {
+    public ForceSkipCmd(Bot bot) {
         super(bot);
         this.name = "forceskip";
         this.help = "skips the current song";
@@ -38,12 +35,13 @@ public class ForceskipCmd extends DJCommand
     }
 
     @Override
-    public void doCommand(CommandEvent event) 
-    {
-        AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
+    public void doCommand(CommandEvent event) {
+        AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
         RequestMetadata rm = handler.getRequestMetadata();
-        event.reply(event.getClient().getSuccess()+" Skipped **"+handler.getPlayer().getPlayingTrack().getInfo().title
-                +"** "+(rm.getOwner() == 0L ? "(autoplay)" : "(requested by **" + FormatUtil.formatUsername(rm.user) + "**)"));
+        event.reply(
+            event.getClient().getSuccess() + " Skipped **" + handler.getPlayer().getPlayingTrack().getInfo().title
+                + "** " + (rm.getOwner() == 0L ? "(autoplay)" :
+                "(requested by **" + FormatUtil.formatUsername(rm.user) + "**)"));
         handler.getPlayer().stopTrack();
     }
 }

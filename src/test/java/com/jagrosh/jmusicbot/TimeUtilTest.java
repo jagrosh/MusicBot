@@ -15,105 +15,92 @@
  */
 package com.jagrosh.jmusicbot;
 
-
 import com.jagrosh.jmusicbot.utils.TimeUtil;
+import org.junit.Assert;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Whew., Inc.
  */
-public class TimeUtilTest
-{
+public class TimeUtilTest {
     @Test
-    public void singleDigit()
-    {
+    public void singleDigit() {
         TimeUtil.SeekTime seek = TimeUtil.parseTime("5");
-        assertNotNull(seek);
-        assertEquals(5000, seek.milliseconds);
+        Assert.assertNotNull(seek);
+        Assert.assertEquals(5000, seek.milliseconds);
     }
 
     @Test
-    public void multipleDigits()
-    {
+    public void multipleDigits() {
         TimeUtil.SeekTime seek = TimeUtil.parseTime("99:9:999");
-        assertNotNull(seek);
-        assertEquals(357939000, seek.milliseconds);
+        Assert.assertNotNull(seek);
+        Assert.assertEquals(357939000, seek.milliseconds);
 
         seek = TimeUtil.parseTime("99h9m999s");
-        assertNotNull(seek);
-        assertEquals(357939000, seek.milliseconds);
+        Assert.assertNotNull(seek);
+        Assert.assertEquals(357939000, seek.milliseconds);
     }
 
     @Test
-    public void decimalDigits()
-    {
+    public void decimalDigits() {
         TimeUtil.SeekTime seek = TimeUtil.parseTime("99.5:9.0:999.777");
-        assertNotNull(seek);
-        assertEquals(359739777, seek.milliseconds);
+        Assert.assertNotNull(seek);
+        Assert.assertEquals(359739777, seek.milliseconds);
     }
 
     @Test
-    public void seeking()
-    {
+    public void seeking() {
         TimeUtil.SeekTime seek = TimeUtil.parseTime("5");
-        assertNotNull(seek);
-        assertFalse(seek.relative);
-        assertEquals(5000, seek.milliseconds);
+        Assert.assertNotNull(seek);
+        Assert.assertFalse(seek.relative);
+        Assert.assertEquals(5000, seek.milliseconds);
     }
 
     @Test
-    public void relativeSeekingForward()
-    {
+    public void relativeSeekingForward() {
         TimeUtil.SeekTime seek = TimeUtil.parseTime("+5");
-        assertNotNull(seek);
-        assertTrue(seek.relative);
-        assertEquals(5000, seek.milliseconds);
+        Assert.assertNotNull(seek);
+        Assert.assertTrue(seek.relative);
+        Assert.assertEquals(5000, seek.milliseconds);
     }
 
     @Test
-    public void relativeSeekingBackward()
-    {
+    public void relativeSeekingBackward() {
         TimeUtil.SeekTime seek = TimeUtil.parseTime("-5");
-        assertNotNull(seek);
-        assertTrue(seek.relative);
-        assertEquals(-5000, seek.milliseconds);
+        Assert.assertNotNull(seek);
+        Assert.assertTrue(seek.relative);
+        Assert.assertEquals(-5000, seek.milliseconds);
     }
 
     @Test
-    public void parseTimeArgumentLength()
-    {
+    public void parseTimeArgumentLength() {
         TimeUtil.SeekTime seek = TimeUtil.parseTime("");
-        assertNull(seek);
+        Assert.assertNull(seek);
     }
 
     @Test
-    public void timestampTotalUnits()
-    {
+    public void timestampTotalUnits() {
         TimeUtil.SeekTime seek = TimeUtil.parseTime("1:1:1:1");
-        assertNull(seek);
+        Assert.assertNull(seek);
 
         seek = TimeUtil.parseTime("1h2m3m4s5s");
-        assertNotNull(seek);
-        assertEquals(3909000, seek.milliseconds);
+        Assert.assertNotNull(seek);
+        Assert.assertEquals(3909000, seek.milliseconds);
     }
 
     @Test
-    public void relativeSymbol()
-    {
+    public void relativeSymbol() {
         TimeUtil.SeekTime seek = TimeUtil.parseTime("+-1:-+1:+-1");
-        assertNull(seek);
+        Assert.assertNull(seek);
     }
 
     @Test
-    public void timestampNumberFormat()
-    {
+    public void timestampNumberFormat() {
         TimeUtil.SeekTime seek = TimeUtil.parseTime("1:1:a");
-        assertNull(seek);
+        Assert.assertNull(seek);
 
         seek = TimeUtil.parseTime("1a2s");
-        assertNotNull(seek);
-        assertEquals(3000, seek.milliseconds);
+        Assert.assertNotNull(seek);
+        Assert.assertEquals(3000, seek.milliseconds);
     }
 }

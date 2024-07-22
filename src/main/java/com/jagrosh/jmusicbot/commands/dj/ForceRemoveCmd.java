@@ -30,13 +30,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
  * @author Michaili K.
  */
-public class ForceRemoveCmd extends DJCommand
-{
-    public ForceRemoveCmd(Bot bot)
-    {
+public class ForceRemoveCmd extends DJCommand {
+    public ForceRemoveCmd(Bot bot) {
         super(bot);
         this.name = "forceremove";
         this.help = "removes all entries by a user from the queue";
@@ -44,60 +41,52 @@ public class ForceRemoveCmd extends DJCommand
         this.aliases = bot.getConfig().getAliases(this.name);
         this.beListening = false;
         this.bePlaying = true;
-        this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
+        this.botPermissions = new Permission[] {Permission.MESSAGE_EMBED_LINKS};
     }
 
     @Override
-    public void doCommand(CommandEvent event)
-    {
-        if (event.getArgs().isEmpty())
-        {
+    public void doCommand(CommandEvent event) {
+        if(event.getArgs().isEmpty()) {
             event.replyError("You need to mention a user!");
             return;
         }
 
         AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
-        if (handler.getQueue().isEmpty())
-        {
+        if(handler.getQueue().isEmpty()) {
             event.replyError("There is nothing in the queue!");
             return;
         }
 
-
         User target;
         List<Member> found = FinderUtil.findMembers(event.getArgs(), event.getGuild());
 
-        if(found.isEmpty())
-        {
+        if(found.isEmpty()) {
             event.replyError("Unable to find the user!");
             return;
         }
-        else if(found.size()>1)
-        {
+        else if(found.size() > 1) {
             OrderedMenu.Builder builder = new OrderedMenu.Builder();
-            for(int i=0; i<found.size() && i<4; i++)
-            {
+            for(int i = 0; i < found.size() && i < 4; i++) {
                 Member member = found.get(i);
-                builder.addChoice("**"+member.getUser().getName()+"**#"+member.getUser().getDiscriminator());
+                builder.addChoice("**" + member.getUser().getName() + "**#" + member.getUser().getDiscriminator());
             }
 
             builder
-            .setSelection((msg, i) -> removeAllEntries(found.get(i-1).getUser(), event))
-            .setText("Found multiple users:")
-            .setColor(event.getSelfMember().getColor())
-            .useNumbers()
-            .setUsers(event.getAuthor())
-            .useCancelButton(true)
-            .setCancel((msg) -> {})
-            .setEventWaiter(bot.getWaiter())
-            .setTimeout(1, TimeUnit.MINUTES)
+                .setSelection((msg, i) -> removeAllEntries(found.get(i - 1).getUser(), event))
+                .setText("Found multiple users:")
+                .setColor(event.getSelfMember().getColor())
+                .useNumbers()
+                .setUsers(event.getAuthor())
+                .useCancelButton(true)
+                .setCancel(msg -> {})
+                .setEventWaiter(bot.getWaiter())
+                .setTimeout(1, TimeUnit.MINUTES)
 
-            .build().display(event.getChannel());
+                .build().display(event.getChannel());
 
             return;
         }
-        else
-        {
+        else {
             target = found.get(0).getUser();
         }
 
@@ -105,16 +94,15 @@ public class ForceRemoveCmd extends DJCommand
 
     }
 
-    private void removeAllEntries(User target, CommandEvent event)
-    {
-        int count = ((AudioHandler) event.getGuild().getAudioManager().getSendingHandler()).getQueue().removeAll(target.getIdLong());
-        if (count == 0)
-        {
-            event.replyWarning("**"+target.getName()+"** doesn't have any songs in the queue!");
+    private void removeAllEntries(User target, CommandEvent event) {
+        int count = ((AudioHandler) event.getGuild().getAudioManager().getSendingHandler()).getQueue()
+            .removeAll(target.getIdLong());
+        if(count == 0) {
+            event.replyWarning("**" + target.getName() + "** doesn't have any songs in the queue!");
         }
-        else
-        {
-            event.replySuccess("Successfully removed `"+count+"` entries from "+FormatUtil.formatUsername(target)+".");
+        else {
+            event.replySuccess(
+                "Successfully removed `" + count + "` entries from " + FormatUtil.formatUsername(target) + ".");
         }
     }
 }

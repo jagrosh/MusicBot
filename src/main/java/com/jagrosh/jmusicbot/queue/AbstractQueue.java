@@ -20,27 +20,25 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
- * @author Wolfgang Schwendtbauer
  * @param <T>
+ * @author Wolfgang Schwendtbauer
  */
-public abstract class AbstractQueue<T extends Queueable>
-{
-    protected AbstractQueue(AbstractQueue<T> queue)
-    {
+public abstract class AbstractQueue<T extends Queueable> {
+    protected final List<T> list;
+    
+    protected AbstractQueue(AbstractQueue<T> queue) {
         this.list = queue != null ? queue.getList() : new LinkedList<>();
     }
-
-    protected final List<T> list;
-
+    
     public abstract int add(T item);
 
-    public void addAt(int index, T item)
-    {
-        if(index >= list.size())
+    public void addAt(int index, T item) {
+        if(index >= list.size()) {
             list.add(item);
-        else
+        }
+        else {
             list.add(index, item);
+        }
     }
 
     public int size() {
@@ -51,13 +49,11 @@ public abstract class AbstractQueue<T extends Queueable>
         return list.remove(0);
     }
 
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return list.isEmpty();
     }
 
-    public List<T> getList()
-    {
+    public List<T> getList() {
         return list;
     }
 
@@ -65,18 +61,14 @@ public abstract class AbstractQueue<T extends Queueable>
         return list.get(index);
     }
 
-    public T remove(int index)
-    {
+    public T remove(int index) {
         return list.remove(index);
     }
 
-    public int removeAll(long identifier)
-    {
+    public int removeAll(long identifier) {
         int count = 0;
-        for(int i=list.size()-1; i>=0; i--)
-        {
-            if(list.get(i).getIdentifier()==identifier)
-            {
+        for(int i = list.size() - 1; i >= 0; i--) {
+            if(list.get(i).getIdentifier() == identifier) {
                 list.remove(i);
                 count++;
             }
@@ -84,45 +76,41 @@ public abstract class AbstractQueue<T extends Queueable>
         return count;
     }
 
-    public void clear()
-    {
+    public void clear() {
         list.clear();
     }
 
-    public int shuffle(long identifier)
-    {
-        List<Integer> iset = new ArrayList<>();
-        for(int i=0; i<list.size(); i++)
-        {
-            if(list.get(i).getIdentifier()==identifier)
-                iset.add(i);
+    public int shuffle(long identifier) {
+        List<Integer> identifierSet = new ArrayList<>();
+        for(int i = 0; i < list.size(); i++) {
+            if(list.get(i).getIdentifier() == identifier) {
+                identifierSet.add(i);
+            }
         }
-        for(int j=0; j<iset.size(); j++)
-        {
-            int first = iset.get(j);
-            int second = iset.get((int)(Math.random()*iset.size()));
-            T temp = list.get(first);
-            list.set(first, list.get(second));
-            list.set(second, temp);
+        for(int j = 0; j < identifierSet.size(); j++) {
+            int elementIndex = identifierSet.get(j);
+            int newIndex = (int) (Math.random() * identifierSet.size());
+            T temp = list.get(elementIndex);
+            list.set(elementIndex, list.get(newIndex));
+            list.set(newIndex, temp);
         }
-        return iset.size();
+        return identifierSet.size();
     }
 
-    public void skip(int number)
-    {
-        if (number > 0) {
+    public void skip(int number) {
+        if(number > 0) {
             list.subList(0, number).clear();
         }
     }
 
     /**
      * Move an item to a different position in the list
+     *
      * @param from The position of the item
-     * @param to The new position of the item
+     * @param to   The new position of the item
      * @return the moved item
      */
-    public T moveItem(int from, int to)
-    {
+    public T moveItem(int from, int to) {
         T item = list.remove(from);
         list.add(to, item);
         return item;

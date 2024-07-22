@@ -15,138 +15,129 @@
  */
 package com.jagrosh.jmusicbot.entities;
 
-import java.util.Scanner;
-import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.JOptionPane;
+import java.awt.HeadlessException;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+
 /**
- *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public class Prompt
-{
+public class Prompt {
     private final String title;
-    private final String noguiMessage;
-    
-    private boolean nogui;
-    private boolean noprompt;
+    private final String noGuiMessage;
+
+    private boolean noGui;
+    private final boolean noPrompt;
     private Scanner scanner;
-    
-    public Prompt(String title)
-    {
+
+    public Prompt(String title) {
         this(title, null);
     }
-    
-    public Prompt(String title, String noguiMessage)
-    {
-        this(title, noguiMessage, "true".equalsIgnoreCase(System.getProperty("nogui")), "true".equalsIgnoreCase(System.getProperty("noprompt")));
+
+    public Prompt(String title, String noGuiMessage) {
+        this(
+            title,
+            noGuiMessage,
+            Boolean.parseBoolean(System.getProperty("nogui")),
+            Boolean.parseBoolean(System.getProperty("noprompt"))
+        );
     }
-    
-    public Prompt(String title, String noguiMessage, boolean nogui, boolean noprompt)
-    {
+
+    public Prompt(String title, String noGuiMessage, boolean noGui, boolean noPrompt) {
         this.title = title;
-        this.noguiMessage = noguiMessage == null ? "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag." : noguiMessage;
-        this.nogui = nogui;
-        this.noprompt = noprompt;
+        this.noGuiMessage = noGuiMessage == null ?
+            "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag." :
+            noGuiMessage;
+        this.noGui = noGui;
+        this.noPrompt = noPrompt;
     }
-    
-    public boolean isNoGUI()
-    {
-        return nogui;
+
+    public boolean isNoGui() {
+        return noGui;
     }
-    
-    public void alert(Level level, String context, String message)
-    {
-        if(nogui)
-        {
+
+    public void alert(Level level, String context, String message) {
+        if(noGui) {
             Logger log = LoggerFactory.getLogger(context);
-            switch(level)
-            {
-                case INFO: 
-                    log.info(message); 
+            switch(level) {
+                case WARNING:
+                    log.warn(message);
                     break;
-                case WARNING: 
-                    log.warn(message); 
+                case ERROR:
+                    log.error(message);
                     break;
-                case ERROR: 
-                    log.error(message); 
-                    break;
-                default: 
-                    log.info(message); 
+                default:
+                    log.info(message);
                     break;
             }
         }
-        else
-        {
-            try 
-            {
-                int option = 0;
-                switch(level)
-                {
-                    case INFO: 
-                        option = JOptionPane.INFORMATION_MESSAGE; 
-                        break;
-                    case WARNING: 
-                        option = JOptionPane.WARNING_MESSAGE; 
-                        break;
-                    case ERROR: 
-                        option = JOptionPane.ERROR_MESSAGE; 
-                        break;
-                    default:
-                        option = JOptionPane.PLAIN_MESSAGE;
-                        break;
-                }
-                JOptionPane.showMessageDialog(null, "<html><body><p style='width: 400px;'>"+message, title, option);
+        else {
+            int option;
+            switch(level) {
+                case INFO:
+                    option = JOptionPane.INFORMATION_MESSAGE;
+                    break;
+                case WARNING:
+                    option = JOptionPane.WARNING_MESSAGE;
+                    break;
+                case ERROR:
+                    option = JOptionPane.ERROR_MESSAGE;
+                    break;
+                default:
+                    option = JOptionPane.PLAIN_MESSAGE;
+                    break;
             }
-            catch(Exception e) 
-            {
-                nogui = true;
-                alert(Level.WARNING, context, noguiMessage);
+            try {
+                JOptionPane.showMessageDialog(null, "<html><body><p style='width: 400px;'>" + message, title, option);
+            }
+            catch(HeadlessException ignored) {
+                noGui = true;
+                alert(Level.WARNING, context, noGuiMessage);
                 alert(level, context, message);
             }
         }
     }
-    
-    public String prompt(String content)
-    {
-        if(noprompt)
+
+    public String prompt(String content) {
+        if(noPrompt) {
             return null;
-        if(nogui)
-        {
-            if(scanner==null)
+        }
+        if(noGui) {
+            if(scanner == null) {
                 scanner = new Scanner(System.in);
-            try
-            {
-                System.out.println(content);
-                if(scanner.hasNextLine())
+            }
+            System.out.println(content);
+            try {
+                if(scanner.hasNextLine()) {
                     return scanner.nextLine();
+                }
                 return null;
             }
-            catch(Exception e)
-            {
+            catch(IllegalStateException | NoSuchElementException e) {
                 alert(Level.ERROR, title, "Unable to read input from command line.");
                 e.printStackTrace();
                 return null;
             }
         }
-        else
-        {
-            try 
-            {
+        else {
+            try {
                 return JOptionPane.showInputDialog(null, content, title, JOptionPane.QUESTION_MESSAGE);
             }
-            catch(Exception e) 
-            {
-                nogui = true;
-                alert(Level.WARNING, title, noguiMessage);
+            catch(HeadlessException e) {
+                noGui = true;
+                alert(Level.WARNING, title, noGuiMessage);
                 return prompt(content);
             }
         }
     }
-    
-    public static enum Level
-    {
-        INFO, WARNING, ERROR;
+
+    public enum Level {
+        INFO,
+        WARNING,
+        ERROR
     }
 }

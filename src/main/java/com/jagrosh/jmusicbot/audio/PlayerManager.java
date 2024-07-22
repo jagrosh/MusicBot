@@ -33,21 +33,18 @@ import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import net.dv8tion.jda.api.entities.Guild;
 
 /**
- *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public class PlayerManager extends DefaultAudioPlayerManager
-{
+public class PlayerManager extends DefaultAudioPlayerManager {
     private final Bot bot;
-    
-    public PlayerManager(Bot bot)
-    {
+
+    public PlayerManager(Bot bot) {
         this.bot = bot;
     }
-    
-    public void init()
-    {
-        TransformativeAudioSourceManager.createTransforms(bot.getConfig().getTransforms()).forEach(t -> registerSourceManager(t));
+
+    public void init() {
+        TransformativeAudioSourceManager.createTransforms(bot.getConfig().getTransforms())
+            .forEach(this::registerSourceManager);
 
         YoutubeAudioSourceManager yt = new YoutubeAudioSourceManager(true);
         yt.setPlaylistPageCount(bot.getConfig().getMaxYTPlaylistPages());
@@ -66,30 +63,27 @@ public class PlayerManager extends DefaultAudioPlayerManager
 
         DuncteBotSources.registerAll(this, "en-US");
     }
-    
-    public Bot getBot()
-    {
+
+    public Bot getBot() {
         return bot;
     }
-    
-    public boolean hasHandler(Guild guild)
-    {
-        return guild.getAudioManager().getSendingHandler()!=null;
+
+    public boolean hasHandler(Guild guild) {
+        return guild.getAudioManager().getSendingHandler() != null;
     }
-    
-    public AudioHandler setUpHandler(Guild guild)
-    {
+
+    public AudioHandler setUpHandler(Guild guild) {
         AudioHandler handler;
-        if(guild.getAudioManager().getSendingHandler()==null)
-        {
+        if(guild.getAudioManager().getSendingHandler() == null) {
             AudioPlayer player = createPlayer();
             player.setVolume(bot.getSettingsManager().getSettings(guild).getVolume());
             handler = new AudioHandler(this, guild, player);
             player.addListener(handler);
             guild.getAudioManager().setSendingHandler(handler);
         }
-        else
+        else {
             handler = (AudioHandler) guild.getAudioManager().getSendingHandler();
+        }
         return handler;
     }
 }

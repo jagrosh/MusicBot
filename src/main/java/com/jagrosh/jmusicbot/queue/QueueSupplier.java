@@ -16,11 +16,9 @@
 package com.jagrosh.jmusicbot.queue;
 
 /**
- *
  * @author Wolfgang Schwendtbauer
  */
 @FunctionalInterface
-public interface QueueSupplier
-{
+public interface QueueSupplier {
     <T extends Queueable> AbstractQueue<T> apply(AbstractQueue<T> queue);
 }
