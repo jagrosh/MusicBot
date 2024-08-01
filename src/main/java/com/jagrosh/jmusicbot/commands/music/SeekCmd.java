@@ -23,6 +23,8 @@ import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.utils.TimeUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -30,6 +32,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
  */
 public class SeekCmd extends MusicCommand
 {
+    private final static Logger LOG = LoggerFactory.getLogger("Seeking");
+    
     public SeekCmd(Bot bot)
     {
         super(bot);
@@ -83,8 +87,8 @@ public class SeekCmd extends MusicCommand
         }
         catch (Exception e)
         {
-            event.replyError("An error occurred while trying to seek!");
-            e.printStackTrace(); // TODO: remove this
+            event.replyError("An error occurred while trying to seek: " + e.getMessage());
+            LOG.warn("Failed to seek track " + playingTrack.getIdentifier(), e);
             return;
         }
         event.replySuccess("Successfully seeked to `" + TimeUtil.formatTime(playingTrack.getPosition()) + "/" + TimeUtil.formatTime(playingTrack.getDuration()) + "`!");
