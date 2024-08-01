@@ -24,6 +24,7 @@ import java.util.HashMap;
 import net.dv8tion.jda.api.entities.Guild;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SettingsManager implements GuildSettingsManager<Settings>
 {
+    private final static Logger LOG = LoggerFactory.getLogger("Settings");
     private final static String SETTINGS_FILE = "serversettings.json";
     private final HashMap<Long,Settings> settings;
 
@@ -63,17 +65,17 @@ public class SettingsManager implements GuildSettingsManager<Settings>
         } catch (NoSuchFileException e) {
             // create an empty json file
             try {
-                LoggerFactory.getLogger("Settings").info("serversettings.json will be created in " + OtherUtil.getPath("serversettings.json").toAbsolutePath());
+                LOG.info("serversettings.json will be created in " + OtherUtil.getPath("serversettings.json").toAbsolutePath());
                 Files.write(OtherUtil.getPath("serversettings.json"), new JSONObject().toString(4).getBytes());
             } catch(IOException ex) {
-                LoggerFactory.getLogger("Settings").warn("Failed to create new settings file: "+ex);
+                LOG.warn("Failed to create new settings file: "+ex);
             }
             return;
         } catch(IOException | JSONException e) {
-            LoggerFactory.getLogger("Settings").warn("Failed to load server settings: "+e);
+            LOG.warn("Failed to load server settings: "+e);
         }
 
-        LoggerFactory.getLogger("Settings").info("serversettings.json loaded from " + OtherUtil.getPath("serversettings.json").toAbsolutePath());
+        LOG.info("serversettings.json loaded from " + OtherUtil.getPath("serversettings.json").toAbsolutePath());
     }
 
     /**
@@ -127,7 +129,7 @@ public class SettingsManager implements GuildSettingsManager<Settings>
         try {
             Files.write(OtherUtil.getPath(SETTINGS_FILE), obj.toString(4).getBytes());
         } catch(IOException ex){
-            LoggerFactory.getLogger("Settings").warn("Failed to write to file: "+ex);
+            LOG.warn("Failed to write to file: "+ex);
         }
     }
 }
