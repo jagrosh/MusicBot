@@ -78,6 +78,7 @@ public class PlayCmd extends MusicCommand
                     event.replyError("Only DJs can unpause the player!");
                 return;
             }
+            handler.playFromDefault();
             StringBuilder builder = new StringBuilder(event.getClient().getWarning()+" Play Commands:\n");
             builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <song title>` - plays the first result from Youtube");
             builder.append("\n`").append(event.getClient().getPrefix()).append(name).append(" <URL>` - plays the provided song, playlist, or stream");

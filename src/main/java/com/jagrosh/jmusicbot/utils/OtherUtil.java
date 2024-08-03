@@ -45,18 +45,25 @@ public class OtherUtil
                     + "New Version: %s\n\n"
                     + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
     private final static String WINDOWS_INVALID_PATH = "c:\\windows\\system32\\";
-    
+
     /**
      * gets a Path from a String
      * also fixes the windows tendency to try to start in system32
      * any time the bot tries to access this path, it will instead start in the location of the jar file
-     * 
+     *
      * @param path the string path
      * @return the Path object
      */
     public static Path getPath(String path)
     {
         Path result = Paths.get(path);
+
+        if(isDockerContainer())
+        {
+            // for future docker mounting, the saved folder has to be separated from the jar file
+            result = Paths.get("data", path);
+        }
+
         // special logic to prevent trying to access system32
         if(result.toAbsolutePath().toString().toLowerCase().startsWith(WINDOWS_INVALID_PATH))
         {
@@ -68,10 +75,10 @@ public class OtherUtil
         }
         return result;
     }
-    
+
     /**
      * Loads a resource from the jar as a string
-     * 
+     *
      * @param clazz class base object
      * @param name name of resource
      * @return string containing the contents of the resource
@@ -89,10 +96,10 @@ public class OtherUtil
             return null;
         }
     }
-    
+
     /**
      * Loads image data from a URL
-     * 
+     *
      * @param url url of image
      * @return inputstream of url
      */
@@ -100,7 +107,7 @@ public class OtherUtil
     {
         if(url==null)
             return null;
-        try 
+        try
         {
             URL u = new URL(url);
             URLConnection urlConnection = u.openConnection();
@@ -110,10 +117,10 @@ public class OtherUtil
         catch(IOException | IllegalArgumentException ignore) {}
         return null;
     }
-    
+
     /**
      * Parses an activity from a string
-     * 
+     *
      * @param game the game, including the action such as 'playing' or 'watching'
      * @return the parsed activity
      */
@@ -140,12 +147,12 @@ public class OtherUtil
         }
         return Activity.playing(game);
     }
-   
+
     public static String makeNonEmpty(String str)
     {
         return str == null || str.isEmpty() ? "\u200B" : str;
     }
-    
+
     public static OnlineStatus parseStatus(String status)
     {
         if(status==null || status.trim().isEmpty())
@@ -153,28 +160,28 @@ public class OtherUtil
         OnlineStatus st = OnlineStatus.fromKey(status);
         return st == null ? OnlineStatus.ONLINE : st;
     }
-    
+
     public static void checkJavaVersion(Prompt prompt)
     {
         if(!System.getProperty("java.vm.name").contains("64"))
-            prompt.alert(Prompt.Level.WARNING, "Java Version", 
+            prompt.alert(Prompt.Level.WARNING, "Java Version",
                     "It appears that you may not be using a supported Java version. Please use 64-bit java.");
     }
-    
+
     public static void checkVersion(Prompt prompt)
     {
         // Get current version number
         String version = getCurrentVersion();
-        
+
         // Check for new version
         String latestVersion = getLatestVersion();
-        
+
         if(latestVersion!=null && !latestVersion.equals(version))
         {
             prompt.alert(Prompt.Level.WARNING, "JMusicBot Version", String.format(NEW_VERSION_AVAILABLE, version, latestVersion));
         }
     }
-    
+
     public static String getCurrentVersion()
     {
         if(JMusicBot.class.getPackage()!=null && JMusicBot.class.getPackage().getImplementationVersion()!=null)
@@ -182,7 +189,7 @@ public class OtherUtil
         else
             return "UNKNOWN";
     }
-    
+
     public static String getLatestVersion()
     {
         try
@@ -216,7 +223,7 @@ public class OtherUtil
      * Checks if the bot JMusicBot is being run on is supported & returns the reason if it is not.
      * @return A string with the reason, or null if it is supported.
      */
-    public static String getUnsupportedBotReason(JDA jda) 
+    public static String getUnsupportedBotReason(JDA jda)
     {
         if (jda.getSelfUser().getFlags().contains(User.UserFlag.VERIFIED_BOT))
             return "The bot is verified. Using JMusicBot in a verified bot is not supported.";
@@ -229,5 +236,15 @@ public class OtherUtil
                     + jda.getSelfUser().getId() + "/installation .";
 
         return null;
+    }
+
+    /**
+     * Check if the program is running inside a docker container
+     * @return Boolean
+     */
+    public static Boolean isDockerContainer()
+    {
+        File dockerenv = new File("/.dockerenv");
+        return dockerenv.exists();
     }
 }

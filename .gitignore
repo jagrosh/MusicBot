@@ -2,6 +2,12 @@
 /target/
 /Playlists/
 /test/
+/bin/
+/.settings/
+
+nb*.xml
 *.json
 *.txt
-nb*.xml
+
+.project
+.classpath

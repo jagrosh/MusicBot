@@ -105,11 +105,20 @@ public class BotConfig
 
             // validate bot token
             if(token==null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
-            {
-                token = prompt.prompt("Please provide a bot token."
-                        + "\nInstructions for obtaining a token can be found here:"
-                        + "\nhttps://github.com/jagrosh/MusicBot/wiki/Getting-a-Bot-Token."
-                        + "\nBot Token: ");
+            {                
+                prompt.alert(Prompt.Level.INFO, CONTEXT,
+                    "Please provide a bot token."
+                    + "\nInstructions for obtaining a token can be found here:"
+                    + "\nhttps://github.com/jagrosh/MusicBot/wiki/Getting-a-Bot-Token."
+                );
+                if(OtherUtil.isDockerContainer())
+                {
+                    prompt.alert(Prompt.Level.WARNING, CONTEXT,
+                        "No token provided! Exiting.\n\nPlease set the token in an environment variable named as 'CONFIG_FORCE_token'"
+                    );
+                    return;
+                }
+                token = prompt.prompt("\nBot Token: ");
                 if(token==null)
                 {
                     prompt.alert(Prompt.Level.WARNING, CONTEXT, "No token provided! Exiting.\n\nConfig Location: " + path.toAbsolutePath().toString());
@@ -124,13 +133,22 @@ public class BotConfig
             // validate bot owner
             if(owner<=0)
             {
+                prompt.alert(Prompt.Level.INFO, CONTEXT,
+                    "Owner ID was missing, or the provided owner ID is not valid."
+                    + "\nPlease provide the User ID of the bot's owner."
+                    + "\nInstructions for obtaining your User ID can be found here:"
+                    + "\nhttps://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID"
+                );
+                if(OtherUtil.isDockerContainer())
+                {
+                    prompt.alert(Prompt.Level.ERROR, CONTEXT,
+                        "Invalid User ID! Exiting.\n\nPlease set the owner ID in an environment variable named as 'CONFIG_FORCE_owner'"
+                    );
+                    return;
+                }
                 try
                 {
-                    owner = Long.parseLong(prompt.prompt("Owner ID was missing, or the provided owner ID is not valid."
-                        + "\nPlease provide the User ID of the bot's owner."
-                        + "\nInstructions for obtaining your User ID can be found here:"
-                        + "\nhttps://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID"
-                        + "\nOwner User ID: "));
+                    owner = Long.parseLong(prompt.prompt("\nOwner User ID: "));
                 }
                 catch(NumberFormatException | NullPointerException ex)
                 {
@@ -147,7 +165,7 @@ public class BotConfig
                 }
             }
             
-            if(write)
+            if(write || !path.toFile().exists())
                 writeToFile();
             
             // if we get through the whole config, it's good to go

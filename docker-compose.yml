@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+
+  jmusicbot:
+
+    container_name: jmusicbot
+
+    image: jmusicbot:latest
+
+    restart: always
+
+    volumes:
+      - ./JMusicBot:/JMusicBot/data
+
+    environment:
+      # https://github.com/jagrosh/MusicBot/wiki/Getting-a-Bot-Token
+      CONFIG_FORCE_token: BOT_TOKEN_HERE
+
+      # https://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID
+      CONFIG_FORCE_owner: 0
