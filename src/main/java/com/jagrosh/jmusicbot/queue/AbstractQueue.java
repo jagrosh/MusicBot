@@ -30,7 +30,10 @@ public abstract class AbstractQueue<T extends Queueable>
     {
         this.list = queue != null ? queue.getList() : new LinkedList<>();
     }
-
+/*
+* Author:- Neeraja
+* dob:-01/01/01
+* */
     protected final List<T> list;
 
     public abstract int add(T item);
