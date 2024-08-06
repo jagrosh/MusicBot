@@ -1,22 +1,47 @@
 name: Build and Test
 on:
   push:
-    branches:
-    - master
+    paths-ignore:
+      - '.github/workflows/make-release.yml'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/*.md'
+      - '.github/FUNDING.yml'
+      - '.circleci/**'
+      - 'LICENSE'
+      - 'CNAME'
+      - 'README.md'
+    branches: [ master ]
   pull_request:
-    branches:
-    - master
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
           java-version: '11'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: maven
-      - name: Build and Test with Maven
+
+      - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
+
+      - name: Set environments
+        run: |
+          {
+            echo "commit=$(echo ${{ github.sha }} | cut -c-7)"
+            echo "repo=$(echo ${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/})"
+          } >> $GITHUB_ENV
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.repo }}@${{ env.commit }}
+          path: target/JMusicBot-Snapshot-All.jar
+          if-no-files-found: error
