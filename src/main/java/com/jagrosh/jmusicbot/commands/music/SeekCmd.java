@@ -18,10 +18,13 @@ package com.jagrosh.jmusicbot.commands.music;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
+import com.jagrosh.jmusicbot.audio.RequestMetadata;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.utils.TimeUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -29,6 +32,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
  */
 public class SeekCmd extends MusicCommand
 {
+    private final static Logger LOG = LoggerFactory.getLogger("Seeking");
+    
     public SeekCmd(Bot bot)
     {
         super(bot);
@@ -52,7 +57,7 @@ public class SeekCmd extends MusicCommand
         }
 
 
-        if (!DJCommand.checkDJPermission(event) && playingTrack.getUserData(Long.class) != event.getAuthor().getIdLong())
+        if (!DJCommand.checkDJPermission(event) && playingTrack.getUserData(RequestMetadata.class).getOwner() != event.getAuthor().getIdLong())
         {
             event.replyError("You cannot seek **" + playingTrack.getInfo().title + "** because you didn't add it!");
             return;
@@ -73,19 +78,18 @@ public class SeekCmd extends MusicCommand
         if (seekMilliseconds > trackDuration)
         {
             event.replyError("Cannot seek to `" + TimeUtil.formatTime(seekMilliseconds) + "` because the current track is `" + TimeUtil.formatTime(trackDuration) + "` long!");
+            return;
         }
-        else
+        
+        try
         {
-            try
-            {
-                playingTrack.setPosition(seekMilliseconds);
-            }
-            catch (Exception e)
-            {
-                event.replyError("An error occurred while trying to seek!");
-                e.printStackTrace();
-                return;
-            }
+            playingTrack.setPosition(seekMilliseconds);
+        }
+        catch (Exception e)
+        {
+            event.replyError("An error occurred while trying to seek: " + e.getMessage());
+            LOG.warn("Failed to seek track " + playingTrack.getIdentifier(), e);
+            return;
         }
         event.replySuccess("Successfully seeked to `" + TimeUtil.formatTime(playingTrack.getPosition()) + "/" + TimeUtil.formatTime(playingTrack.getDuration()) + "`!");
     }
