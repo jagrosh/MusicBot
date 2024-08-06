@@ -94,7 +94,7 @@ public class FormatUtil {
     
     public static String listOfRoles(List<Role> list, String query)
     {
-        String out = " Multiple text channels found matching \""+query+"\":";
+        String out = " Multiple roles found matching \""+query+"\":";
         for(int i=0; i<6 && i<list.size(); i++)
             out+="\n - "+list.get(i).getName()+" (ID:"+list.get(i).getId()+")";
         if(list.size()>6)
