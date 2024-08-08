@@ -182,6 +182,8 @@ public class PlaylistLoader
                     {
                         if(config.isTooLong(at))
                             errors.add(new PlaylistLoadError(index, items.get(index), "This track is longer than the allowed maximum"));
+                        else if(config.isTooShort(at))
+                            errors.add(new PlaylistLoadError(index, items.get(index), "This track is shorter than the allowed minimum"));
                         else
                         {
                             at.setUserData(0L);
@@ -213,7 +215,7 @@ public class PlaylistLoader
                                     loaded.set(first, loaded.get(second));
                                     loaded.set(second, tmp);
                                 }
-                            loaded.removeIf(track -> config.isTooLong(track));
+                            loaded.removeIf(track -> config.isTooLong(track) || config.isTooShort(track));
                             loaded.forEach(at -> at.setUserData(0L));
                             tracks.addAll(loaded);
                             loaded.forEach(at -> consumer.accept(at));

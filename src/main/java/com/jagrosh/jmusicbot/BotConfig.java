@@ -43,7 +43,7 @@ public class BotConfig
             successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji,
             evalEngine;
     private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
-    private long owner, maxSeconds, aloneTimeUntilStop;
+    private long owner, maxSeconds, minSeconds, aloneTimeUntilStop;
     private int maxYTPlaylistPages;
     private double skipratio;
     private OnlineStatus status;
@@ -92,6 +92,7 @@ public class BotConfig
             useEval = config.getBoolean("eval");
             evalEngine = config.getString("evalengine");
             maxSeconds = config.getLong("maxtime");
+            minSeconds = config.getLong("mintime");
             maxYTPlaylistPages = config.getInt("maxytplaylistpages");
             aloneTimeUntilStop = config.getLong("alonetimeuntilstop");
             playlistsFolder = config.getString("playlistsfolder");
@@ -342,6 +343,11 @@ public class BotConfig
     {
         return maxSeconds;
     }
+
+    public long getMinSeconds()
+    {
+        return minSeconds;
+    }
     
     public int getMaxYTPlaylistPages()
     {
@@ -351,6 +357,11 @@ public class BotConfig
     public String getMaxTime()
     {
         return TimeUtil.formatTime(maxSeconds * 1000);
+    }
+
+    public String getMinTime()
+    {
+        return TimeUtil.formatTime(minSeconds * 1000);
     }
 
     public long getAloneTimeUntilStop()
@@ -363,6 +374,13 @@ public class BotConfig
         if(maxSeconds<=0)
             return false;
         return Math.round(track.getDuration()/1000.0) > maxSeconds;
+    }
+
+    public boolean isTooShort(AudioTrack track)
+    {
+        if(minSeconds<=0)
+            return false;
+        return Math.round(track.getDuration()/1000.0) < minSeconds;
     }
 
     public String[] getAliases(String command)
