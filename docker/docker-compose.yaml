@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - './bot:/usr/bot'
