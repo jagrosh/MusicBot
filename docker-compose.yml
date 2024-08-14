@@ -1,0 +1,13 @@
+version: "3"
+services:
+  discord-bot:
+    container_name: Discord-Hr-Music-bot
+    restart: unless-stopped
+    # Modify Version as per input[0.3.9]
+    image: [DOCKER HUB USER]/jmusic:[version]
+    labels:
+      # This is for Watchtower to Ignore Updating this Image.
+      - "com.centurylinklabs.watchtower.enable=false"
+    environment:
+      # Add your Bot TOken below
+      - TOKEN=[BOT TOKEN]
