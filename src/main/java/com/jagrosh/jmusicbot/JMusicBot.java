@@ -72,6 +72,9 @@ public class JMusicBot
     {
         // create prompt to handle startup
         Prompt prompt = new Prompt("JMusicBot");
+
+        // logging version
+        LOG.info("Running JMusicBot version " + OtherUtil.getCurrentVersion());
         
         // startup checks
         OtherUtil.checkVersion(prompt);
