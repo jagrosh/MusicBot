@@ -96,7 +96,7 @@ public class PlaylistLoader
             {
                 boolean[] shuffle = {false};
                 List<String> list = new ArrayList<>();
-                Files.readAllLines(OtherUtil.getPath(config.getPlaylistsFolder()+File.separator+name+".txt")).forEach(str -> 
+                Files.readAllLines(OtherUtil.getPath(config.getPlaylistsFolder()+File.separator+name+".txt")).forEach(str ->
                 {
                     String s = str.trim();
                     if(s.isEmpty())
@@ -106,6 +106,9 @@ public class PlaylistLoader
                         s = s.replaceAll("\\s+", "");
                         if(s.equalsIgnoreCase("#shuffle") || s.equalsIgnoreCase("//shuffle"))
                             shuffle[0]=true;
+                    }
+                    else if(isDirectory(s)){
+                        list.addAll(getFilePaths(s));
                     }
                     else
                         list.add(s);
@@ -124,6 +127,25 @@ public class PlaylistLoader
         {
             return null;
         }
+    }
+
+    public static boolean isDirectory(String filePath) {
+        File file = new File(filePath);
+        return file.isDirectory();
+    }
+
+    public static List<String> getFilePaths(String filePath) {
+        List<String> filePaths = new ArrayList<>();
+        File directory = new File(filePath);
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    filePaths.add(file.getAbsolutePath());
+                }
+            }
+        }
+        return filePaths;
     }
     
     
