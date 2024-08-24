@@ -76,7 +76,14 @@ public class PlayerManager extends DefaultAudioPlayerManager
                 LOGGER.warn("Failed to read YouTube OAuth2 token file: {}",e.getMessage());
             }
             LOGGER.debug("Using YouTube OAuth2 refresh token {}", token);
-            yt.useOauth2(token, false);
+            try
+            {
+                yt.useOauth2(token, false);
+            }
+            catch (Exception e)
+            {
+                LOGGER.warn("Failed to authorize with YouTube. If this issue persists, delete the youtubetoken.txt file to reauthorize.", e);
+            }
         }
         registerSourceManager(yt);
 
