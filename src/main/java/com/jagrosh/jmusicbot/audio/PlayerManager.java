@@ -17,6 +17,7 @@ package com.jagrosh.jmusicbot.audio;
 
 import com.dunctebot.sourcemanagers.DuncteBotSources;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.utils.OtherUtil;
 import com.sedmelluq.discord.lavaplayer.container.MediaContainerRegistry;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -30,7 +31,14 @@ import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceM
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
+import dev.lavalink.youtube.http.YoutubeOauth2Handler;
 import net.dv8tion.jda.api.entities.Guild;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 
 /**
  *
@@ -38,6 +46,7 @@ import net.dv8tion.jda.api.entities.Guild;
  */
 public class PlayerManager extends DefaultAudioPlayerManager
 {
+    private final static Logger LOGGER = LoggerFactory.getLogger(PlayerManager.class);
     private final Bot bot;
     
     public PlayerManager(Bot bot)
@@ -51,6 +60,24 @@ public class PlayerManager extends DefaultAudioPlayerManager
 
         YoutubeAudioSourceManager yt = new YoutubeAudioSourceManager(true);
         yt.setPlaylistPageCount(bot.getConfig().getMaxYTPlaylistPages());
+        if (bot.getConfig().useYoutubeOauth2())
+        {
+            String token = null;
+            try
+            {
+                token = Files.readString(OtherUtil.getPath("youtubetoken.txt"));
+            }
+            catch (NoSuchFileException e) 
+            {
+                /* ignored */
+            }
+            catch (IOException e)
+            {
+                LOGGER.warn("Failed to read YouTube OAuth2 token file: {}",e.getMessage());
+            }
+            LOGGER.debug("Using YouTube OAuth2 refresh token {}", token);
+            yt.useOauth2(token, false);
+        }
         registerSourceManager(yt);
 
         registerSourceManager(SoundCloudAudioSourceManager.createDefault());
