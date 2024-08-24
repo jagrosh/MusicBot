@@ -12,7 +12,7 @@ import java.nio.file.Files;
 /**
  * A logback turbo filter, used retrieve the YouTube OAuth2 refresh token that gets logged once authorized with YouTube.
  *
- * @author Michaili K. <git@michaili.dev></git@michaili.dev>
+ * @author Michaili K. <git@michaili.dev>
  */
 public class YouTubeOauth2TurboFilter extends TurboFilter {
     public final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger(YouTubeOauth2TurboFilter.class);
