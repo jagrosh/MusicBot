@@ -57,6 +57,11 @@ public class OtherUtil
     public static Path getPath(String path)
     {
         Path result = Paths.get(path);
+        if(inDockerContainer())
+        {
+            // for docker mounting, the saved folder has to be separated from the jar file
+            result = Paths.get("data", path);
+        }
         // special logic to prevent trying to access system32
         if(result.toAbsolutePath().toString().toLowerCase().startsWith(WINDOWS_INVALID_PATH))
         {
@@ -229,5 +234,15 @@ public class OtherUtil
                     + jda.getSelfUser().getId() + "/installation .";
 
         return null;
+    }
+
+    /**
+     * Check if the program is running inside a docker container
+     * @return Boolean
+     */
+    public static Boolean inDockerContainer()
+    {
+        File dockerenv = new File("/.dockerenv");
+        return dockerenv.exists();
     }
 }

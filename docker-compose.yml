@@ -1,0 +1,12 @@
+services:
+    jagrosh-musicbot:
+        image: ghcr.io/lynbean/jagrosh-musicbot:docker
+        container_name: jmusicbot
+        restart: always
+        volumes:
+            - ./data:/app/data
+        environment:
+            # https://github.com/jagrosh/MusicBot/wiki/Getting-a-Bot-Token
+            CONFIG_FORCE_token: BOT_TOKEN_HERE
+            # https://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID
+            CONFIG_FORCE_owner: 0

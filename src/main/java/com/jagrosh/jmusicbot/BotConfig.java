@@ -106,6 +106,13 @@ public class BotConfig
             // validate bot token
             if(token==null || token.isEmpty() || token.equalsIgnoreCase("BOT_TOKEN_HERE"))
             {
+                if(OtherUtil.inDockerContainer())
+                {
+                    prompt.alert(Prompt.Level.WARNING, CONTEXT,
+                        "No token provided! Exiting.\n\nPlease set the token in an environment variable named `CONFIG_FORCE_token`"
+                    );
+                    return;
+                }
                 token = prompt.prompt("Please provide a bot token."
                         + "\nInstructions for obtaining a token can be found here:"
                         + "\nhttps://github.com/jagrosh/MusicBot/wiki/Getting-a-Bot-Token."
@@ -126,6 +133,13 @@ public class BotConfig
             {
                 try
                 {
+                    if(OtherUtil.inDockerContainer())
+                    {
+                        prompt.alert(Prompt.Level.ERROR, CONTEXT,
+                            "Invalid User ID! Exiting.\n\nPlease set the Owner ID in an environment variable named `CONFIG_FORCE_owner`"
+                        );
+                        return;
+                    }
                     owner = Long.parseLong(prompt.prompt("Owner ID was missing, or the provided owner ID is not valid."
                         + "\nPlease provide the User ID of the bot's owner."
                         + "\nInstructions for obtaining your User ID can be found here:"
@@ -146,8 +160,8 @@ public class BotConfig
                     write = true;
                 }
             }
-            
-            if(write)
+
+            if(write || !path.toFile().exists())
                 writeToFile();
             
             // if we get through the whole config, it's good to go
