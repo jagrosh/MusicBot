@@ -13,7 +13,5 @@
     <root level="INFO">
         <appender-ref ref="Simple"/>
     </root>
-
-    <turboFilter class="com.jagrosh.jmusicbot.utils.YouTubeOauth2TurboFilter" />
     
 </configuration>
