@@ -93,7 +93,7 @@ public class Listener extends ListenerAdapter
             if (data != null)
             {
                 PrivateChannel channel = bot.getJDA().openPrivateChannelById(bot.getConfig().getOwnerId()).complete();
-                channel.sendMessage("# DO NOT AUTHORISE THIS WITH YOUR MAIN ACCOUNT!!!\n" + "## Create or use an alternative/burner account!\n" + "To give JMusicBot access to your account, go to " + data.getAuthorisationUrl() + " and enter the code **" + data.getCode() + "**").queue();
+                channel.sendMessage("# DO NOT AUTHORISE THIS WITH YOUR MAIN GOOGLE ACCOUNT!!!\n" + "## Create or use an alternative/burner Google account!\n" + "To give JMusicBot access to your Google account, go to " + data.getAuthorisationUrl() + " and enter the code **" + data.getCode() + "**").queue();
             }
         }
     }
