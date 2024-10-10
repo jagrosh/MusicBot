@@ -93,6 +93,7 @@ public class PlayerManager extends DefaultAudioPlayerManager
             catch (IOException e)
             {
                 LOGGER.warn("Failed to read YouTube OAuth2 token file: {}", e.getMessage());
+                return yt;
             }
             LOGGER.debug("Read YouTube OAuth2 refresh token from youtubetoken.txt");
             try
