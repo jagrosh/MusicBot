@@ -58,6 +58,7 @@ nav:
     - advanced-config.md
     - hosting.md
     - running-as-a-service.md
+    - youtube-oauth2.md
   - Reference:
     - commands.md
     - playlists.md
