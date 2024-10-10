@@ -17,8 +17,10 @@ package com.jagrosh.jmusicbot;
 
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import java.util.concurrent.TimeUnit;
+import com.jagrosh.jmusicbot.utils.YoutubeOauth2TokenHandler;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -38,14 +40,14 @@ import org.slf4j.LoggerFactory;
 public class Listener extends ListenerAdapter
 {
     private final Bot bot;
-    
+
     public Listener(Bot bot)
     {
         this.bot = bot;
     }
-    
+
     @Override
-    public void onReady(ReadyEvent event) 
+    public void onReady(ReadyEvent event)
     {
         if(event.getJDA().getGuildCache().isEmpty())
         {
@@ -54,7 +56,7 @@ public class Listener extends ListenerAdapter
             log.warn(event.getJDA().getInviteUrl(JMusicBot.RECOMMENDED_PERMS));
         }
         credit(event.getJDA());
-        event.getJDA().getGuilds().forEach((guild) -> 
+        event.getJDA().getGuilds().forEach((guild) ->
         {
             try
             {
@@ -69,7 +71,7 @@ public class Listener extends ListenerAdapter
         });
         if(bot.getConfig().useUpdateAlerts())
         {
-            bot.getThreadpool().scheduleWithFixedDelay(() -> 
+            bot.getThreadpool().scheduleWithFixedDelay(() ->
             {
                 try
                 {
@@ -85,10 +87,19 @@ public class Listener extends ListenerAdapter
                 catch(Exception ignored) {} // ignored
             }, 0, 24, TimeUnit.HOURS);
         }
+        if (bot.getConfig().useYoutubeOauth2())
+        {
+            YoutubeOauth2TokenHandler.Data data = bot.getYouTubeOauth2Handler().getData();
+            if (data != null)
+            {
+                PrivateChannel channel = bot.getJDA().openPrivateChannelById(bot.getConfig().getOwnerId()).complete();
+                channel.sendMessage("# DO NOT AUTHORISE THIS WITH YOUR MAIN GOOGLE ACCOUNT!!!\n" + "## Create or use an alternative/burner Google account!\n" + "To give JMusicBot access to your Google account, go to " + data.getAuthorisationUrl() + " and enter the code **" + data.getCode() + "**").queue();
+            }
+        }
     }
-    
+
     @Override
-    public void onGuildMessageDelete(GuildMessageDeleteEvent event) 
+    public void onGuildMessageDelete(GuildMessageDeleteEvent event)
     {
         bot.getNowplayingHandler().onMessageDelete(event.getGuild(), event.getMessageIdLong());
     }
@@ -100,17 +111,17 @@ public class Listener extends ListenerAdapter
     }
 
     @Override
-    public void onShutdown(ShutdownEvent event) 
+    public void onShutdown(ShutdownEvent event)
     {
         bot.shutdown();
     }
 
     @Override
-    public void onGuildJoin(GuildJoinEvent event) 
+    public void onGuildJoin(GuildJoinEvent event)
     {
         credit(event.getJDA());
     }
-    
+
     // make sure people aren't adding clones to dbots
     private void credit(JDA jda)
     {
