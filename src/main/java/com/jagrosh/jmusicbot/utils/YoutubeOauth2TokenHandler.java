@@ -44,7 +44,11 @@ public class YoutubeOauth2TokenHandler extends TurboFilter {
         }
         if (format.equals("OAUTH INTEGRATION: Token retrieved successfully. Store your refresh token as this can be reused. ({})"))
         {
-            LOGGER.info("Authorization successful & retrieved token! Storing the token in {}", OtherUtil.getPath("youtubetoken.txt").toAbsolutePath());
+            LOGGER.info(
+                "Authorization successful & retrieved token! Storing the token in {}",
+                OtherUtil.getPath("youtubetoken.txt").toAbsolutePath()
+            );
+
             try
             {
                 Files.write(OtherUtil.getPath("youtubetoken.txt"), params[0].toString().getBytes());
@@ -52,8 +56,8 @@ public class YoutubeOauth2TokenHandler extends TurboFilter {
             catch (Exception e)
             {
                 LOGGER.error(
-                        "Failed to write the YouTube OAuth2 refresh token to storage! You will need to authorize again on the next reboot",
-                        e
+                    "Failed to write the YouTube OAuth2 refresh token to storage! You will need to authorize again on the next reboot",
+                    e
                 );
             }
             return FilterReply.DENY;
