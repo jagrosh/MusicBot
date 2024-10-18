@@ -71,17 +71,22 @@ public class Listener extends ListenerAdapter
         });
         if(bot.getConfig().useUpdateAlerts())
         {
-            bot.getThreadpool().scheduleWithFixedDelay(() -> 
+            bot.getThreadpool().scheduleWithFixedDelay(() ->
             {
                 try
                 {
                     User owner = bot.getJDA().retrieveUserById(bot.getConfig().getOwnerId()).complete();
                     String currentVersion = OtherUtil.getCurrentVersion();
                     String latestVersion = OtherUtil.getLatestVersion();
-                    if(latestVersion!=null && !currentVersion.equalsIgnoreCase(latestVersion))
+                    if(latestVersion != null && !currentVersion.equalsIgnoreCase(latestVersion))
                     {
-                        String msg = String.format(OtherUtil.NEW_VERSION_AVAILABLE, currentVersion, latestVersion);
-                        owner.openPrivateChannel().queue(pc -> pc.sendMessage(msg).queue());
+                        // Check if the current version is a snapshot build
+                        if (!currentVersion.toLowerCase().contains("snapshot"))
+                        {
+                            String msg = String.format(OtherUtil.NEW_VERSION_AVAILABLE, currentVersion, latestVersion);
+                            owner.openPrivateChannel().queue(pc -> pc.sendMessage(msg).queue());
+                        }
+                        // If it's a snapshot build, we don't send the message because who thought sending a dm message on dev builds?? oh wait..
                     }
                 }
                 catch(Exception ignored) {} // ignored
