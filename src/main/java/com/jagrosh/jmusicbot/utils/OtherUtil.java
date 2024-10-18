@@ -160,16 +160,22 @@ public class OtherUtil
             prompt.alert(Prompt.Level.WARNING, "Java Version", 
                     "It appears that you may not be using a supported Java version. Please use 64-bit java.");
     }
-    
+
     public static void checkVersion(Prompt prompt)
     {
         // Get current version number
         String version = getCurrentVersion();
-        
+
+        // Check if it's a snapshot version
+        if (version.toLowerCase().contains("snapshot")) {
+            // If it's a snapshot/Dev Build, This should ignore / stop the bot from sending messages to owner...
+            return;
+        }
+
         // Check for new version
         String latestVersion = getLatestVersion();
-        
-        if(latestVersion!=null && !latestVersion.equals(version))
+
+        if(latestVersion != null && !latestVersion.equals(version))
         {
             prompt.alert(Prompt.Level.WARNING, "JMusicBot Version", String.format(NEW_VERSION_AVAILABLE, version, latestVersion));
         }
