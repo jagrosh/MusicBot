@@ -1,3 +1,10 @@
+## Unofficial JMusicBot update (Forked from: https://github.com/d-pacheco/MusicBot)
+Compiled using Github Actions
+
+### To enable Oauth
+- In your bot folder, edit "config.txt" and add `youtubeoauth2=true` to enable Youtube oauth.
+- USE A BURNER GOOGLE ACCOUNT AS YOU MAY GET BANNED IN THE WORSE CASE.
+
 <img align="right" src="https://i.imgur.com/zrE80HY.png" height="200" width="200">
 
 # JMusicBot

@@ -13,5 +13,5 @@
     <root level="INFO">
         <appender-ref ref="Simple"/>
     </root>
-
+    
 </configuration>

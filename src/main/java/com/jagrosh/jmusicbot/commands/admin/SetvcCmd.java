@@ -22,7 +22,7 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 
 /**
  *
@@ -54,7 +54,9 @@ public class SetvcCmd extends AdminCommand
         }
         else
         {
-            List<VoiceChannel> list = FinderUtil.findVoiceChannels(event.getArgs(), event.getGuild());
+            List<VoiceChannel> list = event.getGuild().getVoiceChannels().stream()
+                    .filter(c -> c.getName().toLowerCase().contains(event.getArgs().toLowerCase()))
+                    .toList();
             if(list.isEmpty())
                 event.reply(event.getClient().getWarning()+" No Voice Channels found matching \""+event.getArgs()+"\"");
             else if (list.size()>1)

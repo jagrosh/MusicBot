@@ -22,7 +22,7 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 /**
  *
@@ -54,7 +54,9 @@ public class SettcCmd extends AdminCommand
         }
         else
         {
-            List<TextChannel> list = FinderUtil.findTextChannels(event.getArgs(), event.getGuild());
+            List<TextChannel> list = event.getGuild().getTextChannels().stream()
+                    .filter(c -> c.getName().toLowerCase().contains(event.getArgs().toLowerCase()))
+                    .toList();
             if(list.isEmpty())
                 event.reply(event.getClient().getWarning()+" No Text Channels found matching \""+event.getArgs()+"\"");
             else if (list.size()>1)
