@@ -1,0 +1,17 @@
+<!-- author: Kaidan Gustave -->
+<configuration>
+
+    <appender name="Simple" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- Pattern -->
+            <pattern>
+                %nopex[%d{HH:mm:ss}] [%level] [%logger{0}]: %msg%n%ex
+            </pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="Simple"/>
+    </root>
+
+</configuration>

@@ -15,17 +15,26 @@
  */
 package com.jagrosh.jmusicbot;
 
+
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.Guild;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import java.util.concurrent.TimeUnit;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.api.events.ReadyEvent;
-import net.dv8tion.jda.api.events.ShutdownEvent;
+import com.jagrosh.jmusicbot.utils.YoutubeOauth2TokenHandler;
+//Old: import net.dv8tion.jda.api.entities.PrivateChannel;
+//Old: import net.dv8tion.jda.api.entities.VoiceChannel;
+/**New*/import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
+/**New*/import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+/**New*/import net.dv8tion.jda.api.entities.channel.concrete.TextChannel/**Added for Credit Method:*/;
+//Old: import net.dv8tion.jda.api.events.ReadyEvent;
+//Old: import net.dv8tion.jda.api.events.ShutdownEvent;
+/**New*/import net.dv8tion.jda.api.events.session.ReadyEvent;
+/**New*/import net.dv8tion.jda.api.events.session.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
+//OLd: import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
+/**New*/import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -85,12 +94,31 @@ public class Listener extends ListenerAdapter
                 catch(Exception ignored) {} // ignored
             }, 0, 24, TimeUnit.HOURS);
         }
+         if (bot.getConfig().useYoutubeOauth2())
+        {
+            YoutubeOauth2TokenHandler.Data data = bot.getYouTubeOauth2Handler().getData();
+            if (data != null)
+            {
+                PrivateChannel channel = bot.getJDA().openPrivateChannelById(bot.getConfig().getOwnerId()).complete();
+                channel
+                   .sendMessage(
+                       "# DO NOT AUTHORISE THIS WITH YOUR MAIN GOOGLE ACCOUNT!!!\n"
+                       + "## Create or use an alternative/burner Google account!\n"
+                       + "To give JMusicBot access to your Google account, go to "
+                       + data.getAuthorisationUrl()
+                       + " and enter the code **" + data.getCode() + "**")
+                   .queue();
+            }
+        }
     }
     
     @Override
-    public void onGuildMessageDelete(GuildMessageDeleteEvent event) 
+    public void onMessageDelete(MessageDeleteEvent event)
     {
-        bot.getNowplayingHandler().onMessageDelete(event.getGuild(), event.getMessageIdLong());
+        if (event.isFromGuild())
+        {
+            bot.getNowplayingHandler().onMessageDelete(event.getGuild(), event.getMessageIdLong());
+        }
     }
 
     @Override

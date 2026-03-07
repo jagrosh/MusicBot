@@ -23,19 +23,21 @@ import com.jagrosh.jmusicbot.utils.OtherUtil;
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.ChannelType;
+//import net.dv8tion.jda.api.entities.ChannelType; **NO LONGER USED PER V5 JDA
+import net.dv8tion.jda.api.utils.FileUpload;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 
 /**
  *
- * @author John Grosh (john.a.grosh@gmail.com)
+ * Debug Command for JMusicBot
  */
-public class DebugCmd extends OwnerCommand 
+public class DebugCmd extends OwnerCommand
 {
-    private final static String[] PROPERTIES = {"java.version", "java.vm.name", "java.vm.specification.version", 
+    private final static String[] PROPERTIES = {"java.version", "java.vm.name", "java.vm.specification.version",
         "java.runtime.name", "java.runtime.version", "java.specification.version",  "os.arch", "os.name"};
-    
+
     private final Bot bot;
-    
+
     public DebugCmd(Bot bot)
     {
         this.bot = bot;
@@ -50,8 +52,9 @@ public class DebugCmd extends OwnerCommand
     {
         StringBuilder sb = new StringBuilder();
         sb.append("```\nSystem Properties:");
-        for(String key: PROPERTIES)
+        for (String key : PROPERTIES) {
             sb.append("\n  ").append(key).append(" = ").append(System.getProperty(key));
+        }
         sb.append("\n\nJMusicBot Information:")
                 .append("\n  Version = ").append(OtherUtil.getCurrentVersion())
                 .append("\n  Owner = ").append(bot.getConfig().getOwnerId())
@@ -77,11 +80,14 @@ public class DebugCmd extends OwnerCommand
                 .append("\n  Guilds = ").append(event.getJDA().getGuildCache().size())
                 .append("\n  Users = ").append(event.getJDA().getUserCache().size());
         sb.append("\n```");
-        
-        if(event.isFromType(ChannelType.PRIVATE) 
-                || event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ATTACH_FILES))
-            event.getChannel().sendFile(sb.toString().getBytes(), "debug_information.txt").queue();
-        else
+
+        // Check if the event is from a private channel
+        if (event.getChannel() instanceof PrivateChannel
+                || event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ATTACH_FILES)) {
+            event.getChannel().sendFiles(FileUpload.fromData(sb.toString().getBytes(), "debug_information.txt")).queue();
+        } else {
             event.reply("Debug Information: " + sb.toString());
+        }
     }
 }
+

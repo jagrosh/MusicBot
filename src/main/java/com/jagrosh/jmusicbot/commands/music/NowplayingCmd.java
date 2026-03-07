@@ -20,7 +20,8 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 /**
  *
@@ -38,18 +39,29 @@ public class NowplayingCmd extends MusicCommand
     }
 
     @Override
-    public void doCommand(CommandEvent event) 
+    public void doCommand(CommandEvent event)
     {
-        AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        Message m = handler.getNowPlaying(event.getJDA());
-        if(m==null)
+        AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+        MessageCreateData m = handler.getNowPlaying(event.getJDA());
+        if (m == null)
         {
-            event.reply(handler.getNoMusicPlaying(event.getJDA()));
+            event.getChannel().sendMessage(handler.getNoMusicPlaying(event.getJDA())).queue();
             bot.getNowplayingHandler().clearLastNPMessage(event.getGuild());
         }
         else
         {
-            event.reply(m, msg -> bot.getNowplayingHandler().setLastNPMessage(msg));
+            event.getChannel().sendMessage(m).queue(msg -> {
+                if (event.getChannel() instanceof TextChannel) {
+                    TextChannel textChannel = (TextChannel) event.getChannel();
+                    long guildId = event.getGuild().getIdLong();
+                    long messageId = msg.getIdLong();
+                    bot.getNowplayingHandler().setLastNPMessage(textChannel, guildId, messageId);
+                } else {
+                    event.replyError("The current channel is not a TextChannel. Cannot set last now-playing message.");
+                }
+            });
+
         }
     }
 }
+

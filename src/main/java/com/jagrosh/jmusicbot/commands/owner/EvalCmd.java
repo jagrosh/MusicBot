@@ -20,7 +20,7 @@ import javax.script.ScriptEngineManager;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
-import net.dv8tion.jda.api.entities.ChannelType;
+//import net.dv8tion.jda.api.entities.ChannelType; - **NO LONGER USED**
 
 /**
  *
@@ -45,8 +45,7 @@ public class EvalCmd extends OwnerCommand
     protected void execute(CommandEvent event) 
     {
         ScriptEngine se = new ScriptEngineManager().getEngineByName(engine);
-        if(se == null)
-        {
+        if(se == null) {
             event.replyError("The eval engine provided in the config (`"+engine+"`) doesn't exist. This could be due to an invalid "
                     + "engine name, or the engine not existing in your version of java (`"+System.getProperty("java.version")+"`).");
             return;
@@ -54,7 +53,8 @@ public class EvalCmd extends OwnerCommand
         se.put("bot", bot);
         se.put("event", event);
         se.put("jda", event.getJDA());
-        if (event.getChannelType() != ChannelType.PRIVATE) {
+        if (event.getChannelType().isGuild())
+        {
             se.put("guild", event.getGuild());
             se.put("channel", event.getChannel());
         }

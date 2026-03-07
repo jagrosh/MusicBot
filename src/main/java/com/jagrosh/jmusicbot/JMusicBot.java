@@ -39,6 +39,12 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
+import net.dv8tion.jda.api.Permission;
+/**new imports for JDAVE*/
+import dev.minn.jdave.JDaveSessionFactory;
+import net.dv8tion.jda.api.audio.AudioModuleConfig;
+import net.dv8tion.jda.api.audio.factory.NativeAudioSendFactory;
+
 
 /**
  *
@@ -47,7 +53,7 @@ import ch.qos.logback.classic.Level;
 public class JMusicBot 
 {
     public final static Logger LOG = LoggerFactory.getLogger(JMusicBot.class);
-    public final static Permission[] RECOMMENDED_PERMS = {Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
+    public final static Permission[] RECOMMENDED_PERMS = {Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
                                 Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
                                 Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
     public final static GatewayIntent[] INTENTS = {GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_VOICE_STATES};
@@ -114,59 +120,71 @@ public class JMusicBot
         }
         
         // attempt to log in and start
-        try
-        {
-            JDA jda = JDABuilder.create(config.getToken(), Arrays.asList(INTENTS))
-                    .enableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE)
-                    .disableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.EMOTE, CacheFlag.ONLINE_STATUS)
-                    .setActivity(config.isGameNone() ? null : Activity.playing("loading..."))
-                    .setStatus(config.getStatus()==OnlineStatus.INVISIBLE || config.getStatus()==OnlineStatus.OFFLINE 
-                            ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
-                    .addEventListeners(client, waiter, new Listener(bot))
-                    .setBulkDeleteSplittingEnabled(true)
-                    .build();
-            bot.setJDA(jda);
+       try
+       {
+	   /**OLD CODE:
+		   JDA jda = JDABuilder.create(config.getToken(), Arrays.asList(INTENTS))
+					.enableIntents(GatewayIntent.MESSAGE_CONTENT)
+					.enableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE)
+					.disableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.EMOJI, CacheFlag.ONLINE_STATUS)
+					.setActivity(config.isGameNone() ? null : Activity.playing("loading..."))
+					.setStatus(config.getStatus()==OnlineStatus.INVISIBLE || config.getStatus()==OnlineStatus.OFFLINE
+							? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
+					.addEventListeners(client, waiter, new Listener(bot))
+					.setBulkDeleteSplittingEnabled(true)
+					.build();
+			bot.setJDA(jda);
+		*/
+           JDABuilder builder = JDABuilder.create(config.getToken(), Arrays.asList(INTENTS))
+					.enableIntents(GatewayIntent.MESSAGE_CONTENT)
+					.enableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE)
+					.disableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.EMOJI, CacheFlag.ONLINE_STATUS)
+					.setActivity(config.isGameNone() ? null : Activity.playing("loading..."))
+					.setStatus(config.getStatus()==OnlineStatus.INVISIBLE || config.getStatus()==OnlineStatus.OFFLINE
+							? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
+					.addEventListeners(client, waiter, new Listener(bot))
+					.setBulkDeleteSplittingEnabled(true);
 
-            // check if something about the current startup is not supported
-            String unsupportedReason = OtherUtil.getUnsupportedBotReason(jda);
-            if (unsupportedReason != null)
-            {
-                prompt.alert(Prompt.Level.ERROR, "JMusicBot", "JMusicBot cannot be run on this Discord bot: " + unsupportedReason);
-                try{ Thread.sleep(5000);}catch(InterruptedException ignored){} // this is awful but until we have a better way...
-                jda.shutdown();
-                System.exit(1);
-            }
-            
-            // other check that will just be a warning now but may be required in the future
-            // check if the user has changed the prefix and provide info about the 
-            // message content intent
-            if(!"@mention".equals(config.getPrefix()))
-            {
-                LOG.info("JMusicBot", "You currently have a custom prefix set. "
-                        + "If your prefix is not working, make sure that the 'MESSAGE CONTENT INTENT' is Enabled "
-                        + "on https://discord.com/developers/applications/" + jda.getSelfUser().getId() + "/bot");
-            }
-        }
-        catch (LoginException ex)
-        {
-            prompt.alert(Prompt.Level.ERROR, "JMusicBot", ex + "\nPlease make sure you are "
-                    + "editing the correct config.txt file, and that you have used the "
-                    + "correct token (not the 'secret'!)\nConfig Location: " + config.getConfigLocation());
-            System.exit(1);
-        }
-        catch(IllegalArgumentException ex)
-        {
-            prompt.alert(Prompt.Level.ERROR, "JMusicBot", "Some aspect of the configuration is "
-                    + "invalid: " + ex + "\nConfig Location: " + config.getConfigLocation());
-            System.exit(1);
-        }
-        catch(ErrorResponseException ex)
-        {
-            prompt.alert(Prompt.Level.ERROR, "JMusicBot", ex + "\nInvalid reponse returned when "
-                    + "attempting to connect, please make sure you're connected to the internet");
-            System.exit(1);
-        }
-    }
+			// ⭐ Add JDAVE audio module configuration here
+			builder.setAudioModuleConfig(
+					new AudioModuleConfig()
+							.withDaveSessionFactory(new JDaveSessionFactory())
+							.withAudioSendFactory(new NativeAudioSendFactory())
+			);
+
+			// Now build the JDA instance
+			JDA jda = builder.build();
+			bot.setJDA(jda);
+
+           // Additional checks
+           String unsupportedReason = OtherUtil.getUnsupportedBotReason(jda);
+           if (unsupportedReason != null)
+           {
+               prompt.alert(Prompt.Level.ERROR, "JMusicBot", "JMusicBot cannot be run on this Discord bot: " + unsupportedReason);
+               try { Thread.sleep(5000); } catch (InterruptedException ignored) {}
+               jda.shutdown();
+               System.exit(1);
+           }
+
+           if (!"@mention".equals(config.getPrefix()))
+           {
+               LOG.info("JMusicBot", "You currently have a custom prefix set. "
+                       + "If your prefix is not working, make sure that the 'MESSAGE CONTENT INTENT' is Enabled "
+                       + "on https://discord.com/developers/applications/" + jda.getSelfUser().getId() + "/bot");
+           }
+       }
+       catch (IllegalArgumentException ex)
+       {
+           prompt.alert(Prompt.Level.ERROR, "JMusicBot", "Some aspect of the configuration is invalid: " + ex + "\nConfig Location: " + config.getConfigLocation());
+           System.exit(1);
+       }
+       catch (ErrorResponseException ex)
+       {
+           prompt.alert(Prompt.Level.ERROR, "JMusicBot", ex + "\nInvalid response returned when attempting to connect. Please make sure you're connected to the internet.");
+           System.exit(1);
+       }
+   }
+
     
     private static CommandClient createCommandClient(BotConfig config, SettingsManager settings, Bot bot)
     {

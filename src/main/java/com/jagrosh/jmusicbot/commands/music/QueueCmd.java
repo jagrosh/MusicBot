@@ -28,19 +28,20 @@ import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.jagrosh.jmusicbot.utils.TimeUtil;
-import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 /**
  *
- * @author John Grosh <john.a.grosh@gmail.com>
+ * Handles the queue command that shows the current queue.
  */
-public class QueueCmd extends MusicCommand 
+public class QueueCmd extends MusicCommand
 {
     private final Paginator.Builder builder;
-    
+
     public QueueCmd(Bot bot)
     {
         super(bot);
@@ -49,10 +50,12 @@ public class QueueCmd extends MusicCommand
         this.arguments = "[pagenum]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.bePlaying = true;
-        this.botPermissions = new Permission[]{Permission.MESSAGE_ADD_REACTION,Permission.MESSAGE_EMBED_LINKS};
+        this.botPermissions = new Permission[]{Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS};
         builder = new Paginator.Builder()
                 .setColumns(1)
-                .setFinalAction(m -> {try{m.clearReactions().queue();}catch(PermissionException ignore){}})
+                .setFinalAction(m -> {
+                    try { m.clearReactions().queue(); } catch (PermissionException ignore) {}
+                })
                 .setItemsPerPage(10)
                 .waitOnSinglePage(false)
                 .useNumberedItems(true)
@@ -70,44 +73,61 @@ public class QueueCmd extends MusicCommand
         {
             pagenum = Integer.parseInt(event.getArgs());
         }
-        catch(NumberFormatException ignore){}
-        AudioHandler ah = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
+        catch (NumberFormatException ignore) {}
+
+        AudioHandler ah = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
         List<QueuedTrack> list = ah.getQueue().getList();
-        if(list.isEmpty())
+        if (list.isEmpty())
         {
-            Message nowp = ah.getNowPlaying(event.getJDA());
-            Message nonowp = ah.getNoMusicPlaying(event.getJDA());
-            Message built = new MessageBuilder()
-                    .setContent(event.getClient().getWarning() + " There is no music in the queue!")
-                    .setEmbeds((nowp==null ? nonowp : nowp).getEmbeds().get(0)).build();
-            event.reply(built, m -> 
+            MessageCreateData nowp = ah.getNowPlaying(event.getJDA());
+            MessageCreateData nonowp = ah.getNoMusicPlaying(event.getJDA());
+
+            MessageCreateBuilder builder = new MessageCreateBuilder();
+            builder.setContent(event.getClient().getWarning() + " There is no music in the queue!");
+
+            // Handle embed setting correctly
+            MessageCreateData embedSource = nowp != null ? nowp : nonowp;
+            if (embedSource != null && !embedSource.getEmbeds().isEmpty())
             {
-                if(nowp!=null)
-                    bot.getNowplayingHandler().setLastNPMessage(m);
+                builder.setEmbeds(embedSource.getEmbeds().get(0));
+            }
+
+            MessageCreateData build = builder.build();
+            event.getChannel().sendMessage(build).queue(m -> {
+                if (event.getChannel() instanceof TextChannel) {
+                    TextChannel textChannel = (TextChannel) event.getChannel();
+                    long guildId = event.getGuild().getIdLong();
+                    long messageId = m.getIdLong();
+                    bot.getNowplayingHandler().setLastNPMessage(textChannel, guildId, messageId);
+                } else {
+                    event.replyError("This command can only be used in a TextChannel.");
+                }
             });
+
             return;
         }
+
         String[] songs = new String[list.size()];
         long total = 0;
-        for(int i=0; i<list.size(); i++)
+        for (int i = 0; i < list.size(); i++)
         {
             total += list.get(i).getTrack().getDuration();
             songs[i] = list.get(i).toString();
         }
+
         Settings settings = event.getClient().getSettingsFor(event.getGuild());
         long fintotal = total;
-        builder.setText((i1,i2) -> getQueueTitle(ah, event.getClient().getSuccess(), songs.length, fintotal, settings.getRepeatMode(), settings.getQueueType()))
+        builder.setText((i1, i2) -> getQueueTitle(ah, event.getClient().getSuccess(), songs.length, fintotal, settings.getRepeatMode(), settings.getQueueType()))
                 .setItems(songs)
                 .setUsers(event.getAuthor())
-                .setColor(event.getSelfMember().getColor())
-                ;
+                .setColor(event.getSelfMember().getColor());
         builder.build().paginate(event.getChannel(), pagenum);
     }
-    
+
     private String getQueueTitle(AudioHandler ah, String success, int songslength, long total, RepeatMode repeatmode, QueueType queueType)
     {
         StringBuilder sb = new StringBuilder();
-        if(ah.getPlayer().getPlayingTrack()!=null)
+        if (ah.getPlayer().getPlayingTrack() != null)
         {
             sb.append(ah.getStatusEmoji()).append(" **")
                     .append(ah.getPlayer().getPlayingTrack().getInfo().title).append("**\n");
@@ -115,6 +135,6 @@ public class QueueCmd extends MusicCommand
         return FormatUtil.filter(sb.append(success).append(" Current Queue | ").append(songslength)
                 .append(" entries | `").append(TimeUtil.formatTime(total)).append("` ")
                 .append("| ").append(queueType.getEmoji()).append(" `").append(queueType.getUserFriendlyName()).append('`')
-                .append(repeatmode.getEmoji() != null ? " | "+repeatmode.getEmoji() : "").toString());
+                .append(repeatmode.getEmoji() != null ? " | " + repeatmode.getEmoji() : "").toString());
     }
 }
