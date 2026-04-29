@@ -27,6 +27,7 @@ import com.jagrosh.jmusicbot.playlist.PlaylistLoader;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
 import java.util.Objects;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -121,6 +122,9 @@ public class Bot
         Activity game = config.getGame()==null || config.getGame().getName().equalsIgnoreCase("none") ? null : config.getGame();
         if(!Objects.equals(jda.getPresence().getActivity(), game))
             jda.getPresence().setActivity(game);
+        OnlineStatus status = config.getStatus();
+        if(status != OnlineStatus.UNKNOWN && jda.getPresence().getStatus() != status)
+            jda.getPresence().setStatus(status);
     }
 
     public void shutdown()

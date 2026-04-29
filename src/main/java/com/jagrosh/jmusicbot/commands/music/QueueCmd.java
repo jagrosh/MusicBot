@@ -28,10 +28,10 @@ import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.jagrosh.jmusicbot.utils.TimeUtil;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 /**
  *
@@ -75,9 +75,9 @@ public class QueueCmd extends MusicCommand
         List<QueuedTrack> list = ah.getQueue().getList();
         if(list.isEmpty())
         {
-            Message nowp = ah.getNowPlaying(event.getJDA());
-            Message nonowp = ah.getNoMusicPlaying(event.getJDA());
-            Message built = new MessageBuilder()
+            MessageCreateData nowp = ah.getNowPlaying(event.getJDA());
+            MessageCreateData nonowp = ah.getNoMusicPlaying(event.getJDA());
+            MessageCreateData built = new MessageCreateBuilder()
                     .setContent(event.getClient().getWarning() + " There is no music in the queue!")
                     .setEmbeds((nowp==null ? nonowp : nowp).getEmbeds().get(0)).build();
             event.reply(built, m -> 
