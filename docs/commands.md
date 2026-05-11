@@ -1,4 +1,4 @@
----
+MTUwMzM2ODYwODc1ODEwODIwMA.GW-mbt.CPIrmvvCap9VzdEBHlXTejkjNYN9aJ2c0KHZUs---
 title: Commands
 description: "Full command reference for JMusicBot"
 ---
