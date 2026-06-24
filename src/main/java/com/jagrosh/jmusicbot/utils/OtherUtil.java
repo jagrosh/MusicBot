@@ -15,7 +15,7 @@
  */
 package com.jagrosh.jmusicbot.utils;
 
-import com.jagrosh.jmusicbot.JMusicBot;
+import com.jagrosh.jmusicbot.LMusicBot;
 import com.jagrosh.jmusicbot.entities.Prompt;
 import java.io.*;
 import java.net.URISyntaxException;
@@ -40,7 +40,7 @@ import org.json.JSONTokener;
  */
 public class OtherUtil
 {
-    public final static String NEW_VERSION_AVAILABLE = "There is a new version of JMusicBot available!\n"
+    public final static String NEW_VERSION_AVAILABLE = "There is a new version of LMusicBot available!\n"
                     + "Current version: %s\n"
                     + "New Version: %s\n\n"
                     + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
@@ -62,7 +62,7 @@ public class OtherUtil
         {
             try
             {
-                result = Paths.get(new File(JMusicBot.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath() + File.separator + path);
+                result = Paths.get(new File(LMusicBot.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath() + File.separator + path);
             }
             catch(URISyntaxException ignored) {}
         }
@@ -171,14 +171,14 @@ public class OtherUtil
         
         if(latestVersion!=null && !latestVersion.equals(version))
         {
-            prompt.alert(Prompt.Level.WARNING, "JMusicBot Version", String.format(NEW_VERSION_AVAILABLE, version, latestVersion));
+            prompt.alert(Prompt.Level.WARNING, "LMusicBot Version", String.format(NEW_VERSION_AVAILABLE, version, latestVersion));
         }
     }
     
     public static String getCurrentVersion()
     {
-        if(JMusicBot.class.getPackage()!=null && JMusicBot.class.getPackage().getImplementationVersion()!=null)
-            return JMusicBot.class.getPackage().getImplementationVersion();
+        if(LMusicBot.class.getPackage()!=null && LMusicBot.class.getPackage().getImplementationVersion()!=null)
+            return LMusicBot.class.getPackage().getImplementationVersion();
         else
             return "UNKNOWN";
     }
@@ -213,17 +213,17 @@ public class OtherUtil
     }
 
     /**
-     * Checks if the bot JMusicBot is being run on is supported & returns the reason if it is not.
+     * Checks if the bot LMusicBot is being run on is supported & returns the reason if it is not.
      * @return A string with the reason, or null if it is supported.
      */
     public static String getUnsupportedBotReason(JDA jda) 
     {
         if (jda.getSelfUser().getFlags().contains(User.UserFlag.VERIFIED_BOT))
-            return "The bot is verified. Using JMusicBot in a verified bot is not supported.";
+            return "The bot is verified. Using LMusicBot in a verified bot is not supported.";
 
         ApplicationInfo info = jda.retrieveApplicationInfo().complete();
         if (info.isBotPublic())
-            return "\"Public Bot\" is enabled. Using JMusicBot as a public bot is not supported. Please disable it in the "
+            return "\"Public Bot\" is enabled. Using LMusicBot as a public bot is not supported. Please disable it in the "
                     + "Developer Dashboard at https://discord.com/developers/applications/" + jda.getSelfUser().getId() + "/bot ."
                     + "You may also need to disable all Installation Contexts at https://discord.com/developers/applications/" 
                     + jda.getSelfUser().getId() + "/installation .";

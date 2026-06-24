@@ -51,7 +51,7 @@ public class Listener extends ListenerAdapter
         {
             Logger log = LoggerFactory.getLogger("MusicBot");
             log.warn("This bot is not on any guilds! Use the following link to add the bot to your guilds!");
-            log.warn(event.getJDA().getInviteUrl(JMusicBot.RECOMMENDED_PERMS));
+            log.warn(event.getJDA().getInviteUrl(LMusicBot.RECOMMENDED_PERMS));
         }
         credit(event.getJDA());
         event.getJDA().getGuilds().forEach((guild) -> 
@@ -120,7 +120,7 @@ public class Listener extends ListenerAdapter
         if(bot.getConfig().getDBots())
             return;
         jda.getTextChannelById(119222314964353025L)
-                .sendMessage("This account is running JMusicBot. Please do not list bot clones on this server, <@"+bot.getConfig().getOwnerId()+">.").complete();
+                .sendMessage("This account is running LMusicBot. Please do not list bot clones on this server, <@"+bot.getConfig().getOwnerId()+">.").complete();
         dbots.leave().queue();
     }
 }

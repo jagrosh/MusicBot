@@ -1,0 +1,11 @@
+.git/
+.gitignore
+.circleci/
+.github/
+scripts/
+*.md
+LICENSE
+CNAME
+README.md
+.gradle/
+build/

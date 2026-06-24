@@ -1,0 +1,30 @@
+services:
+  lmusicbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lmusicbot
+    restart: unless-stopped
+    init: true
+
+    volumes:
+      - ./config:/app/config
+
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx512m -XX:+ExitOnOutOfMemoryError -Djava.awt.headless=true"
+
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
+
+    security_opt:
+      - no-new-privileges:true
+
+    deploy:
+      resources:
+        limits:
+          memory: 768m
+        reservations:
+          memory: 256m

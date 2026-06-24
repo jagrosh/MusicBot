@@ -1,60 +1,181 @@
-<img align="right" src="https://i.imgur.com/zrE80HY.png" height="200" width="200">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://i.imgur.com/zrE80HY.png">
+  <img align="right" src="https://i.imgur.com/zrE80HY.png" height="200" width="200">
+</picture>
 
-# JMusicBot
+# LMusicBot
 
-[![Downloads](https://img.shields.io/github/downloads/jagrosh/MusicBot/total.svg)](https://github.com/jagrosh/MusicBot/releases/latest)
-[![Stars](https://img.shields.io/github/stars/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/stargazers)
-[![Release](https://img.shields.io/github/release/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/releases/latest)
-[![License](https://img.shields.io/github/license/jagrosh/MusicBot.svg)](https://github.com/jagrosh/MusicBot/blob/master/LICENSE)
-[![Discord](https://discordapp.com/api/guilds/147698382092238848/widget.png)](https://discord.gg/0p9LSGoRLu6Pet0k)<br>
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/jagrosh/MusicBot/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/jagrosh/MusicBot/tree/master)
-[![Build and Test](https://github.com/jagrosh/MusicBot/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/jagrosh/MusicBot/actions/workflows/build-and-test.yml)
-[![CodeFactor](https://www.codefactor.io/repository/github/jagrosh/musicbot/badge)](https://www.codefactor.io/repository/github/jagrosh/musicbot)
+[![License](https://shieldcn.dev/github/license/Lukas48452/MusicBot.svg?variant=secondary)](https://github.com/Lukas48452/MusicBot/blob/master/LICENSE)
+[![Java](https://shieldcn.dev/badge/Java-26-orange?variant=secondary)](https://adoptium.net/temurin/releases/)
+[![Gradle](https://shieldcn.dev/badge/Gradle-9.5-purple?variant=secondary)](https://gradle.org)
+[![Build](https://shieldcn.dev/github/actions/workflow/status/Lukas48452/MusicBot/build-and-test.yml?variant=secondary)](https://github.com/Lukas48452/MusicBot/actions/workflows/build-and-test.yml)
+[![Docker](https://shieldcn.dev/badge/Docker-Compose-blue?variant=secondary)](https://docs.docker.com/compose/)
+[![Release](https://shieldcn.dev/github/v/release/Lukas48452/MusicBot.svg?variant=secondary)](https://github.com/Lukas48452/MusicBot/releases)
 
-A cross-platform Discord music bot with a clean interface, and that is easy to set up and run yourself!
+A **modern, actively maintained fork** of JMusicBot — a cross-platform Discord music bot with slash commands, Spotify support, webhook notifications, and optional Redis/PostgreSQL storage. Now renamed to **LMusicBot (Lukas' Music Bot)**.
 
-[![Setup](http://i.imgur.com/VvXYp5j.png)](https://jmusicbot.com/setup)
+---
+
+## What's New in This Fork
+
+| Feature | Original JMusicBot | LMusicBot |
+|---------|:-:|:-:|
+| Slash commands | ✗ | ✓ (14 commands) |
+| Spotify tracks/playlists/albums | ✗ | ✓ |
+| Interaction modes (text/slash/both) | ✗ | ✓ |
+| Webhook notifications | ✗ | ✓ |
+| Redis storage backend | ✗ | ✓ |
+| PostgreSQL storage backend | ✗ | ✓ |
+| Docker image & GHCR publishing | ✗ | ✓ |
+| JDK 26 / Gradle 9.5 | ✗ | ✓ |
+| Config in YAML (HOCON) | ✗ | ✓ |
+| Makefile convenience commands | ✗ | ✓ |
+
+All original features (YouTube, SoundCloud, Bandcamp, Vimeo, Twitch, local playlists, DJ roles, embed menus) are fully preserved.
+
+---
 
 ## Features
-  * Easy to run (just make sure Java is installed, and run!)
-  * Fast loading of songs
-  * No external keys needed (besides a Discord Bot token)
-  * Smooth playback
-  * Server-specific setup for the "DJ" role that can moderate the music
-  * Clean and beautiful menus
-  * Supports many sites, including Youtube, Soundcloud, and more
-  * Supports many online radio/streams
-  * Supports local files
-  * Playlist support (both web/youtube, and local)
 
-## Supported sources and formats
-JMusicBot supports all sources and formats supported by [lavaplayer](https://github.com/sedmelluq/lavaplayer#supported-formats):
-### Sources
-  * YouTube
-  * SoundCloud
-  * Bandcamp
-  * Vimeo
-  * Twitch streams
-  * Local files
-  * HTTP URLs
-### Formats
-  * MP3
-  * FLAC
-  * WAV
-  * Matroska/WebM (AAC, Opus or Vorbis codecs)
-  * MP4/M4A (AAC codec)
-  * OGG streams (Opus, Vorbis and FLAC codecs)
-  * AAC streams
-  * Stream playlists (M3U and PLS)
+- **14 slash commands** — `/play`, `/skip`, `/stop`, `/pause`, `/volume`, `/queue`, `/nowplaying`, `/shuffle`, `/search`, `/lyrics`, `/remove`, `/repeat`, `/forceskip`, `/playnext`
+- **Interaction modes** — choose slash commands, text commands, or both
+- Spotify tracks, playlists, and albums via Spotify Web API
+- YouTube, SoundCloud, Bandcamp, Vimeo, Twitch, and more
+- Optional **Redis** and **PostgreSQL** storage backends
+- **Webhook notifications** — nowplaying and queue updates sent to a Discord webhook
+- Local file and playlist support
+- Clean embed-based menus
+- DJ role with per-server permissions
+- **Docker Compose** for one-command deployment
+- **Makefile** convenience commands
+- Updated dependencies — modern JDA, Lavaplayer, Logback, Typesafe Config
 
-## Example
-![Loading Example...](https://i.imgur.com/kVtTKvS.gif)
+## Quick Start
 
-## Setup
-Please see the [Setup Page](https://jmusicbot.com/setup) to run this bot yourself!
+### Docker Compose (Recommended)
 
-## Questions/Suggestions/Bug Reports
-**Please read the [Issues List](https://github.com/jagrosh/MusicBot/issues) before suggesting a feature**. If you have a question, need troubleshooting help, or want to brainstorm a new feature, please start a [Discussion](https://github.com/jagrosh/MusicBot/discussions). If you'd like to suggest a feature or report a reproducible bug, please open an [Issue](https://github.com/jagrosh/MusicBot/issues) on this repository. If you like this bot, be sure to add a star to the libraries that make this possible: [**JDA**](https://github.com/DV8FromTheWorld/JDA) and [**lavaplayer**](https://github.com/sedmelluq/lavaplayer)!
+```sh
+git clone https://github.com/Lukas48452/MusicBot.git
+cd MusicBot
+make run
+```
 
-## Editing
-This bot (and the source code here) might not be easy to edit for inexperienced programmers. The main purpose of having the source public is to show the capabilities of the libraries, to allow others to understand how the bot works, and to allow those knowledgeable about java, JDA, and Discord bot development to contribute. There are many requirements and dependencies required to edit and compile it, and there will not be support provided for people looking to make changes on their own. Instead, consider making a feature request (see the above section). If you choose to make edits, please do so in accordance with the Apache 2.0 License.
+The bot restarts automatically unless stopped with `make stop` or `docker compose down`.
+
+| Command | Description |
+|---------|-------------|
+| `make build` | rebuild the Docker image |
+| `make run` | start the bot in the background |
+| `make stop` | stop the bot |
+| `make logs` | tail bot logs |
+| `make restart` | rebuild and restart |
+| `make test` | run tests via Gradle |
+
+### Manual (Gradle)
+
+```sh
+./gradlew shadowJar
+java -jar build/libs/LMusicBot-All.jar --nogui
+```
+
+Requirements: JDK 26+, Gradle 9.5+ (or use the bundled wrapper).
+
+## Configuration
+
+Create `config.yaml` in the project root or `config/` directory:
+
+```yaml
+token = "your-bot-token"
+owner = 123456789012345678
+prefix = "!"
+interactionmode = "all"
+```
+
+### Core Settings
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `token` | `BOT_TOKEN_HERE` | Discord bot token (required) |
+| `owner` | `0` | Owner user ID (required) |
+| `prefix` | `@mention` | Text command prefix |
+| `interactionmode` | `all` | `all`, `text`, or `slash` |
+
+### Spotify
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `spotify.clientid` | `""` | Spotify API client ID |
+| `spotify.clientsecret` | `""` | Spotify API client secret |
+
+### Webhook Notifications
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `webhook.url` | `""` | Discord webhook URL for nowplaying/queue updates |
+| `webhook.updatetime` | `5` | Update interval in seconds |
+
+### Storage Backend
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `storage.type` | `file` | `file`, `redis`, or `postgres` |
+| `storage.redis.host` | `localhost` | Redis host |
+| `storage.redis.port` | `6379` | Redis port |
+| `storage.redis.password` | `""` | Redis password (optional) |
+| `storage.postgres.host` | `localhost` | PostgreSQL host |
+| `storage.postgres.port` | `5432` | PostgreSQL port |
+| `storage.postgres.database` | `lmusicbot` | PostgreSQL database name |
+| `storage.postgres.user` | `lmusicbot` | PostgreSQL user |
+| `storage.postgres.password` | `""` | PostgreSQL password |
+
+### Interaction Modes
+
+| Mode | Text Commands | Slash Commands |
+|------|:---:|:---:|
+| `all` (default) | ✓ | ✓ |
+| `text` | ✓ | ✗ |
+| `slash` | ✗ | ✓ |
+
+## Spotify Setup
+
+1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) and create an app
+2. Set the redirect URI to `https://example.com/callback` (not used by the bot)
+3. Copy the **Client ID** and **Client Secret**
+4. Add them to `config.yaml`:
+   ```yaml
+   spotify {
+       clientid = "your-client-id"
+       clientsecret = "your-client-secret"
+   }
+   ```
+5. Paste Spotify URLs into Discord — tracks, playlists, and albums all work
+
+## Docker Images
+
+Published to GHCR on every release:
+
+```sh
+docker pull ghcr.io/Lukas48452/musicbot:latest
+```
+
+See [PUBLISH_GHCR.md](PUBLISH_GHCR.md) for setup instructions.
+
+## Building from source
+
+```sh
+./gradlew build          # compile and run tests
+./gradlew shadowJar      # build standalone fat JAR
+./gradlew test           # run tests only
+```
+
+## Contributing
+
+- Report bugs or suggest features via [Issues](https://github.com/Lukas48452/MusicBot/issues)
+- Ask questions or get help in [Discussions](https://github.com/Lukas48452/MusicBot/discussions)
+- Read the code of conduct before submitting a PR
+
+## License
+
+Apache 2.0 — see [LICENSE](LICENSE).
+
+Thanks to [JDA](https://github.com/DV8FromTheWorld/JDA), [lavaplayer](https://github.com/sedmelluq/lavaplayer), [jagrosh](https://github.com/jagrosh) for the original JMusicBot, and all other open-source libraries that make this project possible.

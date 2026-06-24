@@ -35,7 +35,7 @@ body:
     id: debug
     attributes:
       label: Debug Output
-      description: Please run the `debug` command and paste it here or upload it as an attachment. If you cannot run the command, please provide information about your system such as operating system version, JMusicBot version, etc.
+      description: Please run the `debug` command and paste it here or upload it as an attachment. If you cannot run the command, please provide information about your system such as operating system version, LMusicBot version, etc.
     validations:
       required: true
   - type: textarea
@@ -49,16 +49,16 @@ body:
       label: Checklist
       description: Before submitting your issue, please affirm the following
       options:
-        - label: I have looked for information about this [within the documentation](https://jmusicbot.com/)
+        - label: I have looked for information about this [within the documentation](https://github.com/Lukas48452/MusicBot/wiki)
           required: true
-        - label: I have searched for similar issues [on the issues page](https://github.com/jagrosh/MusicBot/issues?q=is%3Aissue)
+        - label: I have searched for similar issues [on the issues page](https://github.com/Lukas48452/MusicBot/issues?q=is%3Aissue)
           required: true
-        - label: I am using an official release from [the releases page](https://github.com/jagrosh/MusicBot/releases)
+        - label: I am using an official release from [the releases page](https://github.com/Lukas48452/MusicBot/releases)
           required: true
   - type: input
     id: version
     attributes:
-      label: JMusicBot Version
-      description: Which version of JMusicBot are you running?
+      label: LMusicBot Version
+      description: Which version of LMusicBot are you running?
     validations:
       required: true

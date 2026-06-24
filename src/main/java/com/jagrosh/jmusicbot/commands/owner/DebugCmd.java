@@ -52,7 +52,7 @@ public class DebugCmd extends OwnerCommand
         sb.append("```\nSystem Properties:");
         for(String key: PROPERTIES)
             sb.append("\n  ").append(key).append(" = ").append(System.getProperty(key));
-        sb.append("\n\nJMusicBot Information:")
+        sb.append("\n\nLMusicBot Information:")
                 .append("\n  Version = ").append(OtherUtil.getCurrentVersion())
                 .append("\n  Owner = ").append(bot.getConfig().getOwnerId())
                 .append("\n  Prefix = ").append(bot.getConfig().getPrefix())

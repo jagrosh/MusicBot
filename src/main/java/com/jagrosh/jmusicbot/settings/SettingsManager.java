@@ -16,10 +16,6 @@
 package com.jagrosh.jmusicbot.settings;
 
 import com.jagrosh.jdautilities.command.GuildSettingsManager;
-import com.jagrosh.jmusicbot.utils.OtherUtil;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.util.HashMap;
 import net.dv8tion.jda.api.entities.Guild;
 import org.json.JSONException;
@@ -34,15 +30,34 @@ import org.slf4j.LoggerFactory;
 public class SettingsManager implements GuildSettingsManager<Settings>
 {
     private final static Logger LOG = LoggerFactory.getLogger("Settings");
-    private final static String SETTINGS_FILE = "serversettings.json";
     private final HashMap<Long,Settings> settings;
+    private final StorageBackend storage;
+    private final FileStorage fileStorage;
 
     public SettingsManager()
     {
+        this(new FileStorage());
+    }
+
+    public SettingsManager(StorageBackend storage)
+    {
         this.settings = new HashMap<>();
+        this.storage = storage;
+        this.fileStorage = (storage instanceof FileStorage) ? (FileStorage) storage : null;
+
+        String raw = storage.read();
+        if (raw == null)
+        {
+            if (fileStorage != null)
+            {
+                LOG.info("serversettings.json will be created in " + fileStorage.getPath().toAbsolutePath());
+                storage.write(new JSONObject().toString(4));
+            }
+            return;
+        }
 
         try {
-            JSONObject loadedSettings = new JSONObject(new String(Files.readAllBytes(OtherUtil.getPath(SETTINGS_FILE))));
+            JSONObject loadedSettings = new JSONObject(raw);
             loadedSettings.keySet().forEach((id) -> {
                 JSONObject o = loadedSettings.getJSONObject(id);
 
@@ -62,20 +77,10 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                         o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : -1,
                         o.has("queue_type")      ? o.getEnum(QueueType.class, "queue_type")  : QueueType.FAIR));
             });
-        } catch (NoSuchFileException e) {
-            // create an empty json file
-            try {
-                LOG.info("serversettings.json will be created in " + OtherUtil.getPath("serversettings.json").toAbsolutePath());
-                Files.write(OtherUtil.getPath("serversettings.json"), new JSONObject().toString(4).getBytes());
-            } catch(IOException ex) {
-                LOG.warn("Failed to create new settings file: "+ex);
-            }
+        } catch (JSONException e) {
+            LOG.warn("Failed to parse server settings: "+e);
             return;
-        } catch(IOException | JSONException e) {
-            LOG.warn("Failed to load server settings: "+e);
         }
-
-        LOG.info("serversettings.json loaded from " + OtherUtil.getPath("serversettings.json").toAbsolutePath());
     }
 
     /**
@@ -126,10 +131,6 @@ public class SettingsManager implements GuildSettingsManager<Settings>
                 o.put("queue_type", s.getQueueType().name());
             obj.put(Long.toString(key), o);
         });
-        try {
-            Files.write(OtherUtil.getPath(SETTINGS_FILE), obj.toString(4).getBytes());
-        } catch(IOException ex){
-            LOG.warn("Failed to write to file: "+ex);
-        }
+        storage.write(obj.toString(4));
     }
 }

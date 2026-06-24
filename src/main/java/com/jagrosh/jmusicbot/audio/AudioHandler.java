@@ -33,6 +33,7 @@ import java.util.Set;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
+import com.jagrosh.jmusicbot.audio.WebhookNotifier;
 import java.nio.ByteBuffer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -211,6 +212,13 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
     {
         votes.clear();
         manager.getBot().getNowplayingHandler().onTrackUpdate(track);
+        WebhookNotifier wn = manager.getBot().getWebhookNotifier();
+        if (wn != null)
+        {
+            Guild guild = manager.getBot().getJDA().getGuildById(guildId);
+            if (guild != null)
+                wn.sendNowPlaying(track, guild);
+        }
     }
 
     

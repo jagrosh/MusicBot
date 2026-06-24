@@ -22,6 +22,7 @@ import com.jagrosh.jmusicbot.audio.AloneInVoiceHandler;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.NowplayingHandler;
 import com.jagrosh.jmusicbot.audio.PlayerManager;
+import com.jagrosh.jmusicbot.audio.WebhookNotifier;
 import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
@@ -44,6 +45,7 @@ public class Bot
     private final PlaylistLoader playlists;
     private final NowplayingHandler nowplaying;
     private final AloneInVoiceHandler aloneInVoiceHandler;
+    private WebhookNotifier webhookNotifier;
     
     private boolean shuttingDown = false;
     private JDA jda;
@@ -102,6 +104,16 @@ public class Bot
     public AloneInVoiceHandler getAloneInVoiceHandler()
     {
         return aloneInVoiceHandler;
+    }
+
+    public WebhookNotifier getWebhookNotifier()
+    {
+        return webhookNotifier;
+    }
+
+    public void setWebhookNotifier(WebhookNotifier webhookNotifier)
+    {
+        this.webhookNotifier = webhookNotifier;
     }
     
     public JDA getJDA()

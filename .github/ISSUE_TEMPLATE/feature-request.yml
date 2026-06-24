@@ -42,11 +42,11 @@ body:
       label: Checklist
       description: Before submitting your issue, please affirm the following
       options:
-        - label: I have checked [the documentation](https://jmusicbot.com/) to make sure this feature doesn't already exist
+        - label: I have checked [the documentation](https://github.com/Lukas48452/MusicBot/wiki) to make sure this feature doesn't already exist
           required: true
-        - label: I have searched for [similar feature requests](https://github.com/jagrosh/MusicBot/labels/enhancement)
+        - label: I have searched for [similar feature requests](https://github.com/Lukas48452/MusicBot/labels/enhancement)
           required: true
-        - label: I have confirmed that my requests is **not** on the [list of things that will not be added](https://jmusicbot.com/things-that-wont-be-added)
+        - label: I have confirmed that my requests is **not** on the [list of things that will not be added](https://github.com/Lukas48452/MusicBot/wiki/Things-That-Won't-Be-Added)
           required: true
-        - label: "I am running the latest version of the bot: ![Release](https://img.shields.io/github/release/jagrosh/MusicBot.svg)"
+        - label: "I am running the latest version of the bot: ![Release](https://img.shields.io/github/release/Lukas48452/MusicBot.svg)"
           required: true

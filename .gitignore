@@ -1,7 +1,28 @@
+# Gradle
+build/
+.gradle/
+
+# IDE
 /nbproject/
-/target/
-/Playlists/
-/test/
-*.json
-*.txt
 nb*.xml
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+bin/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project-specific
+/config/
+/Playlists/
+config.yaml
+config.txt
+COMMIT.md
+
+# Logs
+*.log

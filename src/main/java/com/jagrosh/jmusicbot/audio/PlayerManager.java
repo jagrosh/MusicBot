@@ -65,6 +65,13 @@ public class PlayerManager extends DefaultAudioPlayerManager
         AudioSourceManagers.registerLocalSource(this);
 
         DuncteBotSources.registerAll(this, "en-US");
+
+        String spotifyId = bot.getConfig().getSpotifyClientId();
+        String spotifySecret = bot.getConfig().getSpotifyClientSecret();
+        if (spotifyId != null && !spotifyId.isEmpty() && spotifySecret != null && !spotifySecret.isEmpty())
+        {
+            registerSourceManager(new SpotifyAudioSourceManager(spotifyId, spotifySecret));
+        }
     }
     
     public Bot getBot()

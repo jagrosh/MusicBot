@@ -1,0 +1,124 @@
+// Config for the LMusicBot
+// Any line starting with // is ignored
+// You MUST set the token and owner
+// All other items have defaults if you don't set them
+
+
+// Bot token (required)
+// https://github.com/Lukas48452/MusicBot/wiki/Getting-a-Bot-Token
+token = BOT_TOKEN_HERE
+
+
+// Owner user ID (required, 17-18 digit number)
+// https://github.com/Lukas48452/MusicBot/wiki/Finding-Your-User-ID
+owner = 0
+
+
+// Command prefix (@mention uses a bot mention as the prefix)
+prefix = "@mention"
+
+// Alternative prefix (NONE to disable)
+altprefix = "NONE"
+
+
+// Bot activity and status
+game = "DEFAULT"
+status = ONLINE
+
+
+// Show currently playing song in bot status (only works on one guild)
+songinstatus=false
+
+
+// Custom emojis for bot responses
+success = "🎶"
+warning = "💡"
+error = "🚫"
+loading = "⌚"
+searching = "🔎"
+
+
+// Help command name
+help = help
+
+
+// Show YouTube thumbnails in nowplaying (disables auto-refresh)
+npimages = false
+
+
+// Stay in voice channel after queue finishes
+stayinchannel = false
+
+
+// Maximum track length in seconds (0 = unlimited)
+maxtime = 0
+
+// Maximum YouTube playlist pages to load (100 tracks per page)
+maxytplaylistpages = 10
+
+// Vote-skip ratio (0.0 - 1.0)
+skipratio = 0.55
+
+// Auto-leave after N seconds alone in voice channel (0 = disabled)
+alonetimeuntilstop = 0
+
+// Folder for local playlist files
+playlistsfolder = "Playlists"
+
+// Check for updates and notify owner
+updatealerts=true
+
+// Lyric provider (A-Z Lyrics, Genius, MusicMatch, LyricsFreak)
+lyrics.default = "A-Z Lyrics"
+
+
+// Command aliases
+aliases {
+  settings = [ status ]
+  lyrics = []
+  nowplaying = [ np, current ]
+  play = []
+  playlists = [ pls ]
+  queue = [ list ]
+  remove = [ delete ]
+  scsearch = []
+  search = [ ytsearch ]
+  shuffle = []
+  skip = [ voteskip ]
+  prefix = [ setprefix ]
+  setdj = []
+  setskip = [ setskippercent, skippercent, setskipratio ]
+  settc = []
+  setvc = []
+  forceremove = [ forcedelete, modremove, moddelete, modelete ]
+  forceskip = [ modskip ]
+  movetrack = [ move ]
+  pause = []
+  playnext = []
+  queuetype = []
+  repeat = []
+  skipto = [ jumpto ]
+  stop = [ leave ]
+  volume = [ vol ]
+}
+
+
+// Logging verbosity (off, error, warn, info, debug, trace, all)
+loglevel = info
+
+
+// URL transforms (advanced, see source code for details)
+transforms = {}
+
+
+// Eval command (DANGEROUS - only enable if you know what you're doing)
+eval=false
+evalengine="Nashorn"
+
+
+// Spotify integration (optional)
+// Create an app at https://developer.spotify.com/dashboard to get credentials
+spotify {
+    clientid = ""
+    clientsecret = ""
+}
